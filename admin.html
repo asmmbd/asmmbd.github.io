@@ -165,38 +165,124 @@
     <!-- End Header -->
 
     <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
+     <aside id="sidebar" class="sidebar">
       <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="admin">
+          <a class="nav-link collapsed" href="admin">
             <i class="bi bi-grid"></i>
             <span>Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="/student-view">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#student-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
             <i class="bi bi-mortarboard"></i>
-            <span>Students</span>
+            <span>Students</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
+          <ul
+            id="student-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="admission.html">
+                <i class="bi bi-circle"></i><span>Add Student</span>
+              </a>
+            </li>
+            <li>
+              <a href="/view-student">
+                <i class="bi bi-circle"></i><span>View Students</span>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="/add-teacher">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#teacher-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
             <i class="bi bi-person-workspace"></i>
-            <span>Teachers</span>
+            <span>Teachers</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
+          <ul
+            id="teacher-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="/add-teacher.html">
+                <i class="bi bi-circle"></i><span>Add Teacher</span>
+              </a>
+            </li>
+            <li>
+              <a href="/view-teacher">
+                <i class="bi bi-circle"></i><span>View Teachers</span>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="/add-notice">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#notice-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
             <i class="bi bi-journal-text"></i>
-            <span>Notice & Routine</span>
+            <span>Notice & Routine</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
           </a>
+          <ul
+            id="notice-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="/add-notice.html">
+                <i class="bi bi-circle"></i><span>Add Notice </span>
+              </a>
+            </li>
+            <li>
+              <a href="/view-notice">
+                <i class="bi bi-circle"></i><span>View Notices</span>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link collapsed" href="add-activities">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#activity-nav"
+            data-bs-toggle="collapse"
+            href="add-activities"
+          >
             <i class="bi bi-journals"></i>
-            <span>Recent Activities</span>
+            <span>Recent Activities</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
           </a>
+          <ul
+            id="activity-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="/add-activities">
+                <i class="bi bi-circle"></i><span>Add Activity</span>
+              </a>
+            </li>
+            <li>
+              <a href="/view-activities">
+                <i class="bi bi-circle"></i><span>View Activity</span>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item">
