@@ -390,7 +390,7 @@
     ></script>
     <script src="assets/vendor/quill/quill.min.js"></script>
     <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-    <script src="src/tinymce/tinymce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script>
     <!-- Template Main JS File -->
     <script src="src/js/main.js"></script>
 
@@ -402,15 +402,6 @@
       let type = document.getElementById("type");
       let saveBtn = document.getElementById("saveBtn");
       let flnt = document.getElementById("file");
-      flnt.addEventListener("change", function () {
-        e.preventDefault();
-        let file = flnt.files[0];
-        let src = URL.createObjectURL(file);
-        let img = document.querySelector(".img");
-        img.src = src;
-        img.classList.remove("d-none");
-      });
-
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const file = form.file.files[0];
