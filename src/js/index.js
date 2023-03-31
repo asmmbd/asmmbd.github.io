@@ -133,6 +133,7 @@ if ("serviceWorker" in navigator) {
 
 let deferredPrompt;
 const addBtn = document.querySelector(".add-button");
+const addBtnDiv = document.querySelector(".add-btn-div");
 
 window.addEventListener("beforeinstallprompt", (e) => {
   
