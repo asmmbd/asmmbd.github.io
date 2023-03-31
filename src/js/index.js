@@ -153,5 +153,6 @@ window.addEventListener("beforeinstallprompt", (e) => {
       }
       deferredPrompt = null;
     });
+   addBtnDiv.style.display ='none';
   });
 });
