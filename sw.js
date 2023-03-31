@@ -1,5 +1,5 @@
 const staticDevCoffee = "asmmbd-1";
-const assets = ["/", "/index.html", "src/css/index.css", "src/js/index.js"];
+const assets = ["https://asmmbd.github.io", "/index.html", "src/css/index.css", "src/js/index.js"];
 
 self.addEventListener("install", (installEvent) => {
   installEvent.waitUntil(
