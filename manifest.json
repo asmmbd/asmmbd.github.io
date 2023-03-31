@@ -1,23 +1,23 @@
 
 {
-  "name": "ASMMBD",
-  "short_name": "মাদ্রাসায়ে আয়েশা সিদ্দিকা (রা.)",
+  "short_name": "ASMMBD",
+  "name": "মাদ্রাসায়ে আয়েশা সিদ্দিকা (রা.)",
   "start_url": ".",
   "display": "standalone",
   "icons": [
     {
-      "src": "src/img/asmmlogo.png",
+      "src": "src/img/asmmlogo.jpg",
       "type": "image/png",
       "sizes": "180x180"
     },
     {
-      "src": "src/img/asmmlogo.png",
+      "src": "src/img/asmmlogo.jpg",
       "type": "image/png",
       "sizes": "310x310"
     }
   ],
-  "background_color": "#3367D6",
-  "theme_color": "#3367D6",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "screenshots": [
     {
       "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
