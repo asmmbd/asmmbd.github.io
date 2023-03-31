@@ -119,33 +119,14 @@ prevNextIcon.forEach((icon) => {
 
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").then(() => {
-    console.log("Service Worker Registered");
-  });
-}
-
-let deferredPrompt;
-const addBtn = document.querySelector(".add-button");
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  
-  e.preventDefault();
-  deferredPrompt = e;
-
-  
-
-  addBtn.addEventListener("click", () => {
-    
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the A2HS prompt");
-      } else {
-        console.log("User dismissed the A2HS prompt");
-      }
-      deferredPrompt = null;
+  navigator.serviceWorker
+    .register("sw.js")
+    .then((registration) => {
+      console.log("SW registered");
+      console.log(registration);
+    })
+    .catch((error) => {
+      console.log("SW registered failed");
+      console.log(error);
     });
-  });
-});
-
-
+}
