@@ -6,12 +6,12 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      "src": "src/img/asmmlogo.png",
       "type": "image/png",
       "sizes": "180x180"
     },
     {
-      "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      "src": "src/img/asmmlogo.png",
       "type": "image/png",
       "sizes": "310x310"
     }
