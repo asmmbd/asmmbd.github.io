@@ -1,17 +1,21 @@
-const staticDevCoffee = "asmmbd-1";
-const assets = ["https://asmmbd.github.io", "/index.html", "src/css/index.css", "src/js/index.js"];
-
-self.addEventListener("install", (installEvent) => {
-  installEvent.waitUntil(
-    caches.open(staticDevCoffee).then((cache) => {
-      cache.addAll(assets);
+self.addEventListener("install", (e) => {
+  e.waitUntill(
+    caches.open("static").then((cache) => {
+      return cache.addAll([
+        "https://asmmbd.github.io",
+        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/style.css",
+        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/index.js",
+        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/script.js",
+        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/other.js",
+        "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      ]);
     })
   );
 });
-self.addEventListener("fetch", (fetchEvent) => {
-  fetchEvent.respondWith(
-    caches.match(fetchEvent.request).then((res) => {
-      return res || fetch(fetchEvent.request);
-    })
-  );
+
+self.addEventListener("fetch", (e) => {
+  //   console.log(`refdsf ${e.request.url}`);
+  caches.match(e.request).then((response) => {
+    return response || fetch(e.request);
+  });
 });
