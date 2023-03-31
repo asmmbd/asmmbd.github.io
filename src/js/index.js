@@ -126,16 +126,16 @@ if ("serviceWorker" in navigator) {
 
 let deferredPrompt;
 const addBtn = document.querySelector(".add-button");
-const addBtnDiv = document.querySelector(".add-to-home-btn");
+
 window.addEventListener("beforeinstallprompt", (e) => {
   
   e.preventDefault();
   deferredPrompt = e;
 
-  addBtnDiv.style.display = "flex";
+  
 
   addBtn.addEventListener("click", () => {
-    addBtnDiv.style.display = "none";
+    
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === "accepted") {
