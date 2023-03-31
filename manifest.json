@@ -6,12 +6,12 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "src/img/asmmlogo.jpg",
+      "src": "src/img/asmmsqrlogo.png",
       "type": "image/png",
       "sizes": "180x180"
     },
     {
-      "src": "src/img/asmmlogo.jpg",
+      "src": "src/img/asmmsqrlogo.png",
       "type": "image/png",
       "sizes": "310x310"
     }
