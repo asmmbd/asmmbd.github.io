@@ -1,0 +1,30 @@
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+
+let deferredPrompt;
+const addBtn = document.querySelector(".add-button");
+const addBtnDiv = document.querySelector(".add-to-home-btn");
+window.addEventListener("beforeinstallprompt", (e) => {
+  
+  e.preventDefault();
+  deferredPrompt = e;
+
+  addBtnDiv.style.display = "flex";
+
+  addBtn.addEventListener("click", () => {
+    addBtnDiv.style.display = "none";
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("User accepted the A2HS prompt");
+      } else {
+        console.log("User dismissed the A2HS prompt");
+      }
+      deferredPrompt = null;
+    });
+  });
+});
