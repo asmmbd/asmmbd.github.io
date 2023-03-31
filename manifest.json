@@ -1,30 +1,36 @@
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js").then(() => {
-    console.log("Service Worker Registered");
-  });
+{
+  "name": "SAIF KHAN",
+  "short_name": "SAIF KHAN",
+  "start_url": ".",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      "type": "image/png",
+      "sizes": "310x310"
+    }
+  ],
+  "background_color": "#3367D6",
+  "theme_color": "#3367D6",
+  "screenshots": [
+    {
+      "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      "type": "image/png",
+      "sizes": "540x720",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+      "type": "image/jpg",
+      "sizes": "720x540",
+      "form_factor": "wide"
+    }
+  ],
+  "orientation": "portrait"
 }
-
-let deferredPrompt;
-const addBtn = document.querySelector(".add-button");
-const addBtnDiv = document.querySelector(".add-to-home-btn");
-window.addEventListener("beforeinstallprompt", (e) => {
-  
-  e.preventDefault();
-  deferredPrompt = e;
-
-  addBtnDiv.style.display = "flex";
-
-  addBtn.addEventListener("click", () => {
-    addBtnDiv.style.display = "none";
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the A2HS prompt");
-      } else {
-        console.log("User dismissed the A2HS prompt");
-      }
-      deferredPrompt = null;
-    });
-  });
-});
