@@ -445,7 +445,7 @@
           .then((ress) => ress.json())
           .then((deta) => {
             console.log(deta);
-            let data = deta.rows[0];
+            let data = deta[0];
             post_area.innerHTML = `
              <div class="single-latest-page-image">
                  <img src="${data.file}" class="img-fluid" />
