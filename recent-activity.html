@@ -440,7 +440,7 @@
       let postid = localStorage.getItem("postId");
       if (postid) {
         fetch(
-          `http://gsx2json.com/api?id=1trNKu_nvpfnaCu7wWJXM5qHpxZs4j3xXJ6G7iYcD-1I&sheet=Sheet1&q=${postid}`
+          `https://sheetdb.io/api/v1/284cwu4ran803/search?Id=${postid}`
         )
           .then((ress) => ress.json())
           .then((deta) => {
@@ -471,34 +471,9 @@
           });
       }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="src/js/owl.carousel.min.js"></script>
+    
     <script src="src/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      $(".owl-carousel").owlCarousel({
-        loop: true,
-        margin: 0,
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: false,
-        responsiveClass: true,
-        responsive: {
-          0: {
-            items: 1,
-          },
-          768: {
-            items: 2,
-          },
-          1100: {
-            items: 4,
-          },
-          1400: {
-            items: 4,
-            loop: false,
-          },
-        },
-      });
-    </script>
+    
   </body>
 </html>
