@@ -1,5 +1,4 @@
-let message_tabs = document.querySelector(".message-tabs");
-let tabContent = document.querySelector(".tab-content");
+
 const firebaseConfig = {
   apiKey: "AIzaSyDdiEIc1e26bHA8GD6_qoy_nKnVYsd084E",
   authDomain: "test-app-43138.firebaseapp.com",
@@ -45,47 +44,3 @@ form.addEventListener("submit", (e) => {
 });
 
 
-function getdata() {
-        db.collection("messages")
-          .get()
-          .then((data) => {
-            let users = data.docs.map((item) => {
-              return { ...item.data(), id: item.id };
-            });
-            console.log(users);
-            for (let user of users) {
-              console.log(user.email);
-
-              message_tabs.innerHTML += `
-                <li class="list-group-item list-group-item-info">
-                  <i class="bi bi-x me-2 text-danger" onclick='deletedata("${user.id}")'></i><span onclick='showdata("${user.email}","${user.name}","${user.subject}","${user.message}")'>${user.email}</span>
-                </li>
-              `;
-            }
-          });
-      }
-      getdata();
-      function showdata(email, name, sub, sms) {
-        console.log(email, name, sub, sms);
-        tabContent.innerHTML = `
-              <div class="">
-                <h1>${name}</h1>
-                <h4>${email}</h4>
-                <h5>${sub}</h5>
-                <p>${sms}</p>
-              </div>
-        `;
-      }
-      function deletedata(id) {
-        console.log(id);
-        db.collection("messages")
-          .doc(id)
-          .delete()
-          .then(() => {
-            alert("Data Deleted");
-            location.reload();
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
