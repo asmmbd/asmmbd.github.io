@@ -196,12 +196,13 @@
 
           <div class="col-xl-6">
             <div class="card p-4">
-              <form class="form">
+              <form class="form" id="form">
                 <div class="row gy-4">
                   <div class="col-md-6">
                     <input
                       type="text"
                       name="name"
+                      id="name"     
                       class="form-control"
                       placeholder="আপনার নাম"
                       required
@@ -213,6 +214,7 @@
                       type="email"
                       class="form-control"
                       name="email"
+                      id="email"
                       placeholder="আপনার ইমেইল"
                       required
                     />
@@ -223,6 +225,7 @@
                       type="text"
                       class="form-control"
                       name="subject"
+                      id="subject"
                       placeholder="আপনার বিষয়"
                       required
                     />
@@ -232,6 +235,7 @@
                     <textarea
                       class="form-control"
                       name="message"
+                      id="message"
                       rows="6"
                       placeholder="এখানে লিখুন"
                       required
@@ -239,10 +243,9 @@
                   </div>
 
                   <div class="col-md-12 text-center">
-                    <div class="loading d-none">Loading...</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message d-none">
-                      Your message has been sent. Thank you!
+                    <div class="loading d-none my-2">পাঠানো হচ্ছে...</div>
+                    <div class="sent-message d-none my-2 text-success">
+                      আপনার এসএমএস টি পাঠানো হয়েছে।
                     </div>
 
                     <button type="submit" class="btn btn-primary">
@@ -388,7 +391,9 @@
         </div>
       </footer>
     </div>
-    
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
+    <script src="src/js/database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="src/js/index.js"></script>
   </body>
