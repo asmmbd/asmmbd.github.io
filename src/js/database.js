@@ -1,3 +1,5 @@
+let message_tabs = document.querySelector(".message-tabs");
+let tabContent = document.querySelector(".tab-content");
 const firebaseConfig = {
   apiKey: "AIzaSyDdiEIc1e26bHA8GD6_qoy_nKnVYsd084E",
   authDomain: "test-app-43138.firebaseapp.com",
