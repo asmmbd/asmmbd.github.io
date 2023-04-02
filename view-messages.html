@@ -352,7 +352,68 @@
     <script src="src/js/main.js"></script>
    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
-    <script src="src/js/database.js"></script>
+    
+      <script>
+      let message_tabs = document.querySelector(".message-tabs");
+      let tabContent = document.querySelector(".tab-content");
+      const firebaseConfig = {
+        apiKey: "AIzaSyDdiEIc1e26bHA8GD6_qoy_nKnVYsd084E",
+        authDomain: "test-app-43138.firebaseapp.com",
+        databaseURL: "https://test-app-43138-default-rtdb.firebaseio.com",
+        projectId: "test-app-43138",
+        storageBucket: "test-app-43138.appspot.com",
+        messagingSenderId: "389574239084",
+        appId: "1:389574239084:web:a2947fcd4155795b478949",
+      };
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = app.firestore();
+
+      function getdata() {
+        db.collection("messages")
+          .get()
+          .then((data) => {
+            let users = data.docs.map((item) => {
+              return { ...item.data(), id: item.id };
+            });
+            console.log(users);
+            for (let user of users) {
+              console.log(user.email);
+
+              message_tabs.innerHTML += `
+                <li class="list-group-item list-group-item-info">
+                  <i class="bi bi-x me-2 text-danger" onclick='deletedata("${user.id}")'></i><span onclick='showdata("${user.email}","${user.name}","${user.subject}","${user.message}")'>${user.email}</span>
+                </li>
+              `;
+            }
+          });
+      }
+      getdata();
+      function showdata(email, name, sub, sms) {
+        console.log(email, name, sub, sms);
+        tabContent.innerHTML = `
+              <div class="">
+                <h1>${name}</h1>
+                <h4>${email}</h4>
+                <h5>${sub}</h5>
+                <p>${sms}</p>
+              </div>
+        `;
+      }
+      function deletedata(id) {
+        console.log(id);
+        db.collection("messages")
+          .doc(id)
+          .delete()
+          .then(() => {
+            alert("Data Deleted");
+            location.reload();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+    
    
   </body>
 </html>
