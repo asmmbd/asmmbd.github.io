@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>ASMM - Admin Dashboard</title>
+    <title>ASKM - Admin Dashboard</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
     <script>
@@ -48,8 +47,7 @@
   </head>
 
   <body>
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
+   <header id="header" class="header fixed-top d-flex align-items-center">
       <div class="d-flex align-items-center justify-content-between">
         <a href="admin.html" class="logo d-flex align-items-center">
           <img src="src/img/asmmlogo.png" alt="" />
@@ -302,7 +300,8 @@
       </ul>
     </aside>
     <!-- End Sidebar-->
-   <main id="main" class="main">
+
+    <main id="main" class="main">
       <div class="pagetitle">
         <h1>View Messages</h1>
         <nav>
@@ -315,24 +314,82 @@
       <!-- End Page Title -->
 
       <section class="section dashboard">
-        <div class="card p-2 bg-white">
-          <div class="row">
-            <div class="tab-buttons col-md-5">
-              <ul class="list-group ms-0 w-100 message-tabs">
-                
-              </ul>
+        
+
+        <div class="w-100">
+          <div class="card">
+            <div class="card-body">
+              <div class="email-header">
+                <div class="row">
+                  <div class="col top-action-left">
+                    <div class="float-start">
+                      <div class="btn-group dropdown-action mail-search my-3">
+                        <input
+                          type="text"
+                          placeholder="Search Messages"
+                          class="form-control search-message"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="email-content">
+                <div class="table-responsive">
+                  <table class="table table-inbox table-hover">
+                    <tbody id="inbox-message">
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-            <div class="tab-content col-md-7"></div>
           </div>
         </div>
       </section>
+
+      <div
+        class="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                Inbox Message
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
     <!-- End #main -->
 
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
       <div class="copyright">
-        &copy; Copyright <strong><span>ASMMBD</span></strong
+        &copy; Copyright <strong><span>ASKMBD</span></strong
         >. All Rights Reserved
       </div>
     </footer>
@@ -349,13 +406,16 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
+    <script src="assets/vendor/quill/quill.min.js"></script>
+    <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+
+    <!-- Template Main JS File -->
     <script src="src/js/main.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
-    
-      <script>
-      let message_tabs = document.querySelector(".message-tabs");
-      let tabContent = document.querySelector(".tab-content");
+    <script>
+      let inbox = document.querySelector("#inbox-message");
+      let modalbody = document.querySelector(".modal-body");
       const firebaseConfig = {
         apiKey: "AIzaSyDdiEIc1e26bHA8GD6_qoy_nKnVYsd084E",
         authDomain: "test-app-43138.firebaseapp.com",
@@ -379,23 +439,32 @@
             for (let user of users) {
               console.log(user.email);
 
-              message_tabs.innerHTML += `
-                <li class="list-group-item list-group-item-info">
-                  <i class="bi bi-x me-2 text-danger" onclick='deletedata("${user.id}")'></i><span onclick='showdata("${user.email}","${user.name}","${user.subject}","${user.message}")'>${user.email}</span>
-                </li>
+              inbox.innerHTML += `
+                 <tr class="unread clickable-row">
+                        <td class="col-1">
+                          <i class="bi bi-trash me-2 text-danger" onclick="deletedata('${user.id}')"></i>
+                          <i data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="bi bi-eye" onclick="showdata('${user.email}','${user.name}','${user.subject}','${user.message}','${user.date}')"></i>
+                        </td>
+                        <td class="name col-2">${user.name}</td>
+                        <td class="subject col-7">
+                          ${user.subject}
+                        </td>
+                        <td class="mail-date col-2">${user.date}</td>
+                      </tr>
+                     
               `;
             }
           });
       }
       getdata();
-      function showdata(email, name, sub, sms) {
-        console.log(email, name, sub, sms);
-        tabContent.innerHTML = `
+      function showdata(email, name, sub, sms, date) {
+        console.log(email, name, sub, sms, date);
+        modalbody.innerHTML = `
               <div class="">
-                <h1>${name}</h1>
-                <h4>${email}</h4>
-                <h5>${sub}</h5>
-                <p>${sms}</p>
+                <h4>Name : ${name}</h4>
+                <h4>Email : ${email}</h4>
+                <h5>Subject : ${sub}</h5>
+                <p>Message : ${sms}</p>
               </div>
         `;
       }
@@ -413,7 +482,5 @@
           });
       }
     </script>
-    
-   
   </body>
 </html>
