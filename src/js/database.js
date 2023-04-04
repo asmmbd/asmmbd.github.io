@@ -21,13 +21,17 @@ form.addEventListener("submit", (e) => {
   let subject = document.querySelector("#subject").value;
   let message = document.querySelector("#message").value;
   console.log(name, email, subject, message);
-
+  let date = new Date();
+  let td = date.getDate();
+  let md = date.getMonth() + 1;
+  let yd = date.getFullYear();
   db.collection("messages")
     .add({
       name: name,
       email: email,
       subject: subject,
       message: message,
+      date: `${td}/${md}/${yd}`,
     })
     .then((docRef) => {
       loading.classList.add("d-none");
