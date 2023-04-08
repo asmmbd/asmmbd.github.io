@@ -4,10 +4,10 @@ self.addEventListener("install", (e) => {
       return cache.addAll([
         "https://asmmbd.github.io",
         "/",
+        "/index.html",
         "/src/js/index.js",
         "/src/css/index.css",
-        "index.html",
-        "admission.html",
+        "/admission.html",
       ]);
     })
   );
