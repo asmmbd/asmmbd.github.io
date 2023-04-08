@@ -3,11 +3,11 @@ self.addEventListener("install", (e) => {
     caches.open("static").then((cache) => {
       return cache.addAll([
         "https://asmmbd.github.io",
-        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/style.css",
-        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/index.js",
-        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/script.js",
-        "https://raw.githubusercontent.com/alsaifdev/alsaifdev.github.io/main/src/other.js",
-        "https://github.com/alsaifdev/alsaifdev.github.io/blob/main/images/android-icon-144x144.png?raw=true",
+        "/",
+        "/src/js/index.js",
+        "/src/css/index.css",
+        "index.html",
+        "admission.html",
       ]);
     })
   );
