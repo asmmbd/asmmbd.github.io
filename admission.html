@@ -656,6 +656,32 @@
     </main>
 
     <!-- End #main -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+    <script>
+      let form = document.querySelector("form");
+      const { Client ,Databases} = Appwrite;
+      const client = new Client();
+      
+    client
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject('652c1374db243c864a6c');
+      const databases = new Databases(client);
+      function addPost(studentId, student) {
+        const promise = databases.createDocument('652c16162f939c821f75','652c16266c0f7c2fccd8', studentId, student)
+        promise.then(function(response) {
+        alert('registation');
+        }, function(error) {
+        alert(error.code);
+        });
+      }
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let data =  new FormData(formElem);
+        let student = Object.fromEntries(data)
+        addPost(student.faPhone, {...student, image: 'https://digiedubd.com/3/assets/images/avatars/9.jpg'})
+      })
+    </script>
+    <!--
     <script>
       let forms = document.querySelector("form");
       let stPrintBtn = document.querySelector(".student-print-btn");
@@ -733,7 +759,7 @@
           .catch((error) => console.error("Error!", error.message));
       });
     </script>
-
+-->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
       integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
