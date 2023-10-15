@@ -676,7 +676,7 @@
       }
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-        let data =  new FormData(formElem);
+        let data =  new FormData(form);
         let student = Object.fromEntries(data)
         addPost(student.faPhone, {...student, image: 'https://digiedubd.com/3/assets/images/avatars/9.jpg'})
       })
