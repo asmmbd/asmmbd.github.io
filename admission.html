@@ -678,6 +678,19 @@
         let student = Object.fromEntries(data)
         addPost(student.faPhone, {...student, image: 'https://digiedubd.com/3/assets/images/avatars/9.jpg'})
       })
+
+
+      let stPrintBtn = document.querySelector(".student-print-btn");
+      let stPrintValue = document.querySelector(".student-print-Value");
+      stPrintBtn.addEventListener("click", () => {
+        console.log(stPrintValue.value);
+        if (stPrintValue.value === "") {
+        } else {
+          sessionStorage.setItem("number", stPrintValue.value);
+          stPrintValue.value = "";
+          location.assign("/print-student");
+        }
+      });
     </script>
     <!--
     <script>
