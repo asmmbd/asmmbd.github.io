@@ -1,4 +1,15 @@
-      
+  let time = document.querySelector('#demo');
+let date = document.querySelector('#demonew');
+
+function showTime() {
+  let current = new Date();
+
+  time.innerHTML = current.toLocaleTimeString()
+  date.innerHTML = current.toDateString()
+
+}
+setInterval(showTime, 1000)
+    
          window.onscroll = function() {myFunction()};
 
                // Get the navbar
