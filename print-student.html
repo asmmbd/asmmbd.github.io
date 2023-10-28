@@ -160,143 +160,155 @@
         </div>
       </div> -->
     </div>
-    <script>
-      let number = sessionStorage.getItem("number");
+
+      <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Query } = Appwrite;
+    const client = new Client();
+    const bucketId = '653bc7811a3ca0417dd5';
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+   // const urlParams = new URLSearchParams(window.location.search);
+    const number = /*urlParams.get('faPhone')*/ '01947660563'
+    const searchStudent = (param) => {
+      const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.search("faPhone", param)]);
+      promise.then(function(ress) {
+        setPrintData(ress.documents[0]);
+      }, function(error) {
+        console.log(error);
+      });
+    }
+
+    searchStudent(number)
+
+    function setPrintData(data) {
       let printarea = document.querySelector(".print-area");
-      console.log(number);
+      console.log(data);
+      printarea.innerHTML = `
 
-      if (number) {
-        fetch(
-          `https://sheetdb.io/api/v1/la00p44cu79ob/search?faPhone=${number}`
-        )
-          .then((ress) => ress.json())
-          .then((deta) => {
-            let data = deta[0];
-            printarea.innerHTML = `
+         <div class="row">
+         <div class="col-2">
+           <img
+             src="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png"
+             class="img-fluid"
+           />
+         </div>
+         <div class="col-8 pt-1 text-center">
+           <h1 class="fw-bolder text-primary">
+             আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা
+           </h1>
+           <h3>নিমতলা মোড়,হোটেল বাজার, মেহেরপুর।</h3>
+           <span>স্থাপিতঃ ২০২২ খ্রিঃ </span>
+         </div>
+         <div class="col-2">
+           <img
+             src="${data.image}"
+             class="img-fluid img border"
+           />
+         </div>
+       </div>
+       <div class="row">
+         <div class="col-12 text-center">
+           <p>
+             <i class="bi bi-browser-chrome me-2"></i>asmmbd.github.io
+             <i class="bi bi-facebook mx-2"></i>facebook.com/asmmbd2022
+             <i class="bi bi-envelope-at mx-2"></i> asmmbd2022@gmail.com
+           </p>
+           <span class="bg-primary text-white py-2 px-3 rounded fw-bolder fs-4"
+             >শিক্ষার্থীর তথ্য</span
+           >
+         </div>
+         <div class="col-8">ক্রমিক নং- ${data.$id}</div>
+         <div class="col-4">তারিখঃ ${new Date(data.$createdAt).toLocaleDateString()}</div>
+       </div>
+       <div class="row">
+         <div class="col-6">ছাত্রীর নাম (বাংলায়)* ${data.stname}</div>
+         <div class="col-6">ছাত্রীর নাম (আরবিতে)* ${data.staname}</div>
+         <div class="col-12">ইংরেজিতে (বড় অক্ষরে)* ${data.stiname}</div>
+         <div class="col-4">শ্রেণিঃ ${data.class}</div>
+         <div class="col-4">বিভাগঃ ${data.group}</div>
+         <div class="col-4">ক্যাটাগরি ${data.category}</div>
+         <div class="col-6">জন্ম তারিখঃ ${data.birthDate}</div>
+         <div class="col-6">বয়সঃ ${data.age}</div>
+       </div>
+       <div class="row">
+         <div class="col-6">পিতার নাম(বাংলায়)* ${data.faName}</div>
+         <div class="col-6">পিতার নাম(ইংরেজিতে)* ${data.faNameIng}</div>
+         <div class="col-8">ভোটার আইডি/জন্ম নিবন্ধন নংঃ ${data.faIdNum}</div>
+         <div class="col-4">শিক্ষাগত যোগ্যতাঃ ${data.faStudy}</div>
+         <div class="col-4">পেশাঃ ${data.faProfession}</div>
+         <div class="col-4">মাসিক ইনকামঃ ${data.faIncome}</div>
+         <div class="col-4">মোবাইল নংঃ ${data.faPhone}</div>
+       </div>
+       <div class="row">
+         <div class="col-6">মাতার নাম(বাংলায়)* ${data.maName}</div>
+         <div class="col-6">মাতার নাম(ইংরেজিতে)* ${data.maNameIng}</div>
+         <div class="col-8">ভোটার আইডি/জন্ম নিবন্ধন নংঃ ${data.maIdNum}</div>
+         <div class="col-4">শিক্ষাগত যোগ্যতাঃ ${data.maStudy}</div>
+         <div class="col-4">পেশাঃ ${data.maProfession}</div>
+         <div class="col-4">মাসিক ইনকামঃ ${data.maIncome}</div>
+         <div class="col-4">মোবাইল নংঃ ${data.maPhone}</div>
+       </div>
+       <div class="row">
+         <div class="col-12"><h5>বর্তমান ঠিকানাঃ</h5></div>
+         <div class="col-4">গ্রাম/মহল্লাঃ ${data.preVillage}</div>
+         <div class="col-4">ওয়ার্ড নংঃ ${data.preWord}</div>
+         <div class="col-4">ডাকঘরঃ ${data.prePost}</div>
+         <div class="col-4">ইউনিয়নঃ ${data.preUni}</div>
+         <div class="col-4">উপজেলাঃ ${data.preUpojela}</div>
+         <div class="col-4">জেলাঃ ${data.preJela}</div>
+         <div class="col-12"><h5>স্থায়ী ঠিকানাঃ</h5></div>
+         <div class="col-4">গ্রাম/মহল্লাঃ ${data.parVillage}</div>
+         <div class="col-4">ওয়ার্ড নংঃ ${data.parWord}</div>
+         <div class="col-4">ডাকঘরঃ ${data.parPost}</div>
+         <div class="col-4">ইউনিয়নঃ ${data.parUni}</div>
+         <div class="col-4">উপজেলাঃ ${data.parUpojela}</div>
+         <div class="col-4">জেলাঃ ${data.parJela}</div>
+       </div>
+       <div class="row">
+         <div class="col-12"><h5>অভিভাবক/অভিভাবিকা (পিতার অবর্তমানে)</h5></div>
+         <div class="col-12">নামঃ ${data.ovivabok}</div>
+         <div class="col-4">মোবাঃ ${data.ovivabokNum}</div>
+         <div class="col-4">পেশাঃ ${data.ovivabokProf}</div>
+         <div class="col-4">সম্পর্কঃ ${data.oviRelation}</div>
+         <div class="col-12">ঠিকানাঃ ${data.oviAdress}</div>
+       </div>
+       <div class="row mb-2">
+         <div class="col-12"><h4>পূর্বে যে প্রতিষ্ঠানে অধ্যয়নরত ছিল</h4></div>
+         <div class="col-12">প্রতিষ্ঠানের নামঃ ${data.preInsName}</div>
+         <div class="col-6">গ্রাম/মহল্লাঃ ${data.preInsVillage}</div>
+         <div class="col-6">ডাকঘরঃ ${data.preInsPost}</div>
+         <div class="col-4">ইউনিয়নঃ ${data.preInsUni}</div>
+         <div class="col-4">উপজেলাঃ ${data.preInsUpojela}</div>
+         <div class="col-4">জেলাঃ ${data.preInsJela}</div>
+       </div>
+       <div class="row mt-5">
+         <div class="col-9">
+           <span class="border-top py-1 px-3">প্রধান শিক্ষিকা</span>
+         </div>
+         <div class="col-3">
+           <span class="border-top py-1 px-3">মহতামিম</span>
+         </div>
+       </div>
+       <div class="row mt-3 d-print-none">
+         <div
+           class="col-12 justify-content-center d-flex align-items-center gap-3"
+         >
+           <button class="btn-primary btn" onclick="print()">Print</button>
+           Or
+           <button class="btn-primary btn" onclick="location.assign('/')">
+             Back to home
+           </button>
+         </div>
+       </div>
 
-        <div class="row">
-        <div class="col-2">
-          <img
-            src="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png"
-            class="img-fluid"
-          />
-        </div>
-        <div class="col-8 pt-1 text-center">
-          <h1 class="fw-bolder text-primary">
-            আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা
-          </h1>
-          <h3>নিমতলা মোড়,হোটেল বাজার, মেহেরপুর।</h3>
-          <span>স্থাপিতঃ ২০২২ খ্রিঃ </span>
-        </div>
-        <div class="col-2">
-          <img
-            src="${data.image}"
-            class="img-fluid img border"
-          />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 text-center">
-          <p>
-            <i class="bi bi-browser-chrome me-2"></i>asmmbd.github.io
-            <i class="bi bi-facebook mx-2"></i>facebook.com/asmmbd2022
-            <i class="bi bi-envelope-at mx-2"></i> asmmbd2022@gmail.com
-          </p>
-          <span class="bg-primary text-white py-2 px-3 rounded fw-bolder fs-4"
-            >শিক্ষার্থীর তথ্য</span
-          >
-        </div>
-        <div class="col-8">ক্রমিক নং-${data.FormNo}</div>
-        <div class="col-4">তারিখঃ ${data.intyDate}</div>
-      </div>
-      <div class='info'>
-      <div class="row">
-        <div class="col-6">ছাত্রীর নাম (বাংলায়)* ${data.stname}</div>
-        <div class="col-6">ছাত্রীর নাম (আরবিতে)* ${data.staname}</div>
-        <div class="col-12">ইংরেজিতে (বড় অক্ষরে)* ${data.stiname}</div>
-        <div class="col-4">শ্রেণিঃ ${data.class}</div>
-        <div class="col-4">বিভাগঃ ${data.group}</div>
-        <div class="col-4">ক্যাটাগরি ${data.category}</div>
-        <div class="col-6">জন্ম তারিখঃ ${data.birthDate}</div>
-        <div class="col-6">বয়সঃ ${data.age}</div>
-      </div>
-      <div class="row">
-        <div class="col-6">পিতার নাম(বাংলায়)* ${data.faName}</div>
-        <div class="col-6">পিতার নাম(ইংরেজিতে)* ${data.faNameIng}</div>
-        <div class="col-8">ভোটার আইডি/জন্ম নিবন্ধন নংঃ ${data.faIdNum}</div>
-        <div class="col-4">শিক্ষাগত যোগ্যতাঃ ${data.faStudy}</div>
-        <div class="col-4">পেশাঃ ${data.faProfession}</div>
-        <div class="col-4">মাসিক ইনকামঃ ${data.faIncome}</div>
-        <div class="col-4">মোবাইল নংঃ 0${data.faPhone}</div>
-      </div>
-      <div class="row">
-        <div class="col-6">মাতার নাম(বাংলায়)* ${data.maName}</div>
-        <div class="col-6">মাতার নাম(ইংরেজিতে)* ${data.maNameIng}</div>
-        <div class="col-8">ভোটার আইডি/জন্ম নিবন্ধন নংঃ ${data.maIdNum}</div>
-        <div class="col-4">শিক্ষাগত যোগ্যতাঃ ${data.maStudy}</div>
-        <div class="col-4">পেশাঃ ${data.maProfession}</div>
-        <div class="col-4">মাসিক ইনকামঃ ${data.maIncome}</div>
-        <div class="col-4">মোবাইল নংঃ 0${data.maPhone}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><h6 class='mb-0 pb-0'>বর্তমান ঠিকানাঃ</h6></div>
-        <div class="col-4">গ্রাম/মহল্লাঃ ${data.preVillage}</div>
-        <div class="col-4">ওয়ার্ড নংঃ ${data.preWord}</div>
-        <div class="col-4">ডাকঘরঃ ${data.prePost}</div>
-        <div class="col-4">ইউনিয়নঃ ${data.preUni}</div>
-        <div class="col-4">উপজেলাঃ ${data.preUpojela}</div>
-        <div class="col-4">জেলাঃ ${data.preJela}</div>
-        <div class="col-12"><h6 class='mb-0 pb-0'>স্থায়ী ঠিকানাঃ</h6></div>
-        <div class="col-4">গ্রাম/মহল্লাঃ ${data.parVillage}</div>
-        <div class="col-4">ওয়ার্ড নংঃ ${data.parWord}</div>
-        <div class="col-4">ডাকঘরঃ ${data.parPost}</div>
-        <div class="col-4">ইউনিয়নঃ ${data.parUni}</div>
-        <div class="col-4">উপজেলাঃ ${data.parUpojela}</div>
-        <div class="col-4">জেলাঃ ${data.parJela}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><h6 class='mb-0 pb-0'>অভিভাবক/অভিভাবিকা (পিতার অবর্তমানে)</h6></div>
-        <div class="col-12">নামঃ ${data.ovivabok}</div>
-        <div class="col-4">মোবাঃ 0${data.ovivabokNum}</div>
-        <div class="col-4">পেশাঃ ${data.ovivabokProf}</div>
-        <div class="col-4">সম্পর্কঃ ${data.oviRelation}</div>
-        <div class="col-12">ঠিকানাঃ ${data.oviAdress}</div>
-      </div>
-      <div class="row mb-2">
-        <div class="col-12"><h6 class='mb-0 pb-0' >পূর্বে যে প্রতিষ্ঠানে অধ্যয়নরত ছিল</h6></div>
-        <div class="col-12">প্রতিষ্ঠানের নামঃ ${data.preInsName}</div>
-        <div class="col-6">গ্রাম/মহল্লাঃ ${data.preInsVillage}</div>
-        <div class="col-6">ডাকঘরঃ ${data.preInsPost}</div>
-        <div class="col-4">ইউনিয়নঃ ${data.preInsUni}</div>
-        <div class="col-4">উপজেলাঃ ${data.preInsUpojela}</div>
-        <div class="col-4">জেলাঃ ${data.preInsJela}</div>
-      </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-9">
-          <span class="border-top py-1 px-3">প্রধান শিক্ষিকা</span>
-        </div>
-        <div class="col-3">
-          <span class="border-top py-1 px-3">মহতামিম</span>
-        </div>
-      </div>
-      <div class="row mt-3 d-print-none">
-        <div
-          class="col-12 justify-content-center d-flex align-items-center gap-3"
-        >
-          <button class="btn-primary btn" onclick="print()">Print</button>
-          Or
-          <button class="btn-primary btn" onclick="location.assign('/')">
-            Back to home
-          </button>
-        </div>
-      </div>
+         `;
+    }
 
-        `;
-          });
-      } else {
-        location.assign("/admission.html");
-      }
-    </script>
+  </script>
+            
   </body>
 </html>
