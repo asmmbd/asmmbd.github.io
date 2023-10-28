@@ -708,132 +708,94 @@
     </main>
 
     <!-- End #main -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
-    <script>
-      let form = document.querySelector("form");
-      const { Client ,Databases} = Appwrite;
-      const client = new Client();
-      
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    let form = document.querySelector("form");
+    let files = document.querySelector("#file");
+    let file;
+    let studentId;
+
+    files.addEventListener('change', (e) => {
+      file = e.target.files[0];
+    })
+    const { Client, Databases, Storage } = Appwrite;
+    const client = new Client();
+    const storage = new Storage(client);
+    const bucketId = '653bc7811a3ca0417dd5';
     client
-    .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('652c1374db243c864a6c');
-      const databases = new Databases(client);
-      function addPost(studentId, student) {
-        const promise = databases.createDocument('652c16162f939c821f75','652c16266c0f7c2fccd8', studentId, student)
-        promise.then(function(response) {
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+
+    function addPost(studentId, student) {
+      const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
+      promise.then(function(response) {
         alert('registation');
-        }, function(error) {
+      }, function(error) {
         alert(error.code);
-        });
+      });
+    }
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let data = new FormData(form);
+      let student = Object.fromEntries(data)
+      const promise = storage.createFile(bucketId, studentId, file);
+      promise.then(function({ bucketId, $id }) {
+        const result = storage.getFileDownload(bucketId, $id);
+        addPost(studentId, { ...student, image: result })
+        console.log(result); // Resource URL
+      }, function(error) {
+        console.log(error); // Failure
+      });
+    })
+    const createId = (id) => {
+      let year = new Date().getFullYear()
+      if (id < 10) {
+        return `${year}000${id}`
       }
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        let data =  new FormData(form);
-        let student = Object.fromEntries(data)
-        addPost(student.faPhone, {...student, image: 'https://digiedubd.com/3/assets/images/avatars/9.jpg'})
-      })
+      else if (id < 100) {
+        return `${year}00${id}`
+      }
+      else if (id < 1000) {
+        return `${year}0${id}`
+      }
+      else if (id < 10000) {
+        return `${year}${id}`
+      }
+    }
 
 
-      let stPrintBtn = document.querySelector(".student-print-btn");
-      let stPrintValue = document.querySelector(".student-print-Value");
-      stPrintBtn.addEventListener("click", () => {
-        console.log(stPrintValue.value);
-        if (stPrintValue.value === "") {
-        } else {
-          sessionStorage.setItem("number", stPrintValue.value);
-          stPrintValue.value = "";
-          location.assign("/print-student");
-        }
+    const getAllPost = () => {
+      const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8');
+      promise.then(function(response) {
+        console.log(response);
+        console.log(createId(response.total + 1))
+        studentId = createId(response.total + 1)
+      }, function(error) {
+        console.log(error);
       });
-    </script>
-    <!--
-    <script>
-      let forms = document.querySelector("form");
-      let stPrintBtn = document.querySelector(".student-print-btn");
-      let stPrintValue = document.querySelector(".student-print-Value");
-      stPrintBtn.addEventListener("click", () => {
-        console.log(stPrintValue.value);
-        if (stPrintValue.value === "") {
-        } else {
-          sessionStorage.setItem("number", stPrintValue.value);
-          stPrintValue.value = "";
-          location.assign("/print-student");
-        }
-      });
+    }
 
-      let inputs = document.querySelectorAll("input");
-      inputs.forEach((input) => {
-        input.setAttribute("required", "required");
-      });
-      let selects = document.querySelectorAll("select");
-      selects.forEach((select) => {
-        select.setAttribute("required", "required");
-      });
+    getAllPost()
 
-      window.addEventListener("load", function () {
-        let intyDate = document.querySelector("#intyDate");
-        let date = new Date();
-        let month = date.getMonth() + 1;
-        intyDate.value =
-          date.getDate() + "/" + month + "/" + date.getFullYear();
-        console.log(intyDate.value);
-      });
 
-      let fileI = document.querySelector("#file");
-      let img = document.querySelector("img");
-      let fileIn = document.querySelector("#fileIn");
-      let url =
-        "https://script.google.com/macros/s/AKfycbxduFy6hP4JS970NlEQL_agDJEvun3b7t-ahmsOT4Z6W_A3ydWt3f7HlZ-5k2vodzax/exec";
-      fileI.addEventListener("change", () => {
-        let fr = new FileReader();
-        fr.addEventListener("loadend", () => {
-          let res = fr.result;
-          img.src = res;
-          console.log(res);
-          let spt = res.split("base64,")[1];
-          // console.log(spt);
-          let obj = {
-            base64: spt,
-            type: file.files[0].type,
-            name: file.files[0].name,
-          };
-          fetch(url, {
-            method: "POST",
-            body: JSON.stringify(obj),
-          })
-            .then((r) => r.text())
-            .then((data) => {
-              fileIn.value = data;
-            });
-        });
-        fr.readAsDataURL(file.files[0]);
-      });
+    let stPrintBtn = document.querySelector(".student-print-btn");
+    let stPrintValue = document.querySelector(".student-print-Value");
+    stPrintBtn.addEventListener("click", () => {
+      let number = stPrintValue.value;
+      if (number !== "") {
+        stPrintValue.vale = "";
+        location.assign(`/print-student?faPhone=${number}`);
+      }
+    });
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+</body>
 
-      const scriptURL =
-        "https://script.google.com/macros/s/AKfycbxiBOMd-OllNvHqT0vpFX4BfutbpeZhWF4GGlKnhJNm6mbuxXJc2Gf_4PtCxjNkIbnYGQ/exec";
-      const form = document.forms["submit-to-google-sheet"];
-      let success_sms = document.querySelector(".success_sms");
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        fetch(scriptURL, { method: "POST", body: new FormData(form) })
-          .then((response) => {
-            alert("Form submited successfully!");
-            form.reset();
-            img.src = "https://digiedubd.com/3/assets/images/avatars/9.jpg";
-          })
-          .catch((error) => console.error("Error!", error.message));
-      });
-    </script>
--->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
-      integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
-      crossorigin="anonymous"
-    ></script>
-  </body>
 </html>
+
+
+    
