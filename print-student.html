@@ -171,8 +171,8 @@
       .setProject('652c1374db243c864a6c');
     const databases = new Databases(client);
 
-   // const urlParams = new URLSearchParams(window.location.search);
-    const number = /*urlParams.get('faPhone')*/ '01947660563'
+    const urlParams = new URLSearchParams(window.location.search);
+    const number = urlParams.get('faPhone')
     const searchStudent = (param) => {
       const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.search("faPhone", param)]);
       promise.then(function(ress) {
