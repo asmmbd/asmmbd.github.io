@@ -804,6 +804,14 @@
         console.log(error); // Failure
       });
     })
+    function addPost(studentId, student) {
+      const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
+      promise.then(function(response) {
+        alert('registation');
+      }, function(error) {
+        alert(error.code);
+      });
+    }
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       let data = new FormData(form);
