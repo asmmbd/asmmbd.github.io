@@ -204,10 +204,15 @@
            <span>স্থাপিতঃ ২০২২ খ্রিঃ </span>
          </div>
          <div class="col-2">
-           <img
+           ${data.image !== ""?
+           ` <img
              src="${data.image}"
              class="img-fluid img border"
-           />
+           /> ` :
+          ` <div class="border w-100 d-flex align-items-center justify-content-center text-center" style="height: 100px">
+            <span> পাসপোর্ট সাইজ ছবি </span>
+           </div>`
+           }
          </div>
        </div>
        <div class="row">
