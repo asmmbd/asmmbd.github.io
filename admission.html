@@ -748,6 +748,17 @@
     <!-- End #main -->
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
   <script>
+    let stPrintBtn = document.querySelector(".student-print-btn");
+    let stPrintValue = document.querySelector(".student-print-Value");
+    stPrintBtn.addEventListener("click", () => {
+      let number = stPrintValue.value;
+      if (number !== "") { 
+        location.assign(`/print-student?faPhone=${number}`);
+        stPrintValue.vale = "";
+      }
+    });
+
+    
     let form = document.querySelector("form");
     let files = document.querySelector("#file");
     let studentImg = document.querySelector("#studentImg");
@@ -820,15 +831,7 @@
     getAllPost()
 
 
-    let stPrintBtn = document.querySelector(".student-print-btn");
-    let stPrintValue = document.querySelector(".student-print-Value");
-    stPrintBtn.addEventListener("click", () => {
-      let number = stPrintValue.value;
-      if (number !== "") {
-        stPrintValue.vale = "";
-        location.assign(`/print-student?faPhone=${number}`);
-      }
-    });
+    
   </script>
   
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
