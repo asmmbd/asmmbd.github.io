@@ -738,9 +738,11 @@
       const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
       promise.then(function(response) {
         alert('registation');
-         form.reset()
+         location.reload()
       }, function(error) {
+        
         alert(error.code);
+        location.reload()
       });
     }
     form.addEventListener("submit", (e) => {
