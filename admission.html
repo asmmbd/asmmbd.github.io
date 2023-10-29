@@ -782,10 +782,10 @@
       const promise = storage.createFile(bucketId, studentId, file);
       promise.then(function({ bucketId, $id }) {
         const result = storage.getFileDownload(bucketId, $id);
-        imageUrl = result;
-        studentImg.src = result;
+        imageUrl = result.href;
+        studentImg.src = result.href;
         deleteBtn.classList.remove('d-none')
-        alert(result); // Resource URL
+        alert(result.href); // Resource URL
       }, function(error) {
         console.log(error); // Failure
       });
