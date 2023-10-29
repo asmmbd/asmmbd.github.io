@@ -617,7 +617,7 @@
           </div>
           <div class="col-12 text-center my-4">
             <button class="btn btn-primary" type='submit'>Submit</button>
-            <button class="btn btn-danger">Reset</button>
+            <button class="btn btn-danger" onclick='location.reload()'>Reset</button>
             <button
               type="button"
               class="btn btn-primary"
@@ -738,6 +738,7 @@
       const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
       promise.then(function(response) {
         alert('registation');
+         form.reset()
       }, function(error) {
         alert(error.code);
       });
