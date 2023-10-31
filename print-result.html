@@ -10,6 +10,29 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/src/css/index.css" />
+  <style>
+    .spinner {
+      --d: 24.6px;
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 50%;
+      color: #3F497F;
+      box-shadow: calc(1*var(--d)) calc(0*var(--d)) 0 0,
+        calc(0.707*var(--d)) calc(0.707*var(--d)) 0 1.1px,
+        calc(0*var(--d)) calc(1*var(--d)) 0 2.2px,
+        calc(-0.707*var(--d)) calc(0.707*var(--d)) 0 3.4px,
+        calc(-1*var(--d)) calc(0*var(--d)) 0 4.5px,
+        calc(-0.707*var(--d)) calc(-0.707*var(--d))0 5.6px,
+        calc(0*var(--d)) calc(-1*var(--d)) 0 6.7px;
+      animation: spinner-a90wxe 1s infinite steps(8);
+    }
+
+    @keyframes spinner-a90wxe {
+      100% {
+        transform: rotate(1turn);
+      }
+    }
+  </style>
 
   <title>আয়েশা সিদ্দিকা (র.) মহিলা মাদরাসা</title>
 </head>
@@ -89,147 +112,51 @@
   <div class="main-content theme-bg">
     <div class="album py-5 bg-light">
       <div class="result-content">
-        <div class="d-print-none">
-          <div class="form p-2">
+        <div class="d-print-none d-flex align-items-center justify-content-center">
+          <div class="form p-2" style="width: 400px">
             <div class="text-center mb-1">
               <h2 class="fw-bolder my-0">পরীক্ষার ফলাফল</h2>
               <img src="https://themesbazar.net/academic/wp-content/themes/AcadcmicTheme/assets/img/icon-image.png" alt="">
             </div>
-            <select class="form-select mb-2">
-              <option selected>বছর</option>
-              <option value="1">২০২৩</option>
-              <option value="2">২০২৪</option>
-              <option value="3">২০২৫</option>
-            </select>
-            <select class="form-select mb-2">
-              <option selected>ক্লাস</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-            <select class="form-select mb-2">
-              <option selected>সমায়িক</option>
-              <option value="1">১ম সমায়িক</option>
-              <option value="2">২য় সমায়িক</option>
-              <option value="3">বার্ষিক</option>
-            </select>
-            <input type="number" class="form-control mb-2" placeholder="আইডি নং:">
-            <button class="w-100 btn btn-primary">ফলাফল দেখুন</button>
-          </div>
-        </div>
-        <div class="mt-0 px-2">
-          <div class="text-center">
-            <h1 class="fw-bolder">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
-            <h4>মার্কাজ মসজিদ রোড, মেহেরপুর।</h4>
-            <h2 class="py-0 my-0">পরীক্ষার ফলাফল</h2>
-            <h4>প্রথম সমায়িক পরীক্ষা - ২০২৩</h4>
-          </div>
-          <div class="w-100 text-center bg-primary text-white py-2">
-            <h2 class="py-0 my-0">ছাত্র/ছাত্রীর তথ্য</h2>
-          </div>
-          <div>
-            <table class="table table-borderless table-striped ">
-              <tbody>
-                <tr>
-                  <th scope="row">নাম:</th>
-                  <td>সুমাইয়া ইসলাম</td>
-                  <td>আইডি নং:</td>
-                  <td>20234545</td>
-                </tr>
-                <tr>
-                  <th scope="row">পিতার নাম:</th>
-                  <td>আফতাব আহমেদ</td>
-                  <td>শ্রেণী:</td>
-                  <td>৪র্থ</td>
-                </tr>
-                <tr>
-                  <th scope="row">মাতার নাম:</th>
-                  <td>পারভীন আক্তার</td>
-                  <td>গ্রেড:</td>
-                  <td>A+</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="w-100 text-center">
-            <h2>ফলাফল</h2>
-          </div>
-          <div>
-            <table class="table table-bordered table-striped">
-              <thead>
-                <tr class="table-secondary">
-                  <th scope="col">subject Name</th>
-                  <th scope="col">Mark</th>
-                  <th scope="col">Grade</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Bangla</th>
-                  <td>55</td>
-                  <td>B</td>
-                </tr>
-                <tr>
-                  <th scope="row">English</th>
-                  <td>66</td>
-                  <td>A-</td>
-                </tr>
-                <tr>
-                  <th scope="row">Arabiq</th>
-                  <td>88</td>
-                  <td>A+</td>
-                </tr>
-                <tr>
-                  <th scope="row">Bangla</th>
-                  <td>55</td>
-                  <td>B</td>
-                </tr>
-                <tr>
-                  <th scope="row">English</th>
-                  <td>66</td>
-                  <td>A-</td>
-                </tr>
-                <tr>
-                  <th scope="row">Arabiq</th>
-                  <td>88</td>
-                  <td>A+</td>
-                </tr>
-                <tr>
-                  <th scope="row">Bangla</th>
-                  <td>55</td>
-                  <td>B</td>
-                </tr>
-                <tr>
-                  <th scope="row">English</th>
-                  <td>66</td>
-                  <td>A-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <h3>মন্তব্য :</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus elementum euismod ultrices.
-            </p>
-          </div>
-          <div class="text-end mt-5">
-            <span class="border-top pt-1">অভিভাবকের সাক্ষর</span>
-          </div>
-          <div class="row border-top mt-4">
-            <div class="col-6">
-              মুহতামিম: <br> সুমাইয়া তাবাসসুম
-            </div>
-            <div class="col-6 text-end">
-              মুহতামিম: <br> হা:মাও: আবদুল্লাহ আল সাইফ
+            <div id="selectArea">
+              <select class="form-select mb-2" id="year">
+                <option selected>বছর</option>
+                <option value="2023">২০২৩</option>
+                <option value="2024">২০২৪</option>
+                <option value="2025">২০২৫</option>
+              </select>
+              <select class="form-select mb-2" id="className">
+                <option selected>ক্লাস</option>
+                <option value="one"> প্রথম শ্রেণী</option>
+                <option value="two"> দ্বিতীয় শ্রেণী</option>
+                <option value="three">তৃতীয় শ্রেণী</option>
+                <option value="four">চতুর্থ শ্রেণী</option>
+                <option value="five">পঞ্চম শ্রেণী </option>
+              </select>
+              <select class="form-select mb-2" id="semister">
+                <option selected>সমায়িক</option>
+                <option value="first">১ম সমায়িক</option>
+                <option value="second">২য় সমায়িক</option>
+                <option value="final">বার্ষিক</option>
+              </select>
+              <input type="number" class="form-control mb-2" placeholder="আইডি নং:" id='studentId'>
+              <button class="w-100 btn btn-primary" id="resultBtn">ফলাফল দেখুন</button>
             </div>
           </div>
         </div>
-        <div class="text-center my-3">
+
+
+        <div class="d-flex align-items-center justify-content-center d-none loader" style="height: 200px">
+          <div class="spinner"></div>
+        </div>
+
+
+        <div class="mt-0 px-2" id="printArea">
+
+        </div>
+
+        <div class="text-center my-3 print-btn d-none">
           <button class="btn btn-primary d-print-none text-center" onclick="print()">Print</button>
-
-
-
         </div>
       </div>
 
@@ -300,9 +227,150 @@
         </div>
       </footer>
     </div>
+  </div>
 
-    <script src="/src/js/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/src/js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const resultBtn = document.getElementById('resultBtn');
+    const selectArea = document.getElementById('selectArea');
+    const spinner = document.querySelector('.loader');
+    const printArea = document.querySelector('#printArea');
+    const printBtn = document.querySelector('.print-btn');
+
+
+    const { Client, Databases, Query } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+
+
+    function formetGred(mark) {
+      let number = Number(mark);
+      return number >= 80 ? 'A+' :
+        number >= 70 ? 'A' :
+        number >= 60 ? 'A-' :
+        number >= 50 ? 'B' :
+        number >= 40 ? 'C' : 'F'
+    }
+
+    function formetSemister(name) {
+      if (name === 'first') {
+        return 'প্রথম সমায়িক পরীক্ষা';
+      }
+      if (name === 'second') {
+        return 'দ্বিতীয় সমায়িক পরীক্ষা';
+      }
+      if (name === 'final') {
+        return 'বার্ষিক পরীক্ষা';
+      }
+
+    }
+
+    function getResult(studentId, className, semister, year) {
+      spinner.classList.remove('d-none');
+      selectArea.classList.add('d-none');
+      const promise = databases.listDocuments('652c16162f939c821f75', '653fb05e44be80e1d70c', [Query.search("studentId", studentId), Query.search("class", className), Query.search("semister", semister), Query.search("year", year), ]);
+      promise.then(function(ress) {
+        spinner.classList.add('d-none');
+        let result = ress.documents[0];
+        console.log(result);
+        let subjects = JSON.parse(result.subjects);
+        printArea.innerHTML = `
+            <div class="text-center">
+            <h1 class="fw-bolder">আয়েশা সিদ্দিকা (রাঃ) মহিলা মাদরাসা</h1>
+            <h4>মার্কাজ মসজিদ রোড, কলেজ মোড়,মেহেরপুর।</h4>
+            <h2 class="py-0 my-0">পরীক্ষার ফলাফল</h2>
+            <h4>${formetSemister(result.semister)} - ${result.year}</h4>
+          </div>
+          <div class="w-100 text-center bg-primary text-white py-2">
+            <h2 class="py-0 my-0">ছাত্র/ছাত্রীর তথ্য</h2>
+          </div>
+          <div>
+            <table class="table table-borderless table-striped">
+              <tbody>
+                <tr>
+                  <th scope="row">নাম:</th>
+                  <td>${result.name}</td>
+                  <td>আইডি নং:</td>
+                  <td>${result.studentId}</td>
+                </tr>
+                <tr>
+                  <th scope="row">পিতার নাম:</th>
+                  <td>${result.faName}</td>
+                  <td>শ্রেণী:</td>
+                  <td>${result.class}</td>
+                </tr>
+                <tr>
+                  <th scope="row">মাতার নাম:</th>
+                  <td>${result.maName}</td>
+                  <td>গ্রেড:</td>
+                  <td>${result.gred}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="w-100 text-center">
+            <h2>ফলাফল</h2>
+          </div>
+          <div>
+            <table class="table table-bordered">
+              <thead>
+                <tr class="table-secondary">
+                  <th scope="col">subject Name</th>
+                  <th scope="col">Mark</th>
+                  <th scope="col">Grade</th>
+                </tr>
+              </thead>
+              <tbody>
+              ${subjects.map(subject => `<tr>
+                  <th scope="row">${subject.name}</th>
+                  <td>${subject.mark}</td>
+                  <td>${formetGred(subject.mark)}</td>
+                </tr>`)
+              }
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3>মন্তব্য :</h3>
+            <p>
+              ${result.comment}
+            </p>
+          </div>
+          <div class="text-end mt-5">
+            <span class="border-top pt-1">অভিভাবকের সাক্ষর</span>
+          </div>
+          <div class="row border-top mt-4">
+            <div class="col-6">
+              মুহতামিম: <br> সুমাইয়া তাবাসসুম
+            </div>
+            <div class="col-6 text-end">
+              মুহতামিম: <br> হা:মাও: আবদুল্লাহ আল সাইফ
+            </div>
+          </div>
+             
+             `;
+        printBtn.classList.remove('d-none')
+
+
+      }, function(error) {
+        console.log(error);
+      });
+    }
+
+    resultBtn.addEventListener('click', () => {
+      const year = document.getElementById('year').value;
+      const className = document.getElementById('className').value;
+      const semister = document.getElementById('semister').value;
+      const studentId = document.getElementById('studentId').value;
+      getResult(studentId, className, semister, year)
+    })
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
