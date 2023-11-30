@@ -169,6 +169,7 @@
                       id="file"
                     />
                   </div>
+                  <!--
                   <div class="col-md-9">
                     
                   </div>
@@ -178,6 +179,7 @@
                     <i class="bi bi-trash-fill d-none"></i>
                    </div>
                   </div>
+                  -->
                 </div>
               </div>
             </div>
@@ -680,11 +682,11 @@
   <script>
     const { Client, Databases, Storage } = Appwrite;
     const client = new Client();
-    const bucketId = '653bc7811a3ca0417dd5';
+   // const bucketId = '653bc7811a3ca0417dd5';
     client
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject('652c1374db243c864a6c');
-    const storage = new Storage(client);
+   // const storage = new Storage(client);
     const databases = new Databases(client);
 
     
@@ -700,14 +702,14 @@
 
     
     let form = document.querySelector("form");
-    let files = document.querySelector("#file");
-    let studentImg = document.querySelector("#studentImg");
-    let deleteBtn = document.querySelector(".bi-trash-fill");
+   // let files = document.querySelector("#file");
+  //  let studentImg = document.querySelector("#studentImg");
+   // let deleteBtn = document.querySelector(".bi-trash-fill");
 
-    let imageUrl = null;
+   // let imageUrl = null;
     let studentId;
 
-    files.addEventListener('change', (e) => {
+   /* files.addEventListener('change', (e) => {
       let file = e.target.files[0];
       const promise = storage.createFile(bucketId, studentId, file);
       promise.then(function({ bucketId, $id }) {
@@ -725,15 +727,15 @@
       const promise = storage.deleteFile(bucketId, studentId);
       promise.then(function(response) {
         console.log(response); // Success
-        imageUrl = null;
-        studentImg.src = 'src/img/images.png';
-        deleteBtn.classList.add('d-none');
-        file.value = '';
+       // imageUrl = null;
+       // studentImg.src = 'src/img/images.png';
+       //  deleteBtn.classList.add('d-none');
+       // file.value = '';
         console.log(file.files);
       }, function(error) {
         console.log(error); // Failure
       });
-    })
+    })*/
     function addPost(studentId, student) {
       const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
       promise.then(function(response) {
@@ -749,7 +751,7 @@
       e.preventDefault();
       let data = new FormData(form);
       let student = Object.fromEntries(data)
-      addPost(studentId, { ...student, image: imageUrl ? imageUrl : '' })
+      addPost(studentId, { ...student, active: true })
     })
     const createId = (id) => {
       let year = new Date().getFullYear()
