@@ -188,7 +188,8 @@
     const searchStudent = (param) => {
       const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.search("faPhone", param)]);
       promise.then(function(ress) {
-        setPrintData(ress.documents[0]);
+        console.log(ress.documents[0])
+       // setPrintData(ress.documents[0]);
       }, function(error) {
         console.log(error);
       });
