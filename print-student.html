@@ -59,6 +59,18 @@
           <span>স্থাপিতঃ ২০২২ খ্রিঃ </span>
         </div>
         <div class="col-2">
+      
+         <div class="col-2">
+           ${data.image !== ""?
+           ` <img
+             src="${data.image}"
+             class="img-fluid img border"
+           /> ` :
+          ` <div class="border w-100 d-flex align-items-center justify-content-center text-center" style="height: 100px">
+            <span> পাসপোর্ট সাইজ ছবি </span>
+           </div>`
+           }
+         </div> 
           <img
             src="https://raw.githubusercontent.com/askmbd/askmbd.github.io/main/src/img/teacher.jpg"
             class="img-fluid border"
@@ -165,7 +177,7 @@
   <script>
     const { Client, Databases, Query } = Appwrite;
     const client = new Client();
-    const bucketId = '653bc7811a3ca0417dd5';
+   // const bucketId = '653bc7811a3ca0417dd5';
     client
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject('652c1374db243c864a6c');
@@ -203,18 +215,7 @@
            <h4>মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর।</h4>
            <span>স্থাপিতঃ ২০২২ খ্রিঃ </span>
          </div>
-         <!--
-         <div class="col-2">
-           ${data.image !== ""?
-           ` <img
-             src="${data.image}"
-             class="img-fluid img border"
-           /> ` :
-          ` <div class="border w-100 d-flex align-items-center justify-content-center text-center" style="height: 100px">
-            <span> পাসপোর্ট সাইজ ছবি </span>
-           </div>`
-           }
-         </div> -->
+         
        </div>
        <div class="row">
          <div class="col-12 text-center">
