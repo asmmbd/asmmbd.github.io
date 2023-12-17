@@ -476,7 +476,8 @@
         const result = storage.getFileDownload(bucketId, $id);
         imageUrl = result.href;
         studentImg.src = result.href;
-        console.log(result.href)
+        alert(result.href)
+        alert(result)
         deleteBtn.classList.remove('d-none')
         // alert(result.href); // Resource URL
       }, function(error) {
