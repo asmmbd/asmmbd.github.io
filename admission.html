@@ -514,7 +514,7 @@
       e.preventDefault();
       let data = new FormData(form);
       let student = Object.fromEntries(data)
-      addPost(studentId, { ...student, active: true, imageUrl: imageUrl })
+      addPost(studentId, { ...student, active: true, image: imageUrl })
     })
     const createId = (id) => {
       let year = new Date().getFullYear()
