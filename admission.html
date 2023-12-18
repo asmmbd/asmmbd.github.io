@@ -123,7 +123,7 @@
                   </select>
                 </div>
                 
-                -->
+              
                 <div class="col-md-3">
                   <label for="file" class="form-label"> ছবিঃ
                   </label>
@@ -139,7 +139,7 @@
                     <i class="bi bi-trash-fill d-none"></i>
                   </div>
                 </div>
-
+                -->
               </div>
             </div>
           </div>
@@ -442,7 +442,7 @@
   <script>
     const { Client, Databases, Storage } = Appwrite;
     const client = new Client();
-    const bucketId = '653bc7811a3ca0417dd5';
+   // const bucketId = '653bc7811a3ca0417dd5';
     client
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject('652c1374db243c864a6c');
@@ -460,9 +460,9 @@
       }
     });
 
-
+    let studentId;
     let form = document.querySelector("form");
-    let files = document.querySelector("#file");
+  /*  let files = document.querySelector("#file");
     let studentImg = document.querySelector("#studentImg");
     let deleteBtn = document.querySelector(".bi-trash-fill");
 
@@ -498,7 +498,7 @@
       }, function(error) {
         console.log(error); // Failure
       });
-    })
+    }) */
 
     function addPost(studentId, student) {
       const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
