@@ -440,7 +440,7 @@
   <!-- End #main -->
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
   <script>
-    const { Client, Databases, Storage } = Appwrite;
+    const { Client, Databases, Storage , ID} = Appwrite;
     const client = new Client();
    // const bucketId = '653bc7811a3ca0417dd5';
     client
@@ -500,8 +500,8 @@
       });
     }) */
 
-    function addPost(studentId, student) {
-      const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
+    function addPost(student) {
+      const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', ID.unique(), student)
       promise.then(function(response) {
         alert('registation');
         console.log(response)
@@ -516,7 +516,7 @@
       e.preventDefault();
       let data = new FormData(form);
       let student = Object.fromEntries(data)
-      addPost(studentId, { ...student, active: true, image: imageUrl })
+      addPost(studentId, { ...student, active: true, studentId: studentId})
     })
     const createId = (id) => {
       let year = new Date().getFullYear()
