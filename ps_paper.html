@@ -36,7 +36,7 @@
       .setProject('652c1374db243c864a6c');
     const databases = new Databases(client);
 
-    // const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id') // '20240001';
     const year = urlParams.get('year') // '2024';
     const searchStudent = (param) => {
