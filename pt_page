@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>আয়েশা সিদ্দিকা (রাঃ) মহিলা মাদ্রাসা || প্রত্যয়ন পত্র</title>
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .page {
+      width: 21cm;
+      height: 29.7cm;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div class="page relative">
+      <img src="./src/img/pt_page.jpg" class="w-full h-full">
+      <div class="absolute top-96 px-20 print-area"></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Query } = Appwrite;
+    const client = new Client();
+    const bucketId = '653bc7811a3ca0417dd5';
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id') // '20240001';
+    const year = urlParams.get('year') // '2024';
+    const searchStudent = (param) => {
+      const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.search("studentId", id)]);
+      promise.then(function(ress) {
+        setPrintData(ress.documents[0]);
+      }, function(error) {
+        console.log(error);
+      });
+    }
+
+    searchStudent(id)
+
+    function setPrintData(data) {
+      let printarea = document.querySelector(".print-area");
+      console.log(data);
+      printarea.innerHTML = `
+               <p class="text-xl">
+                 এই মর্মে অঙ্গীকার করা যাচ্ছে যে, <span class="font-bold"> ${data.stname} </span>
+                 পিতা: <span class="font-bold"> ${data.faName} </span> মাতা: <span class="font-bold"> ${data.maName} </span>
+                 গ্রাম/এলাকা:<span class="font-bold"> ${data.preVillage} </span> ডাকঘর: <span class="font-bold"> ${data.prePost} </span> উপজেলা: <span class="font-bold">${data.preUpojela}</span>
+                 জেলা: <span class="font-bold"> ${data.preJela} </span> আইডি নং :<span class="font-bold"> ${data.studentId}</span> এই মাদ্রাসায় <span class="font-bold"> ${year} </span> শিক্ষাবর্ষে <span class="font-bold"> ${data.class} </span> শ্রেণীতে
+                 অধ্যয়ন করেছে। তার শিখন মূল্যায়ন সন্তোষজনক। সে পরবর্তী শ্রেণীতে উন্নীত হওয়ার যোগ্য।
+       
+               <p class="mt-6 text-xl"> আমি তার উজ্জ্বল ভবিষ্যৎ ও সর্বাঙ্গীণ সাফল্য কামনা করি। </p>
+               </p>
+      `;
+
+    }
+  </script>
+</body>
+
+</html>
