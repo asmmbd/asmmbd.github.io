@@ -9,14 +9,13 @@
   <meta content="" name="description" />
   <meta content="" name="keywords" />
   <script>
-      let user = localStorage.getItem("user");
+    let user = localStorage.getItem("user");
 
-      if (user) {
-      } else {
-        location.assign("login.html");
-      }
-    </script>
-    <!-- Favicons -->
+    if (user) {} else {
+      location.assign("login.html");
+    }
+  </script>
+  <!-- Favicons -->
   <link href="src/img/asmmlogo.jpg" rel="icon" />
 
   <!-- Google Fonts -->
@@ -232,14 +231,18 @@
     <!-- End Page Title -->
 
     <section class="section dashboard">
-      <div>
+      <div class="mb-3">
+        <h1 class='mb-2'>প্রশংসা পত্র / পত্যয়ন পত্র</h1>
         <select name="" id="studentSelect" class="form-select my-2"></select>
         <select name="" id="seletedYear" class="form-select">
           <option value="2023">2023</option>
           <option value="2024">2024</option>
           <option value="2025">2025</option>
         </select>
-        <button class="searchBtn btn btn-primary mt-2">Search</button>
+        <div class="d-flex gap-2">
+          <button class="searchBtn1 btn btn-primary mt-2">প্রশংসা পত্র</button>
+          <button class="searchBtn1 btn btn-primary mt-2">পত্যয়ন পত্র</button>
+        </div>
       </div>
     </section>
   </main>
@@ -272,7 +275,7 @@
       const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8');
       promise.then(function(response) {
         console.log(response.documents);
-        
+
         response.documents.forEach(doc => {
           document.querySelector('#studentSelect').innerHTML += `<option value="${doc.studentId}">${doc.studentId}-${doc.stname}-${doc.class}</option>`
         })
@@ -282,15 +285,20 @@
     }
 
     getAllStudent()
-    
-    
-    
+
+
+
     let id = document.getElementById('studentSelect');
     let year = document.getElementById('seletedYear');
-    let searchBtn = document.querySelector('.searchBtn');
-    
-    searchBtn.addEventListener('click', ()=> {
+    let searchBtn1 = document.querySelector('.searchBtn1');
+    let searchBtn2 = document.querySelector('.searchBtn2');
+
+
+    searchBtn1.addEventListener('click', () => {
       location.assign(`./ps_paper?id=${id.value}&year=${year.value}`);
+    })
+    searchBtn2.addEventListener('click', () => {
+      location.assign(`./pt_page?id=${id.value}&year=${year.value}`);
     })
   </script>
   <script src="src/js/main.js">
