@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>আয়েশা সিদ্দিকা মহিলা মাদ্রাসা || নোটিশ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <!-- html2pdf CDN link -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .page {
+      width: 21cm;
+      height: 29.7cm;
+
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="invoice" class="page relative">
+    <img src="./src/img/notice.jpg" alt="">
+    <div class="absolute top-72 left-0 px-20 bg-red-80">
+      <h1 class="text-center text-3xl font-bold mb-3">নোটিশ</h1>
+      <p>
+        শব্দ গুলো দেখে সকলেই অবাক হয়েছে, এটা বলা বাহুল্য। অনেকেই ভাবছেন, এ সব শব্দের বেশিরভাগটাই নিজে থেকে বানানো। তবে সত্যটা হলো, এর একটাও বানানো নয়। সব গুলোই বাংলা ভাষার অংশ। উৎপত্তি অনুসারে বাংলাভাষার যে শ্রেনীবিভাগ রয়েছে, সেই পাঁচটি শ্রেনী বিভাগের ফলেই জন্ম নিয়েছে এই সকল শব্দ, যার অনেকগুলোই আপনি আপনার এই পর্যন্ত জীবনে একবারও শোনেননি।শব্দ গুলো দেখে সকলেই অবাক হয়েছে, এটা বলা বাহুল্য। অনেকেই ভাবছেন, এ সব শব্দের বেশিরভাগটাই নিজে থেকে বানানো। তবে সত্যটা হলো, এর একটাও বানানো নয়। সব গুলোই বাংলা ভাষার অংশ। উৎপত্তি অনুসারে বাংলাভাষার যে শ্রেনীবিভাগ রয়েছে, সেই পাঁচটি শ্রেনী বিভাগের ফলেই জন্ম নিয়েছে এই সকল শব্দ, যার অনেকগুলোই আপনি আপনার এই পর্যন্ত জীবনে একবারও শোনেননি।
+      </p>
+    </div>
+  </div>
+
+   <script>
+    function generatePDF() {
+      // Choose the element that your content will be rendered to.
+      const element = document.getElementById('invoice');
+      // Choose the element and save the PDF for your user.
+      html2pdf().from(element).save();
+      
+      setTimeout(() => {
+        location.back()
+      }, 1000)
+    }
+
+    generatePDF()
+  </script>
+</body>
+
+</html>
