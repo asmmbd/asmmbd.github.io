@@ -18,6 +18,14 @@
     .logo-img{
       height: 30px;
     }
+    #installInstructions {
+     display: none
+    }
+    @media (display-mode: browser) {
+      #installInstructions {
+        display: block
+      }
+    }
   </style>
 </head>
 
@@ -596,7 +604,7 @@
             </li>
           </ul>
         </div>
-        <div class="pb-2 d-flex align-items-center justify-content-between gap-3 add-btn-div">
+        <div id='installInstructions' class="pb-2 d-flex align-items-center justify-content-between gap-3 add-btn-div">
           <div>
             <button class="btn btn-secondary">
               <i class='bi bi-apple'></i>
