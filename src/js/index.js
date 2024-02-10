@@ -1,4 +1,4 @@
-  let time = document.querySelector('#demo');
+let time = document.querySelector('#demo');
 let date = document.querySelector('#demonew');
 
 function showTime() {
@@ -59,8 +59,10 @@ window.addEventListener("beforeinstallprompt", (e) => {
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === "accepted") {
         console.log("User accepted the A2HS prompt");
+        addBtnDiv.style.display = 'none'
       } else {
         console.log("User dismissed the A2HS prompt");
+        addBtnDiv.style.display = 'block'
       }
       deferredPrompt = null;
     });
