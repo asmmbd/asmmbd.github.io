@@ -41,24 +41,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-
-  <script>
-    let print_btn = document.querySelector('.print_btn');
-
-    function generatePDF() {
-      // Choose the element that your content will be rendered to.
-      const element = document.getElementById('invoice');
-      // Choose the element and save the PDF for your user.
-      html2pdf().from(element).save();
-
-      /* setTimeout(() => {
-         location.back()
-       }, 1000)*/
-    }
-
-    // generatePDF()
-    print_btn.addEventListener('click', generatePDF)
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
   <script>
     const { Client, Databases, Query } = Appwrite;
@@ -87,7 +69,7 @@
       let printarea = document.querySelector("#invoice");
       console.log(data);
       printarea.innerHTML = `
-   <img src="/images/20240212_210852.jpg" alt="">
+   <img src="./src/img/admissionpage.jpg" alt="">
     <div class="absolute w-full top-48 left-0 px-6 bg-red-60">
       <div class="text-center">
         <p>২০২৪ শিক্ষাবর্ষে প্রথম শ্রেণীতে ভর্তির অনলাইন আবেদন</p>
@@ -323,6 +305,19 @@
       
          `;
     }
+
+
+    let print_btn = document.querySelector('.print_btn');
+
+    function generatePDF() {
+      // Choose the element that your content will be rendered to.
+      const element = document.getElementById('invoice');
+      // Choose the element and save the PDF for your user.
+      html2pdf().from(element).save();
+    }
+
+    // generatePDF()
+    print_btn.addEventListener('click', generatePDF)
   </script>
 </body>
 
