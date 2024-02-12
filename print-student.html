@@ -79,7 +79,7 @@
         <tbody class="bg-red-60 border">
           <tr class="border text-center">
             <td class="px-3 py-2 border-r w-1/2">
-              তারিখ: ${new Date(data.$createdAt).toLocaleDateString()}
+              তারিখ: ${new Intl.DateTimeFormat('bn').format(new Date(data.$createdAt))}
             </td>
             <td class="px-3 py-2">
               আইডি নং: ${data.studentId}
@@ -142,7 +142,7 @@
               জন্ম নিবন্ধন নং:
             </td>
             <td class="px-3 py-2 border">
-              ০১৯৬৭২৮২৬২৬৬২৬
+              ${data.stbirthId}
             </td>
           </tr>
 
