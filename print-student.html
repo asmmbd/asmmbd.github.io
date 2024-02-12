@@ -79,7 +79,7 @@
       let printarea = document.querySelector("#invoice");
       console.log(data);
       printarea.innerHTML = `
-   <img src="./src/img/admissionpage.jpg" alt="">
+   <img src="./src/img/admissionprint.jpg" alt="">
     <div class="absolute w-full top-48 left-0 px-6 bg-red-60">
       <div class="text-center">
         <p>${new Intl.DateTimeFormat('bn').format(new Date(data.$createdAt)).split('/')[2]} শিক্ষাবর্ষে ${data.class} শ্রেণীতে ভর্তির অনলাইন আবেদন</p>
