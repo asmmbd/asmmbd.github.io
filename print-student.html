@@ -32,10 +32,10 @@
 <body>
   <div id="invoice" class="page relative"></div>
 
-  <div class="w-full text-center mt-5 print:hidden " id="controls">
-    <button class="px-2 py-1 bg-blue-700 text-white rounded print_btn">Go Back</button>
+  <div class="w-full text-center mt-5 print:hidden hidden" id="controls">
+    <button class="px-2 py-1 bg-blue-700 text-white rounded">Go Back</button>
     <button class="px-2 py-1 bg-blue-700 text-white rounded print_btn mx-3">Download</button>
-    <button class="px-2 py-1 bg-blue-700 text-white rounded print_btn" onclick="print()">Print</button>
+    <button class="px-2 py-1 bg-blue-700 text-white rounded" onclick="print()">Print</button>
   </div>
 
 
@@ -57,7 +57,7 @@
       const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.search("faPhone", param)]);
       promise.then(function(ress) {
         setPrintData(ress.documents[0]);
-        // document.querySelector('#controls').classList.remove('hidden')
+        document.querySelector('#controls').classList.remove('hidden')
       }, function(error) {
         console.log(error);
       });
