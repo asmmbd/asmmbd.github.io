@@ -65,6 +65,16 @@
 
     searchStudent(number)
 
+    const finalEnlishToBanglaNumber = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+
+    String.prototype.getBangla = function() {
+      let retStr = this;
+      for (var x in finalEnlishToBanglaNumber) {
+        retStr = retStr.replace(new RegExp(x, 'g'), finalEnlishToBanglaNumber[x]);
+      }
+      return retStr;
+    };
+
     function setPrintData(data) {
       let printarea = document.querySelector("#invoice");
       console.log(data);
@@ -82,7 +92,7 @@
               তারিখ: ${new Intl.DateTimeFormat('bn').format(new Date(data.$createdAt))}
             </td>
             <td class="px-3 py-2">
-              আইডি নং: ${data.studentId}
+              আইডি নং: ${data.studentId.getBangla()}
             </td>
           </tr>
         </tbody>
