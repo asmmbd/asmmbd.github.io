@@ -29,18 +29,17 @@
   </style>
 </head>
 
-<body>
+<body class='w-full flex justify-center'>
+  <div>
   <div id="invoice" class="page relative"></div>
 
-  <div class="w-full text-center mt-5 print:hidden hidden" id="controls">
-    <button class="px-2 py-1 bg-blue-700 text-white rounded">Go Back</button>
-    <button class="px-2 py-1 bg-blue-700 text-white rounded print_btn mx-3">Download</button>
+  <div class="w-full text-center my-5 print:hidden hidden" id="controls">
+    <button class="px-2 py-1 bg-blue-700 text-white rounded mr-3">Go Back</button>
     <button class="px-2 py-1 bg-blue-700 text-white rounded" onclick="print()">Print</button>
   </div>
+  </div>
 
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+  
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
   <script>
     const { Client, Databases, Query } = Appwrite;
@@ -317,17 +316,7 @@
     }
 
 
-    let print_btn = document.querySelector('.print_btn');
-
-    function generatePDF() {
-      // Choose the element that your content will be rendered to.
-      const element = document.getElementById('invoice');
-      // Choose the element and save the PDF for your user.
-      html2pdf().from(element).save();
-    }
-
-    // generatePDF()
-    print_btn.addEventListener('click', generatePDF)
+    
   </script>
 </body>
 
