@@ -1,321 +1,656 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>বেতন রশিদ</title>
-  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
-  <!-- html2pdf CDN link -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <style>
-    * {
-      font-family: SolaimanLipi;
-    }
-
-    /* .page {
-      width: 14.8cm;
-      height: 21.0cm;
-
-    }
-
-    .page img {
-      width: 100%;
-      height: 100%;
-    }*/
-  </style>
-</head>
-
-<body>
-  <div class="relative page border border-0" x-data="data()">
-    <div class="w-full px-3 mt-4">
-      <label>স্টুডেন্ট আইডি:</label>
-      <div class="w-full h-10 flex">
-        <input type="text" class="w-full h-10 rounded-l border outline-none px-3 mb-3" placeholder="স্টুডেন্ট আইডি নং" x-model="student_id">
-        <button class="h-10 w-10 bg-blue-600 text-white rounded-r" @click="searchStudent()">✓</button>
-      </div>
-      <label>মাসের নাম:</label>
-      <input type="month" class="w-full h-10 rounded border outline-none px-3 mb-3 bg-white" placeholder="মাসের নাম" x-model="month_name" />
-      <h1 class="font-bold text-xl text-center"> বেতন রশিদ </h1>
-    </div>
-    <div class="w-full px-4 mt-4">
-      <table class="w-full text-sm text-left border border-gray-400">
-        <tbody>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-2 py-1 border-r border-gray-400">
-              নাম
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400" x-text="studentName">
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              পিতা
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400" x-text="fatherName">
-              আবদুল হামিদ
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-2 py-1 border-r border-gray-400">
-              জামাত
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400" x-text="studentClass">
-              মিজান
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              বিভাগ
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400" x-text="studentGroup">
-              কিতাব বিভাগ
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-2 py-1 border-r border-gray-400">
-              মাসের নাম
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400" x-text="formetMonth">
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              তারিখ
-            </th>
-            <td class="px-2 py-1" x-text="date">
-              ২ জুলাই, ২০২৪
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-2 py-1 border-r border-gray-400">
-              আইডি নং
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400" x-text="student_id">
-              ২০২৪০০০১
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              রশিদ নং
-            </th>
-            <td class="px-2 py-1">
-              ২৪০০০১
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table class="w-full text-sm text-left border border-gray-400 mt-4">
-        <thead class="text-xs">
-          <tr class="border-b border-gray-400 text-center">
-            <th scope="col" class="px-3 py-1 border-r border-gray-400 w-10">
-              ক্রমিক নং
-            </th>
-            <th scope="col" class="px-3 py-1 border-r border-gray-400">
-              বিবরণ
-            </th>
-            <th scope="col" class="px-3 py-1">
-              পরিমাণ
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ১
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              ভর্তি ফি
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="admissionFee">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ২
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              মাসিক বেতন
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="monthFee">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৩
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              সেশন ফি
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="sesonFee">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৪
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              ডায়েরি
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="dairyFee">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৫
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              আবাসিক ফি
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="abasikFee">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৬
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              পরীক্ষা ফি
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="examFee">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৭
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              আইডি কার্ড
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="idCard">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৮
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              বিবিধ / বকেয়া
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="bokeyaBibid">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-3 py-1 font-bold  whitespace-nowrap text-right border-r border-gray-400" colspan="2">
-              মোট
-            </th>
-            <td class="px-3 py-1 font-bold text-center" x-text="total">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-3 py-1 font-bold  whitespace-nowrap text-right border-r border-gray-400" colspan="2">
-              জমা
-            </th>
-            <td class="border-gray-400 w-20">
-              <input type="number" class="w-full h-full outline-none px-3 text-center" x-model.number="deposit">
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-3 py-1 font-bold  whitespace-nowrap text-right border-r border-gray-400" colspan="2">
-              বকেয়া
-            </th>
-            <td class="px-3 py-1 font-bold text-center" x-text="bokeya">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-
-    <div class="w-full text-center mt-6">
-      <button class="px-3 py-1.5 bg-gray-200 rounded-md" @click="submit()">Submit</button>
-    </div>
-
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
-  <script>
-    const { Client, Databases, Query } = Appwrite;
-    const client = new Client();
-    client
-      .setEndpoint('https://cloud.appwrite.io/v1')
-      .setProject('652c1374db243c864a6c');
-    const databases = new Databases(client);
-
-    function data() {
-      return {
-        date: new Intl.DateTimeFormat('bn', {
-          dateStyle: 'long',
-        }).format(new Date()),
-        fatherName: '',
-        studentName: '',
-        studentGroup: '',
-        studentClass: '',
-        student_id: '',
-        month_name: '',
-        admissionFee: 0,
-        monthFee: 0,
-        sesonFee: 0,
-        dairyFee: 0,
-        examFee: 0,
-        abasikFee: 0,
-        idCard: 0,
-        bokeyaBibid: 0,
-        deposit: 0,
-        get total() {
-          return this.admissionFee + this.monthFee + this.sesonFee + this.dairyFee + this.examFee + this.abasikFee + this.idCard + this.bokeyaBibid
-        },
-        get bokeya() {
-          return ((this.admissionFee + this.monthFee + this.sesonFee + this.dairyFee + this.examFee + this.abasikFee + this.idCard + this.bokeyaBibid) - this.deposit)
-        },
-        get formetMonth(){
-          return new Intl.DateTimeFormat('bn', {
-            year: "numeric",
-            month: "long",
-          }).format(this.month_name ? new Date(this.month_name) : new Date())
-        },
-        searchStudent() {
-          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.search("studentId", this.student_id)]);
-          promise.then((ress) => {
-            //console.log(ress.documents[0]);
-            const { faName, stname, group } = ress.documents[0];
-            this.fatherName = faName;
-            this.studentName = stname;
-            this.studentGroup = group;
-            this.studentClass = ress.documents[0].class;
-          }, function(error) {
-            console.log(error);
-          });
-        },
-        submit() {
-          console.log(this.total, this.bokeya, this.date)
-          let receipt = {
-            fatherName: this.fatherName,
-            studentName: this.studentName,
-            studentGroup: this.studentGroup,
-            studentClass: this.studentClass,
-            student_id: this.student_id,
-            month_name: this.formetMonth,
-            admissionFee: this.admissionFee,
-            monthFee: this.monthFee,
-            sesonFee: this.sesonFee,
-            dairyFee: this.dairyFee,
-            examFee: this.examFee,
-            abasikFee: this.abasikFee,
-            idCard: this.idCard,
-            bokeyaBibid: this.bokeyaBibid,
-            deposit: this.deposit,
-            total: this.total,
-            bokeya: this.bokeya,
-            date: this.date
-          }
-          
-          console.log(receipt)
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>বেতন রশিদ</title>
+    <link
+      href="https://fonts.maateen.me/solaiman-lipi/font.css"
+      rel="stylesheet"
+    />
+    <!-- html2pdf CDN link -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <style>
+      * {
+        font-family: SolaimanLipi;
       }
-    }
-  </script>
-</body>
 
+      .page {
+        width: 14.8cm;
+        height: 21cm;
+      }
+
+      .page img {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body class="w-full h-screen flex justify-center items-center">
+    <div class="w-full grid md:grid-cols-2 gap-3" x-data="data()">
+      <div class="w-full relative border border-0 print:hidden">
+        <div class="w-full px-3 mt-4">
+          <label>স্টুডেন্ট আইডি:</label>
+          <div class="w-full h-10 flex">
+            <input
+              type="text"
+              class="w-full h-10 rounded-l border outline-none px-3 mb-3"
+              placeholder="স্টুডেন্ট আইডি নং"
+              x-model="student_id"
+            />
+            <button
+              class="h-10 w-10 bg-blue-600 text-white rounded-r"
+              @click="searchStudent()"
+            >
+              ✓
+            </button>
+          </div>
+          <label>মাসের নাম:</label>
+          <input
+            type="month"
+            class="w-full h-10 rounded border outline-none px-3 mb-3 bg-white"
+            placeholder="মাসের নাম"
+            x-model="month_name"
+          />
+          <h1 class="font-bold text-xl text-center">বেতন রশিদ</h1>
+        </div>
+        <div class="w-full px-4 mt-4">
+          <table class="w-full text-sm text-left border border-gray-400">
+            <tbody>
+              <tr class="border-b border-gray-400">
+                <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                  নাম
+                </th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="studentName"
+                ></td>
+                <th class="px-2 py-1 border-r border-gray-400">পিতা</th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="fatherName"
+                >
+                  আবদুল হামিদ
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">জামাত</th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="studentClass"
+                >
+                  মিজান
+                </td>
+                <th class="px-2 py-1 border-r border-gray-400">বিভাগ</th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="studentGroup"
+                >
+                  কিতাব বিভাগ
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                  মাসের নাম
+                </th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="formetMonth"
+                ></td>
+                <th class="px-2 py-1 border-r border-gray-400">তারিখ</th>
+                <td class="px-2 py-1" x-text="date">২ জুলাই, ২০২৪</td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                  আইডি নং
+                </th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="student_id"
+                >
+                  ২০২৪০০০১
+                </td>
+                <th class="px-2 py-1 border-r border-gray-400">রশিদ নং</th>
+                <td class="px-2 py-1">২৪০০০১</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="w-full text-sm text-left border border-gray-400 mt-4">
+            <thead class="text-xs">
+              <tr class="border-b border-gray-400 text-center">
+                <th scope="col" class="px-3 py-1 border-r border-gray-400 w-10">
+                  ক্রমিক নং
+                </th>
+                <th scope="col" class="px-3 py-1 border-r border-gray-400">
+                  বিবরণ
+                </th>
+                <th scope="col" class="px-3 py-1">পরিমাণ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ১
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">ভর্তি ফি</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="admissionFee"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ২
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">মাসিক বেতন</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="monthFee"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৩
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">সেশন ফি</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="sesonFee"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৪
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">ডায়েরি</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="dairyFee"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৫
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">আবাসিক ফি</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="abasikFee"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৬
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">পরীক্ষা ফি</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="examFee"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৭
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">আইডি কার্ড</th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="idCard"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৮
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">
+                  বিবিধ / বকেয়া
+                </th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="bokeyaBibid"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th
+                  scope="row"
+                  class="px-3 py-1 font-bold whitespace-nowrap text-right border-r border-gray-400"
+                  colspan="2"
+                >
+                  মোট
+                </th>
+                <td class="px-3 py-1 font-bold text-center" x-text="total"></td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th
+                  scope="row"
+                  class="px-3 py-1 font-bold whitespace-nowrap text-right border-r border-gray-400"
+                  colspan="2"
+                >
+                  জমা
+                </th>
+                <td class="border-gray-400 w-20">
+                  <input
+                    type="number"
+                    class="w-full h-full outline-none px-3 text-center"
+                    x-model.number="deposit"
+                  />
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th
+                  scope="row"
+                  class="px-3 py-1 font-bold whitespace-nowrap text-right border-r border-gray-400"
+                  colspan="2"
+                >
+                  বকেয়া
+                </th>
+                <td
+                  class="px-3 py-1 font-bold text-center"
+                  x-text="bokeya"
+                ></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="w-full text-center mt-6">
+          <button class="px-3 py-1.5 bg-gray-200 rounded-md" @click="submit()">
+            Submit
+          </button>
+        </div>
+      </div>
+
+      <div class="relative page border border-0" x-show="recepitData">
+        <img src="https://asmmbd.github.io/src/img/receipt.jpg" />
+        <div class="w-full absolute top-36 left-0 px-3 text-center">
+          <h1 class="font-bold text-xl">বেতন রশিদ</h1>
+        </div>
+        <div class="w-full absolute top-48 left-0 px-4">
+          <table class="w-full text-sm text-left border border-gray-400">
+            <tbody>
+              <tr class="border-b border-gray-400">
+                <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                  নাম
+                </th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="recepitData?.studentName"
+                >
+                  আয়েশা সিদ্দিকা মনিরা
+                </td>
+                <th class="px-2 py-1 border-r border-gray-400">পিতা</th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="recepitData?.fatherName"
+                >
+                  আবদুল হামিদ
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">জামাত</th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="recepitData?.studentClass"
+                >
+                  মিজান
+                </td>
+                <th class="px-2 py-1 border-r border-gray-400">বিভাগ</th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="recepitData?.studentGroup"
+                >
+                  কিতাব বিভাগ
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                  মাসের নাম
+                </th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="recepitData?.month_name"
+                >
+                  জুলাই
+                </td>
+                <th class="px-2 py-1 border-r border-gray-400">তারিখ</th>
+                <td class="px-2 py-1" x-text="recepitData?.date">
+                  ২ জুলাই, ২০২৪
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                  আইডি নং
+                </th>
+                <td
+                  class="px-2 py-1 border-r border-gray-400"
+                  x-text="recepitData?.student_id"
+                >
+                  ২০২৪০০০১
+                </td>
+                <th class="px-2 py-1 border-r border-gray-400">রশিদ নং</th>
+                <td class="px-2 py-1" x-text="recepitData?.student_id">
+                  ২৪০০০১
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="w-full text-sm text-left border border-gray-400 mt-4">
+            <thead class="text-xs">
+              <tr class="border-b border-gray-400 text-center">
+                <th scope="col" class="px-3 py-1 border-r border-gray-400 w-10">
+                  ক্রমিক নং
+                </th>
+                <th scope="col" class="px-3 py-1 border-r border-gray-400">
+                  বিবরণ
+                </th>
+                <th scope="col" class="px-3 py-1">পরিমাণ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ১
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">ভর্তি ফি</th>
+                <td
+                  class="px-3 py-1 text-center border-gray-400"
+                  x-text="recepitData?.admissionFee"
+                >
+                  ১০০০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ২
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">মাসিক বেতন</th>
+                <td
+                  class="px-3 py-1 text-center"
+                  x-text="recepitData?.monthFee"
+                >
+                  ০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৩
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">সেশন ফি</th>
+                <td
+                  class="px-3 py-1 text-center"
+                  x-text="recepitData?.sesonFee"
+                >
+                  ০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৪
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">ডায়েরি</th>
+                <td
+                  class="px-3 py-1 text-center"
+                  x-text="recepitData?.dairyFee"
+                >
+                  ২০০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৫
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">আবাসিক ফি</th>
+                <td
+                  class="px-3 py-1 text-center"
+                  x-text="recepitData?.abasikFee"
+                >
+                  ০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৬
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">পরীক্ষা ফি</th>
+                <td class="px-3 py-1 text-center" x-text="recepitData?.examFee">
+                  ০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৭
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">আইডি কার্ড</th>
+                <td class="px-3 py-1 text-center" x-text="recepitData?.idCard">
+                  ০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
+                  ৮
+                </th>
+                <th class="px-3 py-1 border-r border-gray-400">বিবিধ</th>
+                <td
+                  class="px-3 py-1 text-center"
+                  x-text="recepitData?.bokeyaBibid"
+                >
+                  ০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th
+                  scope="row"
+                  class="px-3 py-1 font-bold whitespace-nowrap text-right border-r border-gray-400"
+                  colspan="2"
+                >
+                  মোট
+                </th>
+                <td
+                  class="px-3 py-1 font-bold text-center"
+                  x-text="recepitData?.total"
+                >
+                  ১০০০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th
+                  scope="row"
+                  class="px-3 py-1 font-bold whitespace-nowrap text-right border-r border-gray-400"
+                  colspan="2"
+                >
+                  জমা
+                </th>
+                <td
+                  class="px-3 py-1 font-bold text-center"
+                  x-text="recepitData?.deposit"
+                >
+                  ১০০০
+                </td>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th
+                  scope="row"
+                  class="px-3 py-1 font-bold whitespace-nowrap text-right border-r border-gray-400"
+                  colspan="2"
+                >
+                  বকেয়া
+                </th>
+                <td
+                  class="px-3 py-1 font-bold text-center"
+                  x-text="recepitData?.bokeya"
+                >
+                  ০
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="p-3 mt-12 text-right">
+            <span> আদায়কারীর স্বাক্ষর</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+    <script>
+      const { Client, Databases, Query } = Appwrite;
+      const client = new Client();
+      client
+        .setEndpoint("https://cloud.appwrite.io/v1")
+        .setProject("652c1374db243c864a6c");
+      const databases = new Databases(client);
+
+      function data() {
+        return {
+          date: new Intl.DateTimeFormat("bn", {
+            dateStyle: "long",
+          }).format(new Date()),
+          recepitData: null,
+          fatherName: "",
+          studentName: "",
+          studentGroup: "",
+          studentClass: "",
+          student_id: "",
+          month_name: "",
+          admissionFee: 0,
+          monthFee: 0,
+          sesonFee: 0,
+          dairyFee: 0,
+          examFee: 0,
+          abasikFee: 0,
+          idCard: 0,
+          bokeyaBibid: 0,
+          deposit: 0,
+          get total() {
+            return (
+              this.admissionFee +
+              this.monthFee +
+              this.sesonFee +
+              this.dairyFee +
+              this.examFee +
+              this.abasikFee +
+              this.idCard +
+              this.bokeyaBibid
+            );
+          },
+          get bokeya() {
+            return (
+              this.admissionFee +
+              this.monthFee +
+              this.sesonFee +
+              this.dairyFee +
+              this.examFee +
+              this.abasikFee +
+              this.idCard +
+              this.bokeyaBibid -
+              this.deposit
+            );
+          },
+          get formetMonth() {
+            return new Intl.DateTimeFormat("bn", {
+              year: "numeric",
+              month: "long",
+            }).format(this.month_name ? new Date(this.month_name) : new Date());
+          },
+          searchStudent() {
+            const promise = databases.listDocuments(
+              "652c16162f939c821f75",
+              "652c16266c0f7c2fccd8",
+              [Query.search("studentId", this.student_id)]
+            );
+            promise.then(
+              (ress) => {
+                //console.log(ress.documents[0]);
+                const { faName, stname, group } = ress.documents[0];
+                this.fatherName = faName;
+                this.studentName = stname;
+                this.studentGroup = group;
+                this.studentClass = ress.documents[0].class;
+              },
+              function (error) {
+                console.log(error);
+              }
+            );
+          },
+          submit() {
+            console.log(this.total, this.bokeya, this.date);
+            let receipt = {
+              fatherName: this.fatherName,
+              studentName: this.studentName,
+              studentGroup: this.studentGroup,
+              studentClass: this.studentClass,
+              student_id: this.getBangla(this.student_id),
+              receiptId: this.getBangla(Date.now().toString()),
+              month_name: this.formetMonth,
+              admissionFee: this.admissionFee,
+              monthFee: this.monthFee,
+              sesonFee: this.sesonFee,
+              dairyFee: this.dairyFee,
+              examFee: this.examFee,
+              abasikFee: this.abasikFee,
+              idCard: this.idCard,
+              bokeyaBibid: this.bokeyaBibid,
+              deposit: this.deposit,
+              total: this.total,
+              bokeya: this.bokeya,
+              date: this.date,
+            };
+
+            console.log(receipt);
+            this.recepitData = receipt;
+          },
+
+          getBangla(number) {
+            var banglaNumber = {
+              0: "০",
+              1: "১",
+              2: "২",
+              3: "৩",
+              4: "৪",
+              5: "৫",
+              6: "৬",
+              7: "৭",
+              8: "৮",
+              9: "৯",
+            };
+            var retStr = number;
+            for (var x in banglaNumber) {
+              retStr = retStr.replace(new RegExp(x, "g"), banglaNumber[x]);
+            }
+            return retStr;
+          },
+        };
+      }
+    </script>
+  </body>
 </html>
