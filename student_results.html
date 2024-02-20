@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    /*.page {
+      width: 21cm;
+      height: 29.6cm;
+    }*/
+    .page {
+      width: 29.7cm;
+      height: 21cm;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .flex {
+      width: 100%;
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="w-full admit" x-data="data()">
+    <template x-for="result in results">
+      <div class="page relative">
+        <img src="/images/20240219_152926.jpg" alt="">
+        <div class="w-full absolute top-48 left-0 px-10 flex gap-3">
+          <div class="left w-full">
+            <table class="w-full text-sm text-left border border-gray-400">
+              <tbody>
+                <tr class="border-b border-gray-400">
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    নাম
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                    আয়েশা সিদ্দিকা মনিরা
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    আইডি নং
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="result.studentId">
+                    ২০২৪০০০১
+                  </td>
+                  <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                    মোট নাম্বার
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(result.total)">
+                    ১০০০
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-400">
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    পিতার নাম
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="result.faName">
+                    আব্দুল মালেক
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    জামাত
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="result.class">
+                    মিজান
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    গ্রেড
+                  </th>
+                  <td class="px-2 py-1" x-text="result.grade">
+                    A+
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-400">
+                  <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                    মাতার নাম
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="result.maName">
+                    আমেনা খাতুন
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    বিভাগ
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="result.group">
+                    কিতাব বিভাগ
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    গ্রেড
+                  </th>
+                  <td class="px-2 py-1" x-text="result.status">
+                    পাস
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="w-full text-sm text-left border border-gray-400 mt-4 text-center">
+              <tbody>
+                <tr class="border-b border-gray-400">
+                  <th class="px-2 py-1 border-r border-gray-400 w-20">
+                    ক্রমিক নং
+                  </th>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    বিষয়
+                  </th>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    সর্বোচ্চ নাম্বার
+                  </th>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    প্রাপ্ত নাম্বার
+                  </th>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    গ্রেড
+                  </th>
+                </tr>
+                <template x-for="(value,index) in JSON.parse(result.results)">
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ১
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="index">
+                      বাংলা
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(value)">
+                      ৯৬
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="getGrade(Number(value))">
+                      A+
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+            <span x-text="result.examName"></span>
+          </div>
+          <div class="right w-80">
+            <div>
+              <table class="w-full text-sm text-left border border-gray-400">
+                <tbody>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৮০ - ১০০
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      A+
+                    </td>
+                    <td class="px-2 py-1 border-gray-400">
+                      মুমতাজ
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="px-2 py-4 border border-gray-400 mt-3">
+              <p>
+                <span class="font-bold text-lg"> শ্রেণী শিক্ষিকার মন্তব্য </span><br>
+                <span x-text="result.comment"></span>
+              </p>
+            </div>
+            <div>
+              <table class="w-full text-sm text-left border border-gray-400 mt-2">
+                <tbody>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      মোট কার্যদিবস
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ১০১ দিন
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      উপস্থিতি
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ৯০ দিন
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+
+  <script>
+    const { Client, Databases, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+
+    function data() {
+      return {
+        results: [],
+        getResult() {
+          const promise = databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac');
+          promise.then((ress) => {
+           // this.results = ress.documents.filter(result => result.examName === 'প্রথম সাময়িক পরীক্ষা ২০২৪')
+           this.results = ress.documents;
+          }, function(error) {
+            console.log(error);
+          });
+        },
+        getGrade(score) {
+          let grade
+          if (score >= 80) {
+            grade = "A+";
+          } else if (score >= 70) {
+            grade = "A";
+          } else if (score >= 65) {
+            grade = "A-";
+          } else if (score >= 60) {
+            grade = "B+";
+          } else if (score >= 55) {
+            grade = "B";
+          } else if (score >= 50) {
+            grade = "B-";
+          } else if (score >= 45) {
+            grade = "C+";
+          } else if (score >= 40) {
+            grade = "C";
+          } else if (score >= 35) {
+            grade = "D";
+          } else {
+            grade = "ফেল";
+          }
+          return grade
+        },
+        getBangla(x) {
+          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+          var retStr = String(x);
+          for (let n in numbers) {
+            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+          }
+          return retStr;
+        },
+        init() {
+          this.getResult()
+        }
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
