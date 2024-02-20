@@ -40,7 +40,10 @@
   <div class="w-full admit" x-data="data()">
     <template x-for="result in results">
       <div class="page relative">
-        <img src="/images/20240219_152926.jpg" alt="">
+        <img src="./src/img/admit.jpg" alt="">
+        <div class="w-full absolute top-32 left-0 text-center">
+          <h1 class="text-center font-bold text-2xl" x-text="result.examName"></h1>
+        </div>
         <div class="w-full absolute top-48 left-0 px-10 flex gap-3">
           <div class="left w-full">
             <table class="w-full text-sm text-left border border-gray-400">
@@ -147,7 +150,6 @@
                 </template>
               </tbody>
             </table>
-            <span x-text="result.examName"></span>
           </div>
           <div class="right w-80">
             <div>
