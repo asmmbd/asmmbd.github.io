@@ -44,7 +44,7 @@
               <th class="px-2 py-1 border-r border-gray-400">
                 আইডি নং
               </th>
-              <td class="px-2 py-1 border-r border-gray-400" x-text="student?.studentId">
+              <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.studentId)">
                 ২০২৪০০০১
               </td>
             </tr>
@@ -138,6 +138,14 @@
           }, function(error) {
             console.log(error);
           });
+        },
+        getBangla(x) {
+          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+          var retStr = String(x);
+          for (let n in numbers) {
+            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+          }
+          return retStr;
         },
         init(){
           this.searchStudent()
