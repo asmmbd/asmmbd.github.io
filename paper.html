@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet" />
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .page {
+      width: 21cm;
+      height: 29.6cm;
+    }
+    .text-sml {
+      font-size: 4px;
+    }
+    
+    .border, .border-r , .border-t{
+      border-color: rgb(156 163 175);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page relative">
+    <img src="/images/20240213_023748.jpg" alt="">
+    <div class="w-full absolute top-48 left-0 px-6">
+      <h1 class="text-center text-xl"> প্রথম / দ্বিতীয় / বার্ষিক পরীক্ষা ২০....</h1>
+      <div class="border border-3 px-2 py-3 mt-5">
+        <div class="flex gap-4">
+          <div class="left border w-32 shrink-0">
+            <div class="w-full border-b px-2 py-1">
+              শ্রেণী
+            </div>
+            <ul class="grid gap-2 p-2">
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span> শিশু শ্রেণী</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>প্রথম</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-2"></div>
+                <span>সরহে বেকায়া</span>
+              </li>
+            </ul>
+          </div>
+          <div class="w-full">
+            <div class="flex gap-2">
+              <div class="middle w-full flex items-start gap-3">
+                <table class="w-full text-sm text-left border border-gray-400">
+                  <tbody>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        নাম
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        আয়েশা সিদ্দিকা মনিরা
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        রোল
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        ০৯
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        জামাত
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        মিজান
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        বিভাগ
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        কিতাব বিভাগ
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        পরীক্ষার নাম
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        বাংলা
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        পরীক্ষার তারিখ
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        ৪/৯/২০২৪
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                        মাদ্রাসার নাম
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        আয়েশা সিদ্দিকা মহিলা মাদ্রাসা 
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                       পিতার নাম
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                         মনির উদ্দীন 
+                      </td>
+                    </tr>
+                    <tr class="border-b border-gray-400">
+                      <th class="px-2 py-1 border-r border-gray-400">
+                       মাতার নাম
+                      </th>
+                      <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                        আয়েশা সিদ্দিকা
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="right">
+                <div class="flex gap-3">
+                  <div class="w-40 border shrink-0">
+                    <div class="grid grid-cols-8">
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4"></div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border text-sml flex items-center justify-center"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-8 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="w-20 border shrink-0">
+                    <div class="grid grid-cols-3">
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4 border-r"></div>
+                      <div class="w-full h-4"></div>
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+                    <div class="grid grid-cols-3 border-t">
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 border-r flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+                      <div class="w-full h-4 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full border"></div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                  <div class="mb-2 text-center">
+                    <span class="text-sm"> কক্ষ পরিদর্শকের স্বাক্ষর</span>
+                    <div class="w-full h-10 border"></div>
+                  </div>
+                  <div class="mb-2 text-center">
+                    <span class="text-sm"> তারিখ</span>
+                    <div class="w-full h-10 border"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <table class="w-full text-sm text-left border border-gray-400">
+                <tbody>
+                  <tr class="border-b border-gray-400">
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ক্রমিক নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ১নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ২নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৩নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৪নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৫নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৬নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৭নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৮নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৯নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ১১নং
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ১২নং
+                    </th>
+
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      প্রাপ্ত নম্বর
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ১০
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৮
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৯
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৭
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৫
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৬
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৭
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৮
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৯
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ১০
+                    </th>
+                    <th class="px-2 py-1 border-r border-gray-400">
+                      ৯
+                    </th>
+
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 text-center">
+        <h1 class="text-xl font-bold"> এখানে থেকে লেখা আরম্ভ করতে হবে</h1>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
