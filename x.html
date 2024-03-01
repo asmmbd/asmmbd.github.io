@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <style type="text/tailwindcss">
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .bg-green {
+      background: #0E7A43;
+    }
+
+    .bg-theme {
+      background: #3f497f;
+    }
+    @media screen and (max-width: 600px) {
+      .navbar {
+        @apply w-72 h-screen fixed top-0 left-0 bg-theme
+      }
+    }
+    @media screen and (min-width: 600px) {
+    .login-btn{
+      @apply bg-white text-black px-1.5 py-0.5 rounded
+    }
+    }
+  </style>
+</head>
+
+<body x-data="data()" class="bg-gray-100">
+  <!--header start -->
+  <div class="bg-yellow-200">
+    <div class="container mx-auto">
+      <div class="w-full px-2 py-1 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="/facebook.png" class="h-6">
+          <img src="/instagram.png" class="h-6">
+          <img src="/whatsapp.png" class="h-6">
+        </div>
+        <span class="hidden md:block"> জেনারেল ও আরবি শিক্ষার সমন্বয়ে একটি আদর্শ দ্বীনি প্রতিষ্ঠান</span>
+        <span class="bg-theme text-white py-1 px-2 rounded"> অনলাইন ভর্তি</span>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white">
+    <div class="container mx-auto">
+      <img src="https://asmmbd.github.io/src/img/banner.jpg" alt="">
+    </div>
+  </div>
+  <div class="bg-theme sticky top-0 z-50">
+    <div class="container mx-auto">
+      <div class="w-full h-12 py-1 px-1 flex items-center justify-between">
+        <img src="/asmmbd_logo.png" class="h-full">
+        <nav class="navbar hidden md:block" id="navbar">
+          <h1 class="text-white text-xl font-bold text-center my-5 md:hidden">আয়েশা সিদ্দিকা (রা.) মহিলা মাদ্রাসা</h1>
+          <ul class="w-full text-white px-5 md:px-2 space-y-3 md:space-y-0 md:flex items-center gap-3">
+            <li><a href="#">হোম</a></li>
+            <li><a href="#">মাদরাসা সম্পর্কে</a></li>
+            <li><a href="#">ভর্তি</a></li>
+            <li><a href="#">একাডেমিক</a></li>
+            <li><a href="#">শিক্ষক তথ্য</a></li>
+            <li><a href="#">ছাত্রী তথ্য</a></li>
+            <li><a href="#">পরীক্ষার ফলাফল</a></li>
+            <li><a href="#">যোগাযোগ</a></li>
+            <li><a href="#">ব্লগ</a></li>
+            <li><a href="#">অন্যান্য</a></li>
+            <li><a href="#" class="login-btn">লগইন</a></li>
+          </ul>
+        </nav>
+
+        <i class="md:hidden ri-menu-3-line mr-1 text-white text-xl" @click="openMenu()"></i>
+      </div>
+    </div>
+  </div>
+  <!-- Header end -->
+
+  <div class="container mx-auto px-2 grid grid-cols-1 md:grid-cols-4 md:gap-2">
+    <div class="left col-span-3">
+      <div class="my-2">
+        <img src="https://asmmbd.github.io/src/img/banner-lg.jpg" alt="">
+      </div>
+      <div class="text-center">
+        <h2 class="mb-2 text-2xl font-semibold text-gray-900"> আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসায় আপনাকে স্বাগতম </h2>
+        <h2 class="mb-2 text-lg font-semibold text-gray-900"> «طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ» </h2>
+        <h3 class="mb-2 text-lg font-semibold text-gray-900"> ‘ইলম’ বা জ্ঞানার্জন করা প্রত্যেক মুসলিমের জন্য ফরয। </h3>
+      </div>
+      <div class="left mb-3 text-lg">
+        <p> যুগে যুগে বহু জ্ঞানী ও মনিষীগন জ্ঞানের প্রয়োজনীয়তা উপলব্ধি করেছিলেন, জ্ঞান বিজ্ঞানের সকল শাখায় সমানভাবে কৃতিত্বের স্বাক্ষর রেখেছিলেন। তখন থেকেই জ্ঞান-বিজ্ঞানের শাখায় ইসলামী নারীদের অংশগ্রহণও কোন অংশে কম ছিলো না। তার প্রমাণ আম্মাজান হজরত আয়েশা (রাঃ) এর আরবী সাহিত্যের পারদর্শিতা, চিকিৎসা শাস্ত্রের গভীর ব্যুৎপত্তি অর্জন, গণিত শাস্ত্রে এতখানি পারদর্শী ছিলেন যে, হযরত ওমর (রা) এর মত জালীলুল কদর সাহাবী তাঁর কাছ থেকে মিরাসের মাসয়ালা ও হিসাব জেনে নিতেন। এছাড়া যুক্তিবিদ্যায়ও তিনি ছিলেন সিদ্ধহস্ত। ফিক্হ শাস্ত্রে ও অর্জন করেছিলেন সুগভীর পান্ডিত্য। ইতিহাস পর্যালোচনা করলে জানা যায় যে, তৎকালীন নারী সমাজ লেখার নিয়মকানুন সম্পর্কে এতখানি ওয়াকিবহাল ছিলেন যে গুরুত্বপূর্ণ পত্রাবলি ও বিভিন্ন মাসয়ালা মাসায়েল লিখে রাখতে তাদের কোনো অসুবিধা হতো না।
+        </p>
+        <p class="my-2"> সভ্যতা বিকাশে জ্ঞানের বিকল্প নেই। প্রাগৈতিহাসিক কাল থেকে একবিংশ শতাব্দীর এ তথ্যপ্রযুক্তির যুগেও মানুষ কল্যাণমুখী জ্ঞান সাধনায় নিরন্তর প্রচেষ্টা চালিয়ে যাওয়ার পাশাপাশি নারী শিক্ষাকে এগিয়ে নিতে অগ্রণী ভূমিকা পালন করে যাচ্ছে, আর এই নারী শিক্ষার অগ্রযাত্রাকে এগিয়ে নিতে প্রয়োজন সঠিক অবলম্বন।</p>
+
+        <p> জ্ঞানার্জনের ক্ষেত্রে একটি ভালো বই যেমন নিঃসন্দেহে উৎকৃষ্ট অবলম্বন, কখনো এর প্রয়োজন ফুরায় না। আবার হাজারটা ভালো বইয়ের সমষ্টির রূপ একটি আদর্শবান শিক্ষকা । সেই আদর্শবান, আখলাকে পরিপূর্ণ শিক্ষিকার সমন্বয়ে মানুষ গড়ার লক্ষ্যে সুন্নতে নববীর পুনঃজাগরণের উদ্দেশ্যে মেহেরপুর শহরের অদূরেই গড়ে উঠেছে ‘‘আয়েশা সিদ্দিকা মহিলা মাদ্রাসা’’। </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"> মাদ্রাসার বৈশিষ্ট্যসমূহঃ </h2>
+          <ul class="space-y-3">
+            <template x-for="item in facilities">
+              <li class="text-body-color dark:text-dark-6 flex text-base">
+                <span class="text-primary mr-2.5 mt-0.5">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 9.5L11.5312 2.9375C11.25 2.65625 10.8125 2.65625 10.5312 2.9375C10.25 3.21875 10.25 3.65625 10.5312 3.9375L15.7812 9.28125H2.5C2.125 9.28125 1.8125 9.59375 1.8125 9.96875C1.8125 10.3438 2.125 10.6875 2.5 10.6875H15.8437L10.5312 16.0938C10.25 16.375 10.25 16.8125 10.5312 17.0938C10.6562 17.2188 10.8437 17.2812 11.0312 17.2812C11.2187 17.2812 11.4062 17.2188 11.5312 17.0625L18 10.5C18.2812 10.2187 18.2812 9.78125 18 9.5Z" fill="currentColor" />
+                  </svg>
+                </span>
+                <span x-text="item"></span>
+              </li>
+            </template>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"> মাদ্রাসার বিভাগসমূহঃ </h2>
+          <ul class="space-y-3">
+            <template x-for="item in items">
+              <li class="text-body-color dark:text-dark-6 flex text-base">
+                <span class="text-primary mr-2.5 mt-0.5">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 9.5L11.5312 2.9375C11.25 2.65625 10.8125 2.65625 10.5312 2.9375C10.25 3.21875 10.25 3.65625 10.5312 3.9375L15.7812 9.28125H2.5C2.125 9.28125 1.8125 9.59375 1.8125 9.96875C1.8125 10.3438 2.125 10.6875 2.5 10.6875H15.8437L10.5312 16.0938C10.25 16.375 10.25 16.8125 10.5312 17.0938C10.6562 17.2188 10.8437 17.2812 11.0312 17.2812C11.2187 17.2812 11.4062 17.2188 11.5312 17.0625L18 10.5C18.2812 10.2187 18.2812 9.78125 18 9.5Z" fill="currentColor" />
+                  </svg>
+                </span>
+                <span x-text="item"></span>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="right mt-2 w-full">
+      <div class="widget profile">
+        <div class="title bg-theme text-white w-full rounded">
+          <h2 class="py-1 px-2 text-xl font-semibold"> মাদ্রাসার মুহতামিম:</h2>
+        </div>
+        <div class="body text-center">
+          <img src="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png" alt="">
+          <h2 class="py-1 px-2 text-xl font-semibold"> হাফেজ মাও: আব্দুল্লাহ আল সাইফ</h2>
+          <h2 class="py-1 px-2 text-md font-semibold"> মুহতামিম অত্র মাদরাসা</h2>
+        </div>
+      </div>
+      <div class="widget notice">
+        <div class="title bg-theme text-white w-full rounded">
+          <h2 class="py-1 px-2 text-xl font-semibold"> নোটিস:</h2>
+        </div>
+        <div class="body">
+          <marquee class="space-y-3" direction="up">
+            <template x-for="notice in notices">
+              <div class="text-body-color dark:text-dark-6 flex text-base">
+                <div class="w-12 h-12 bg-green-600 rounded-md text-center mr-2.5 text-white">
+                  <p>১২</p>
+                  <p>জানু</p>
+                </div>
+                <div>
+                  <p>১২ জুন ২০২৪</p>
+                  <p x-text="notice"></p>
+                </div>
+              </div>
+            </template>
+          </marquee>
+          <div class="title bg-green-600 text-white w-full rounded text-center">
+            <h2 class="py-1 px-2 text-md font-semibold"> আরো দেখুন >></h2>
+          </div>
+        </div>
+      </div>
+      <div class="widget holiday my-3">
+        <div class="title bg-theme text-white w-full rounded">
+          <h2 class="py-1 px-2 text-xl font-semibold"> একাডেমিক ছুটি:</h2>
+        </div>
+        <div class="body">
+          <marquee class="space-y-2" direction="up">
+            <template x-for="notice in notices">
+              <div class="bg-theme py-1 px-2 flex items-center rounded-md text-white gap-2">
+                <div class="w-10 h-10 rounded-md flex items-center justify-center bg-white text-black">
+                  <span> ছুটি</span>
+                </div>
+                <div>
+                  <p>১২ জুন ২০২৪ - ২৪ জুন ২০২৪</p>
+                  <p x-text="notice"></p>
+                </div>
+              </div>
+            </template>
+          </marquee>
+          <div class="title bg-green-600 text-white w-full rounded text-center">
+            <h2 class="py-1 px-2 text-md font-semibold"> আরো দেখুন >></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="bg-theme">
+    <div class="container mx-auto">
+      <div class="w-full h-96"></div>
+    </div>
+  </div>
+
+  <!-- Teacher section start -->
+
+  <div class="bg-white">
+    <div class="container mx-auto">
+      <div class="w-full h-96"></div>
+    </div>
+  </div>
+
+  <!-- Teacher section end -->
+
+  <!-- Footer section start -->
+  <div class="bg-theme">
+    <div class="container mx-auto">
+      <div class="w-full h-96"></div>
+    </div>
+  </div>
+  <!-- Footer section end -->
+
+  <script>
+    function data() {
+      return {
+        openMenu() {
+          document.querySelector('#navbar').classList.toggle('hidden');
+        },
+        facilities: ['স্বল্প খরচে আবাসিক ছাত্রীদের থাকা ও মন সম্মত খাবারের সু-ব্যবস্থা আছে।', 'মানসিক চাপের পরিবর্তে আদর - সোহাগ ও কৌশলে পাঠদান করানো হয়।', 'নিরিবিলি সুন্দর মনোরম পরিবেশে থাকার সু-ব্যবস্থা।', 'ক্লাসের পড়া ক্লাসেই প্রস্তুত করিয়ে দেওয়ার চেষ্টা করা হয়।', 'সার্বিক সুন্নাতের বাস্তবায়নে তালিম ও তারবিয়াতের ব্যবস্থা।', 'প্রশিক্ষণ প্রাপ্ত যোগ্য শিক্ষিকা দ্বারা সার্বিক্ষণ দেখাশোনা ও পাঠদানের ব্যবস্থা।'],
+        items: ['হিফ্জ বিভাগ', 'কিতাব বিভাগ', 'নূরানী ও মক্তব বিভাগ'],
+        notices: [
+          'Lorem ipsum dolor sit amet',
+          'It is a long established fact reader',
+          'The point of using Lorem Ipsum',
+          'There are many variations of passages',
+          'If you are going to use a of Lorem'
+        ],
+      }
+    }
+  </script>
+</body>
+
+</html>
