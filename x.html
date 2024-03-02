@@ -250,12 +250,14 @@
             <h1 class="text-xl font-bold text-black">শিক্ষিকাগণ</h1>
             <img src="https://themesbazar.net/academic/wp-content/themes/AcadcmicTheme/assets/img/icon-image.png" />
           </div>
-          <div class="teachers">
-            <div class="w-72 border text-center rounded-md">
+          <div class="teachers grid grid-cols-5 gap-2.5">
+          <template x-for="teacher in teachers">
+            <div class="w-full border text-center rounded-md">
               <img src="./src/img/teacher.jpg" class="rounded-md">
               <h1 class="mt-2 text-lg font-bold">সুমাইয়া তাবাসসুম</h1>
               <p class="my-1">প্রধান শিক্ষিকা</p>
             </div>
+          </template>
           </div>
         </div>
       </div>
@@ -332,6 +334,7 @@
           'There are many variations of passages',
           'If you are going to use a of Lorem'
         ],
+        teachers: ['s','s','e','y','u']
       }
     }
   </script>
