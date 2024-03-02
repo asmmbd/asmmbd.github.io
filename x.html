@@ -58,7 +58,7 @@
   <div class="bg-theme sticky top-0 z-50">
     <div class="container mx-auto">
       <div class="w-full h-12 py-1 px-1 flex items-center justify-between">
-        <img src="https://asmmbd.github.io/src/img/asmmbd_logo.png" class="h-full">
+        <img src="./src/img/asmmbd_logo.png" class="h-full">
         <nav class="navbar hidden md:block" id="navbar">
           <h1 class="text-white text-xl font-bold text-center my-5 md:hidden">আয়েশা সিদ্দিকা (রা.) মহিলা মাদ্রাসা</h1>
           <ul class="w-full text-white px-5 md:px-2 space-y-3 md:space-y-0 md:flex items-center gap-3">
@@ -164,7 +164,7 @@
             </template>
           </marquee>
           <div class="title bg-green-600 text-white w-full rounded text-center">
-            <h2 class="py-1 px-2 text-md font-semibold"> আরো দেখুন >></h2>
+            <h2 class="py-1 px-2 text-md font-semibold"> আরো দেখুন <i class="ri-arrow-right-double-line"></i></h2>
           </div>
         </div>
       </div>
@@ -187,7 +187,7 @@
             </template>
           </marquee>
           <div class="title bg-green-600 text-white w-full rounded text-center">
-            <h2 class="py-1 px-2 text-md font-semibold"> আরো দেখুন >></h2>
+            <h2 class="py-1 px-2 text-md font-semibold"> আরো দেখুন <i class="ri-arrow-right-double-line"></i></h2>
           </div>
         </div>
       </div>
@@ -197,7 +197,21 @@
 
   <div class="bg-theme">
     <div class="container mx-auto">
-      <div class="w-full h-96"></div>
+      <div class="w-full h-96 p-4">
+        <div class="section-header flex flex-col items-center justify-center my-4">
+          <h1 class="text-xl font-bold text-white">ব্লগ পোস্ট</h1>
+          <img src="https://themesbazar.net/academic/wp-content/themes/AcadcmicTheme/assets/img/icon-image.png" />
+        </div>
+        <div class="cards">
+          <div class="card w-80 bg-white rounded-md p-2">
+            <img src="./src/img/asmmbd-banner-min.webp" alt="" class="w-full rounded-md">
+            <div class="pt-2 px-1">
+              <h1 class="text-md font-bold mb-2">যুগে যুগে বহু জ্ঞানী ও মনিষীগন জ্ঞানের </h1>
+              <p class="text-sm">যুগে যুগে বহু জ্ঞানী ও মনিষীগন জ্ঞানের প্রয়োজনীয়তা উপলব্ধি করেছিলেন,</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -205,18 +219,99 @@
 
   <div class="bg-white">
     <div class="container mx-auto">
-      <div class="w-full h-96"></div>
+      <div class="w-full">
+        <div class="counter-section grid grid-cols-2 md:grid-cols-4 px-2 py-5 gap-3">
+          <div class="w-full flex items-center justify-center">
+            <div class="w-40 h-40 rounded-full bg-green flex items-center justify-center text-white">
+              ৫০+ ছাত্রী
+            </div>
+          </div>
+          <div class="w-full flex items-center justify-center">
+            <div class="w-40 h-40 rounded-full bg-green flex items-center justify-center text-white">
+              ৫+ শিক্ষিকা
+            </div>
+          </div>
+          <div class="w-full flex items-center justify-center">
+            <div class="w-40 h-40 rounded-full bg-green flex items-center justify-center text-white">
+              ১০+ ক্লাস রুম
+            </div>
+          </div>
+          <div class="w-full flex items-center justify-center">
+            <div class="w-40 h-40 rounded-full bg-green flex items-center justify-center text-white">
+              ৩+ বিভাগ
+            </div>
+          </div>
+        </div>
+        <div class="teacher-section px-2 py-5">
+          <div class="section-header flex flex-col items-center justify-center my-4">
+            <h1 class="text-xl font-bold text-black">শিক্ষিকাগণ</h1>
+            <img src="https://themesbazar.net/academic/wp-content/themes/AcadcmicTheme/assets/img/icon-image.png" />
+          </div>
+          <div class="teachers">
+            <div class="w-72 border text-center rounded-md">
+              <img src="./src/img/teacher.jpg" class="rounded-md">
+              <h1 class="mt-2 text-lg font-bold">সুমাইয়া তাবাসসুম</h1>
+              <p class="my-1">প্রধান শিক্ষিকা</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Teacher section end -->
 
   <!-- Footer section start -->
-  <div class="bg-theme">
-    <div class="container mx-auto">
-      <div class="w-full h-96"></div>
+  <footer class='pt-5 print:none bg-theme'>
+    <div class='container mx-auto px-2'>
+      <div class='grid grid-cols-1 md:grid-cols-3'>
+        <div class='mb-3'>
+          <h5 class="text-white text-xl font-semibold mb-2">যোগাযোগ</h5>
+          <ul class='nav flex-column'>
+            <li class='nav-item mb-2'><a class='nav-link p-0 text-white font-bold text-xl' href='#'>আয়েশা সিদ্দিকা (র.) মহিলা মাদরাসা</a></li>
+            <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'><i class="bi bi-house"></i> মারকাজ মসজিদ পাড়া, কলেজ মোড় , মেহেরপুরে</a></li>
+            <li class='nav-item mb-2'><a class='nav-link p-0  text-white' href='#'><i class="bi bi-envelope-at-fill"></i> asmmbd2022@gmail.com</a></li>
+            <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'><i class="bi bi-telephone"></i> +8801947660563</a></li>
+            <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'><i class="bi bi-telephone"></i> +8801406701513</a></li>
+            <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'></a></li>
+            <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'></a></li>
+          </ul>
+        </div>
+        <div class='mb-3'>
+          <h5 class="text-white text-xl font-semibold mb-2">ফেসবুকে আমরা </h5>
+          <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fasmmbd&tabs&width=340&height=130&small_header=false&adapt_container_width=false&hide_cover=false&show_facepile=false&appId" width="340" height="200" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </div>
+        <div class='mb-3'>
+          <h5 class="text-white text-xl font-semibold mb-2">ম্যাপে আমরা </h5>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.3801178362414!2d88.6336304142973!3d23.769474793965855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f9480879361a2d%3A0x65d1e008dd28277d!2sMeherpur%20Bus%20Stand!5e0!3m2!1sen!2sbd!4v1678470431892!5m2!1sen!2sbd" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
     </div>
-  </div>
+    <div class='bg-yellow-200'>
+      <div class="container mx-auto px-2">
+        <div class='flex justify-between pt-4 mt-1 border-top'>
+          <p> <i class='bi bi-c-circle'></i> asmmbd.info All rights reserved.</p>
+          <div class="flex items-center gap-2">
+            <img src="./src/img/facebook.png" class="h-6">
+            <img src="./src/img/instagram.png" class="h-6">
+            <img src="./src/img/whatsapp.png" class="h-6">
+          </div>
+        </div>
+        <div id='installInstructions' class="pb-2 flex items-center justify-between mt-3 gap-3 add-btn-div">
+          <button class="bg-gray-500 text-white px-2 py-1 rounded-md">
+            <i class="ri-google-play-line"></i>
+            Install App
+          </button>
+          <div class="flex items-center">
+            <input type="text" class="w-44 h-10 outline-none border rounded-l-md bg-gray-200 px-2.5">
+            <button class="w-10 h-10 rounded-r-md bg-gray-400 text-gray-100">
+              <i class="ri-send-plane-line"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
   <!-- Footer section end -->
 
   <script>
