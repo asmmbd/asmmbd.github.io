@@ -46,7 +46,7 @@
         </div>
         <div class="w-full absolute top-48 left-0 px-10 flex gap-3">
           <div class="left w-full">
-            <table class="w-full text-sm text-left border border-gray-400">
+            <table class="w-full text-md text-left border border-gray-400">
               <tbody>
                 <tr class="border-b border-gray-400">
                   <th class="px-2 py-1 border-r border-gray-400">
@@ -82,9 +82,9 @@
                     মিজান
                   </td>
                   <th class="px-2 py-1 border-r border-gray-400">
-                    গ্রেড
+                    গড় নাম্বার
                   </th>
-                  <td class="px-2 py-1" x-text="result.grade">
+                  <td class="px-2 py-1" x-text="getBangla(result.total / JSON.parse(result.results).length)">
                     A+
                   </td>
                 </tr>
@@ -102,9 +102,9 @@
                     কিতাব বিভাগ
                   </td>
                   <th class="px-2 py-1 border-r border-gray-400">
-                    অবস্থা
+                    বিভাগ
                   </th>
-                  <td class="px-2 py-1" x-text="result.status">
+                  <td class="px-2 py-1" x-text="getGrade(result.total / JSON.parse(result.results).length)">
                     পাস
                   </td>
                 </tr>
@@ -120,36 +120,33 @@
                     বিষয়
                   </th>
                   <th class="px-2 py-1 border-r border-gray-400">
-                    সর্বোচ্চ নাম্বার
+                    পূর্ণমান
                   </th>
                   <th class="px-2 py-1 border-r border-gray-400">
                     প্রাপ্ত নাম্বার
                   </th>
-                  <th class="px-2 py-1 border-r border-gray-400">
-                    গ্রেড
-                  </th>
                 </tr>
-                <template x-for="(value,index) in JSON.parse(result.results)">
+
+                <template x-for="(result,index) in JSON.parse(result.results)">
                   <tr class="border-b border-gray-400">
-                    <td class="px-2 py-1 border-r border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)">
                       ১
                     </td>
-                    <td class="px-2 py-1 border-r border-gray-400" x-text="index">
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
                       বাংলা
                     </td>
                     <td class="px-2 py-1 border-r border-gray-400">
                       ১০০
                     </td>
-                    <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(value)">
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(result.mark)">
                       ৯৬
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400" x-text="getGrade(Number(value))">
-                      A+
                     </td>
                   </tr>
                 </template>
+
               </tbody>
             </table>
+
           </div>
           <div class="right w-80">
             <div>
@@ -159,77 +156,40 @@
                     <td class="px-2 py-1 border-r border-gray-400">
                       ৮০ - ১০০
                     </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      A+
-                    </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
+                      মুমতায
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
                     <td class="px-2 py-1 border-r border-gray-400">
-                      ৭০ - ৮০
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      A
+                      ৬০ - ৭৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
+                      জায়্যিদ জিদ্দান
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
                     <td class="px-2 py-1 border-r border-gray-400">
-                      ৬০ - ৭০
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      A-
+                      ৫০ - ৫৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
+                      জায়্যিদ
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
                     <td class="px-2 py-1 border-r border-gray-400">
-                      ৫০ - ৬০
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      B
+                      ৪০ - ৪৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
+                      মাকবুল
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
                     <td class="px-2 py-1 border-r border-gray-400">
-                      ৪০ - ৫০
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      C
+                      ০ - ৩৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
-                    </td>
-                  </tr>
-                  <tr class="border-b border-gray-400">
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      ৩৩ - ৪০
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      D
-                    </td>
-                    <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
-                    </td>
-                  </tr>
-                  <tr class="border-b border-gray-400">
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      ০ - ৩৩
-                    </td>
-                    <td class="px-2 py-1 border-r border-gray-400">
-                      ফেল
-                    </td>
-                    <td class="px-2 py-1 border-gray-400">
-                      মুমতাজ
+                      রাসিব
                     </td>
                   </tr>
                 </tbody>
@@ -249,7 +209,7 @@
                       মোট কার্যদিবস
                     </td>
                     <td class="px-2 py-1 border-r border-gray-400">
-                      ১০১ দিন
+                      ০০ দিন
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
@@ -257,7 +217,15 @@
                       উপস্থিতি
                     </td>
                     <td class="px-2 py-1 border-r border-gray-400">
-                      ৯০ দিন
+                      ০০ দিন
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      অনুপস্থিতি
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400">
+                      ০০ দিন
                     </td>
                   </tr>
                 </tbody>
@@ -287,34 +255,25 @@
         getResult() {
           const promise = databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac');
           promise.then((ress) => {
-           // this.results = ress.documents.filter(result => result.examName === 'প্রথম সাময়িক পরীক্ষা ২০২৪')
-           this.results = ress.documents;
+            // this.results = ress.documents.filter(result => result.examName === 'প্রথম সাময়িক পরীক্ষা ২০২৪')
+            this.results = ress.documents;
           }, function(error) {
             console.log(error);
+            // console.log(this.results)
           });
         },
         getGrade(score) {
           let grade
           if (score >= 80) {
-            grade = "A+";
-          } else if (score >= 70) {
-            grade = "A";
-          } else if (score >= 65) {
-            grade = "A-";
+            grade = "মুমতায";
           } else if (score >= 60) {
-            grade = "B+";
-          } else if (score >= 55) {
-            grade = "B";
+            grade = "জায়্যিদ জিদ্দান";
           } else if (score >= 50) {
-            grade = "B-";
-          } else if (score >= 45) {
-            grade = "C+";
+            grade = "জায়্যিদ";
           } else if (score >= 40) {
-            grade = "C";
-          } else if (score >= 35) {
-            grade = "D";
+            grade = "মাকবুল";
           } else {
-            grade = "ফেল";
+            grade = "রাসিব";
           }
           return grade
         },
@@ -331,8 +290,6 @@
         }
       }
     }
-
-
   </script>
 </body>
 
