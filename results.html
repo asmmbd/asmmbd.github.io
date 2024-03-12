@@ -126,6 +126,9 @@
                   <th class="px-2 py-1 border-r border-gray-400">
                     প্রাপ্ত নাম্বার
                   </th>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    বিষয় ভিত্তিক  অবস্থা
+                  </th>
                 </tr>
 
                 <template x-for="(result,index) in JSON.parse(result.results)">
@@ -140,6 +143,9 @@
                       ১০০
                     </td>
                     <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(result.mark)">
+                      ৯৬
+                    </td>
+                    <td class="px-2 py-1 border-r border-gray-400" x-text="getGrade(result.mark)">
                       ৯৬
                     </td>
                   </tr>
@@ -158,7 +164,7 @@
                       ৮০ - ১০০
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মুমতায
+                      মুমতায (উত্তম)
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
@@ -166,7 +172,7 @@
                       ৬৫ - ৭৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      জায়্যিদ জিদ্দান
+                      জায়্যিদ জিদ্দান (খুব ভালো)
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
@@ -174,7 +180,7 @@
                       ৫০ - ৬৪
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      জায়্যিদ
+                      জায়্যিদ (ভালো)
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
@@ -182,7 +188,7 @@
                       ৪০ - ৪৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      মাকবুল
+                      মাকবুল (পাস)
                     </td>
                   </tr>
                   <tr class="border-b border-gray-400">
@@ -190,7 +196,7 @@
                       ০ - ৩৯
                     </td>
                     <td class="px-2 py-1 border-gray-400">
-                      রাসিব
+                      রাসিব (ফেল)
                     </td>
                   </tr>
                 </tbody>
