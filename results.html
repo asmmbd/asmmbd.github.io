@@ -85,7 +85,7 @@
                   <th class="px-2 py-1 border-r border-gray-400">
                     গড় নাম্বার
                   </th>
-                  <td class="px-2 py-1" x-text="getBangla(result.total / JSON.parse(result.results).length)">
+                  <td class="px-2 py-1" x-text="getBangla(Math.round(result.total / JSON.parse(result.results).length))">
                     A+
                   </td>
                 </tr>
