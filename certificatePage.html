@@ -11,7 +11,7 @@
   <script>
     let user = localStorage.getItem("user");
 
-    if (user) {} else {
+    if (!user) {
       location.assign("login.html");
     }
   </script>
