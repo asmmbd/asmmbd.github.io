@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Teacher Appreciation Form</title>
+  <meta content="" name="description" />
+  <meta content="" name="keywords" />
+  <link rel="shortcut icon" href="src/img/asmmlogo.jpg" type="image/x-icon" />
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150910.jpg" rel="icon" />
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .student-img {
+      width: 50px;
+      height: 50px;
+      position: relative;
+    }
+
+    .student-img img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+
+    .student-img .bi {
+      position: absolute;
+      bottom: 0;
+      right: -6px;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <main id="main" class="main container">
+    <!-- End Page Title -->
+    <div class="row my-4 text-center">
+      <h1 class="h1">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+      <span>মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর </span>
+      <p class="text-bold mt-2 fs-3">শিক্ষক/ শিক্ষিকা আবেদন ফরম</p>
+      <p class="text-red">( সমস্ত তথ্য সঠিকভাবে পূরণ করতে হবে )</p>
+    </div>
+    <section class="section">
+      <form class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- Multi Columns Form -->
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label for="name" class="form-label">
+                    নাম (বাংলায়)*</label>
+                  <input type="text" class="form-control" id="tcname" name="tcname" required />
+                </div>
+                <div class="col-md-4">
+                  <label for="stiname" class="form-label">ইংরেজিতে (বড় অক্ষরে)*</label>
+                  <input type="text" class="form-control" id="tciname" name="tciname" required/>
+                </div>
+                <div class="col-md-4">
+                  <label for="faName" class="form-label">পিতার নাম(বাংলায়)*</label>
+                  <input type="text" class="form-control" id="faName" name="faName" required/>
+                </div>
+                <div class="col-md-4">
+                  <label for="faNameIng" class="form-label">পিতার নাম(ইংরেজিতে)*</label>
+                  <input type="text" class="form-control" id="faNameIng" name="faNameIng" required />
+                </div>
+
+                <div class="col-md-4">
+                  <label for="maName" class="form-label">মাতার নাম(বাংলায়)*</label>
+                  <input type="text" class="form-control" id="maName" name="maName"  required />
+                </div>
+                <div class="col-md-4">
+                  <label for="maNameIng" class="form-label">মাতার নাম(ইংরেজিতে)*</label>
+                  <input type="text" class="form-control" id="maNameIng" name="maNameIng" required />
+                </div>
+
+                <div class="col-md-3">
+                  <label for="birthDate" class="form-label">জন্ম তারিখঃ
+                  </label>
+                  <input type="date" class="form-control" id="birthDate" name="birthDate" required />
+                </div>
+                <div class="col-md-4">
+                  <label for="age" class="form-label">বয়সঃ </label>
+                  <input type="number" class="form-control" id="age" name="age" required />
+                </div>
+                <div class="col-md-5">
+                  <label for="stbirthId" class="form-label">জাতীয় পরিচয় পত্রের নম্বর:</label>
+                  <input type="number" class="form-control" id="nationalId" name="nationalId" required />
+                </div>
+                <div class="col-md-5">
+                  <label for="stbirthId" class="form-label">মোবাইল নম্বর*</label>
+                  <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" required />
+                </div>
+                <div class="col-md-5">
+                  <label for="stbirthId" class="form-label"> ইমেইল*</label>
+                  <input type="number" class="form-control" id="email" name="email" required />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-4">
+            <div class="card-body">
+              <h5>বর্তমান ঠিকানাঃ</h5>
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label for="preVillage" class="form-label">গ্রাম/মহল্লাঃ
+                  </label>
+                  <input type="text" class="form-control" id="preVillage" name="preVillage" placeholder="মেহেরপুর" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="preWord" class="form-label">ওয়ার্ড নংঃ </label>
+                  <input type="text" class="form-control" id="preWord" name="preWord" placeholder="১ নং ওয়ার্ড " required />
+                </div>
+                <div class="col-md-2">
+                  <label for="prePost" class="form-label">ডাকঘরঃ </label>
+                  <input type="text" class="form-control" id="prePost" name="prePost" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="preUni" class="form-label">ইউনিয়নঃ </label>
+                  <input type="text" class="form-control" id="preUni" name="preUni" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="preUpojela" class="form-label">উপজেলাঃ </label>
+                  <input id="preUpojela" name="preUpojela" class="form-control" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="preJela" class="form-label">জেলাঃ </label>
+                  <input id="preJela" name="preJela" class="form-control" required/>
+                </div>
+              </div>
+              <h5 class="mt-4">স্থায়ী ঠিকানাঃ</h5>
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label for="parVillage" class="form-label">গ্রাম/মহল্লাঃ
+                  </label>
+                  <input type="text" class="form-control" id="parVillage" name="parVillage" placeholder="মেহেরপুর" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="parWord" class="form-label">ওয়ার্ড নংঃ </label>
+                  <input type="text" class="form-control" id="parWord" name="parWord" placeholder="১ নং ওয়ার্ড "required />
+                </div>
+                <div class="col-md-2">
+                  <label for="parPost" class="form-label">ডাকঘরঃ </label>
+                  <input type="text" class="form-control" id="parPost" name="parPost" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="parUni" class="form-label">ইউনিয়নঃ </label>
+                  <input type="text" class="form-control" id="parUni" name="parUni" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="parUpojela" class="form-label">উপজেলাঃ </label>
+                  <input id="parUpojela" name="parUpojela" class="form-control" required/>
+                </div>
+                <div class="col-md-2">
+                  <label for="parJela" class="form-label">জেলাঃ </label>
+                  <input id="parJela" name="parJela" class="form-control" required />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-4">
+            <div class="card-body">
+              <h5>শিক্ষাগত যোগ্যতা</h5>
+              <div id="quality">
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label for="preInsName" class="form-label">প্রতিষ্ঠানের নামঃ</label>
+                    <input type="text" class="form-control" id="insName" required/>
+                  </div>
+                  <div class="col-md-3">
+                    <label for="preInsVillage" class="form-label"> পরীক্ষার নাম
+                    </label>
+                    <input type="text" class="form-control" id="examName" required/>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label for="preInsPost" class="form-label">পরীক্ষার সাল </label>
+                    <input type="text" class="form-control" id="examYear" required />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="preInsUni" class="form-label">ফলাফল </label>
+                    <input type="text" class="form-control" id="examResult" required />
+                  </div>
+                </div>
+              </div>
+              <div class="text-center w-100 mt-4">
+                <button class="btn btn-primary add-more">আরো যুক্ত করুন</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 text-center my-4">
+          <button class="btn btn-primary" type='submit'>Submit</button>
+          <button class="btn btn-danger" onclick='location.reload()'>Reset</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCF77ENFklUT4rL0wKlwRecDNjHjJrXKew",
+      authDomain: "database-3b1c4.firebaseapp.com",
+      databaseURL: "https://database-3b1c4-default-rtdb.firebaseio.com",
+      projectId: "database-3b1c4",
+      storageBucket: "database-3b1c4.appspot.com",
+      messagingSenderId: "715855490427",
+      appId: "1:715855490427:web:3c74353c94c3d7a330a1de"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let form = document.querySelector("form");
+    let addMore = document.querySelector(".add-more");
+    let quality = document.querySelector("#quality");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let data = new FormData(form);
+      let teacher = Object.fromEntries(data)
+
+      let rows = quality.querySelectorAll('.row');
+      let array = []
+      rows.forEach(row => {
+        let inputs = row.querySelectorAll('input');
+        let obj;
+        inputs.forEach(input => {
+          obj = {
+            ...obj,
+            [input.id]: input.value
+          }
+        })
+        array.push(obj)
+      })
+
+      let teacherData = {
+        ...teacher,
+        qualities: array,
+        id: Date.now().toString()
+      }
+
+      const dbRef = collection(db, "teacher_applications");
+      addDoc(dbRef, teacherData)
+        .then(docRef => {
+          alert("data sent successfully!");
+          location.assign('/')
+
+        })
+        .catch(error => {
+          alert('something went wrong!');
+        })
+    })
+
+    addMore.addEventListener('click', (e) => {
+      e.preventDefault();
+      let moreHtml = document.createElement('div');
+      moreHtml.setAttribute('class', 'row g-3 mt-3')
+      moreHtml.innerHTML = `
+                  <div class="col-md-3">
+                    <label for="preInsName" class="form-label">প্রতিষ্ঠানের নামঃ</label>
+                    <input type="text" class="form-control" id="insName" required />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="preInsVillage" class="form-label"> পরীক্ষার নাম
+                    </label>
+                    <input type="text" class="form-control" id="examName" required />
+                  </div>
+
+                  <div class="col-md-3">
+                    <label for="preInsPost" class="form-label">পরীক্ষার সাল </label>
+                    <input type="text" class="form-control" id="examYear" required />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="preInsUni" class="form-label">ফলাফল </label>
+                    <input type="text" class="form-control" id="examResult" required />
+                  </div>
+      `;
+
+      quality.appendChild(moreHtml)
+    })
+  </script>
+</body>
+
+</html>
