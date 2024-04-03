@@ -3,7 +3,7 @@
   "short_name": "ASMMBD",
   "name": "মাদ্রাসায়ে আয়েশা সিদ্দিকা (রা.)",
   "start_url": ".",
-  "display": "fullscreen",
+  "display": "standalone",
   "icons": [
     {
       "src": "src/img/asmmsqrlogo.png",
