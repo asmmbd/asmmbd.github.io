@@ -246,11 +246,6 @@
           }
           return retStr;
         },
-        formetDate(date){
-         return new Intl.DateTimeFormat('bn', {
-            dateStyle: 'full',
-          }).format(new Date(date))
-        }
       },
       mounted() {
         let param = new URLSearchParams(window.location.search)
