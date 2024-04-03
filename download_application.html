@@ -223,7 +223,7 @@
       data() {
         return {
           data: null,
-          formId: null
+          formId: ''
         }
       },
       methods: {
@@ -240,7 +240,8 @@
         }
       },
       mounted() {
-        this.formId = (new URLSearchParams(window.location.search)).get('id') 
+        let param = new URLSearchParams(window.location.search)
+        this.formId = param.get('id') 
         this.fetcher()
       }
     })
