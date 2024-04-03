@@ -43,7 +43,7 @@
         <tbody class="bg-red-60 border">
           <tr class="border text-center">
             <td class="px-3 py-2 border-r w-1/2">
-              তারিখ: {{new Date(Number(data?.id)).toDateString()}}
+              তারিখ: {{formetDate(Number(data?.id))}}
             </td>
             <td class="px-3 py-2">
               আইডি নং: {{getBangla(data?.id)}}
@@ -106,7 +106,7 @@
               জন্ম তারিখ:
             </td>
             <td class="px-3 py-2 border">
-              {{data?.birthDate}}
+              {{getBangla(data?.birthDate)}}
             </td>
           </tr>
           <tr class="border">
@@ -245,6 +245,11 @@
             retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
           }
           return retStr;
+        },
+        formetDate(date){
+         return new Intl.DateTimeFormat('bn', {
+            dateStyle: 'full',
+          }).format(new Date(date))
         }
       },
       mounted() {
