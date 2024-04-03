@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Download Form</title>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .page {
+      width: 21cm;
+      height: 29.6cm;
+    }
+
+    /*.page {
+      width: 29.7cm;
+      height: 21cm;
+    }*/
+
+    .page img {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page relative border border-4" id="app">
+    <img src="/admissionprint.jpg" alt="">
+    <div class="absolute w-full top-48 left-0 px-6 bg-red-60">
+      <div class="text-center">
+        <p>শিক্ষক/ শিক্ষিকা অনলাইন আবেদন ফরম</p>
+      </div>
+      <table class="w-full text-sm text-left mt-5">
+        <tbody class="bg-red-60 border">
+          <tr class="border text-center">
+            <td class="px-3 py-2 border-r w-1/2">
+              তারিখ:
+            </td>
+            <td class="px-3 py-2">
+              আইডি নং: <span x-text=""></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="w-full text-sm text-left mt-3">
+        <tbody class="bg-red-60 border">
+          <tr class="border">
+            <td class="px-3 py-2 border w-1/4">
+              নাম (বাংলায়)
+            </td>
+            <td class="px-3 py-2 border w-full">
+              {{data?.tcname}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border w-1/4">
+              নাম (ইংরেজিতে)
+            </td>
+            <td class="px-3 py-2 border w-full">
+              {{data?.tciname}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              পিতার নাম(বাংলায়)*
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.faName}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              পিতার নাম(ইংরেজিতে)*
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.faNameIng}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              মাতার নাম(বাংলায়)*
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.maName}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              মাতার নাম(ইংরেজিতে)*
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.maNameIng}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              জন্ম তারিখ:
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.birthDate}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              বয়সঃ
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.age}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              জাতীয় পরিচয় পত্রের নম্বর:
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.nationalId}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              মোবাইল নম্বর*
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.phoneNumber}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              ইমেইল*
+            </td>
+            <td class="px-3 py-2 border">
+              {{data?.email}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="w-full text-sm text-left mt-3 mb-1">
+        <tbody class="bg-red-60 border">
+          <tr class="border">
+            <td class="px-3 py-2 border w-1/4">
+              বর্তমান ঠিকানা:
+            </td>
+            <td class="px-3 py-2 border">
+              গ্রাম: {{data?.preVillage}}, ইউনি:{{data?.preUni}},পোস্ট: {{data?.prePost}},উপজেলা: {{data?.preUpojela}},জেলা: {{data?.preJela}}
+            </td>
+          </tr>
+          <tr class="border">
+            <td class="px-3 py-2 border">
+              স্থানীয় ঠিকানা:
+            </td>
+            <td class="px-3 py-2 border">
+              গ্রাম: {{data?.parVillage}}, ইউনি:{{data?.parUni}},পোস্ট: {{data?.parPost}},উপজেলা: {{data?.parUpojela}},জেলা: {{data?.parJela}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="w-full text-sm text-left mt-1">
+        <span>শিক্ষাগত যোগ্যতা:</span>
+        <tbody class="bg-red-60 border">
+          <tr class="border" v-for="{examName,examResult,examYear,insName} in data?.qualities">
+            <td class="px-3 py-2 border w-1/4">
+              {{insName}}
+            </td>
+            <td class="px-3 py-2 border w-1/4">
+              {{examName}}
+            </td>
+            <td class="px-3 py-2 border w-1/4">
+              {{examYear}}
+            </td>
+            <td class="px-3 py-2 border w-1/4">
+              {{examResult}}
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+      <div class="w-full grid grid-cols-2 border mt-4">
+        <div class="px-2 py-4">
+          <p>
+            সংযুক্তি সমূহ: <br>
+            ১. ২ কপি পাসপোর্ট সাইজের রঙিন ছবি। <br>
+            ২. জাতীয় পরিচয় পত্রের ফটোকপি। <br>
+            ৩. সার্টিফিকেটের ফটোকপি
+          </p>
+        </div>
+        <div class="border-l">
+          <div class="h-1/2 border-b text-center pt-3">
+            <span class="font-bold"> স্বাক্ষর </span>
+          </div>
+          <div class="h-1/2 text-center pt-1.5">
+            <span class="font-bold"> মুহতামিমের স্বাক্ষর ও সীল </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCF77ENFklUT4rL0wKlwRecDNjHjJrXKew",
+      authDomain: "database-3b1c4.firebaseapp.com",
+      databaseURL: "https://database-3b1c4-default-rtdb.firebaseio.com",
+      projectId: "database-3b1c4",
+      storageBucket: "database-3b1c4.appspot.com",
+      messagingSenderId: "715855490427",
+      appId: "1:715855490427:web:3c74353c94c3d7a330a1de"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const application = Vue.createApp({
+      data() {
+        return {
+          data: null,
+          formId: null
+        }
+      },
+      methods: {
+        fetcher() {
+          onSnapshot(collection(db, "teacher_applications"), (snapshot) => {
+            this.data = snapshot.docs.map((doc) => {
+              return {
+                docid: doc.id,
+                ...doc.data()
+              }
+            }).find(d => d.docid === this.formId)
+            console.log(this.data)
+          });
+        }
+      },
+      mounted() {
+        this.formId = (new URL(document.location).searchParams).get("id");
+        this.fetcher()
+      }
+    })
+    application.mount('#app')
+  </script>
+</body>
+
+</html>
