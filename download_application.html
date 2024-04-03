@@ -242,6 +242,8 @@
       mounted() {
         let param = new URLSearchParams(window.location.search)
         this.formId = param.get('id') 
+        console.log(this.formId)
+        console.log(typeOf this.formId)
         this.fetcher()
       }
     })
