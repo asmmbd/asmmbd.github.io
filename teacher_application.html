@@ -251,7 +251,7 @@
       addDoc(dbRef, teacherData)
         .then(docRef => {
           alert("data sent successfully!");
-          location.assign('/')
+          location.assign(`/download_application?id=${teacherData.id}`)
 
         })
         .catch(error => {
