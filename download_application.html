@@ -240,7 +240,7 @@
         }
       },
       mounted() {
-        this.formId = (new URL(document.location).searchParams).get("id");
+        this.formId = (new URL(window.location.search).searchParams).get("id");
         this.fetcher()
       }
     })
