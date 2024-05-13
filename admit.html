@@ -135,7 +135,7 @@
         students: [],
         examName:'প্রথম সাময়িক পরীক্ষা ২০২৪',
         searchStudent() {
-          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8');
+          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(60)]);
           promise.then((ress) => {
             this.students = ress.documents;
             console.log(ress)
