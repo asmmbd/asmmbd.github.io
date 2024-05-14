@@ -34,9 +34,9 @@
     <table class="w-full text-sm text-left border border-gray-400">
       <tbody class="text-center">
         <tr class="border-b border-gray-400">
-          <td class="px-2 py-1 border-r border-gray-400">
+         <!-- <td class="px-2 py-1 border-r border-gray-400">
             নং
-          </td>
+          </td>-->
           <td class="px-2 py-1 border-r border-gray-400">
             আইডি নং
           </td>
@@ -50,7 +50,7 @@
         </tr>
         <template x-for="(student,index) in students">
           <tr class="border-b border-gray-400">
-            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)"></td>
+            <!--<td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)"></td>-->
             <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.studentId)"></td>
             <td class="px-2 py-1 border-r border-gray-400 w-full" x-text="student?.stname">
             </td>
