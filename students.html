@@ -54,8 +54,8 @@
           </td>
           <td class="px-2 py-1 border-r border-gray-400">মোবাইল নং</td>
         </tr>
-        <template x-for="(student,index) in students">
-          <tr x-show="student?.active" class="border-b border-gray-400">
+        <template x-for="(student,index) in students.filter(student => student.active)">
+          <tr class="border-b border-gray-400">
             <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)"></td>
             <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.studentId)"></td>
             <td class="px-2 py-1 border-r border-gray-400" x-text="student?.stname">
