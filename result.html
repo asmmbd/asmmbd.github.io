@@ -10,30 +10,49 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css' />
-  <link rel="stylesheet" href="/src/css/index.css" />
+  <link rel="stylesheet" href="https://asmmbd.github.io/src/css/index.css" />
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <style>
-    .logo-img{
-      height: 30px;
-    }
-    .spinner {
-      --d: 24.6px;
-      width: 4.5px;
-      height: 4.5px;
-      border-radius: 50%;
-      color: #3F497F;
-      box-shadow: calc(1*var(--d)) calc(0*var(--d)) 0 0,
-        calc(0.707*var(--d)) calc(0.707*var(--d)) 0 1.1px,
-        calc(0*var(--d)) calc(1*var(--d)) 0 2.2px,
-        calc(-0.707*var(--d)) calc(0.707*var(--d)) 0 3.4px,
-        calc(-1*var(--d)) calc(0*var(--d)) 0 4.5px,
-        calc(-0.707*var(--d)) calc(-0.707*var(--d))0 5.6px,
-        calc(0*var(--d)) calc(-1*var(--d)) 0 6.7px;
-      animation: spinner-a90wxe 1s infinite steps(8);
+    @import url('https://fonts.googleapis.com/css2?family=Sixtyfour&display=swap');
+
+
+
+    .sixtyfour-font {
+      font-family: "Sixtyfour", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+      font-variation-settings:
+        "BLED" 0,
+        "SCAN" 0;
     }
 
-    @keyframes spinner-a90wxe {
+    .logo-img {
+      height: 30px;
+    }
+
+    .progress {
+      height: 10px;
+      width: 100%;
+      background: linear-gradient(#474bff 0 0),
+        linear-gradient(#474bff 0 0),
+        #dbdcef;
+      background-size: 60% 100%;
+      background-repeat: no-repeat;
+      animation: progress-7x9cg2 3s infinite;
+    }
+
+    @keyframes progress-7x9cg2 {
+      0% {
+        background-position: -150% 0, -150% 0;
+      }
+
+      66% {
+        background-position: 250% 0, -150% 0;
+      }
+
       100% {
-        transform: rotate(1turn);
+        background-position: 250% 0, 250% 0;
       }
     }
   </style>
@@ -63,14 +82,14 @@
     </div>
     <div class='header-middle p-0 bg-lightest xs-text-center' style='background-color: #F8F5E4;'>
       <div class='container pt-0 pb-0'>
-        <img alt='ASMM_LOGO' class='img-fluid' src='src/img/banner.jpg' />
+        <img alt='ASMM_LOGO' class='img-fluid' src='https://asmmbd.github.io/src/img/banner.jpg' />
       </div>
     </div>
     <div id="navbar" class='header-nav' style='background-color: #3F497F !important;'>
       <nav class='navbar navbar-expand-lg '>
         <div class='container'>
           <a class='navbar-brand' href='/'>
-            <img src="./src/img/asmmbd_logo.png" class="logo-img">
+            <img src="https://asmmbd.github.io/src/img/asmmbd_logo.png" class="logo-img">
           </a>
           <button aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler text-white shadow-none' data-bs-target='#navbarNavDropdown' data-bs-toggle='collapse' type='button'>
             <i class='bi bi-list'></i>
@@ -123,46 +142,39 @@
               <h2 class="fw-bolder my-0">পরীক্ষার ফলাফল</h2>
               <img src="https://themesbazar.net/academic/wp-content/themes/AcadcmicTheme/assets/img/icon-image.png" alt="">
             </div>
-            <div id="selectArea">
-              <select class="form-select mb-2" id="year">
-                <option selected>বছর</option>
-                <option value="2023">২০২৩</option>
-                <option value="2024">২০২৪</option>
-                <option value="2025">২০২৫</option>
+            <div id="selectArea" x-data="resultData()" x-init="init()">
+              <select class="form-select mb-2" id="className" :class="error ? `border-danger` : ``" x-model="className">
+                <option selected>শ্রেণী</option>
+                <template x-for="cls in classes">
+                  <option :value="cls" x-text="cls"></option>
+                </template>
               </select>
-              <select class="form-select mb-2" id="className">
-                <option selected>ক্লাস</option>
-                <option value="one"> প্রথম শ্রেণী</option>
-                <option value="two"> দ্বিতীয় শ্রেণী</option>
-                <option value="three">তৃতীয় শ্রেণী</option>
-                <option value="four">চতুর্থ শ্রেণী</option>
-                <option value="five">পঞ্চম শ্রেণী </option>
+              <select class="form-select mb-2" :class="error ? `border-danger` : ``" id="semister" x-model="examName">
+                <option selected> পরীক্ষার নাম</option>
+                <template x-for="examNan in examNames">
+                  <option :value="examNan" x-text="examNan"></option>
+                </template>
               </select>
-              <select class="form-select mb-2" id="semister">
-                <option selected>সমায়িক</option>
-                <option value="first">১ম সমায়িক</option>
-                <option value="second">২য় সমায়িক</option>
-                <option value="final">বার্ষিক</option>
-              </select>
-              <input type="number" class="form-control mb-2" placeholder="আইডি নং:" id='studentId'>
-              <button class="w-100 btn btn-primary" id="resultBtn">ফলাফল দেখুন</button>
+              <input type="number" class="form-control mb-2" :class="error ? `border-danger` : ``" placeholder="আইডি নং:" x-model='studentId'>
+              <div class="w-100 bg-secondary form-control text-center mb-2">
+                <span x-text="randomText" class="sixtyfour-font text-white">ertyuokj</span>
+              </div>
+              <input type="text" class="form-control mb-2" :class="error ? `border-danger` : ``" placeholder=" উপরের কোডটি এখানে লিখুন" x-model="randomTextInput">
+              <button x-show="!loading" class="w-100 btn btn-primary" @click="() => getResult()">ফলাফল দেখুন</button>
+
+              <div x-show="loading" class="progress"></div>
+
+
+
+              <div :class="error ? 'd-flex' : 'd-none'" class=" align-items-center justify-content-between my-3 print-btn">
+                <span>কোন ফলাফল পাওয়া যায়নি</span>
+                <button class="btn btn-primary  text-center" onclick="print()"> আবার চেষ্টা করুন <i class="fi fi-rr-print"></i></button>
+              </div>
+
+
+
             </div>
           </div>
-        </div>
-
-
-        <div class="d-flex align-items-center justify-content-center d-none loader" style="height: 200px">
-          <div class="spinner"></div>
-        </div>
-
-
-        <div class="mt-0 px-2" id="printArea">
-
-        </div>
-
-        <div class="text-center my-3 print-btn d-none d-print-none">
-
-          <button class="btn btn-primary d-print-none text-center" onclick="print()">Print Result <i class="fi fi-rr-print"></i></button>
         </div>
       </div>
 
@@ -235,16 +247,9 @@
     </div>
   </div>
 
-  <script src="/src/js/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+
   <script>
-    const resultBtn = document.getElementById('resultBtn');
-    const selectArea = document.getElementById('selectArea');
-    const spinner = document.querySelector('.loader');
-    const printArea = document.querySelector('#printArea');
-    const printBtn = document.querySelector('.print-btn');
-
-
     const { Client, Databases, Query } = Appwrite;
     const client = new Client();
     client
@@ -252,129 +257,60 @@
       .setProject('652c1374db243c864a6c');
     const databases = new Databases(client);
 
+    function resultData() {
+      return {
+        examNames: ['প্রথম সাময়িক পরীক্ষা ২০২৪'],
+        classes: [
+          'শিশু',
+          'প্রথম',
+          'দ্বিতীয়',
+          'তৃতীয়',
+          'চতুর্থ',
+          'পঞ্চম',
+          'হেফজখানা', ' নাহবেমির',
+          'মিযান'],
+        className: '',
+        examName: '',
+        studentId: '',
+        randomText: '',
+        randomTextInput: '',
+        error: false,
+        loading: false,
+        generateRandomText() {
+          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+          let result = '';
+          const length = 8; // Set the length of the random text
+          for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+          }
+          this.randomText = result;
+        },
+        getResult() {
+          this.loading = true
+          const promise = databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.equal("studentId", this.studentId), Query.equal("class", this.className), Query.equal("examName", this.examName)]);
+          promise.then((ress) => {
+            let results = ress.documents;
+            if (!this.randomText === this.randomTextInput || !results.length) {
+              this.loading = false;
+              this.error = true;
+            } else {
+              console.log(results);
+              location.assign(`./student-result.html?id=${results[0].$id}`)
+              this.loading = false
+            }
 
+          }, function(error) {
+            console.log(error);
+            this.error = true
+          });
+        },
 
-    function formetGred(mark) {
-      let number = Number(mark);
-      return number >= 80 ? 'A+' :
-        number >= 70 ? 'A' :
-        number >= 60 ? 'A-' :
-        number >= 50 ? 'B' :
-        number >= 40 ? 'C' : 'F'
+        init() {
+          this.generateRandomText()
+        }
+
+      };
     }
-
-    function formetSemister(name) {
-      if (name === 'first') {
-        return 'প্রথম সমায়িক পরীক্ষা';
-      }
-      if (name === 'second') {
-        return 'দ্বিতীয় সমায়িক পরীক্ষা';
-      }
-      if (name === 'final') {
-        return 'বার্ষিক পরীক্ষা';
-      }
-
-    }
-
-    function getResult(studentId, className, semister, year) {
-      spinner.classList.remove('d-none');
-      selectArea.classList.add('d-none');
-      const promise = databases.listDocuments('652c16162f939c821f75', '653fb05e44be80e1d70c', [Query.search("studentId", studentId), Query.search("class", className), Query.search("semister", semister), Query.search("year", year), ]);
-      promise.then(function(ress) {
-        spinner.classList.add('d-none');
-        let result = ress.documents[0];
-        console.log(result);
-        let subjects = JSON.parse(result.subjects);
-        printArea.innerHTML = `
-            <div class="text-center">
-            <h1 class="fw-bolder">আয়েশা সিদ্দিকা (রাঃ) মহিলা মাদরাসা</h1>
-            <h4>মার্কাজ মসজিদ রোড, কলেজ মোড়,মেহেরপুর।</h4>
-            <h2 class="py-0 my-0">পরীক্ষার ফলাফল</h2>
-            <h4>${formetSemister(result.semister)} - ${result.year}</h4>
-          </div>
-          <div class="w-100 text-center bg-primary text-white py-2">
-            <h2 class="py-0 my-0">ছাত্র/ছাত্রীর তথ্য</h2>
-          </div>
-          <div>
-            <table class="table table-borderless table-striped">
-              <tbody>
-                <tr>
-                  <th scope="row">নাম:</th>
-                  <td>${result.name}</td>
-                  <td>আইডি নং:</td>
-                  <td>${result.studentId}</td>
-                </tr>
-                <tr>
-                  <th scope="row">পিতার নাম:</th>
-                  <td>${result.faName}</td>
-                  <td>শ্রেণী:</td>
-                  <td>${result.class}</td>
-                </tr>
-                <tr>
-                  <th scope="row">মাতার নাম:</th>
-                  <td>${result.maName}</td>
-                  <td>গ্রেড:</td>
-                  <td>${result.gred}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="w-100 text-center">
-            <h2>ফলাফল</h2>
-          </div>
-          <div>
-            <table class="table table-bordered">
-              <thead>
-                <tr class="table-secondary">
-                  <th scope="col">subject Name</th>
-                  <th scope="col">Mark</th>
-                  <th scope="col">Grade</th>
-                </tr>
-              </thead>
-              <tbody>
-              ${subjects.map(subject => `<tr>
-                  <th scope="row">${subject.name}</th>
-                  <td>${subject.mark}</td>
-                  <td>${formetGred(subject.mark)}</td>
-                </tr>`).join("")
-              }
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <h3>মন্তব্য :</h3>
-            <p>
-              ${result.comment}
-            </p>
-          </div>
-          <div class="text-end mt-5 d-none">
-            <span class="border-top pt-1">অভিভাবকের সাক্ষর</span>
-          </div>
-          <div class="row border-top mt-4 d-none">
-            <div class="col-6">
-              মুহতামিম: <br> সুমাইয়া তাবাসসুম
-            </div>
-            <div class="col-6 text-end">
-              মুহতামিম: <br> হা:মাও: আবদুল্লাহ আল সাইফ
-            </div>
-          </div>
-             
-             `;
-        printBtn.classList.remove('d-none')
-
-
-      }, function(error) {
-        console.log(error);
-      });
-    }
-
-    resultBtn.addEventListener('click', () => {
-      const year = document.getElementById('year').value;
-      const className = document.getElementById('className').value;
-      const semister = document.getElementById('semister').value;
-      const studentId = document.getElementById('studentId').value;
-      getResult(studentId, className, semister, year)
-    })
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
