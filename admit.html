@@ -130,7 +130,7 @@
         searchStudent() {
           const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(60)]);
           promise.then((ress) => {
-            this.students = ress.documents;
+            this.students = ress.documents.filter(s => s.active);
             console.log(ress)
           }, function(error) {
             console.log(error);
