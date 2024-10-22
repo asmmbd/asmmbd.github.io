@@ -1,395 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <link href="src/img/asmmlogo.jpg" rel="icon" />
-    <title>ASMM - Admin Dashboard</title>
-    <meta content="" name="description" />
-    <meta content="" name="keywords" />
-    <script>
-      let user = localStorage.getItem("user");
 
-      if (user) {
-      } else {
-        location.assign("login.html");
-      }
-    </script>
-    <!-- Favicons -->
-    <link href="src/img/favicon.png" rel="icon" />
-    <link href="src/img/apple-touch-icon.png" rel="apple-touch-icon" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <style type="text/tailwindcss">
+    * {
+      font-family: SolaimanLipi;
+    }
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-      rel="stylesheet"
-    />
+    .shadow-custom {
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.05);
+      border-radius: 7px;
+    }
+    .input-number{
+      @apply block w-10 h-10 px-3 text-gray-700 placeholder-gray-500 bg-white border rounded-lg    focus:border-blue-400  focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300;
+    }
+  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+</head>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
-    />
-    <!-- Vendor CSS Files -->
+<body>
 
-    <link href="src/quill/quill.snow.css" rel="stylesheet" />
-    <link href="src/quill/quill.bubble.css" rel="stylesheet" />
 
-    <link href="src/simple-datatables/style.css" rel="stylesheet" />
+  <div class="" x-data="data()">
 
-    <!-- Template Main CSS File -->
-    <link href="src/css/style.css" rel="stylesheet" />
-  </head>
 
-  <body>
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
-      <div class="d-flex align-items-center justify-content-between">
-        <a href="admin.html" class="logo d-flex align-items-center">
-          <img src="src/img/asmmlogo.png" alt="" />
-          <span class="d-none d-lg-block">ASMMBD ADMIN</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-      </div>
-      <!-- End Logo -->
+    <div x-show="studentId">
 
-      <div class="search-bar">
-        <form
-          class="search-form d-flex align-items-center"
-          method="POST"
-          action="#"
-        >
-          <input
-            type="text"
-            name="query"
-            placeholder="Search"
-            title="Enter search keyword"
-          />
-          <button type="submit" title="Search">
-            <i class="bi bi-search"></i>
-          </button>
-        </form>
-      </div>
-      <!-- End Search Bar -->
-
-      <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-          <li class="nav-item d-block d-lg-none">
-            <a class="nav-link nav-icon search-bar-toggle" href="#">
-              <i class="bi bi-search"></i>
-            </a>
-          </li>
-          <!-- End Search Icon-->
-
-          <li class="nav-item dropdown"></li>
-
-          <li class="nav-item dropdown pe-3">
-            <a
-              class="nav-link nav-profile d-flex align-items-center pe-0"
-              href="#"
-              data-bs-toggle="dropdown"
-            >
-              <img
-                src="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png"
-                alt="Profile"
-                class="rounded-circle"
-              />
-              <span class="d-none d-md-block dropdown-toggle ps-2"
-                >Admin</span
-              > </a
-            ><!-- End Profile Iamge Icon -->
-
-            <ul
-              class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
-            >
-              <li class="dropdown-header">
-                <h6>ASKM Admin</h6>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-
-              <li>
-                <a
-                  class="dropdown-item d-flex align-items-center"
-                  href="users-profile.html"
-                >
-                  <i class="bi bi-person"></i>
-                  <span>My Profile</span>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-
-              <li>
-                <a
-                  class="dropdown-item d-flex align-items-center"
-                  href="users-profile.html"
-                >
-                  <i class="bi bi-gear"></i>
-                  <span>Account Settings</span>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-
-              <li>
-                <a
-                  onclick="localStorage.removeItem('user')"
-                  class="dropdown-item d-flex align-items-center"
-                  href="/login"
-                >
-                  <i class="bi bi-box-arrow-right"></i>
-                  <span>Sign Out</span>
-                </a>
-              </li>
-            </ul>
-            <!-- End Profile Dropdown Items -->
-          </li>
-          <!-- End Profile Nav -->
-        </ul>
-      </nav>
-      <!-- End Icons Navigation -->
-    </header>
-    <!-- End Header -->
-
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
-      <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="admin.html">
-            <i class="bi bi-grid"></i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <!-- End Dashboard Nav -->
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#forms-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-journal-text"></i><span>Forms</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="forms-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="student-data.html">
-                <i class="bi bi-circle"></i><span> Forms</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Forms Nav -->
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#tables-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-layout-text-window-reverse"></i><span>Tables</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="tables-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="student-data.html">
-                <i class="bi bi-circle"></i><span> Student Data</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Tables Nav -->
-
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="login.html">
-            <i class="bi bi-box-arrow-in-right"></i>
-            <span>Login</span>
-          </a>
-        </li>
-        <!-- End Login Page Nav -->
-      </ul>
-    </aside>
-    <!-- End Sidebar-->
-    <main id="main" class="main">
-      <div class="pagetitle">
-        <h1>Profile</h1>
-        <nav>
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item">Users</li>
-            <li class="breadcrumb-item active">Profile</li>
-          </ol>
-        </nav>
-      </div>
-      <!-- End Page Title -->
-
-      <section class="section profile">
-        <div class="row">
-          <div class="col-xl-4">
-            <div class="card">
-              <div
-                class="card-body profile-card pt-4 d-flex flex-column align-items-center"
-              >
-                <img
-                  src="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png"
-                  alt="Profile"
-                  class="rounded-circle"
-                />
-                <h2>Kevin Anderson</h2>
-                <h3>Web Designer</h3>
-                <div class="social-links mt-2">
-                  <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                  <a href="#" class="facebook"
-                    ><i class="bi bi-facebook"></i
-                  ></a>
-                  <a href="#" class="instagram"
-                    ><i class="bi bi-instagram"></i
-                  ></a>
-                  <a href="#" class="linkedin"
-                    ><i class="bi bi-linkedin"></i
-                  ></a>
-                </div>
-              </div>
-            </div>
+      <section class="px-2">
+        <div class="w-full flex justify-center">
+          <div class="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gray-100">
+            <svg class="h-1/2 w-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h1 1 14H20z"></path>
+            </svg>
           </div>
+        </div>
 
-          <div class="col-xl-8">
-            <div class="card">
-              <div class="card-body pt-3">
-                <!-- Bordered Tabs -->
-                <ul class="nav nav-tabs nav-tabs-bordered">
-                  <li class="nav-item">
-                    <button
-                      class="nav-link active"
-                      data-bs-toggle="tab"
-                      data-bs-target="#profile-overview"
-                    >
-                      Overview
-                    </button>
-                  </li>
-                </ul>
-                <div class="tab-content pt-2">
-                  <div
-                    class="tab-pane fade show active profile-overview"
-                    id="profile-overview"
-                  >
-                    <h5 class="card-title">About</h5>
-                    <p class="small fst-italic">
-                      Sunt est soluta temporibus accusantium neque nam maiores
-                      cumque temporibus. Tempora libero non est unde veniam est
-                      qui dolor. Ut sunt iure rerum quae quisquam autem eveniet
-                      perspiciatis odit. Fuga sequi sed ea saepe at unde.
-                    </p>
 
-                    <h5 class="card-title">Profile Details</h5>
+        <table class="w-full text-sm text-left mt-5">
+          <tbody class="bg-red-60 border">
+            <tr class="border text-center">
+              <td class="px-3 py-2 border-r w-1/2">
+                আইডি নং:
+              </td>
+              <td class="px-3 py-2" x-text="data?.studentId">
+                ২০২৪০০০১
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="w-full text-sm text-left mt-3">
+          <tbody class="bg-red-60 border">
+            <tr class="border">
+              <td colspan="2" class="px-3 py-2 border w-1/4">
+                শিক্ষার্থীর নাম (বাংলায়)
+              </td>
+              <td colspan="2" class="px-3 py-2 border w-1/4" x-text="data?.stname">
+              </td>
+            </tr>
+            <tr class="border">
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Full Name</div>
-                      <div class="col-lg-9 col-md-8">Kevin Anderson</div>
-                    </div>
+              <td colspan="2" class="px-3 py-2 border">
+                শিক্ষার্থীর নাম (ইংরেজিতে)
+              </td>
+              <td colspan="2" class="px-3 py-2 border" x-text="data?.stiname">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                শ্রেণি:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.class">
+              </td>
+              <td class="px-3 py-2 border">
+                বিভাগ:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.group">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                ক্যাটাগরি:
+              </td>
+              <td class="px-3 py-2 border" x-text="''">
+                আবাসিক
+              </td>
+              <td class="px-3 py-2 border">
+                জন্ম তারিখ:
+              </td>
+              <td class="px-3 py-2 border" x-text="''">
+                ২০/০৫/২০০১
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                বয়স:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.age">
+              </td>
+              <td class="px-3 py-2 border">
+                জন্ম নিবন্ধন নং:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.stbirthId">
+              </td>
+            </tr>
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Company</div>
-                      <div class="col-lg-9 col-md-8">
-                        Lueilwitz, Wisoky and Leuschke
-                      </div>
-                    </div>
+          </tbody>
+        </table>
+        <table class="w-full text-sm text-left mt-3">
+          <tbody class="bg-red-60 border">
+            <tr class="border">
+              <td class="px-3 py-2 border w-1/4">
+                বর্তমান ঠিকানা:
+              </td>
+              <td class="px-3 py-2 border" x-text="`গ্রাম: ${data?.preVillage}, ইউপি: ${data?.preUni},পোস্ট: ${data?.prePost},উপজেলা: ${data?.preUpojela},জেলা: ${data?.preJela}`">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                স্থানীয় ঠিকানা:
+              </td>
+              <td class="px-3 py-2 border" x-text="`গ্রাম: ${data?.parVillage}, ইউনি: ${data?.parUni},পোস্ট: ${data?.parPost},উপজেলা: ${data?.parUpojela},জেলা: ${data?.parJela}`">
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Job</div>
-                      <div class="col-lg-9 col-md-8">Web Designer</div>
-                    </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="w-full text-sm text-left mt-3">
+          <tbody class="bg-red-60 border">
+            <tr class="border">
+              <td class="px-3 py-2 border w-1/2">
+                পিতার নাম(বাংলায়)*
+              </td>
+              <td class="px-3 py-2 border w-1/2" x-text="data?.faName">
+              </td>
+            </tr>
+            <tr class="border">
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Country</div>
-                      <div class="col-lg-9 col-md-8">USA</div>
-                    </div>
+              <td class="px-3 py-2 border w-1/2">
+                পিতার নাম(ইংরেজিতে)*
+              </td>
+              <td class="px-3 py-2 border w-1/2" x-text="data?.faNameIng">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                ভোটার আইডি নং:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.faIdNum">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                মোবাইল নং:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.faPhone">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                মাতার নাম(বাংলায়)*
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.maName">
+              </td>
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Address</div>
-                      <div class="col-lg-9 col-md-8">
-                        A108 Adam Street, New York, NY 535022
-                      </div>
-                    </div>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                মাতার নাম(ইংরেজিতে)*
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.maNameIng">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                ভোটার আইডি নং:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.maIdNum">
+              </td>
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Phone</div>
-                      <div class="col-lg-9 col-md-8">(436) 486-3538 x29071</div>
-                    </div>
+            </tr>
+            <tr class="border">
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Email</div>
-                      <div class="col-lg-9 col-md-8">
-                        k.anderson@example.com
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- End Bordered Tabs -->
+              <td class="px-3 py-2 border">
+                মোবাইল নং:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.maPhone">
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+        <table class="w-full text-sm text-left mt-3">
+          <tbody class="bg-red-60 border">
+            <tr class="border">
+              <td class="px-3 py-2 border w-1/2">
+                অভিভাবকের নাম:
+              </td>
+              <td class="px-3 py-2 border w-1/2" x-text="data?.ovivabok">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border w-1/2">
+                সম্পর্ক:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.oviRelation">
+              </td>
+            </tr>
+            <tr class="border">
+              <td class="px-3 py-2 border">
+                ঠিকানা:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.oviAdress">
+              </td>
+            </tr>
+            <tr class="border">
+
+              <td class="px-3 py-2 border">
+                মোবাইল নং:
+              </td>
+              <td class="px-3 py-2 border" x-text="data?.ovivabokNum">
+              </td>
+            </tr>
+
+
+          </tbody>
+        </table>
+        <table class="w-full text-sm text-left mt-3">
+          <tbody class="bg-red-60 border">
+            <tr class="border">
+              <td class="px-3 py-2 border w-1/2">
+                পূর্বের প্রতিষ্ঠানের নাম:
+              </td>
+              <td class="px-3 py-2 border w-1/2" x-text="data?.preInsName">
+              </td>
+            </tr>
+            <tr class="border">
+
+              <td class="px-3 py-2 border w-1/2">
+                ঠিকানা:
+              </td>
+              <td class="px-3 py-2 border w-1/2" x-text="`${data?.preInsUpojela}, ${data?.preInsJela}`">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </section>
+
+
+      <section class="container px-4 mx-auto mt-4">
+        <div class="flex items-center gap-x-3">
+          <h2 class="text-lg font-medium text-gray-800 ">পরীক্ষার ফলাফল</h2>
+        </div>
+
+        <div class="flex flex-col mt-2 p-2">
+          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div class="overflow-hidden border border-gray-200 rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+
+                      <th scope="col" class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500  border"> পরীক্ষার নাম</th>
+
+                      <th scope="col" class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500  border">বিভাগ</th>
+                      <th scope="col" class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500  border">মোট নম্বর</th>
+                      <th scope="col" class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500  border">গড় নম্বর</th>
+
+                      <th scope="col" class="relative font-normal  py-3.5 px-4">
+                        <span>ফলাফল</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200  ">
+
+                    <template x-for="result  in results">
+                      <tr>
+                        <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap border" x-text="result.examName">Design Director</td>
+                        <td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap border">
+                          <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-emerald-100/60 ">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+
+                            <h2 class="text-sm font-normal text-emerald-500" x-text="result.status">Active</h2>
+                          </div>
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap border" x-text="result.total">Design Director</td>
+                        <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap border" x-text="result.avg">Design Director</td>
+                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                          <div class="flex items-center gap-x-6">
+
+
+                            <a :href="`https://asmmbd.github.io/student-result?id=${result.$id}`" class="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                <path d="M7 11l5 5l5 -5" />
+                                <path d="M12 4l0 12" />
+                              </svg>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
+
       </section>
-    </main>
 
-    <!-- End #main -->
 
-    <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
-      <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong
-        >. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
-    </footer>
-    <!-- End Footer -->
+    </div>
 
-    <a
-      href="#"
-      class="back-to-top d-flex align-items-center justify-content-center"
-      ><i class="bi bi-arrow-up-short"></i
-    ></a>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-    <script src="assets/vendor/quill/quill.min.js"></script>
-    <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
 
-    <!-- Template Main JS File -->
-    <script src="src/js/main.js"></script>
-  </body>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+    function data() {
+      return {
+        data: null,
+        results: [],
+        studentId: new URLSearchParams(window.location.search).get('id'),
+        login() {
+          this.getStudent();
+          this.getStudentResult()
+        },
+        getStudent() {
+          const promise = databases.getDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', this.studentId);
+          promise.then((ress) => {
+            this.data = ress
+            console.log(ress)
+          }, function(error) {
+            console.log(error);
+          });
+        },
+
+        getStudentResult() {
+          const promise = databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.equal("studentId", this.studentId)]);
+          promise.then((ress) => {
+            this.results = ress.documents;
+            console.log(ress.documents)
+          }, function(error) {
+            console.log(error);
+          });
+        },
+        init() {
+          if (this.studentId) {
+            this.login()
+          }
+        },
+      }
+    }
+  </script>
+
+</body>
+
 </html>
