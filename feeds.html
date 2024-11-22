@@ -124,31 +124,32 @@
                   </p>
                   <img :src="post.thumbnail ? post.thumbnail : '/src/post-image.png'" class="w-full rounded-md my-2">
                 </div>
-                <div class="flex items-center justify-between gap-3 my-2.5 px-2">
+                <div class="flex items-center gap-3 my-2.5 px-2">
                   <button class="flex items-center gap-1.5" x-data="{isLiked: false}" @click="isLiked = !isLiked;">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="null">
-                      <path d="M2 12.5C2 11.3954 2.89543 10.5 4 10.5C5.65685 10.5 7 11.8431 7 13.5V17.5C7 19.1569 5.65685 20.5 4 20.5C2.89543 20.5 2 19.6046 2 18.5V12.5Z" stroke="currentColor" stroke-width="null" stroke-linecap="round" stroke-linejoin="round" />
-                      <path d="M15.4787 7.80626L15.2124 8.66634C14.9942 9.37111 14.8851 9.72349 14.969 10.0018C15.0369 10.2269 15.1859 10.421 15.389 10.5487C15.64 10.7065 16.0197 10.7065 16.7791 10.7065H17.1831C19.7532 10.7065 21.0382 10.7065 21.6452 11.4673C21.7145 11.5542 21.7762 11.6467 21.8296 11.7437C22.2965 12.5921 21.7657 13.7351 20.704 16.0211C19.7297 18.1189 19.2425 19.1678 18.338 19.7852C18.2505 19.8449 18.1605 19.9013 18.0683 19.9541C17.116 20.5 15.9362 20.5 13.5764 20.5H13.0646C10.2057 20.5 8.77628 20.5 7.88814 19.6395C7 18.7789 7 17.3939 7 14.6239V13.6503C7 12.1946 7 11.4668 7.25834 10.8006C7.51668 10.1344 8.01135 9.58664 9.00069 8.49112L13.0921 3.96056C13.1947 3.84694 13.246 3.79012 13.2913 3.75075C13.7135 3.38328 14.3652 3.42464 14.7344 3.84235C14.774 3.8871 14.8172 3.94991 14.9036 4.07554C15.0388 4.27205 15.1064 4.37031 15.1654 4.46765C15.6928 5.33913 15.8524 6.37436 15.6108 7.35715C15.5838 7.46692 15.5488 7.5801 15.4787 7.80626Z" stroke="currentColor" stroke-width="null" stroke-linecap="round" stroke-linejoin="round" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                     </svg>
                     <span x-text="formatNumber(post.likes)">${likes}</span>
                   </button>
                   <button class="flex items-center gap-2">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M13.5 3H10.5C7.21252 3 5.56878 3 4.46243 3.90796C4.25989 4.07418 4.07418 4.25989 3.90796 4.46243C3 5.56878 3 7.21252 3 10.5V14.6667C3 16.5076 4.49238 18 6.33333 18H6.5C7.32843 18 8 18.6716 8 19.5C8 20.118 8.70557 20.4708 9.2 20.1L11 18.75C11.4623 18.4033 11.6934 18.23 11.9584 18.1296C12.0086 18.1106 12.0595 18.0936 12.111 18.0787C12.3833 18 12.6722 18 13.25 18H13.5C16.7875 18 18.4312 18 19.5376 17.092C19.7401 16.9258 19.9258 16.7401 20.092 16.5376C21 15.4312 21 13.7875 21 10.5C21 7.21252 21 5.56878 20.092 4.46243C19.9258 4.25989 19.7401 4.07418 19.5376 3.90796C18.4312 3 16.7875 3 13.5 3Z" stroke="currentColor" stroke-width="null" class="my-path"></path>
-                      <path d="M7 8H17" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                      <path d="M7 12H12" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M22 11.5667C22 16.8499 17.5222 21.1334 12 21.1334C11.3507 21.1343 10.7032 21.0742 10.0654 20.9545C9.60633 20.8682 9.37678 20.8251 9.21653 20.8496C9.05627 20.8741 8.82918 20.9948 8.37499 21.2364C7.09014 21.9197 5.59195 22.161 4.15111 21.893C4.69874 21.2194 5.07275 20.4112 5.23778 19.5448C5.33778 19.0148 5.09 18.5 4.71889 18.1231C3.03333 16.4115 2 14.1051 2 11.5667C2 6.28357 6.47778 2 12 2C17.5222 2 22 6.28357 22 11.5667Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
                     </svg>
                     <span x-text="formatNumber(post.comments)">${comments}</span>
                   </button>
                   <button class="flex items-center gap-2">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 7C5 5.11438 5 4.17157 5.58579 3.58579C6.17157 3 7.11438 3 9 3H15C16.8856 3 17.8284 3 18.4142 3.58579C19 4.17157 19 5.11438 19 7V17.1136C19 18.8158 19 19.6668 18.4576 19.946C17.9152 20.2251 17.2226 19.7304 15.8375 18.7411L14.325 17.6607C13.2023 16.8588 12.6409 16.4578 12 16.4578C11.3591 16.4578 10.7977 16.8588 9.67505 17.6607L8.16248 18.7411C6.77738 19.7304 6.08484 20.2251 5.54242 19.946C5 19.6668 5 18.8158 5 17.1136V7Z" stroke="currentColor" stroke-width="null" class="my-path"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M7 17L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M12 17L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M17 17L17 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
                     </svg>
                     <span x-text="formatNumber(post.share)">${comments}</span>
                   </button>
                   <button class="flex items-center gap-2">
-                    <svg class="w-5 h-5" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.0235 2.41406V7.20039C2.03451 7.20039 1.85033 17.7132 2.03508 22.4141C2.03508 20.1918 7.01611 12.4141 12.0235 13.1833V17.9696L22 10.1918L12.0235 2.41406Z" stroke="currentColor" stroke-width="null" stroke-linejoin="round" class="my-path"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M21.0477 3.05293C18.8697 0.707363 2.48648 6.4532 2.50001 8.551C2.51535 10.9299 8.89809 11.6617 10.6672 12.1581C11.7311 12.4565 12.016 12.7625 12.2613 13.8781C13.3723 18.9305 13.9301 21.4435 15.2014 21.4996C17.2278 21.5892 23.1733 5.342 21.0477 3.05293Z" stroke="currentColor" stroke-width="1.5" />
+                      <path d="M11.5 12.5L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                     <span x-text="formatNumber(post.share)">${share}</span>
                   </button>
