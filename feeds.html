@@ -8,6 +8,11 @@
   <title>Document</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    .rotate-360 {
+      transform: rotate(270deg);
+    }
+  </style>
 </head>
 
 <body class="bg-gray-90 text-gray-20" x-data="data()">
@@ -166,14 +171,15 @@
                       <path d="M17.0547 12.001L17.0047 12.001" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="my-path"></path>
                     </svg>
 
-                    <div x-show="isOpen" class="absolute top-5 right-0 bg-gray-100 rounded-md py-2.5 px-2 w-28 shadow-md z-50">
-                      <ul class="space-y-1 *:hover:bg-gray-300">
-                        <li>Edit Post</li>
-                        <li>delete Post</li>
-                        <li>delete Post</li>
-                        <li>delete Post</li>
-                        <li>delete Post</li>
-                        <li>delete Post</li>
+                    <div x-show="isOpen" class="fixed bottom-0 right-0 bg-gray-100 rounded-lg p-4 w-full shadow-md z-50">
+                      <ul class="w-full bg-gray-300 rounded-lg divide-y">
+                        <li class="p-3">Save Post</li>
+                        <li class="p-3">Copy link</li>
+                        <li class="p-3">Not interested</li>
+                        <li class="p-3">Notify me</li>
+                        <li class="p-3">Mute</li>
+                        <li class="p-3">Unfollow</li>
+                        <li class="p-3 text-red-800">Report</li>
                       </ul>
                     </div>
                   </div>
@@ -184,29 +190,34 @@
                   </p>
                   <img :src="post.thumbnail ? post.thumbnail : '/src/post-image.png'" class="w-full rounded-md my-2">
                 </div>
-                <div class="flex items-center gap-3 my-2.5 px-2">
-                  <button class="flex items-center gap-1.5" x-data="{isLiked: false}" @click="isLiked = !isLiked;">
+                <div class="flex items-center gap-4 my-2.5 px-2">
+                  <button class="flex items-center gap-1" x-data="{isLiked: false}" @click="isLiked = !isLiked;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
                       <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                     </svg>
                     <span x-text="formatNumber(post.likes)">${likes}</span>
                   </button>
-                  <button class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                  <button class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5 rotate-[270deg]" color="#000000" fill="none">
                       <path d="M22 11.5667C22 16.8499 17.5222 21.1334 12 21.1334C11.3507 21.1343 10.7032 21.0742 10.0654 20.9545C9.60633 20.8682 9.37678 20.8251 9.21653 20.8496C9.05627 20.8741 8.82918 20.9948 8.37499 21.2364C7.09014 21.9197 5.59195 22.161 4.15111 21.893C4.69874 21.2194 5.07275 20.4112 5.23778 19.5448C5.33778 19.0148 5.09 18.5 4.71889 18.1231C3.03333 16.4115 2 14.1051 2 11.5667C2 6.28357 6.47778 2 12 2C17.5222 2 22 6.28357 22 11.5667Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
                     </svg>
                     <span x-text="formatNumber(post.comments)">${comments}</span>
                   </button>
-                  <button class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                  <button class="flex items-center gap-1">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
                       <path d="M7 17L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                       <path d="M12 17L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                       <path d="M17 17L17 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                       <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>-->
+                    <svg aria-label="Repost" role="img" viewBox="0 0 18 18" class="size-5">
+                      <title>Repost</title>
+                      <path d="M6.41256 1.23531C6.6349 0.971277 7.02918 0.937481 7.29321 1.15982L9.96509 3.40982C10.1022 3.52528 10.1831 3.69404 10.1873 3.87324C10.1915 4.05243 10.1186 4.2248 9.98706 4.34656L7.31518 6.81971C7.06186 7.05419 6.66643 7.03892 6.43196 6.7856C6.19748 6.53228 6.21275 6.13685 6.46607 5.90237L7.9672 4.51289H5.20312C3.68434 4.51289 2.45312 5.74411 2.45312 7.26289V9.51289V11.7629C2.45312 13.2817 3.68434 14.5129 5.20312 14.5129C5.5483 14.5129 5.82812 14.7927 5.82812 15.1379C5.82812 15.4831 5.5483 15.7629 5.20312 15.7629C2.99399 15.7629 1.20312 13.972 1.20312 11.7629V9.51289V7.26289C1.20312 5.05375 2.99399 3.26289 5.20312 3.26289H7.85002L6.48804 2.11596C6.22401 1.89362 6.19021 1.49934 6.41256 1.23531Z"></path>
+                      <path d="M11.5874 17.7904C11.3651 18.0545 10.9708 18.0883 10.7068 17.8659L8.03491 15.6159C7.89781 15.5005 7.81687 15.3317 7.81267 15.1525C7.80847 14.9733 7.8814 14.801 8.01294 14.6792L10.6848 12.206C10.9381 11.9716 11.3336 11.9868 11.568 12.2402C11.8025 12.4935 11.7872 12.8889 11.5339 13.1234L10.0328 14.5129H12.7969C14.3157 14.5129 15.5469 13.2816 15.5469 11.7629V9.51286V7.26286C15.5469 5.74408 14.3157 4.51286 12.7969 4.51286C12.4517 4.51286 12.1719 4.23304 12.1719 3.88786C12.1719 3.54269 12.4517 3.26286 12.7969 3.26286C15.006 3.26286 16.7969 5.05373 16.7969 7.26286V9.51286V11.7629C16.7969 13.972 15.006 15.7629 12.7969 15.7629H10.15L11.512 16.9098C11.776 17.1321 11.8098 17.5264 11.5874 17.7904Z"></path>
                     </svg>
                     <span x-text="formatNumber(post.share)">${comments}</span>
                   </button>
-                  <button class="flex items-center gap-2">
+                  <button class="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
                       <path d="M21.0477 3.05293C18.8697 0.707363 2.48648 6.4532 2.50001 8.551C2.51535 10.9299 8.89809 11.6617 10.6672 12.1581C11.7311 12.4565 12.016 12.7625 12.2613 13.8781C13.3723 18.9305 13.9301 21.4435 15.2014 21.4996C17.2278 21.5892 23.1733 5.342 21.0477 3.05293Z" stroke="currentColor" stroke-width="1.5" />
                       <path d="M11.5 12.5L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
