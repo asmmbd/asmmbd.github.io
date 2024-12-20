@@ -301,7 +301,7 @@
       return {
         results: [],
         getResult() {
-          const promise = databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.limit(100),Query.offset(39)]);
+          const promise = databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.limit(100),Query.offset(80)]);
           promise.then((ress) => {
             // this.results = ress.documents.filter(result => result.examName === 'প্রথম সাময়িক পরীক্ষা ২০২৪')
             this.results = ress.documents;
