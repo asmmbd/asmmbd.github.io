@@ -371,117 +371,53 @@
           </section>
 
           <section class="mt-4">
-            <div class="flex items-center gap-x-3">
-              <h2 class="text-lg font-medium text-gray-800">পরীক্ষার ফলাফল</h2>
-            </div>
+  <div class="row align-items-center">
+    <div class="col-auto">
+      <h2 class="text-lg font-medium text-gray-800">পরীক্ষার ফলাফল</h2> 
+    </div>
+  </div>
 
-            <div class="flex flex-col mt-2 p-2">
-              <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div
-                  class="inline-block min-w-100 py-2 align-middle md:px-6 lg:px-8">
-                  <div
-                    class="overflow-hidden border border-gray-200 rounded-lg">
-                    <table class="min-w-100 divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
-                        <tr>
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500 border">
-                            পরীক্ষার নাম
-                          </th>
-
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500 border">
-                            বিভাগ
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500 border">
-                            মোট নম্বর
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 font-normal text-left rtl:text-right text-gray-500 border">
-                            গড় নম্বর
-                          </th>
-
-                          <th
-                            scope="col"
-                            class="relative font-normal py-3.5 px-4">
-                            <span>ফলাফল</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <template x-for="result  in results">
-                          <tr>
-                            <td
-                              class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap border"
-                              x-text="result.examName">
-                              Design Director
-                            </td>
-                            <td
-                              class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap border">
-                              <div
-                                class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-emerald-100/60">
-                                <span
-                                  class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-
-                                <h2
-                                  class="text-sm font-normal text-emerald-500"
-                                  x-text="result.status">
-                                  Active
-                                </h2>
-                              </div>
-                            </td>
-                            <td
-                              class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap border"
-                              x-text="result.total">
-                              Design Director
-                            </td>
-                            <td
-                              class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap border"
-                              x-text="result.avg">
-                              Design Director
-                            </td>
-                            <td class="px-4 py-4 text-sm whitespace-nowrap">
-                              <div class="flex items-center gap-x-6">
-                                <a
-                                  :href="`https://asmmbd.github.io/student-result?id=${result.$id}`"
-                                  class="text-gray-500 transition-colors duration-200 hover:text-yellow-500 focus:outline-none">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-download">
-                                    <path
-                                      stroke="none"
-                                      d="M0 0h24v24H0z"
-                                      fill="none" />
-                                    <path
-                                      d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-                                    <path d="M7 11l5 5l5 -5" />
-                                    <path d="M12 4l0 12" />
-                                  </svg>
-                                </a>
-                              </div>
-                            </td>
-                          </tr>
-                        </template>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+  <div class="row mt-2">
+    <div class="col">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th scope="col">পরীক্ষার নাম</th>
+              <th scope="col">বিভাগ</th>
+              <th scope="col">মোট নম্বর</th>
+              <th scope="col">গড় নম্বর</th>
+              <th scope="col">ফলাফল</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="result  in results">
+              <tr>
+                <td x-text="result.examName"></td>
+                <td>
+                  <span class="badge bg-success">Active</span> 
+                </td> 
+                <td x-text="result.total"></td>
+                <td x-text="result.avg"></td>
+                <td>
+                  <a :href="`https://asmmbd.github.io/student-result?id=${result.$id}`" 
+                     class="text-gray-500 transition-colors duration-200 hover:text-yellow-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                      <path d="M7 11l5 5l5 -5" />
+                      <path d="M12 4l0 12" />
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
         </div>
       </div>
 
