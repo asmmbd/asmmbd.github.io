@@ -5,83 +5,140 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href='src/img/asmmlogo.jpg' rel='icon' />
+  <meta property="og:title" content="আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা। ইসলামী ও আধুনিক শিক্ষার সমন্বয়ে পরিচালিত একটি আদর্শ দ্বীনি শিক্ষা প্রতিষ্ঠান।" />
+  <meta property="og:image" content="https://asmmbd.github.io/src/img/20231024_131151.jpg" />
+  <meta property="og:url" content="http://asmmbd.github.io" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="manifest" href="/manifest.json" />
   <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="src/css/index.css" />
+  <link href="https://asmmbd.github.io/src/img/asmmlogo.jpg" rel="icon" />
+  <link rel="stylesheet" href="https://asmmbd.github.io/src/css/index.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
   <title>আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</title>
+  <style>
+    .logo-img {
+      height: 30px;
+    }
+
+    #installInstructions {
+      display: none;
+    }
+
+    @media (display-mode: browser) {
+      #installInstructions {
+        display: block;
+      }
+    }
+
+    .grid {
+      display: grid;
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  </style>
 </head>
 
 <body>
-  <header class='header d-print-none' id='header'>
-    <div class='top-header container-fluid py-1' style='background: #dbd170; height:40px;'>
-      <div class='container d-flex align-items-center justify-content-between'>
-        <div class='d-flex align-items-center gap-2'>
-          <i class='bi bi-facebook' style='color: #1877F2;'></i>
-          <i class='bi bi-twitter' style='color: #1DA1F2'></i>
-          <i class='bi bi-whatsapp' style='color: #25D366'></i>
+  <header class="header d-print-none" id="header">
+    <div class="top-header container-fluid py-1" style="background: #dbd170; height: 40px">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook" style="color: #1877f2"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter" style="color: #1da1f2"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp" style="color: #25d366"></i></a>
         </div>
-        <div class='d-none d-md-block  align-items-center gap-2 '>
-          <i class='bi bi-clock'></i>
-          <span id='demo'></span> ,
-          <i class='bi bi-calendar'></i>
-          <span id='demonew'></span>
+        <div class="d-none d-md-block align-items-center gap-2">
+          <i class="bi bi-clock"></i>
+          <span id="demo"></span>,
+          <i class="bi bi-calendar"></i>
+          <span id="demonew"></span>
         </div>
-        <div class='dropdown'>
-          <a class='dropdown-item' href='/admission' style='background-color: #3F497F !important;color:#fff;'>অনলাইন ভর&#2509;ত&#2495; ফরম</a>
+        <div class="dropdown">
+          <a class="dropdown-item" href="/admission" style="background-color: #3f497f !important; color: #fff">অনলাইন ভর্তি ফরম</a>
         </div>
       </div>
     </div>
-    <div class='header-middle p-0 bg-lightest xs-text-center' style='background-color: #F8F5E4;'>
-      <div class='container pt-0 pb-0'>
-        <img alt='ASMM_LOGO' class='img-fluid' src='src/img/banner.jpg' />
+    <div class="header-middle p-0 bg-lightest xs-text-center" style="background-color: #f8f5e4">
+      <div class="container pt-0 pb-0">
+        <img alt="ASMM_LOGO" class="img-fluid" src="https://asmmbd.github.io/src/img/banner.jpg" />
       </div>
     </div>
-    <div id="navbar" class='header-nav' style='background-color: #3F497F !important;'>
-      <nav class='navbar navbar-expand-lg '>
-        <div class='container'>
-          <a class='navbar-brand' href='/'>
-            <img src="./src/img/asmmbd_logo.png" class="logo-img" alt='asmm_logo'>
+    <div id="navbar" class="header-nav" style="background-color: #3f497f !important">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand d-md-none" href="/">
+            <img src="https://asmmbd.github.io/src/img/asmmbd_logo.png" class="logo-img" alt="asmm_logo" />
           </a>
-          <button aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler text-white shadow-none' data-bs-target='#navbarNavDropdown' data-bs-toggle='collapse' type='button'>
-            <i class='bi bi-list'></i>
+          <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler text-white shadow-none" data-bs-target="#navbarNavDropdown" data-bs-toggle="collapse" type="button">
+            <i class="bi bi-list"></i>
           </button>
-          <div class='collapse navbar-collapse' id='navbarNavDropdown'>
-            <ul class='navbar-nav text-center gap-lg-4 ms-auto'>
-              <li class='nav-item b-bottom b-top'>
-                <a aria-current='page' class='nav-link active' href='/'>প্রচ্ছদ</a>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav text-center gap-lg-4">
+              <li class="nav-item b-bottom b-top">
+                <a aria-current="page" class="nav-link active" href="/">প্রচ্ছদ</a>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='/about-us'>আমাদের সম্পর্কে</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="/about-us">পরিচিতি</a>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='#'>একাডেমিক</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="#">একাডেমিক</a>
               </li>
-
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='#'>ভর্তি</a>
+              <li class="nav-item dropdown b-bottom">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  শাখা প্রতিষ্ঠান
+                </a>
+                <ul class="dropdown-menu text-center text-white border-0 rounded-0 p-0" style="background-color: #3f497f !important">
+                  <li>
+                    <a class="dropdown-item b-bottom b-top text-white" href="#">মহিলা শাখা</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item b-bottom text-white" href="#">হিফজ বিভাগ</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item b-bottom text-white" href="#">নূরানী বিভাগ</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item b-bottom text-white" href="#">তাহিলী বিভাগ</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-white" href="#">স্কুল বিভাগ</a>
+                  </li>
+                </ul>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='/notice'>নোটিশ</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="#">ভর্তি</a>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='/result'>ফলাফল</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="#">বৈশিষ্ট্য</a>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='/recent-activities'>সাম্প্রতিক কার্যাবলী</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="#">লাইব্রেরি</a>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='#'>বিভিন্ন তথ্য</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="/notice">নোটিশ</a>
               </li>
-              <li class='nav-item b-bottom'>
-                <a class='nav-link' href='/contact'>যোগাযোগ </a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="/result">ফলাফল</a>
               </li>
-              <li class='nav-item'>
-                <a class='nav-link' href='/teacher_application'>শিক্ষক আবেদন</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="/recent-activities">মিডিয়া</a>
               </li>
-              <li class='nav-item b-top'>
-                <a class='nav-link' href='/login'>লগইন</a>
+              <li class="nav-item b-bottom">
+                <a class="nav-link" href="/contact">যোগাযোগ </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/teacher_application">আবেদন</a>
+              </li>
+              <li class="nav-item b-top">
+                <a class="nav-link" href="/login">লগইন</a>
               </li>
             </ul>
           </div>
@@ -89,10 +146,7 @@
       </nav>
     </div>
   </header>
-  <div class="main-content theme-bg">
-    <!--================================
-							Archive-Page-start
-                      ===============================-->
+  <div class="main-content theme-bg" x-data="data()">
     <div class="archive-page">
       <div class="container py-5">
         <div class="title-section text-center mb-3">
@@ -109,36 +163,46 @@
                 <th scope="col">ডাউনলোড</th>
               </tr>
             </thead>
-            <tbody id="table">
-	        <tr>
-                <th scope="row">০১</th>
-                <td> বার্ষিক পরীক্ষা- ২০২৩-২০২৪</td>
-                <td>২০/০৩/২০২৪</td>
-                <td>
-                  <a href="/results" class="btn btn-primary">
-                    <i class="bi bi-eye"></i>
-                  </a>
-                </td>
-	       </tr>
-	       <tr>
-                <th scope="row">০২</th>
-                <td> প্রথম সাময়িক পরীক্ষা- ২০২৪</td>
-                <td>১৪/০৪/২০২৪</td>
-                <td>
-                  <a href="/notice_page" class="btn btn-primary">
-                    <i class="bi bi-eye"></i>
-                  </a>
-                </td>
-	     </tr>
-	    </tbody>
+            <tbody>
+              <template x-for="(notice, index) in notices" :key="notice.id">
+                <tr>
+                  <th scope="row" x-text="index + 1"></th>
+                  <td x-text="notice.title"></td>
+                  <td x-text="formetDate(notice.createdAt)"></td>
+                  <td>
+                    <button class="btn btn-primary" @click="openModal(notice)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!--================================
-							Archive-Page-End
-                      ===============================-->
+    <!-- Modal -->
+    <div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true" x-show="isModalOpen" @click.away="closeModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="noticeModalLabel" x-text="selectedNotice.title"></h1>
+            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p x-text="selectedNotice.content"> </p>
+            <p x-text="`প্রকাশের সময়ঃ  ${formetDate(selectedNotice.createdAt)}`"> </p>
+            <p x-text="'প্রকাশকঃ' + ' ' + selectedNotice.createdBy"> </p>
+          </div>
+          <div class="p-2">
+            <button type="button" class="btn btn-secondary w-100" @click="closeModal">
+              close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer class='pt-5 d-print-none' style='background-color: #3F497F !important;color:#fff;'>
       <div class='container'>
@@ -151,8 +215,6 @@
               <li class='nav-item mb-2'><a class='nav-link p-0  text-white' href='#'><i class="bi bi-envelope-at-fill"></i> asmmbd2022@gmail.com</a></li>
               <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'><i class="bi bi-telephone"></i> +8801947660563</a></li>
               <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'><i class="bi bi-telephone"></i> +8801406701513</a></li>
-              <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'></a></li>
-              <li class='nav-item mb-2'><a class='nav-link p-0 text-white' href='#'></a></li>
             </ul>
           </div>
           <div class='col-md-4 mb-3'>
@@ -171,8 +233,7 @@
           <ul class='list-unstyled d-flex'>
             <li class='ms-3'>
               <a class='link-dark' href='#'>
-                <i class='bi bi-facebook fs-5' style='color:#1877F2'>
-                </i>
+                <i class='bi bi-facebook fs-5' style='color:#1877F2'></i>
               </a>
             </li>
             <li class='ms-3'>
@@ -207,6 +268,40 @@
       </div>
     </footer>
   </div>
+
+  <script>
+    function data() {
+      return {
+        notices: [],
+        selectedNotice: {},
+        isModalOpen: false,
+        init() {
+          fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/notices')
+            .then(res => res.json())
+            .then(data => this.notices = data);
+        },
+        openModal(notice) {
+          this.selectedNotice = notice;
+          this.isModalOpen = true;
+          const modal = new bootstrap.Modal(document.getElementById('noticeModal'));
+          modal.show();
+        },
+        closeModal() {
+          this.isModalOpen = false;
+          const modal = bootstrap.Modal.getInstance(document.getElementById('noticeModal'));
+          if (modal) {
+            modal.hide();
+          }
+        },
+        formetDate(date) {
+         return  new Intl.DateTimeFormat('bn', {
+            dateStyle: 'full',
+            timeZone: "Asia/Dhaka"
+          }).format(new Date(date))
+        }
+      }
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="src/js/index.js"></script>
 </body>
