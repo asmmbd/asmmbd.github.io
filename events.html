@@ -276,7 +276,7 @@
         selectedNotice: {},
         isModalOpen: false,
         init() {
-          fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/notices')
+          fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/events')
             .then(res => res.json())
             .then(data => this.notices = data);
         },
