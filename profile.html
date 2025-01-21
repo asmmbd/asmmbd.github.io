@@ -51,13 +51,13 @@
     <div class="top-header container-fluid py-1" style="background: #dbd170; height: 40px">
       <div class="container d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-facebook" style="color: #1877f2"></i>
-          <i class="bi bi-twitter" style="color: #1da1f2"></i>
-          <i class="bi bi-whatsapp" style="color: #25d366"></i>
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook" style="color: #1877f2"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter" style="color: #1da1f2"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp" style="color: #25d366"></i></a>
         </div>
         <div class="d-none d-md-block align-items-center gap-2">
           <i class="bi bi-clock"></i>
-          <span id="demo"></span> ,
+          <span id="demo"></span>,
           <i class="bi bi-calendar"></i>
           <span id="demonew"></span>
         </div>
@@ -113,7 +113,6 @@
                   </li>
                 </ul>
               </li>
-
               <li class="nav-item b-bottom">
                 <a class="nav-link" href="#">ভর্তি</a>
               </li>
@@ -150,17 +149,20 @@
       </nav>
     </div>
   </header>
-  <div class="main-content ">
+  <main class="main-content">
     <div class="container" x-data="data()">
       <div x-show="!studentId">
-        <div class="border rounded p-2 mt-5">
+        <div class="border rounded p-2 my-5">
+          <div x-show="errsms">
+            <span x-text="errsms"></span>
+          </div>
           <div class="mb-2">
             <label for="studentIdInput" class="form-label">স্টুডেন্ট আইডি</label>
-            <input x-model="stid" type="text" class="form-control" id="studentIdInput" aria-describedby="emailHelp">
+            <input x-model="stid" type="text" class="form-control" id="studentIdInput" aria-describedby="studentIdHelp">
           </div>
           <div class="mb-3">
             <label for="passwordInput" class="form-label">পাসওয়ার্ড</label>
-            <input type="password" class="form-control" id="passwordInput">
+            <input type="password" class="form-control" id="passwordInput" aria-describedby="passwordHelp">
           </div>
           <div class="d-flex align-items-center justify-content-between">
             <div class="form-check">
@@ -173,8 +175,11 @@
       </div>
       <div x-show="studentId">
         <section class="mt-4">
-          <div class="rounded" style="background-color: #3f497f; color: #fff; height: 200px; display: flex; align-items: center; justify-content: center;">
-            <img style="max-width: 70%; max-height: 70%;" src="/images/avatar_muslim.png" alt="">
+          <div class="rounded position-relative" style="background-color: #3f497f; color: #fff; height: 200px; display: flex; align-items: center; justify-content: center;">
+            <button @click="logout()" class="btn bg-danger position-absolute" style="top: 5px; right: 5px;">
+              <i class="bi bi-box-arrow-right text-white"></i>
+            </button>
+            <img style="max-width: 70%; max-height: 70%;" src="/images/avatar_muslim.png" alt="Student Avatar">
           </div>
 
           <table class="w-100 text-sm text-left mt-5">
@@ -422,7 +427,7 @@
         </div>
       </div>
     </footer>
-  </div>
+  </main>
 
   <script src="https://asmmbd.github.io/src/js/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
@@ -440,12 +445,21 @@
         stid: '',
         results: [],
         studentId: localStorage.getItem('studentId') || '',
+        errsms: '',
         login() {
           if (this.stid) {
-            localStorage.setItem('studentId', this.stid);
             this.studentId = this.stid;
             this.loginStudent();
+            localStorage.setItem('studentId', this.studentId);
+          } else {
+            this.errsms = 'Please enter a valid Student ID.';
           }
+        },
+        logout() {
+          this.studentId = '';
+          this.data = null;
+          this.results = [];
+          localStorage.removeItem('studentId');
         },
         loginStudent() {
           this.getStudent();
@@ -460,14 +474,13 @@
           promise.then(
             (ress) => {
               this.data = ress;
-              console.log(ress);
+              this.errsms = ''; // Clear error message on successful login
             },
-            function(error) {
-              console.log(error);
+            (error) => {
+              this.errsms = 'Invalid ID or password';
             }
           );
         },
-
         getStudentResult() {
           const promise = databases.listDocuments(
             "652c16162f939c821f75",
@@ -477,9 +490,8 @@
           promise.then(
             (ress) => {
               this.results = ress.documents;
-              console.log(ress.documents);
             },
-            function(error) {
+            (error) => {
               console.log(error);
             }
           );
