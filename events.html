@@ -43,6 +43,13 @@
     .grid-cols-2 {
       grid-template-columns: 1fr 1fr;
     }
+    .break-words {
+  word-break: break-word;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
   </style>
 </head>
 
@@ -191,7 +198,7 @@
             <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p x-text="selectedNotice.content"> </p>
+            <p class="break-words whitespace-pre-wrap" x-text="selectedNotice.content"> </p>
             <p x-text="`প্রকাশের সময়ঃ  ${formetDate(selectedNotice.createdAt)}`"> </p>
             <p x-text="'প্রকাশকঃ' + ' ' + selectedNotice.createdBy"> </p>
           </div>
