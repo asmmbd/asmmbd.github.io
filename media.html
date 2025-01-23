@@ -1,0 +1,103 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>
+    Kids App
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</head>
+
+<body class="">
+  <div class="p-4">
+    <!-- Navigation -->
+    <div class="w-full">
+      <div class="relative right-0">
+        <ul class="relative flex flex-wrap px-1.5 py-1.5 list-none rounded-md bg-slate-100">
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer text-slate-600 bg-white">
+              All
+            </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 mb-0 text-sm transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-600 bg-inherit">
+              Hadis
+            </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
+              Quran
+            </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
+              story
+            </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
+              Quran
+            </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
+              Quran
+            </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
+              Quran
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Video List -->
+  <div class="p-4 space-y-4" x-data="data()">
+    <!-- Video Item 1 -->
+    <template x-for="video in videos">
+      <div class="overflow-hidden">
+        <img alt="After Ramadan Advice By Laith &amp; Layla" class="w-full h-52 rounded-lg shadow-lg" src="https://img.youtube.com/vi/8BaZfIbX1Bw/maxresdefault.jpg" />
+        <div class="p-2">
+          <h2 x-text="video.title" class="text-[#8b5e34] font-semibold">
+            After Ramadan Advice By Laith &amp; Layla + Eid S...
+          </h2>
+          <p class="text-[#8b5e34] text-sm">
+            <span x-text="video.channel_name"></span>
+            • <span x-text="video.category"></span>
+            • <span x-text="formater(video.createdAt)"></span>
+          </p>
+        </div>
+      </div>
+    </template>
+  </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+
+  <script>
+    function data() {
+      return {
+        videos: [],
+        init() {
+          fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/media')
+            .then(res => res.json())
+            .then(data => this.videos = data);
+        },
+        formater(d) {
+          console.log(d)
+          let date = new Date(d).toUTCString()
+          let momentDate = moment(date);
+          let relativeTime = momentDate.fromNow();
+          return relativeTime
+        },
+      }
+    }
+  </script>
+</body>
+
+</html>
