@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,9 +10,7 @@
 </head>
 
 <body class="bg-gray-50">
-  <div x-data="data()">
-    <!-- Navigation -->
-
+  <div x-data="data()" x-init="init()">
     <!-- Video Player -->
     <template x-if="selectedVideo">
       <div class="w-full sticky top-0 left-0 z-50 bg-white shadow-md">
@@ -28,41 +27,40 @@
       </div>
     </template>
 
-
-    <div class="w-80 fixed left-1/2 -translate-x-1/2  z-40 bg-white rounded-md  shadow-md" :class="selectedVideo ? 'bottom-6' : 'top-4'">
+    <!-- Navigation -->
+    <div class="w-80 fixed left-1/2 -translate-x-1/2 z-40 bg-white rounded-md shadow-md" :class="selectedVideo ? 'bottom-6' : 'top-4'">
       <ul class="flex flex-wrap px-1.5 py-1.5 list-none rounded-md">
         <li class="flex-auto text-center">
-          <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 bg-gray-100 hover:bg-gray-200">
+          <a @click="filters('all')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 bg-gray-100 hover:bg-gray-200">
             All
           </a>
         </li>
         <li class="flex-auto text-center">
-          <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
+          <a @click="filters('hadis')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
             Hadis
           </a>
         </li>
         <li class="flex-auto text-center">
-          <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
+          <a @click="filters('quran')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
             Quran
           </a>
         </li>
         <li class="flex-auto text-center">
-          <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
+          <a @click="filters('story')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
             Story
           </a>
         </li>
         <li class="flex-auto text-center">
-          <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
+          <a @click="filters('nasheed')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
             Nasheed
           </a>
         </li>
       </ul>
     </div>
 
-
     <!-- Video List -->
     <div class="space-y-3" :class="selectedVideo ? 'mt-0' : 'mt-20'">
-      <template x-for="video in videos" :key="video.id">
+      <template x-for="video in filteredVideos" :key="video.id">
         <div class="relative overflow-hidden" @click="selectedVideo = video">
           <img :alt="video.title" class="w-full h-52 object-cover" :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" />
           <span x-text="video.duration" class="absolute top-[170px] right-4 bg-gray-900 text-white py-0.5 px-2 rounded-md font-bold"></span>
@@ -78,89 +76,8 @@
       </template>
 
       <!-- Fallback when no videos are available -->
-            <template x-if="videos.length === 0">
-        <div class="space-y-3">
-          <div class="relative overflow-hidden animate-pulse">
-            <!-- Image Skeleton -->
-            <div class="w-full h-52 bg-gray-300 rounded-lg"></div>
-
-            <!-- Video Info Skeleton -->
-            <div class="p-2 space-y-2">
-              <!-- Title Skeleton -->
-              <div class="w-3/4 h-4 bg-gray-300 rounded-md"></div>
-              <!-- Description Skeleton -->
-              <div class="flex space-x-2">
-                <div class="w-1/3 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/4 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/5 h-4 bg-gray-300 rounded-md"></div>
-              </div>
-            </div>
-          </div>
-          <div class="relative overflow-hidden animate-pulse">
-            <!-- Image Skeleton -->
-            <div class="w-full h-52 bg-gray-300 rounded-lg"></div>
-
-            <!-- Video Info Skeleton -->
-            <div class="p-2 space-y-2">
-              <!-- Title Skeleton -->
-              <div class="w-3/4 h-4 bg-gray-300 rounded-md"></div>
-              <!-- Description Skeleton -->
-              <div class="flex space-x-2">
-                <div class="w-1/3 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/4 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/5 h-4 bg-gray-300 rounded-md"></div>
-              </div>
-            </div>
-          </div>
-          <div class="relative overflow-hidden animate-pulse">
-            <!-- Image Skeleton -->
-            <div class="w-full h-52 bg-gray-300 rounded-lg"></div>
-
-            <!-- Video Info Skeleton -->
-            <div class="p-2 space-y-2">
-              <!-- Title Skeleton -->
-              <div class="w-3/4 h-4 bg-gray-300 rounded-md"></div>
-              <!-- Description Skeleton -->
-              <div class="flex space-x-2">
-                <div class="w-1/3 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/4 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/5 h-4 bg-gray-300 rounded-md"></div>
-              </div>
-            </div>
-          </div>
-          <div class="relative overflow-hidden animate-pulse">
-            <!-- Image Skeleton -->
-            <div class="w-full h-52 bg-gray-300 rounded-lg"></div>
-
-            <!-- Video Info Skeleton -->
-            <div class="p-2 space-y-2">
-              <!-- Title Skeleton -->
-              <div class="w-3/4 h-4 bg-gray-300 rounded-md"></div>
-              <!-- Description Skeleton -->
-              <div class="flex space-x-2">
-                <div class="w-1/3 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/4 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/5 h-4 bg-gray-300 rounded-md"></div>
-              </div>
-            </div>
-          </div>
-          <div class="relative overflow-hidden animate-pulse">
-            <!-- Image Skeleton -->
-            <div class="w-full h-52 bg-gray-300 rounded-lg"></div>
-
-            <!-- Video Info Skeleton -->
-            <div class="p-2 space-y-2">
-              <!-- Title Skeleton -->
-              <div class="w-3/4 h-4 bg-gray-300 rounded-md"></div>
-              <!-- Description Skeleton -->
-              <div class="flex space-x-2">
-                <div class="w-1/3 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/4 h-4 bg-gray-300 rounded-md"></div>
-                <div class="w-1/5 h-4 bg-gray-300 rounded-md"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <template x-if="filteredVideos.length === 0">
+        <div class="text-center text-gray-600">No videos found for this category.</div>
       </template>
     </div>
   </div>
@@ -170,20 +87,31 @@
     function data() {
       return {
         videos: [],
+        filteredVideos: [],
         selectedVideo: null,
+        filter: 'all',
         init() {
           fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/media')
             .then(res => res.json())
             .then(data => {
               this.videos = data;
-              // this.selectedVideo = data[0]
+              this.applyFilters();
             })
             .catch(err => console.error("Failed to fetch videos:", err));
+        },
+        filters(category) {
+          this.filter = category;
+          this.applyFilters();
+        },
+        applyFilters() {
+          this.filteredVideos = this.videos.filter(video => {
+            return this.filter === 'all' || video.category.toLowerCase() === this.filter.toLowerCase();
+          });
         },
         formater(date) {
           return moment(new Date(date).toUTCString()).fromNow();
         },
-      }
+      };
     }
   </script>
 </body>
