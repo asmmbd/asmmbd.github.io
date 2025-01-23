@@ -30,31 +30,15 @@
     <!-- Navigation -->
     <div class="w-80 fixed left-1/2 -translate-x-1/2 z-40 bg-white rounded-md shadow-md" :class="selectedVideo ? 'bottom-6' : 'top-4'">
       <ul class="flex flex-wrap px-1.5 py-1.5 list-none rounded-md">
-        <li class="flex-auto text-center">
-          <a @click="filters('all')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 bg-gray-100 hover:bg-gray-200">
-            All
-          </a>
-        </li>
-        <li class="flex-auto text-center">
-          <a @click="filters('hadis')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
-            Hadis
-          </a>
-        </li>
-        <li class="flex-auto text-center">
-          <a @click="filters('quran')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
-            Quran
-          </a>
-        </li>
-        <li class="flex-auto text-center">
-          <a @click="filters('story')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
-            Story
-          </a>
-        </li>
-        <li class="flex-auto text-center">
-          <a @click="filters('nasheed')" class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
-            Nasheed
-          </a>
-        </li>
+        <template x-for="(filter, index) in filters" :key="index">
+          <li class="flex-auto text-center">
+            <a @click="applyFilter(filter)"
+              class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer"
+              :class="filter === activeFilter ? 'bg-[#8b5e34] text-white' : 'text-slate-600 hover:bg-gray-200'">
+              <span x-text="filter"></span>
+            </a>
+          </li>
+        </template>
       </ul>
     </div>
 
@@ -89,25 +73,26 @@
         videos: [],
         filteredVideos: [],
         selectedVideo: null,
-        filter: 'all',
+        filters: ['All', 'Hadis', 'Quran', 'Story', 'Nasheed'], // List of filters
+        activeFilter: 'All', // Currently active filter
+
         init() {
           fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/media')
             .then(res => res.json())
             .then(data => {
               this.videos = data;
-              this.applyFilters();
+              this.applyFilter('All'); // Default to 'All' filter
             })
             .catch(err => console.error("Failed to fetch videos:", err));
         },
-        filters(category) {
-          this.filter = category;
-          this.applyFilters();
-        },
-        applyFilters() {
+
+        applyFilter(filter) {
+          this.activeFilter = filter;
           this.filteredVideos = this.videos.filter(video => {
-            return this.filter === 'all' || video.category.toLowerCase() === this.filter.toLowerCase();
+            return filter === 'All' || video.category.toLowerCase() === filter.toLowerCase();
           });
         },
+
         formater(date) {
           return moment(new Date(date).toUTCString()).fromNow();
         },
