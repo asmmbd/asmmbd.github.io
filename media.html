@@ -3,83 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>
-    Kids App
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  <title>Kids App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
 </head>
 
-<body class="">
-  <div class="p-4">
+<body class="bg-gray-50">
+  <div>
     <!-- Navigation -->
-    <div class="w-full">
-      <div class="relative right-0">
-        <ul class="relative flex flex-wrap px-1.5 py-1.5 list-none rounded-md bg-slate-100">
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer text-slate-600 bg-white">
+    <div class="sticky top-0 z-50 bg-white shadow-md">
+      <iframe class="w-full h-60" src="https://www.youtube.com/embed/h9BtIWekM7s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+      </iframe>
+    </div>
+    <div class="sticky top-60 z-50 bg-white shadow-md">
+      <div>
+        <ul class="flex flex-wrap px-1.5 py-1.5 list-none rounded-md">
+          <li class="flex-auto text-center">
+            <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 bg-gray-100 hover:bg-gray-200">
               All
             </a>
           </li>
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 mb-0 text-sm transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-600 bg-inherit">
+          <li class="flex-auto text-center">
+            <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
               Hadis
             </a>
           </li>
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
+          <li class="flex-auto text-center">
+            <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
               Quran
             </a>
           </li>
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
-              story
-            </a>
-          </li>
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
-              Quran
-            </a>
-          </li>
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
-              Quran
-            </a>
-          </li>
-          <li class="z-30 flex-auto text-center">
-            <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit">
-              Quran
+          <li class="flex-auto text-center">
+            <a class="flex items-center justify-center w-full px-0 py-2 text-sm transition-all ease-in-out rounded-md cursor-pointer text-slate-600 hover:bg-gray-200">
+              Story
             </a>
           </li>
         </ul>
       </div>
     </div>
-  </div>
-  <!-- Video List -->
-  <div class="px-4 space-y-3" x-data="data()">
-    <!-- Video Item 1 -->
-    <template x-for="video in videos">
-      <div class="overflow-hidden relative">
-        <img alt="After Ramadan Advice By Laith &amp; Layla" class="w-full h-52 rounded-lg shadow-lg" :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" />
-        <span x-text="video.duration" class="absolute top-[170px] right-4 bg-gray-900 text-white py-0.5 px-2 rounded-md font-bold"></span>
-        <div class="p-2">
-          <h2 x-text="video.title" class="text-[#8b5e34] font-semibold">
-            After Ramadan Advice By Laith &amp; Layla + Eid S...
-          </h2>
-          <p class="text-[#8b5e34] text-sm">
-            <span x-text="video.channel_name"></span>
-            • <span x-text="video.category"></span>
-            • <span x-text="formater(video.createdAt)"></span>
-          </p>
-        </div>
-      </div>
-    </template>
-  </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 
+
+    <!-- Video List -->
+    <div class="space-y-3" x-data="data()">
+      <template x-for="video in videos" :key="video.id">
+        <div class="relative overflow-hidden">
+          <img :alt="video.title" class="w-full h-52 object-cover" :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" />
+          <span x-text="video.duration" class="absolute top-[170px] right-4 bg-gray-900 text-white py-0.5 px-2 rounded-md font-bold"></span>
+          <div class="p-2">
+            <h2 x-text="video.title" class="text-[#8b5e34] font-semibold truncate"></h2>
+            <p class="text-[#8b5e34] text-sm">
+              <span x-text="video.channel_name"></span> •
+              <span x-text="video.category"></span> •
+              <span x-text="formater(video.createdAt)"></span>
+            </p>
+          </div>
+        </div>
+      </template>
+
+      <!-- Fallback when no videos are available -->
+      <template x-if="videos.length === 0">
+        <p class="text-center text-gray-500">No videos available at the moment.</p>
+      </template>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
   <script>
     function data() {
       return {
@@ -87,14 +75,11 @@
         init() {
           fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/media')
             .then(res => res.json())
-            .then(data => this.videos = data);
+            .then(data => this.videos = data)
+            .catch(err => console.error("Failed to fetch videos:", err));
         },
-        formater(d) {
-          console.log(d)
-          let date = new Date(d).toUTCString()
-          let momentDate = moment(date);
-          let relativeTime = momentDate.fromNow();
-          return relativeTime
+        formater(date) {
+          return moment(new Date(date).toUTCString()).fromNow();
         },
       }
     }
