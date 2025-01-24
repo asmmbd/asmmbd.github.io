@@ -24,11 +24,12 @@
         <div :class="isMinimized ? 'bottom-0 flex items-center justify-between gap-2 pe-4' : 'top-0'" class="w-full fixed  left-0 z-50 bg-white shadow-md">
           <iframe :class="isMinimized ? 'w-32 h-16' : 'w-full h-56'" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
           </iframe>
-          <div class="p-2 w-60" @click="isMinimized = false">
+          <div class="p-2" :class="isMinimized ? 'w-60' : 'w-full'" @click="isMinimized = false">
             <h2 :class="isMinimized ? 'text-sm' : 'font-semibold'" x-text="selectedVideo.title" class="text-[#8b5e34] truncate"></h2>
             <p class="text-[#8b5e34] text-sm">
               <span x-text="selectedVideo.channel_name"></span> •
               <span x-text="selectedVideo.category"></span> •
+              <span x-show="!isMinimized" x-text="formatDate(selectedVideo.createdAt)"></span>
             </p>
           </div>
           <div :class="isMinimized ? 'flex gap-2' : 'absolute top-2 right-4 flex justify-end gap-2 mt-2'">
