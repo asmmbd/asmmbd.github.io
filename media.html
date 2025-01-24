@@ -48,7 +48,7 @@
         </div>
 
         <!-- Draggable Minimized Player -->
-        <div x-show="isMinimized" x-ref="draggable" class="fixed z-50 bg-white rounded-md shadow-md flex items-center gap-4 px-4 py-2 cursor-grab" :style="{ top: `${position.y}px`, left: `${position.x}px` }" @touchstart="startDrag($event)" @touchmove="drag($event)" @touchend="stopDrag">
+        <div x-show="isMinimized" x-ref="draggable" class="fixed z-50 bg-white rounded-md shadow-md flex items-center gap-4 pe-4 cursor-grab" :style="{ top: `${position.y}px`, left: `${position.x}px` }" @touchstart="startDrag($event)" @touchmove="drag($event)" @touchend="stopDrag">
           <img @click="isMinimized = false" class="w-32 h-full rounded-l" :src="`https://img.youtube.com/vi/${selectedVideo.videoId}/maxresdefault.jpg`" alt="Thumbnail" />
           <div class="flex gap-2">
             <button @click="closeVideo" class="text-red-500 focus:outline-none">
