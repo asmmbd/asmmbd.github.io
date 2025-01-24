@@ -21,37 +21,23 @@
     <template x-if="selectedVideo">
       <div>
         <!-- Full Video Player -->
-        <div x-show="!isMinimized" class="w-full fixed top-0 left-0 z-50 bg-white shadow-md">
-          <iframe class="w-full h-60" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+        <div :class="isMinimized ? 'bottom-0 flex items-center justify-between gap-2 pe-4' : 'top-0'" class="w-full fixed  left-0 z-50 bg-white shadow-md">
+          <iframe :class="isMinimized ? 'w-32 h-16' : 'w-full h-56'" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
           </iframe>
-          <div class="p-2">
-            <h2 x-text="selectedVideo.title" class="text-[#8b5e34] font-semibold truncate"></h2>
+          <div class="p-2 w-60" @click="isMinimized = false">
+            <h2 :class="isMinimized ? 'text-sm' : 'font-semibold'" x-text="selectedVideo.title" class="text-[#8b5e34] truncate"></h2>
             <p class="text-[#8b5e34] text-sm">
               <span x-text="selectedVideo.channel_name"></span> •
               <span x-text="selectedVideo.category"></span> •
-              <span x-text="formatDate(selectedVideo.createdAt)"></span>
             </p>
-            <div class="absolute top-2 right-4 flex justify-end gap-2 mt-2">
-              <button @click="isMinimized = true" class="text-sm text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
-              </button>
-              <button @click="closeVideo" class="text-sm text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              </button>
-            </div>
           </div>
-        </div>
-
-        <!-- Draggable Minimized Player -->
-        <div x-show="isMinimized" x-ref="draggable" class="fixed z-50 bg-white rounded-md shadow-md flex items-center gap-4 pe-4 cursor-grab" :style="{ top: `${position.y}px`, left: `${position.x}px` }" @touchstart="startDrag($event)" @touchmove="drag($event)" @touchend="stopDrag">
-          <img @click="isMinimized = false" class="w-32 h-full rounded-l" :src="`https://img.youtube.com/vi/${selectedVideo.videoId}/maxresdefault.jpg`" alt="Thumbnail" />
-          <div class="flex gap-2">
-            <button @click="closeVideo" class="text-red-500 focus:outline-none">
+          <div :class="isMinimized ? 'flex gap-2' : 'absolute top-2 right-4 flex justify-end gap-2 mt-2'">
+            <button x-show="!isMinimized" @click="isMinimized = true" class="text-sm text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <button @click="closeVideo" class="text-sm" :class="isMinimized ? 'text-gray-900' : 'text-white'">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 6 6 18"></path>
                 <path d="m6 6 12 12"></path>
@@ -63,11 +49,11 @@
     </template>
 
     <!-- Navigation Bar -->
-    <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-white rounded-md shadow-md w-84">
-      <ul class="flex px-2 py-2 list-none rounded-md">
+    <nav class="sticky left-0 z-50 bg-white shadow-md w-full" :class="selectedVideo && !isMinimized ? 'top-[280px]' : 'top-0'">
+      <ul class="flex gap-2 px-2 py-2 list-none rounded-md">
         <template x-for="(filter, index) in filters" :key="index">
           <li class="flex-auto text-center">
-            <button @click="applyFilter(filter)" :class="filter === activeFilter ? 'bg-[#8b5e34] text-white' : 'text-slate-600 hover:bg-gray-200'" class="w-full px-4 py-2 rounded-md text-sm transition">
+            <button @click="applyFilter(filter)" :class="filter === activeFilter ? 'bg-gray-800 text-white' : 'text-gray-900 bg-gray-200'" class="w-full px-3 py-2 rounded-md text-sm transition">
               <span x-text="filter"></span>
             </button>
           </li>
@@ -107,7 +93,7 @@
         videos: [],
         filteredVideos: [],
         selectedVideo: null,
-        filters: ['All', 'Hadis', 'Quran', 'Story', 'Nasheed'],
+        filters: ['All', 'Hadis', 'Quran', 'Story', 'Nasheed','Advice'],
         activeFilter: 'All',
         isMinimized: false,
 
@@ -145,40 +131,6 @@
         // Format date to "time ago" format
         formatDate(date) {
           return moment(new Date(date).toUTCString()).fromNow();
-        },
-        position: { x: window.innerWidth / 2 - 100, y: window.innerHeight - 140 },
-        dragOffset: { x: 0, y: 0 },
-        isDragging: false,
-
-        startDrag(event) {
-          const touch = event.touches[0];
-          const draggable = this.$refs.draggable;
-          this.dragOffset.x = touch.clientX - draggable.offsetLeft;
-          this.dragOffset.y = touch.clientY - draggable.offsetTop;
-          this.isDragging = true;
-        },
-
-        drag(event) {
-          if (!this.isDragging) return;
-
-          const touch = event.touches[0];
-          const newX = touch.clientX - this.dragOffset.x;
-          const newY = touch.clientY - this.dragOffset.y;
-
-          // Restrict dragging within screen bounds
-          const screenWidth = window.innerWidth;
-          const screenHeight = window.innerHeight;
-
-          this.position.x = Math.max(0, Math.min(newX, screenWidth - 150)); // Width of player
-          this.position.y = Math.max(0, Math.min(newY, screenHeight - 80)); // Height of player
-        },
-
-        stopDrag() {
-          this.isDragging = false;
-        },
-
-        closeVideo() {
-          this.isMinimized = false;
         },
       };
     }
