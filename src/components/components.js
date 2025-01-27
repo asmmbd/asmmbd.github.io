@@ -29,9 +29,9 @@ class Notice extends HTMLElement {
                 ${this.notices.map(notice => (`<div class="notice-item">
                     <div class="d-flex align-items-center">
                       <i class="bi bi-bell-fill notice-icon"></i>
-                      <span class="notice-text">
+                      <a href='/notice' class="notice-text text-dark">
                        ${notice.title}
-                      </span>
+                      </a>
                     </div>
                     <div class="date-card">
                       <div class="day">${banglaNumber(new Date(notice.createdAt).getDate())}</div>
