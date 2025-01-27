@@ -11,57 +11,102 @@
   <meta property="og:image" content="https://asmmbd.github.io/src/img/20231024_131151.jpg">
   <meta property="og:url" content="http://asmmbd.github.io">
   <meta name="twitter:card" content="summary_large_image">
-  
-  <link rel="manifest" href="/manifest.json">
+
+  <link rel="manifest" href="https://asmmbd.github.io/manifest.json">
   <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
   <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css' rel='stylesheet' />
   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' />
-  <link href='src/img/asmmlogo.jpg' rel='icon' />
-  <link rel="stylesheet" href="src/css/index.css">
+  <link href='https://asmmbd.github.io/src/img/asmmlogo.jpg' rel='icon' />
+  <link rel="stylesheet" href="https://asmmbd.github.io/src/css/index.css">
   <link rel="stylesheet" href="src/css/owl.carousel.min.css">
-  <link rel="stylesheet" href="src/css/owl.theme.default.min.css">
+  <link rel="stylesheet" href="https://asmmbd.github.io/src/css/owl.theme.default.min.css">
   <title>আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা </title>
   <style>
-    .logo-img{
+    .logo-img {
       height: 30px;
     }
+
     #installInstructions {
-     display: none
+      display: none
     }
+
     @media (display-mode: browser) {
       #installInstructions {
         display: block
       }
     }
-    .grid{
+
+    .grid {
       display: grid;
     }
-    .grid-cols-2{
+
+    .grid-cols-2 {
       grid-template-columns: 1fr 1fr;
     }
+
+    .notice-board {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 5px;
+    }
+
+    .notice-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e9ecef;
+      padding: 10px 0;
+    }
+
+    .notice-item:last-child {
+      border-bottom: none;
+    }
+
+    .notice-icon {
+      font-size: 1.5rem;
+      color: #198754;
+      margin-right: 10px;
+    }
+
+    .notice-text {
+      flex-grow: 1;
+    }
+
+    .date-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .date-card .day {
+      font-size: 2rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .date-card .others {
+      border-top: 1px solid #000;
+    }
   </style>
-<script>
-window.embeddedChatbotConfig = {
-chatbotId: "_pIQnU-KhSOMQtSNZBzva",
-domain: "www.chatbase.co"
-}
-</script>
-<script
-src="https://www.chatbase.co/embed.min.js"
-chatbotId="_pIQnU-KhSOMQtSNZBzva"
-domain="www.chatbase.co"
-defer>
-</script>
-  
- <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "39bb2632-dec6-4cf8-bc9a-816fbfca1149",
+  <script>
+    window.embeddedChatbotConfig = {
+      chatbotId: "_pIQnU-KhSOMQtSNZBzva",
+      domain: "www.chatbase.co"
+    }
+  </script>
+  <script src="https://www.chatbase.co/embed.min.js" chatbotId="_pIQnU-KhSOMQtSNZBzva" domain="www.chatbase.co" defer>
+  </script>
+
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "39bb2632-dec6-4cf8-bc9a-816fbfca1149",
+      });
     });
-  });
-</script>
+  </script>
 </head>
 
 <body>
@@ -86,14 +131,14 @@ defer>
     </div>
     <div class='header-middle p-0 bg-lightest xs-text-center' style='background-color: #F8F5E4;'>
       <div class='container pt-0 pb-0'>
-        <img alt='ASMM_LOGO' class='img-fluid' src='src/img/banner.jpg' />
+        <img alt='ASMM_LOGO' class='img-fluid' src='https://asmmbd.github.io/src/img/banner.jpg' />
       </div>
     </div>
     <div id="navbar" class='header-nav' style='background-color: #3F497F !important;'>
       <nav class='navbar navbar-expand-lg '>
         <div class='container'>
           <a class='navbar-brand d-md-none' href='/'>
-            <img src="./src/img/asmmbd_logo.png" class="logo-img" alt='asmm_logo'>
+            <img src="https://asmmbd.github.io/src/img/asmmbd_logo.png" class="logo-img" alt='asmm_logo'>
           </a>
           <button aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler text-white shadow-none' data-bs-target='#navbarNavDropdown' data-bs-toggle='collapse' type='button'>
             <i class='bi bi-list'></i>
@@ -111,12 +156,12 @@ defer>
               </li>
               <li class="nav-item dropdown b-bottom">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                 শাখা প্রতিষ্ঠান
+                  শাখা প্রতিষ্ঠান
                 </a>
                 <ul class="dropdown-menu text-center text-white border-0 rounded-0 p-0" style='background-color: #3F497F !important;'>
-                 <li><a class="dropdown-item b-bottom b-top text-white" href="#">মহিলা শাখা</a></li>
-                 <li><a class="dropdown-item b-bottom text-white" href="#">হিফজ বিভাগ</a></li>
-                 <li><a class="dropdown-item b-bottom text-white" href="#">নূরানী বিভাগ</a></li>
+                  <li><a class="dropdown-item b-bottom b-top text-white" href="#">মহিলা শাখা</a></li>
+                  <li><a class="dropdown-item b-bottom text-white" href="#">হিফজ বিভাগ</a></li>
+                  <li><a class="dropdown-item b-bottom text-white" href="#">নূরানী বিভাগ</a></li>
                   <li><a class="dropdown-item b-bottom text-white" href="#">তাহিলী বিভাগ</a></li>
                   <li><a class="dropdown-item text-white" href="#">স্কুল বিভাগ</a></li>
                 </ul>
@@ -161,201 +206,222 @@ defer>
   <div class='main-content'>
     <section>
       <div class='container'>
-        <div class='col-md-12'>
-          <div class='row'>
-            <div class='col-sm-12 col-md-9'>
-              <div class='main-content pt-2'>
-                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                  <div class="carousel-inner">
-                    <div class="carousel-item active">
-                      <img src="src/img/banner-lg.jpg" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                      <img src="https://raw.githubusercontent.com/asmmbd/asmmbd.github.io/main/src/img/20231024_131151.jpg" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                      <img src="src/img/banner-lg.jpg" class="d-block w-100" alt="...">
-                    </div>
+        <div class='row'>
+          <div class='col-sm-12 col-md-9'>
+            <div class='main-content pt-2'>
+              <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="https://asmmbd.github.io/src/img/banner-lg.jpg" class="d-block w-100" alt="...">
                   </div>
-                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                  </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                  </button>
+                  <div class="carousel-item">
+                    <img src="https://raw.githubusercontent.com/asmmbd/asmmbd.github.io/main/src/img/20231024_131151.jpg" class="d-block w-100" alt="...">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://asmmbd.github.io/src/img/banner-lg.jpg" class="d-block w-100" alt="...">
+                  </div>
                 </div>
-                <section class='divider' id='home'>
-                  <div class='container-fluid p-0'>
-                    <br />
-                  </div>
-                </section>
-                <br />
-                <div class='col-md-12 text-left' style=' padding-left: 0px; padding-right: 10px; font-family: SolaimanLipi !important;text-align: justify !important;'>
-                  <h2 class='h2 text-center title text-bolder text-theme-colored mt-30 mb-20' style=' font-family: SolaimanLipi !important;'>আয়েশা সিদ্দিকা (র.) মহিলা মাদরাসায় আপনাকে স্বাগতম</h2>
-                  <p class='mb-20' style='text-align: justify !important; font-family: SolaimanLipi !important;'>
-                  <p>
-                  <h3 class="text-center fw-bolder my-2"> «طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ»</h3>
-                  <p>
-
-                  <h4 class="text-center fw-bolder"> ‘ইলম’ বা জ্ঞানার্জন করা প্রত্যেক মুসলিমের জন্য ফরয। </h4>
-
-                  </p>
-                  <p>
-                    যুগে যুগে বহু জ্ঞানী ও মনিষীগন জ্ঞানের প্রয়োজনীয়তা উপলব্ধি করেছিলেন, জ্ঞান বিজ্ঞানের সকল শাখায় সমানভাবে কৃতিত্বের স্বাক্ষর রেখেছিলেন।
-                    তখন থেকেই জ্ঞান-বিজ্ঞানের শাখায় ইসলামী নারীদের অংশগ্রহণও কোন অংশে কম ছিলো না। তার প্রমাণ আম্মাজান হজরত আয়েশা (রাঃ) এর আরবী
-                    সাহিত্যের পারদর্শিতা, চিকিৎসা শাস্ত্রের গভীর ব্যুৎপত্তি অর্জন, গণিত শাস্ত্রে এতখানি পারদর্শী ছিলেন যে, হযরত ওমর (রা) এর মত জালীলুল কদর সাহাবী
-                    তাঁর কাছ থেকে মিরাসের মাসয়ালা ও হিসাব জেনে নিতেন। এছাড়া যুক্তিবিদ্যায়ও তিনি ছিলেন সিদ্ধহস্ত। ফিক্হ শাস্ত্রে ও অর্জন করেছিলেন সুগভীর পান্ডিত্য।
-                    ইতিহাস পর্যালোচনা করলে জানা যায় যে, তৎকালীন নারী সমাজ লেখার নিয়মকানুন সম্পর্কে এতখানি ওয়াকিবহাল ছিলেন যে গুরুত্বপূর্ণ পত্রাবলি ও বিভিন্ন
-                    মাসয়ালা মাসায়েল লিখে রাখতে তাদের কোনো অসুবিধা হতো না।
-
-                  </p>
-                  <p>
-                    সভ্যতা বিকাশে জ্ঞানের বিকল্প নেই। প্রাগৈতিহাসিক কাল থেকে একবিংশ শতাব্দীর এ তথ্যপ্রযুক্তির যুগেও মানুষ কল্যাণমুখী জ্ঞান সাধনায় নিরন্তর প্রচেষ্টা
-                    চালিয়ে যাওয়ার পাশাপাশি নারী শিক্ষাকে এগিয়ে নিতে অগ্রণী ভূমিকা পালন করে যাচ্ছে, আর এই নারী শিক্ষার অগ্রযাত্রাকে এগিয়ে নিতে প্রয়োজন সঠিক অবলম্বন।
-                  </p>
-                  <p>
-                    জ্ঞানার্জনের ক্ষেত্রে একটি ভালো বই যেমন নিঃসন্দেহে উৎকৃষ্ট অবলম্বন, কখনো এর প্রয়োজন ফুরায় না। আবার হাজারটা ভালো বইয়ের সমষ্টির রূপ
-                    একটি আদর্শবান শিক্ষকা । সেই আদর্শবান, আখলাকে পরিপূর্ণ শিক্ষিকার সমন্বয়ে মানুষ গড়ার লক্ষ্যে সুন্নতে নববীর পুনঃজাগরণের উদ্দেশ্যে মেহেরপুর
-                    শহরের অদূরেই গড়ে উঠেছে ‘‘আয়েশা সিদ্দিকা মহিলা মাদ্রাসা’’।
-
-                  </p>
-                  </p>
-                 <h3> উদ্দেশ্য :</h3>
-                  <p>আল্লাহ প্রদত্ত ইলম অর্জনের মাধ্যমে আল্লাহ তা’য়ালার সন্তুষ্টি অর্জন।</p>
-                  <div class="row">
-                    <div class="col-md-7">
-                      <p>
-                      <h3>মাদ্রাসার বৈশিষ্ট্যসমূহঃ </h3>
-                      <ul class='ps-0'>
-
-                        <li> *স্বল্প খরচে আবাসিক ছাত্রীদের থাকা ও মন সম্মত খাবারের সু-ব্যবস্থা আছে। </li>
-                        <li> *মানসিক চাপের পরিবর্তে আদর - সোহাগ ও কৌশলে পাঠদান করানো হয়। </li>
-                        <li> *নিরিবিলি সুন্দর মনোরম পরিবেশে থাকার সু-ব্যবস্থা। </li>
-                        <li> *ক্লাসের পড়া ক্লাসেই প্রস্তুত করিয়ে দেওয়ার চেষ্টা করা হয়। </li>
-                        <li> *সার্বিক সুন্নাতের বাস্তবায়নে তালিম ও তারবিয়াতের ব্যবস্থা। </li>
-                        <li> *প্রশিক্ষণ প্রাপ্ত যোগ্য শিক্ষিকা দ্বারা সার্বিক্ষণ দেখাশোনা ও পাঠদানের ব্যবস্থা। </li>
-
-                      </ul>
-                      </p>
-                    </div>
-                    <div class="col-md-5">
-                      <p>
-
-                      <h3> মাদ্রাসার বিভাগসমূহঃ </h3>
-                      <ul class='ps-0 grid grid-cols-2'>
-                        <li>*হিফ্জ বিভাগ</li>
-                        <li>*কিতাব বিভাগ</li>
-                        <li>*নূরানী ও মক্তব বিভাগ</li>
-                        <li>*স্কুল বিভাগ</li>
-                        <li>*আবাসিক</li>
-                        <li>*অনাবাসিক</li>
-                        <li>*ডে-কেয়ার</li>
-                      </ul>
-                      </p>
-                    </div>
-                  </div>
-                          <p>
-          <h3>ভবিষ্যৎ পরিকল্পনা :</h3>
-১/ ইফতা বিভাগ ২/ আরবি সাহিত্য বিভাগ ৩/ হিফজুর কুরআন বিভাগ। 
-মহিলাদের ফিকহ শাস্ত্রে উচ্চতর শিক্ষার জন্য ইফতা বিভাগ, আরবী সাহিত্যে উচ্চতর শিক্ষার জন্য আদব বিভাগ, কুরআনের হাফেজা হওয়ার জন্য হিফজুল কুরআন বিভাগ চালু করার পরিকল্পনা রয়েছে।
-এছাড়া কারিগরি শিক্ষার ক্ষেত্রে কম্পিউটার প্রশিক্ষণ, সেলাই প্রশিক্ষন কোর্সসহ বহুমুখী টেকনিক্যাল ও কারিগরি বিভাগ চালু করার পরিকল্পনা আছে।
-                          </p>
-                  </p>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+              <section class='divider' id='home'>
+                <div class='container-fluid p-0'>
                   <br />
                 </div>
+              </section>
+              <br />
+              <div class='col-md-12 text-left' style=' padding-left: 0px; padding-right: 10px; font-family: SolaimanLipi !important;text-align: justify !important;'>
+                <h2 class='h2 text-center title text-bolder text-theme-colored mt-30 mb-20' style=' font-family: SolaimanLipi !important;'>আয়েশা সিদ্দিকা (র.) মহিলা মাদরাসায় আপনাকে স্বাগতম</h2>
+                <p class='mb-20' style='text-align: justify !important; font-family: SolaimanLipi !important;'>
+                <p>
+                <h3 class="text-center fw-bolder my-2"> «طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ»</h3>
+                <p>
+
+                <h4 class="text-center fw-bolder"> ‘ইলম’ বা জ্ঞানার্জন করা প্রত্যেক মুসলিমের জন্য ফরয। </h4>
+
+                </p>
+                <p>
+                  যুগে যুগে বহু জ্ঞানী ও মনিষীগন জ্ঞানের প্রয়োজনীয়তা উপলব্ধি করেছিলেন, জ্ঞান বিজ্ঞানের সকল শাখায় সমানভাবে কৃতিত্বের স্বাক্ষর রেখেছিলেন।
+                  তখন থেকেই জ্ঞান-বিজ্ঞানের শাখায় ইসলামী নারীদের অংশগ্রহণও কোন অংশে কম ছিলো না। তার প্রমাণ আম্মাজান হজরত আয়েশা (রাঃ) এর আরবী
+                  সাহিত্যের পারদর্শিতা, চিকিৎসা শাস্ত্রের গভীর ব্যুৎপত্তি অর্জন, গণিত শাস্ত্রে এতখানি পারদর্শী ছিলেন যে, হযরত ওমর (রা) এর মত জালীলুল কদর সাহাবী
+                  তাঁর কাছ থেকে মিরাসের মাসয়ালা ও হিসাব জেনে নিতেন। এছাড়া যুক্তিবিদ্যায়ও তিনি ছিলেন সিদ্ধহস্ত। ফিক্হ শাস্ত্রে ও অর্জন করেছিলেন সুগভীর পান্ডিত্য।
+                  ইতিহাস পর্যালোচনা করলে জানা যায় যে, তৎকালীন নারী সমাজ লেখার নিয়মকানুন সম্পর্কে এতখানি ওয়াকিবহাল ছিলেন যে গুরুত্বপূর্ণ পত্রাবলি ও বিভিন্ন
+                  মাসয়ালা মাসায়েল লিখে রাখতে তাদের কোনো অসুবিধা হতো না।
+
+                </p>
+                <p>
+                  সভ্যতা বিকাশে জ্ঞানের বিকল্প নেই। প্রাগৈতিহাসিক কাল থেকে একবিংশ শতাব্দীর এ তথ্যপ্রযুক্তির যুগেও মানুষ কল্যাণমুখী জ্ঞান সাধনায় নিরন্তর প্রচেষ্টা
+                  চালিয়ে যাওয়ার পাশাপাশি নারী শিক্ষাকে এগিয়ে নিতে অগ্রণী ভূমিকা পালন করে যাচ্ছে, আর এই নারী শিক্ষার অগ্রযাত্রাকে এগিয়ে নিতে প্রয়োজন সঠিক অবলম্বন।
+                </p>
+                <p>
+                  জ্ঞানার্জনের ক্ষেত্রে একটি ভালো বই যেমন নিঃসন্দেহে উৎকৃষ্ট অবলম্বন, কখনো এর প্রয়োজন ফুরায় না। আবার হাজারটা ভালো বইয়ের সমষ্টির রূপ
+                  একটি আদর্শবান শিক্ষকা । সেই আদর্শবান, আখলাকে পরিপূর্ণ শিক্ষিকার সমন্বয়ে মানুষ গড়ার লক্ষ্যে সুন্নতে নববীর পুনঃজাগরণের উদ্দেশ্যে মেহেরপুর
+                  শহরের অদূরেই গড়ে উঠেছে ‘‘আয়েশা সিদ্দিকা মহিলা মাদ্রাসা’’।
+
+                </p>
+                </p>
+                <h3> উদ্দেশ্য :</h3>
+                <p>আল্লাহ প্রদত্ত ইলম অর্জনের মাধ্যমে আল্লাহ তা’য়ালার সন্তুষ্টি অর্জন।</p>
+                <div class="row">
+                  <div class="col-md-7">
+                    <p>
+                    <h3>মাদ্রাসার বৈশিষ্ট্যসমূহঃ </h3>
+                    <ul class='ps-0'>
+
+                      <li> *স্বল্প খরচে আবাসিক ছাত্রীদের থাকা ও মন সম্মত খাবারের সু-ব্যবস্থা আছে। </li>
+                      <li> *মানসিক চাপের পরিবর্তে আদর - সোহাগ ও কৌশলে পাঠদান করানো হয়। </li>
+                      <li> *নিরিবিলি সুন্দর মনোরম পরিবেশে থাকার সু-ব্যবস্থা। </li>
+                      <li> *ক্লাসের পড়া ক্লাসেই প্রস্তুত করিয়ে দেওয়ার চেষ্টা করা হয়। </li>
+                      <li> *সার্বিক সুন্নাতের বাস্তবায়নে তালিম ও তারবিয়াতের ব্যবস্থা। </li>
+                      <li> *প্রশিক্ষণ প্রাপ্ত যোগ্য শিক্ষিকা দ্বারা সার্বিক্ষণ দেখাশোনা ও পাঠদানের ব্যবস্থা। </li>
+
+                    </ul>
+                    </p>
+                  </div>
+                  <div class="col-md-5">
+                    <p>
+
+                    <h3> মাদ্রাসার বিভাগসমূহঃ </h3>
+                    <ul class='ps-0 grid grid-cols-2'>
+                      <li>*হিফ্জ বিভাগ</li>
+                      <li>*কিতাব বিভাগ</li>
+                      <li>*নূরানী ও মক্তব বিভাগ</li>
+                      <li>*স্কুল বিভাগ</li>
+                      <li>*আবাসিক</li>
+                      <li>*অনাবাসিক</li>
+                      <li>*ডে-কেয়ার</li>
+                    </ul>
+                    </p>
+                  </div>
+                </div>
+                <p>
+                <h3>ভবিষ্যৎ পরিকল্পনা :</h3>
+                ১/ ইফতা বিভাগ ২/ আরবি সাহিত্য বিভাগ ৩/ হিফজুর কুরআন বিভাগ।
+                মহিলাদের ফিকহ শাস্ত্রে উচ্চতর শিক্ষার জন্য ইফতা বিভাগ, আরবী সাহিত্যে উচ্চতর শিক্ষার জন্য আদব বিভাগ, কুরআনের হাফেজা হওয়ার জন্য হিফজুল কুরআন বিভাগ চালু করার পরিকল্পনা রয়েছে।
+                এছাড়া কারিগরি শিক্ষার ক্ষেত্রে কম্পিউটার প্রশিক্ষণ, সেলাই প্রশিক্ষন কোর্সসহ বহুমুখী টেকনিক্যাল ও কারিগরি বিভাগ চালু করার পরিকল্পনা আছে।
+                </p>
+                </p>
+                <br />
               </div>
             </div>
-            <div class='col-sm-12 col-md-3 py-2 d-print-none'>
-              <div class='sidebar sidebar-left mt-sm-10'>
-                <div class='widget'>
-                  <h5 class='prime-color py-2 px-3 text-white'><span>মোহতামিমঃ</span></h5>
-                  <div class='rs-image text-center'>
-                    <img alt='principal image' class='img-fluid' src='https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png' />
-                    <div class="text-center my-2">
-                      <h5 class="card-title fw-bolder"> হাফেজ মাও. আবদুল্লাহ আল সাইফ</h5>
-                      <p class="card-text"> মুহতামিম অত্র মাদ্রাসা </p>
-                    </div>
+          </div>
+          <div class='col-sm-12 col-md-3 py-2 d-print-none'>
+            <div class='sidebar sidebar-left mt-sm-10'>
+              <div class='widget'>
+                <h5 class='prime-color py-2 px-3 text-white'><span>মোহতামিমঃ</span></h5>
+                <div class='rs-image text-center'>
+                  <img alt='principal image' class='img-fluid' src='https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png' />
+                  <div class="text-center my-2">
+                    <h5 class="card-title fw-bolder"> হাফেজ মাও. আবদুল্লাহ আল সাইফ</h5>
+                    <p class="card-text"> মুহতামিম অত্র মাদ্রাসা </p>
                   </div>
                 </div>
               </div>
-              <div class='widget'>
-                <h5 class='prime-color py-2 px-3 text-white'><span>গুরুত্বপূর্ণ তথ্যঃ </span></h5>
-                <div class='latest-posts post_area'>
-                  <marquee behavior='' direction='up' onmouseout='this.start();' onmouseover='this.stop();' style='height: 300px;'>
-                    <div class='post d-flex gap-2 p-2'>
-                      <ul class='lists bg-primary px-1'>
-                        <li class='text-white'>16</li>
-                        <li class=' text-white text-uppercase'>Jan</li>
-
-                      </ul>
-                      <div class='media-body'>
-
-                        <span>23 Jun, 2023</span><br />
-                        <a href='./notice_page'>২০২৩ শ&#2495;ক&#2509;ষ&#2494;বর&#2509;ষ&#2503; ভর&#2509;ত&#2495;র আব&#2503;দন</a>
-
+              <div class='widget notice-board mb-3'>
+                <h5 class="mb-2 py-2 text-center text-white prime-color rounded-top">নোটিশ বোর্ড</h5>
+                <div class="px-2">
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
                       </div>
                     </div>
-                    <div class='post d-flex gap-2 p-2'>
-                      <ul class='lists bg-primary px-1'>
-                        <li class='text-white'>16</li>
-                        <li class=' text-white text-uppercase'>Jan</li>
-
-                      </ul>
-                      <div class='media-body'>
-
-                        <span>23 Jun, 2023</span><br />
-                        <a href='#' target='_blank'>২০২৩ শ&#2495;ক&#2509;ষ&#2494;বর&#2509;ষ&#2503; ভর&#2509;ত&#2495;র আব&#2503;দন</a>
-
+                  </div>
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
                       </div>
                     </div>
-                    <div class='post d-flex gap-2 p-2'>
-                      <ul class='lists bg-primary px-1'>
-                        <li class='text-white'>16</li>
-                        <li class=' text-white text-uppercase'>Jan</li>
-
-                      </ul>
-                      <div class='media-body'>
-
-                        <span>23 Jun, 2023</span><br />
-                        <a href='#' target='_blank'>২০২৩ শ&#2495;ক&#2509;ষ&#2494;বর&#2509;ষ&#2503; ভর&#2509;ত&#2495;র আব&#2503;দন</a>
-
+                  </div>
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
                       </div>
                     </div>
-                    <div class='post d-flex gap-2 p-2'>
-                      <ul class='lists bg-primary px-1'>
-                        <li class='text-white'>16</li>
-                        <li class=' text-white text-uppercase'>Jan</li>
-
-                      </ul>
-                      <div class='media-body'>
-
-                        <span>23 Jun, 2023</span><br />
-                        <a href='#' target='_blank'>২০২৩ শ&#2495;ক&#2509;ষ&#2494;বর&#2509;ষ&#2503; ভর&#2509;ত&#2495;র আব&#2503;দন</a>
-
+                  </div>
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
                       </div>
                     </div>
-                    <div class='post d-flex gap-2 p-2'>
-                      <ul class='lists bg-primary px-1'>
-                        <li class='text-white'>16</li>
-                        <li class=' text-white text-uppercase'>Jan</li>
+                  </div>
 
-                      </ul>
-                      <div class='media-body'>
-
-                        <span>23 Jun, 2023</span><br />
-                        <a href='#' target='_blank'>২০২৩ শ&#2495;ক&#2509;ষ&#2494;বর&#2509;ষ&#2503; ভর&#2509;ত&#2495;র আব&#2503;দন</a>
-
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
                       </div>
                     </div>
-                  </marquee>
-
-                  <div class='text-center text-white mb-3 py-2' style="background-color: #1ab33d">
-                    <a href='/more-information' class="text-white"> আরোও দেখুন
-                      <i aria-hidden='true' class='bi bi-chevron-right'></i></a>
+                  </div>
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="notice-item">
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-bell-fill notice-icon"></i>
+                      <span class="notice-text">যারা আইডি কার্ড পাননি/নতুন অটো নেবেন</span>
+                    </div>
+                    <div class="date-card">
+                      <div class="day">২৭</div>
+                      <div class="text-center">
+                        <div>জানুয়ারি,</div>
+                        <div class="others">২০২৫</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <h6 class="mt-2 my-0 py-2 text-center rounded-bottom" style="background-color: #1ab33d"><a href="/notice" class="text-white "> আরো দেখুন<i class='bi bi-chevron-right'></i></a></h6>
+
+
               </div>
 
               <div class='widget'>
@@ -708,26 +774,26 @@ defer>
 
           <button class="btn btn-danger rounded-pill">
             <i class='bi bi-bell'></i>
-            Subscribe 
+            Subscribe
           </button>
         </div>
       </div>
     </footer>
   </div>
 
-    <script src="//code.tidio.co/fcia5etmhrpfuq5mn41pyct6ndmzeggy.js" async></script>
+  <script src="//code.tidio.co/fcia5etmhrpfuq5mn41pyct6ndmzeggy.js" async></script>
 
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-  <script src="src/js/owl.carousel.min.js"></script>
-  <script src="src/js/index.js"></script>
+  <script src="https://asmmbd.github.io/src/js/owl.carousel.min.js"></script>
+  <script src="https://asmmbd.github.io/src/js/index.js"></script>
   <script>
     if (window.matchMedia('(display-mode: standalone)').matches) {
-        console.log('installed');
-    document.querySelector('#installInstructions').classList.add('d-none')
-      }else{
-        console.log('not installed');
-      }
+      console.log('installed');
+      document.querySelector('#installInstructions').classList.add('d-none')
+    } else {
+      console.log('not installed');
+    }
   </script>
   <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js'></script>
   <script>
