@@ -18,7 +18,7 @@ function banglaMonth(date) {
 
 function dateFormater(d){
   let date = new Date(d);
-  return `${banglaNumber(date.getDate())} ${banglaMonth(date.getMonth())}, ${banglaNumber(date.getFullYear())}`
+  return `${banglaNumber(date.getDate())} ${banglaMonth(d)}, ${banglaNumber(date.getFullYear())}`
 }
 
 
