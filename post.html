@@ -441,16 +441,44 @@
       </div>
     </footer>
   </div>
-  <div class="bg-white w-100 h-50 position-fixed bottom-0 left-0 border-top rounded-top d-none comment-container">
-    <div class="border-bottom d-flex align-items-center justify-content-between p-2">
-      <span>Comments</span>
-      <i class="bi bi-x text-lg" onclick="toggleComment()"></i>
-    </div>
-    <div class="px-2">
-      <input type="text" class="form-control my-3" placeholder="Enter your Name">
-      <textarea class="form-control" placeholder="Comment Here..."></textarea>
-    </div>
+    <div class="comment-container bg-white position-fixed d-none" style="bottom: 5rem; left: 50%; transform: translateX(-50%); width: 24rem; border: 1px solid #ddd; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); border-radius: .375rem; padding: .5rem;">
+  <div class="my-3 d-flex align-items-center gap-4" style="position: relative; display: flex; align-items: center;">
+    <span style="flex: 1; height: 1px; background-color: #d1d5db;"></span>
+    Comments
+    <span style="flex: 1; height: 1px; background-color: #d1d5db;"></span>
   </div>
+
+  <div class="mx-auto" style="max-width: 24rem;">
+    <ul class="list-unstyled">
+      <li class="d-flex gap-4">
+        <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary" style="width: 2.5rem; height: 2.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
+            <path d="M6.57757 15.4816C5.1628 16.324 1.45336 18.0441 3.71266 20.1966C4.81631 21.248 6.04549 22 7.59087 22H16.4091C17.9545 22 19.1837 21.248 20.2873 20.1966C22.5466 18.0441 18.8372 16.324 17.4224 15.4816C14.1048 13.5061 9.89519 13.5061 6.57757 15.4816Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h4 class="h5 mb-0">আব্দুল্লাহ আল সাইফ</h4>
+          <p class="text-muted">অনেক সুন্দর পোস্ট</p>
+        </div>
+      </li>
+      <!-- Repeat above li for other comments -->
+    </ul>
+  </div>
+
+  <div>
+    <div class="my-2 d-flex align-items-center gap-4" style="position: relative; display: flex; align-items: center;">
+      <span style="flex: 1; height: 1px; background-color: #d1d5db;"></span>
+      Comment here
+      <span style="flex: 1; height: 1px; background-color: #d1d5db;"></span>
+    </div>
+    <div class="my-3 d-flex gap-3">
+      <input type="text" class="form-control" placeholder="Enter your Name">
+      <button class="btn btn-outline-secondary" onclick="toggleComment()">send</button>
+    </div>
+    <textarea class="form-control" rows="4" placeholder="Comment Here..."></textarea>
+  </div>
+</div>
 
 
 <script>
