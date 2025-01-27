@@ -84,7 +84,7 @@ class Holiday extends HTMLElement {
           </svg>
         </div>
         <div class='media-body'>
-          <span class="" style="font-size: 18px;">${dateFormater(notice.createdAt)} - ${dateFormater(notice.createdAt)}</span><br />
+          <span class="" style="font-size: 18px;">${dateFormater(notice.startDate)} - ${dateFormater(notice.endDate)}</span><br />
           <a href='#' target='_blank' class="notice-text text-dark ">${notice.title}</a>
         </div>
       </div>`)).join(' ')}
@@ -95,7 +95,7 @@ class Holiday extends HTMLElement {
   }
   connectedCallback() {
     this.render()
-    fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/notices')
+    fetch('https://6797e6b9c2c861de0c6e6110.mockapi.io/api/v1/holidays')
       .then(res => res.json())
       .then(data => {
         this.notices = data;
