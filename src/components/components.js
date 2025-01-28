@@ -21,6 +21,32 @@ function dateFormater(d){
   return `${banglaNumber(date.getDate())} ${banglaMonth(d)}, ${banglaNumber(date.getFullYear())}`
 }
 
+class Principal extends HTMLElement{
+  constructor() {
+    super();
+    this.prop = ""
+  }
+  
+  render(){
+    this.innerHTML = `
+    <div class="notice-board">
+      <h5 class="mb-2 py-2 text-center text-white prime-color rounded-top">মুহতামিম</h5>
+      <div class='rs-image text-center'>
+        <img alt='principal image' class='img-fluid' src='https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150714.png' />
+        <div class="text-center my-2">
+          <h5 class="card-title fw-bolder"> হাফেজ মাও. আবদুল্লাহ আল সাইফ</h5>
+          <p class="card-text"> মুহতামিম অত্র মাদ্রাসা </p>
+        </div>
+      </div>
+      <h6 class="mt-2 my-0 py-2 text-center rounded-bottom" style="background-color: #1ab33d"><a href="#" class="text-white ">মুহতামিমের বাণী<i class='bi bi-chevron-right'></i></a></h6>
+    </div>
+    `;
+  }
+  connectedCallback(){
+    this.render();
+  }
+  
+}
 
 class Notice extends HTMLElement {
   constructor() {
@@ -128,6 +154,6 @@ class Holiday extends HTMLElement {
   }
 }
 
-
+customElements.define('principal-card', Principal);
 customElements.define('notice-board', Notice);
 customElements.define('holiday-board', Holiday);
