@@ -87,7 +87,7 @@ class Holiday extends HTMLElement {
 
     this.innerHTML = `
     <div class='notice-board'>
-      <h5 class="mb-2 py-2 text-center text-white prime-color rounded-top">নোটিশ বোর্ড</h5>
+      <h5 class="mb-2 py-2 text-center text-white prime-color rounded-top">একাডেমিক ছুটি</h5>
       <div class='px-2'>
         ${visibleNotices.length > 0 
           ? visibleNotices.map(notice => (`<div class='border-bottom d-flex align-items-center gap-2 p-2 mb-2'>
