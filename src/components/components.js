@@ -157,3 +157,79 @@ class Holiday extends HTMLElement {
 customElements.define('principal-card', Principal);
 customElements.define('notice-board', Notice);
 customElements.define('holiday-board', Holiday);
+
+
+
+
+class QuranRead extends HTMLElement {
+  constructor() {
+    super();
+    this.error = null;
+    this.ayat = {};
+  }
+
+  async fetchNotices() {
+    try {
+      // Fetch random Ayah
+      const response = await fetch('https://api.alquran.cloud/v1/ayah/random');
+      const data = await response.json();
+      this.ayat = {
+        ...this.ayat,
+        text: data.data.text,
+        number: data.data.number,
+        name: data.data.surah.name,
+      };
+
+      // Fetch Bengali translation
+      const meaningResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${this.ayat.number}/bn.bengali`);
+      const meaningData = await meaningResponse.json();
+      this.ayat = {
+        ...this.ayat,
+        meaning: meaningData.data.text,
+      };
+
+      // Render the component after fetching data
+      this.render();
+    } catch (err) {
+      this.error = 'আয়াত লোড করতে সমস্যা হয়েছে';
+      this.render(); // Render the component to show the error message
+    }
+  }
+
+  render() {
+    this.innerHTML = `
+      <div class="notice-board">
+        <h5 class="mb-2 py-2 text-center text-white prime-color rounded-top">কুরআনের দৈনিক আয়াত</h5>
+        <div class='text-center'>
+          ${
+            !this.error && this.ayat.text
+              ? `
+                <div class="text-center my-2">
+                  <p>
+                    সুরা ${this.ayat.name}, আয়াত : ${this.ayat.number}
+                  </p>
+                  <p class="card-text fs-5">
+                    ${this.ayat.text}
+                  </p>
+                  <p>
+                    ${this.ayat.meaning}
+                  </p>
+                </div>
+              `
+              : `<div>${this.error}</div>`
+          }
+        </div>
+        <h6 class="mt-2 my-0 py-2 text-center rounded-bottom" style="background-color: #1ab33d">
+          <a href="#" class="text-white">তাফসীর পড়ুন<i class='bi bi-chevron-right'></i></a>
+        </h6>
+      </div>
+    `;
+  }
+
+  connectedCallback() {
+    this.fetchNotices();
+  }
+}
+
+// Define the custom element
+customElements.define('quran-read', QuranRead);
