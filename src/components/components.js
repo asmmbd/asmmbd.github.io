@@ -206,7 +206,7 @@ class QuranRead extends HTMLElement {
               ? `
                 <div class="text-center my-2">
                   <p>
-                    সুরা ${this.ayat.name}, আয়াত : ${this.ayat.number}
+                    সুরার নামঃ ${this.ayat.name}, আয়াতঃ ${banglaNumber(this.ayat.number)}
                   </p>
                   <p class="card-text fs-5">
                     ${this.ayat.text}
