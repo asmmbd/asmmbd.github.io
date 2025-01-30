@@ -198,7 +198,7 @@
   <main class="main-content">
     <div class="container">
       <div class='row flex-md-row-reverse'>
-        <div class='col-sm-12 col-md-9 pt-2' x-data="data()">
+        <div class='col-sm-12 col-md-8 pt-2' x-data="data()">
           <div x-show="!studentId">
             <div class="border rounded p-2 my-5">
               <!-- Error Message -->
@@ -238,7 +238,7 @@
             </div>
           </div>
           <div x-show="studentId">
-            <section class="mt-4">
+            <section class="mt-2">
               <div class="rounded position-relative" style="background-color: #3f497f; color: #fff; height: 200px; display: flex; align-items: center; justify-content: center;">
                 <button @click="logout()" class="btn bg-danger position-absolute" style="top: 5px; right: 5px;">
                   <i class="bi bi-box-arrow-right text-white"></i>
@@ -415,7 +415,7 @@
             </section>
           </div>
         </div>
-        <div class='col-sm-12 col-md-3 py-2 d-print-none'>
+        <div class='col-sm-12 col-md-4 py-2 d-print-none'>
           <div class='sidebar sidebar-left mt-sm-10'>
             <div class='widget mb-3'>
               <principal-card></principal-card>
