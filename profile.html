@@ -591,6 +591,14 @@
             console.error(error);
           }
         },
+        loginStudent() {
+          const student = await databases.getDocument(
+            "652c16162f939c821f75",
+            "652c16266c0f7c2fccd8",
+            this.studentId
+          );
+          this.data = student;
+        },
 
         // Initialize Function
         init() {
