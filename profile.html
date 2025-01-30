@@ -153,23 +153,39 @@
     <div class="container" x-data="data()">
       <div x-show="!studentId">
         <div class="border rounded p-2 my-5">
-          <div x-show="errsms">
-            <span x-text="errsms"></span>
+          <!-- Error Message -->
+          <div x-show="errsms" class="alert alert-danger" x-text="errsms"></div>
+
+          <!-- Loading Spinner -->
+          <div x-show="isLoading" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
+
+          <!-- Student ID Input -->
           <div class="mb-2">
             <label for="studentIdInput" class="form-label">স্টুডেন্ট আইডি</label>
-            <input x-model="stid" type="text" class="form-control" id="studentIdInput" aria-describedby="studentIdHelp">
+            <input x-model="stid" type="text" class="form-control" id="studentIdInput" aria-describedby="studentIdHelp" required>
           </div>
+
+          <!-- Password Input -->
           <div class="mb-3">
             <label for="passwordInput" class="form-label">পাসওয়ার্ড</label>
-            <input type="password" class="form-control" id="passwordInput" aria-describedby="passwordHelp">
+            <input x-model="password" type="password" class="form-control" id="passwordInput" aria-describedby="passwordHelp" required>
           </div>
+
+          <!-- Remember Me Checkbox -->
           <div class="d-flex align-items-center justify-content-between">
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="rememberMeCheck">
               <label class="form-check-label" for="rememberMeCheck">আমাকে মনে রাখুন</label>
             </div>
-            <button @click="login()" class="btn btn-primary">প্রবেশ করুন</button>
+
+            <!-- Login Button -->
+            <button @click="login()" class="btn btn-primary" :disabled="isLoading">
+              প্রবেশ করুন
+            </button>
           </div>
         </div>
       </div>
@@ -443,59 +459,77 @@
       return {
         data: null,
         stid: '',
+        password: '',
         results: [],
         studentId: localStorage.getItem('studentId') || '',
         errsms: '',
-        login() {
-          if (this.stid) {
+        isLoading: false,
+
+        // Login Function
+        async login() {
+          this.errsms = '';
+          this.isLoading = true;
+
+          // Input Validation
+          if (!this.stid || !this.password) {
+            this.errsms = 'স্টুডেন্ট আইডি এবং পাসওয়ার্ড প্রয়োজন।';
+            this.isLoading = false;
+            return;
+          }
+
+          try {
+            // Fetch Student Data
+            const student = await databases.getDocument(
+              "652c16162f939c821f75",
+              "652c16266c0f7c2fccd8",
+              this.stid
+            );
+
+            // Validate Password (Assuming password is stored in the database)
+            if (student.$id !== this.password) {
+              this.errsms = 'স্টুডেন্ট আইডি বা পাসওয়ার্ড ভুল।';
+              this.isLoading = false;
+              return;
+            }
+
+            // Login Successful
             this.studentId = this.stid;
-            this.loginStudent();
+            this.data = student;
             localStorage.setItem('studentId', this.studentId);
-          } else {
-            this.errsms = 'Please enter a valid Student ID.';
+
+            // Fetch Exam Results
+            await this.getStudentResult();
+          } catch (error) {
+            this.errsms = 'স্টুডেন্ট আইডি বা পাসওয়ার্ড ভুল।';
+            console.error(error);
+          } finally {
+            this.isLoading = false;
           }
         },
+
+        // Logout Function
         logout() {
           this.studentId = '';
           this.data = null;
           this.results = [];
           localStorage.removeItem('studentId');
         },
-        loginStudent() {
-          this.getStudent();
-          this.getStudentResult();
-        },
-        getStudent() {
-          const promise = databases.getDocument(
-            "652c16162f939c821f75",
-            "652c16266c0f7c2fccd8",
-            this.studentId
-          );
-          promise.then(
-            (ress) => {
-              this.data = ress;
-              this.errsms = ''; // Clear error message on successful login
-            },
-            (error) => {
-              this.errsms = 'Invalid ID or password';
-            }
-          );
-        },
-        getStudentResult() {
-          const promise = databases.listDocuments(
-            "652c16162f939c821f75",
-            "65d42b3c83e7217b2aac",
+
+        // Fetch Exam Results
+        async getStudentResult() {
+          try {
+            const results = await databases.listDocuments(
+              "652c16162f939c821f75",
+              "65d42b3c83e7217b2aac",
             [Query.equal("studentId", this.studentId)]
-          );
-          promise.then(
-            (ress) => {
-              this.results = ress.documents;
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
+            );
+            this.results = results.documents;
+          } catch (error) {
+            console.error(error);
+          }
         },
+
+        // Initialize Function
         init() {
           if (this.studentId) {
             this.loginStudent();
