@@ -378,7 +378,7 @@
           this.listPost();
           client.subscribe('databases.652c16162f939c821f75.collections.675d991f003af378778c.documents', response => {
             // Callback will be executed on changes for documents A and all files.
-            console.log(response);
+            this.posts.unshift(response.payload);
           });
         }
       }
