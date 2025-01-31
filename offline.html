@@ -1,12 +1,57 @@
 <!DOCTYPE html>
-     <html lang="en">
-       <head>
-         <meta charset="UTF-8" />
-         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-         <title>Offline</title>
-       </head>
-       <body>
-         <h1>You are offline!</h1>
-         <p>Please check your internet connection and try again.</p>
-       </body>
-     </html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>অফলাইন - আপনার মাদ্রাসা</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        text-align: center;
+        padding: 50px;
+      }
+      h1 {
+        font-size: 2.5rem;
+        color: #d9534f;
+      }
+      p {
+        font-size: 1.2rem;
+        margin: 20px 0;
+      }
+      .logo {
+        width: 150px;
+        margin-bottom: 20px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #5cb85c;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .button:hover {
+        background-color: #4cae4c;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- লোগো যোগ করুন -->
+    <img src="/images/logo.png" alt="মাদ্রাসা লোগো" class="logo" />
+
+    <!-- প্রধান হেডিং -->
+    <h1>আপনি অফলাইন!</h1>
+
+    <!-- বার্তা -->
+    <p>দুঃখিত, আপনার ইন্টারনেট সংযোগ নেই।</p>
+    <p>অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ চেক করুন এবং পুনরায় চেষ্টা করুন।</p>
+
+    <!-- রিফ্রেশ বাটন -->
+    <a href="/" class="button">পুনরায় চেষ্টা করুন</a>
+  </body>
+</html>
