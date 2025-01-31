@@ -187,4 +187,203 @@
                   <p class="my-1" x-text="post.content">
 
                   </p>
-                  <img :src="`https://cloud.appwrite.io/v1/storage/buckets/653bc7811a3ca0417dd5/files/${post.id}/view?project=652c1374db243c864a6c`" 
+                  <img :src="`https://cloud.appwrite.io/v1/storage/buckets/653bc7811a3ca0417dd5/files/${post.id}/view?project=652c1374db243c864a6c`" class="w-full rounded-md my-2">
+                </div>
+                <div class="flex items-center gap-4 my-2.5 px-2">
+                  <button class="flex items-center gap-1" x-data="{isLiked: false}" @click="isLiked = !isLiked;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" :color="isLiked ? 'red' : 'currentColor'" :fill="isLiked ? 'red' : 'none'">
+                      <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" :stroke="isLiked ? 'red' : 'currentColor'" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <span x-text="formatNumber(post.likes.length)">${likes}</span>
+                  </button>
+                  <button class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5 rotate-[270deg]" color="#000000" fill="none">
+                      <path d="M22 11.5667C22 16.8499 17.5222 21.1334 12 21.1334C11.3507 21.1343 10.7032 21.0742 10.0654 20.9545C9.60633 20.8682 9.37678 20.8251 9.21653 20.8496C9.05627 20.8741 8.82918 20.9948 8.37499 21.2364C7.09014 21.9197 5.59195 22.161 4.15111 21.893C4.69874 21.2194 5.07275 20.4112 5.23778 19.5448C5.33778 19.0148 5.09 18.5 4.71889 18.1231C3.03333 16.4115 2 14.1051 2 11.5667C2 6.28357 6.47778 2 12 2C17.5222 2 22 6.28357 22 11.5667Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>
+                    <span x-text="formatNumber(post.comments.length)">${comments}</span>
+                  </button>
+                  <button class="flex items-center gap-1">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M7 17L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M12 17L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M17 17L17 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>-->
+                    <svg aria-label="Repost" role="img" viewBox="0 0 18 18" class="size-5">
+                      <title>Repost</title>
+                      <path d="M6.41256 1.23531C6.6349 0.971277 7.02918 0.937481 7.29321 1.15982L9.96509 3.40982C10.1022 3.52528 10.1831 3.69404 10.1873 3.87324C10.1915 4.05243 10.1186 4.2248 9.98706 4.34656L7.31518 6.81971C7.06186 7.05419 6.66643 7.03892 6.43196 6.7856C6.19748 6.53228 6.21275 6.13685 6.46607 5.90237L7.9672 4.51289H5.20312C3.68434 4.51289 2.45312 5.74411 2.45312 7.26289V9.51289V11.7629C2.45312 13.2817 3.68434 14.5129 5.20312 14.5129C5.5483 14.5129 5.82812 14.7927 5.82812 15.1379C5.82812 15.4831 5.5483 15.7629 5.20312 15.7629C2.99399 15.7629 1.20312 13.972 1.20312 11.7629V9.51289V7.26289C1.20312 5.05375 2.99399 3.26289 5.20312 3.26289H7.85002L6.48804 2.11596C6.22401 1.89362 6.19021 1.49934 6.41256 1.23531Z"></path>
+                      <path d="M11.5874 17.7904C11.3651 18.0545 10.9708 18.0883 10.7068 17.8659L8.03491 15.6159C7.89781 15.5005 7.81687 15.3317 7.81267 15.1525C7.80847 14.9733 7.8814 14.801 8.01294 14.6792L10.6848 12.206C10.9381 11.9716 11.3336 11.9868 11.568 12.2402C11.8025 12.4935 11.7872 12.8889 11.5339 13.1234L10.0328 14.5129H12.7969C14.3157 14.5129 15.5469 13.2816 15.5469 11.7629V9.51286V7.26286C15.5469 5.74408 14.3157 4.51286 12.7969 4.51286C12.4517 4.51286 12.1719 4.23304 12.1719 3.88786C12.1719 3.54269 12.4517 3.26286 12.7969 3.26286C15.006 3.26286 16.7969 5.05373 16.7969 7.26286V9.51286V11.7629C16.7969 13.972 15.006 15.7629 12.7969 15.7629H10.15L11.512 16.9098C11.776 17.1321 11.8098 17.5264 11.5874 17.7904Z"></path>
+                    </svg>
+                    <span x-text="formatNumber(post.share)">${comments}</span>
+                  </button>
+                  <button class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M21.0477 3.05293C18.8697 0.707363 2.48648 6.4532 2.50001 8.551C2.51535 10.9299 8.89809 11.6617 10.6672 12.1581C11.7311 12.4565 12.016 12.7625 12.2613 13.8781C13.3723 18.9305 13.9301 21.4435 15.2014 21.4996C17.2278 21.5892 23.1733 5.342 21.0477 3.05293Z" stroke="currentColor" stroke-width="1.5" />
+                      <path d="M11.5 12.5L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span x-text="formatNumber(post.share)">${share}</span>
+                  </button>
+                </div>
+                <hr class="hidden" />
+                <div class='px-2 mt-1.5 w-full flex items-center hidden'>
+                  <img class='w-9 h-9 rounded-full' src='/src/avatar.png' alt='Media rounded avatar'>
+                  <div class='ml-2.5 flex-1 relative'>
+                    <input class='w-full h-9 bg-gray-100 rounded-full px-3 outline-0' placeholder='write a comment...' />
+                    <div class='absolute top-2 right-2 flex items-center gap-2'>
+                      <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.2858 8.86328L9.56825 15.9883C8.98246 16.6096 8.03271 16.6096 7.44693 15.9883C6.86114 15.367 6.86114 14.3596 7.44693 13.7383L14.1644 6.61328M13.4571 7.36328L14.8713 5.86327C16.0429 4.62063 17.9424 4.62063 19.114 5.86328C20.2856 7.10592 20.2856 9.12064 19.114 10.3633L17.6998 11.8633M18.4073 11.1133L11.6898 18.2383C9.93243 20.1023 7.08319 20.1023 5.32583 18.2383C3.56847 16.3743 3.56847 13.3522 5.32583 11.4883L12.0433 4.36328" stroke="currentColor" stroke-width="null" stroke-linecap="round" stroke-linejoin="round" class="my-path"></path>
+                      </svg>
+                      <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 14C16 15.6569 14 17 12 17C10 17 8 15.6569 8 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM10 9C10 9.55228 9.55228 10 9 10C8.44772 10 8 9.55228 8 9C8 8.44772 8.44772 8 9 8C9.55228 8 10 8.44772 10 9ZM16 9C16 9.55228 15.5523 10 15 10C14.4477 10 14 9.55228 14 9C14 8.44772 14.4477 8 15 8C15.5523 8 16 8.44772 16 9Z" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                      </svg>
+
+                      <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 19L7.07189 15.2455C7.69252 14.4869 8.00284 14.1076 8.40938 14.0633C8.47386 14.0563 8.53887 14.0555 8.60349 14.0611C9.01094 14.0961 9.32986 14.4682 9.9677 15.2123C10.6306 15.9857 10.962 16.3723 11.381 16.4005C11.4473 16.4049 11.5139 16.4027 11.5797 16.394C11.996 16.3387 12.3016 15.9312 12.9127 15.1164L14.4826 13.0232C15.182 12.0906 15.5317 11.6243 16.0157 11.6119C16.4996 11.5995 16.8728 12.0473 17.619 12.9428L21 17M21 17V9M21 17C21 19.2091 19.2091 21 17 21H11C7.22876 21 5.34315 21 4.17157 19.8284C3 18.6569 3 16.7712 3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H15" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                        <path d="M12 9C12 10.1046 11.1046 11 10 11C8.89543 11 8 10.1046 8 9C8 7.89543 8.89543 7 10 7C11.1046 7 12 7.89543 12 9Z" stroke="currentColor" stroke-width="null" class="my-path"></path>
+                        <path d="M19 3L19 7" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                        <path d="M21 5H17" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div x-show="loading" class="loading">
+        <div class="grid place-items-center mb-3">
+          <div class="w-12 h-12 rounded-full border-2 border-l-blue-400 animate-sping"></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="left w-3/4 h-80 hidden md:block"></div>
+  </div>
+
+
+
+
+
+
+  <!--<blog-toast show="true"></blog-toast>-->
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Storage, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+    const storage = new Storage(client);
+    Date.prototype.fromNow = function() {
+
+      // console.log(this.toUTCString())
+      const now = new Date();
+
+      const diffInSeconds = Math.floor((now - this) / 1000);
+
+      const units = [
+        { name: 'year', seconds: 60 * 60 * 24 * 365 },
+        { name: 'month', seconds: 60 * 60 * 24 * 30 },
+        { name: 'day', seconds: 60 * 60 * 24 },
+        { name: 'hour', seconds: 60 * 60 },
+        { name: 'minute', seconds: 60 },
+        { name: 'second', seconds: 1 }, ];
+
+      for (const unit of units) {
+        const quotient = Math.floor(diffInSeconds / unit.seconds);
+        if (quotient > 0) {
+          return `${quotient} ${unit.name}${quotient > 1 ? 's' : ''} ago`;
+        }
+      }
+
+      return 'just now';
+    };
+
+    function data() {
+      return {
+        showPostPage: false,
+        postUrl: '',
+        postFile: null,
+        postContent: '',
+        posts: [],
+        perpage: 25,
+        loading: false,
+        categories: [],
+        submitPostImage(id) {
+          const promise = storage.createFile(
+            '653bc7811a3ca0417dd5',
+            id,
+            this.postFile
+          );
+          promise.then(function(response) {
+            console.log(response); // Success
+            this.postFile = null;
+          }, function(error) {
+            console.log(error); // Failure
+          });
+        },
+        createPost() {
+          const post = {
+            username: 'Abdullah Al Saif',
+            id: crypto.randomUUID(),
+            content: this.postContent,
+            thumbnail: this.postUrl,
+            likes: [],
+            comments: [],
+            share: 0,
+            date: new Date().toLocaleDateString()
+          }
+          const promise = databases.createDocument('652c16162f939c821f75', '675d991f003af378778c', post.id, { ...post });
+          promise.then((response) => {
+            if(this.postFile){
+              this.submitPostImage(post.id);
+            }
+            console.log(response);
+            this.postContent = '';
+            this.postUrl = '';
+            this.showPostPage = false;
+          }, function(error) {
+            console.log(error);
+          });
+
+
+        },
+        formatNumber(num) {
+          if (num >= 1_000_000) {
+            return (num / 1_000_000).toFixed(1) + 'M';
+          } else if (num >= 1_000) {
+            return (num / 1_000).toFixed(1) + 'K';
+          } else {
+            return num.toString();
+          }
+        },
+        fetcher() {
+          fetch('https://asmmbd.github.io/src/postsdata.json')
+            .then(ress => ress.json())
+            .then(data => this.posts = data)
+        },
+        async listPost() {
+          const promise = await databases.listDocuments('652c16162f939c821f75', '675d991f003af378778c');
+          console.log(promise.documents);
+          this.posts = promise.documents;
+        },
+        init() {
+          //this.fetcher();
+          this.listPost();
+          client.subscribe('databases.652c16162f939c821f75.collections.675d991f003af378778c.documents', response => {
+            // Callback will be executed on changes for documents A and all files.
+            console.log(response);
+          });
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
