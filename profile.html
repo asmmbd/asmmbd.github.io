@@ -89,6 +89,28 @@
     .date-card .others {
       border-top: 1px solid #000;
     }
+    .routine-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .routine-table th,
+    .routine-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      font-size: 16px;
+    }
+    .routine-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .routine-table tr:hover {
+      background-color: #ddd;
+    }
   </style>
 </head>
 
@@ -418,7 +440,7 @@
         <div class='col-sm-12 col-md-4 py-2 d-print-none'>
           <div class='sidebar sidebar-left mt-sm-10'>
             <div class='widget mb-3'>
-              <principal-card></principal-card>
+              <routine-card></routine-card>
             </div>
             <div class='widget mb-3'>
               <notice-board></notice-board>
