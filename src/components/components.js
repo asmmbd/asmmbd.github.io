@@ -154,9 +154,72 @@ class Holiday extends HTMLElement {
   }
 }
 
+class Routine extends HTMLElement {
+  constructor() {
+    super()
+  }
+
+  render() {
+    this.innerHTML = `
+    <div class="notice-board">
+      <table class="routine-table">
+          <tr class="prime-color text-white">
+            <th colspan="3" class="fs-5">পঞ্চম শ্রেণীর ক্লাস রুটিন</th>
+          </tr>
+          <tr>
+            <th class="prime-color text-white">পিরিয়ড</th>
+            <th class="prime-color text-white">সময়</th>
+            <th class="prime-color text-white">বিষয়</th>
+          </tr>
+          <tr>
+            <td>১ম</td>
+            <td>৯.০০ - ৯.৩০</td>
+            <td>বাংলা</td>
+          </tr>
+          <tr>
+            <td>২য়</td>
+            <td>৯.৩০ - ১০.০০</td>
+            <td>গণিত</td>
+          </tr>
+          <tr>
+            <td>৩য়</td>
+            <td>১০.০০ - ১০.৩০</td>
+            <td>ইংরেজি</td>
+          </tr>
+          <tr class="break">
+            <td colspan="3"><b>বিরতি (১০.৩০ - ১০.৪৫)</b></td>
+          </tr>
+          <tr>
+            <td>৪র্থ</td>
+            <td>১০.৪৫ - ১১.১৫</td>
+            <td>বিজ্ঞান</td>
+          </tr>
+          <tr>
+            <td>৫ম</td>
+            <td>১১.১৫ - ১১.৪৫</td>
+            <td>বাংলাদেশ ও বিশ্বপরিচয়</td>
+          </tr>
+          <tr>
+            <td>৬ষ্ঠ</td>
+            <td>১১.৪৫ - ১২.১৫</td>
+            <td>ধর্ম ও নৈতিক শিক্ষা</td>
+          </tr>
+        </table>
+      <h6 class="my-0 py-2 text-center rounded-bottom" style="background-color: #1ab33d"><a href="/notice" class="text-white "> আরো দেখুন<i class='bi bi-chevron-right'></i></a></h6>
+      </h6>
+    </div>
+    `;
+  }
+
+  connectedCallback() {
+    this.render()
+  }
+}
+
 customElements.define('principal-card', Principal);
 customElements.define('notice-board', Notice);
 customElements.define('holiday-board', Holiday);
+customElements.define('routine-card', Routine);
 
 
 
