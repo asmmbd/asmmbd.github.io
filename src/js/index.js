@@ -43,29 +43,37 @@ if ("serviceWorker" in navigator) {
 }
 
 let deferredPrompt;
-const addBtn = document.querySelector(".add-button");
-const addBtnDiv = document.querySelector(".add-btn-div");
+const installPopup = document.getElementById("installPopup");
+const installButton = document.getElementById("installButton");
+const cancelButton = document.getElementById("cancelButton");
 
+// ইভেন্ট লিসেনার যোগ করুন
 window.addEventListener("beforeinstallprompt", (e) => {
-  
   e.preventDefault();
   deferredPrompt = e;
 
-  
+  // শুধুমাত্র প্রথম ভিজিটে পপআপ দেখান
+  if (!localStorage.getItem("installPromptShown")) {
+    installPopup.style.display = "flex";
+    localStorage.setItem("installPromptShown", true);
+  }
+});
 
-  addBtn.addEventListener("click", () => {
-    
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the A2HS prompt");
-        addBtnDiv.style.display = 'none'
-      } else {
-        console.log("User dismissed the A2HS prompt");
-        addBtnDiv.style.display = 'block'
-      }
-      deferredPrompt = null;
-    });
-   
+// ইনস্টল বাটনে ক্লিক করলে
+installButton.addEventListener("click", () => {
+  installPopup.style.display = "none";
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === "accepted") {
+      console.log("অ্যাপ ইনস্টল করা হয়েছে");
+    } else {
+      console.log("অ্যাপ ইনস্টল বাতিল করা হয়েছে");
+    }
+    deferredPrompt = null;
   });
+});
+
+// ক্যান্সেল বাটনে ক্লিক করলে
+cancelButton.addEventListener("click", () => {
+  installPopup.style.display = "none";
 });
