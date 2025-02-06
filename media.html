@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kids App</title>
+  <title>আয়েশা সিদ্দিকা মহিলা মাদরাসা | মিডিয়া</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet" />
@@ -21,8 +21,8 @@
     <template x-if="selectedVideo">
       <div>
         <!-- Full Video Player -->
-        <div :class="isMinimized ? 'bottom-0 flex items-center justify-between gap-2 pe-4' : 'top-0'" class="w-full fixed  left-0 z-50 bg-white shadow-md">
-          <iframe :class="isMinimized ? 'w-32 h-16' : 'w-full h-56'" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+        <div :class="isMinimized ? 'w-96 bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-between gap-2 pe-4 rounded-md' : 'w-full top-0 left-0'" class="fixed z-50 bg-white shadow-md">
+          <iframe :class="isMinimized ? 'w-32 h-16 rounded-l-md' : 'w-full h-56'" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
           </iframe>
           <div class="p-2" :class="isMinimized ? 'w-60' : 'w-full'" @click="isMinimized = false">
             <h2 :class="isMinimized ? 'text-sm' : 'font-semibold'" x-text="selectedVideo.title" class="text-[#8b5e34] truncate"></h2>
@@ -38,7 +38,7 @@
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </button>
-            <button @click="closeVideo" class="text-sm" :class="isMinimized ? 'text-gray-900' : 'text-white'">
+            <button @click="closeVideo" class="text-sm" :class="isMinimized ? 'text-gray-900 absolute -top-2 -right-2 bg-white rounded-full' : 'text-white'">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 6 6 18"></path>
                 <path d="m6 6 12 12"></path>
@@ -63,13 +63,12 @@
     </nav>
 
     <!-- Video List -->
-    <section :class="selectedVideo && !isMinimized ? 'mt-72' : ''">
+    <section class="p-2" :class="selectedVideo && !isMinimized ? 'mt-72' : ''">
       <template x-for="video in filteredVideos" :key="video.id">
-        <div @click="selectVideo(video)" class="relative overflow-hidden mb-3 cursor-pointer">
-          <img :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" alt="Thumbnail" class="w-full h-52 object-cover" onerror="this.onerror=null;this.src='https://via.placeholder.com/300';" />
-          <span x-text="video.duration" class="absolute top-[170px] right-4 bg-gray-800 text-white text-sm px-2 py-0.5 rounded-md font-semibold"></span>
+        <div @click="selectVideo(video)" class="relative overflow-hidden mb-3 cursor-pointer" :class="selectedVideo && !isMinimized ? 'flex items-center' : ''">
+          <img :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" alt="Thumbnail" class="rounded-md" :class="selectedVideo && !isMinimized ? 'w-52 h-auto' : 'w-full h-52 object-cover'" onerror="this.onerror=null;this.src='https://via.placeholder.com/300';" />
           <div class="p-2">
-            <h3 x-text="video.title" class="text-[#8b5e34] font-semibold truncate"></h3>
+            <h3 x-text="selectedVideo && !isMinimized ? video.title.slice(0,60) : video.title" class="text-[#8b5e34] font-semibold" :class="selectedVideo && !isMinimized ? '' : 'truncate'"></h3>
             <p class="text-[#8b5e34] text-sm">
               <span x-text="video.channel_name"></span> •
               <span x-text="video.category"></span> •
@@ -81,7 +80,7 @@
 
       <!-- No Videos Found -->
       <template x-if="filteredVideos.length === 0">
-        <div class="text-center text-gray-500 mt-20">No videos found for this category.</div>
+        <div class="text-center text-gray-500 mt-80">No videos found for this category.</div>
       </template>
     </section>
   </div>
@@ -94,7 +93,7 @@
         videos: [],
         filteredVideos: [],
         selectedVideo: null,
-        filters: ['All', 'Hadis', 'Quran', 'Story', 'Nasheed','Advice'],
+        filters: ['All', 'Hadis', 'Quran', 'Story', 'Nasheed', 'Advice'],
         activeFilter: 'All',
         isMinimized: false,
 
