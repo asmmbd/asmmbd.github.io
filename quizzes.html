@@ -54,7 +54,14 @@
                     }" class="w-full p-2 rounded-lg transition-colors text-left" x-text="answer"></button>
                 </template>
               </div>
-              <p class="text-lg font-semibold border-t p-2">প্রশ্নের ব্যাখ্যা দেখতে উত্তর করুন</p>
+              <div x-data="{isShowing: false}">
+                <p class="text-lg font-semibold border-t p-2 flex items-center justify-between" @click="isShowing = !isShowing">প্রশ্নের ব্যাখ্যা দেখতে উত্তর করুন
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
+                    <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </p>
+                <p x-show="question.userAnswer !== null && isShowing" class="text-lg font-semibold p-2" x-text="question.explanation"></p>
+              </div>
             </div>
           </template>
         </div>
@@ -64,11 +71,11 @@
           </div>
           <!-- Restart Button -->
           <button @click="resetQuiz" :disabled="!allQuestionsAnswered" class="bg-red-600 text-white py-2 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
-            Cancel
+            বাতিল করুন
           </button>
           <!-- Submit Button -->
           <button @click="submitQuiz" :disabled="!allQuestionsAnswered" class="bg-blue-600 text-white py-2 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
-            Submit
+            সাবমিট করুন 
           </button>
         </div>
       </div>
@@ -78,12 +85,12 @@
     <template x-if="quizFinished">
       <div>
         <div class="sticky top-0 left-0 w-full bg-white text-center">
-          <h2 class="text-2xl font-bold mb-4">Quiz Finished!</h2>
+          <h2 class="text-2xl font-bold mb-4">আপনার সময় শেষ</h2>
           <div class="w-full grid grid-cols-2 gap-2 pb-4">
-            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">মোট প্রশ্ন: <span x-text="questions.length"></span></p>
-            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center"> সঠিক উত্তর : <span x-text="correctCount"></span></p>
-            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">ভুল উত্তর: <span x-text="wrongCount"></span></p>
-            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">উত্তর দেননি: <span x-text="unansweredCount"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">মোট প্রশ্ন: <span x-text="banglaNumber(questions.length)"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center"> সঠিক উত্তর : <span x-text="banglaNumber(correctCount)"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">ভুল উত্তর: <span x-text="banglaNumber(wrongCount)"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">উত্তর দেননি: <span x-text="banglaNumber(unansweredCount)"></span></p>
           </div>
         </div>
 
@@ -101,9 +108,13 @@
                 }" class="p-2 rounded-lg" x-text="answer"></div>
                 </template>
               </div>
-              <div x-data="{isShowing: false}" class="border-t mt-2 p-2">
-                <button @click="isShowing = !isShowing" class="w-full h-10">ব্যাখ্যা দেখুন</button>
-                <p x-show="isShowing" class="text-lg font-semibold" x-text="question.explanation"></p>
+              <div x-data="{isShowing: true}">
+                <p class="text-lg font-semibold border-t p-2 flex items-center justify-between" @click="isShowing = !isShowing">প্রশ্নের ব্যাখ্যাঃ
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
+                    <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </p>
+                <p x-show="question.userAnswer !== null && isShowing" class="text-lg font-semibold p-2" x-text="question.explanation"></p>
               </div>
             </div>
           </template>
@@ -111,11 +122,11 @@
 
         <div class="fixed bottom-0 left-0 w-full shadow grid grid-cols-2 gap-4 p-4 bg-white">
           <div>
-            <p class="text-lg">আপনি পেয়েছেন: <span x-text="(score * 2) - (wrongCount * 0.50)"></span> / <span x-text="questions.length * 2"></span></p>
+            <p class="text-lg">আপনি পেয়েছেন: <span x-text="banglaNumber(score * 2 - wrongCount * 0.50)"></span> / <span x-text="banglaNumber(questions.length * 2)"></span></p>
           </div>
           <!-- Restart Button -->
           <button @click="resetQuiz" :disabled="!allQuestionsAnswered" class="bg-red-600 text-white py-2 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
-            Restart
+            পুনরায় শুরু করুন
           </button>
         </div>
       </div>
