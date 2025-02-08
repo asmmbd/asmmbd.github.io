@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Islamic Quiz App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .progress {
+      animation: anim 600s linear infinite;
+    }
+
+    @keyframes anim {
+      0% {
+        width: 0;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div x-data="quizApp" class="bg-white p-4 w-full mb-16">
+    <!-- Quiz Header -->
+    <h1 class="text-2xl font-bold text-center mb-6">ইসলামিক কুইজ</h1>
+
+    <!-- Quiz Content -->
+    <template x-if="!quizFinished">
+      <div>
+        <!-- Questions -->
+        <div class="grid md:grid-cols-3 gap-3">
+          <template x-for="(question, qIndex) in questions" :key="qIndex">
+            <div class="bg-white shadow-md rounded-lg rounded-l-md w-full border">
+              <!-- Question Text -->
+              <p class="text-lg font-semibold border-b p-2" x-text="`${banglaNumber(qIndex + 1)}. ${question.question}`"></p>
+
+              <!-- Answers -->
+              <div class="space-y-2 p-2">
+                <template x-for="(answer, aIndex) in question.answers" :key="aIndex">
+                  <button @click="selectAnswer(qIndex, aIndex)" :class="{
+                      'bg-gray-400 text-white': question.userAnswer === aIndex,
+                      'hover:bg-gray-100': question.userAnswer === null,
+                      'bg-gray-100': question.userAnswer !== aIndex
+                    }" class="w-full p-2 rounded-lg transition-colors text-left" x-text="answer"></button>
+                </template>
+              </div>
+              <p class="text-lg font-semibold border-t p-2">প্রশ্নের ব্যাখ্যা দেখতে উত্তর করুন</p>
+            </div>
+          </template>
+        </div>
+        <div class="fixed bottom-0 left-0 w-full shadow grid grid-cols-2 gap-4 p-4 bg-white">
+          <div class="absolute top-0 left-0 w-full bg-gray-100">
+            <div class="progress h-0.5 bg-green-500"></div>
+          </div>
+          <!-- Restart Button -->
+          <button @click="resetQuiz" :disabled="!allQuestionsAnswered" class="bg-red-600 text-white py-2 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
+            Cancel
+          </button>
+          <!-- Submit Button -->
+          <button @click="submitQuiz" :disabled="!allQuestionsAnswered" class="bg-blue-600 text-white py-2 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
+            Submit
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Results -->
+    <template x-if="quizFinished">
+      <div>
+        <div class="sticky top-0 left-0 w-full bg-white text-center">
+          <h2 class="text-2xl font-bold mb-4">Quiz Finished!</h2>
+          <div class="w-full grid grid-cols-2 gap-2 pb-4">
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">মোট প্রশ্ন: <span x-text="questions.length"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center"> সঠিক উত্তর : <span x-text="correctCount"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">ভুল উত্তর: <span x-text="wrongCount"></span></p>
+            <p class="text-lg border rounded-md py-1.5 px-2.5 text-center">উত্তর দেননি: <span x-text="unansweredCount"></span></p>
+          </div>
+        </div>
+
+        <!-- Review Questions -->
+        <div class="space-y-6">
+          <template x-for="(question, qIndex) in questions" :key="qIndex">
+            <div class="bg-white shadow-md rounded-lg w-full border">
+              <p class="text-lg font-semibold border-b p-2" x-text="`${banglaNumber(qIndex + 1)}. ${question.question}`"></p>
+              <div class="space-y-2 p-2">
+                <template x-for="(answer, aIndex) in question.answers" :key="aIndex">
+                  <div :class="{
+                  'bg-green-500 text-white': question.userAnswer !== null && aIndex === question.correctAnswer,
+                  'bg-red-500 text-white': question.userAnswer !== null && aIndex === question.userAnswer && aIndex !== question.correctAnswer,
+                  'bg-gray-200': question.userAnswer === null || (aIndex !== question.userAnswer && aIndex !== question.correctAnswer)
+                }" class="p-2 rounded-lg" x-text="answer"></div>
+                </template>
+              </div>
+              <div x-data="{isShowing: false}" class="border-t mt-2 p-2">
+                <button @click="isShowing = !isShowing" class="w-full h-10">ব্যাখ্যা দেখুন</button>
+                <p x-show="isShowing" class="text-lg font-semibold" x-text="question.explanation"></p>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div class="fixed bottom-0 left-0 w-full shadow grid grid-cols-2 gap-4 p-4 bg-white">
+          <div>
+            <p class="text-lg">আপনি পেয়েছেন: <span x-text="(score * 2) - (wrongCount * 0.50)"></span> / <span x-text="questions.length * 2"></span></p>
+          </div>
+          <!-- Restart Button -->
+          <button @click="resetQuiz" :disabled="!allQuestionsAnswered" class="bg-red-600 text-white py-2 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed">
+            Restart
+          </button>
+        </div>
+      </div>
+    </template>
+
+  </div>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('quizApp', () => ({
+        questions: [
+          {
+            question: "আল্লাহ কতজন?",
+            answers: ["একজন", "দুজন", "তিনজন", "চারজন"],
+            correctAnswer: 0,
+            userAnswer: null,
+            explanation: "ইসলামে একত্ববাদ (তাওহীদ) সবচেয়ে গুরুত্বপূর্ণ বিশ্বাস। আল্লাহ এক, তাঁর কোনো শরিক নেই।"
+  },
+          {
+            question: "ইসলামের প্রথম স্তম্ভ কী?",
+            answers: ["সালাত", "রোজা", "হজ", "কালিমা শাহাদাহ"],
+            correctAnswer: 3,
+            userAnswer: null,
+            explanation: "কালিমা শাহাদাহ (لا إله إلا الله محمد رسول الله) ইসলামের প্রথম স্তম্ভ, যা আল্লাহর একত্ব ও মুহাম্মাদ (ﷺ) এর রাসুল হওয়ার ঘোষণা।"
+  },
+          {
+            question: "আল্লাহর প্রথম গুণ কী?",
+            answers: ["রহমান", "রহীম", "সর্বশক্তিমান", "একত্ববাদ"],
+            correctAnswer: 3,
+            userAnswer: null,
+            explanation: "আল্লাহর প্রথম ও প্রধান গুণ হলো একত্ববাদ (তাওহীদ)। তিনি এক এবং তাঁর কোনো অংশীদার নেই।"
+  },
+          {
+            question: "আল্লাহর ৯৯টি নামকে কী বলা হয়?",
+            answers: ["আসমাউল হুসনা", "আল কুরআন", "সিফাত", "তাওহীদ"],
+            correctAnswer: 0,
+            userAnswer: null,
+            explanation: "আল্লাহর ৯৯টি সুন্দর নামকে ‘আসমাউল হুসনা’ বলা হয়, যা তাঁর গুণাবলিকে প্রকাশ করে।"
+  },
+          {
+            question: "ইসলামের পবিত্র গ্রন্থের নাম কী?",
+            answers: ["তাওরাত", "ইঞ্জিল", "যবূর", "আল-কুরআন"],
+            correctAnswer: 3,
+            userAnswer: null,
+            explanation: "আল-কুরআন ইসলাম ধর্মের পবিত্র গ্রন্থ, যা নবী মুহাম্মাদ (ﷺ)-এর প্রতি অবতীর্ণ হয়েছে।"
+  },
+          {
+            question: "কুরআনে মোট কতটি সূরা আছে?",
+            answers: ["১১৪", "১০৪", "১২০", "১০০"],
+            correctAnswer: 0,
+            userAnswer: null,
+            explanation: "কুরআনে মোট ১১৪টি সূরা আছে, যা বিভিন্ন সময়ে ধাপে ধাপে নাজিল হয়েছে।"
+  },
+          {
+            question: "কোন সূরাকে কুরআনের হৃদয় বলা হয়?",
+            answers: ["সূরা ফাতিহা", "সূরা বাকারাহ", "সূরা ইয়াসিন", "সূরা ইখলাস"],
+            correctAnswer: 2,
+            userAnswer: null,
+            explanation: "সূরা ইয়াসিনকে কুরআনের হৃদয় বলা হয়, কারণ এতে তাওহীদ ও আখিরাতের গুরুত্বপূর্ণ আলোচনা রয়েছে।"
+  },
+          {
+            question: "কোন ফেরেশতা কুরআন নিয়ে নাজিল হয়েছেন?",
+            answers: ["জিব্রাঈল (আ.)", "ইসরাফিল (আ.)", "আজরাঈল (আ.)", "মিকাঈল (আ.)"],
+            correctAnswer: 0,
+            userAnswer: null,
+            explanation: "ফেরেশতা জিব্রাঈল (আ.) আল্লাহর পক্ষ থেকে ওহী নিয়ে নবীদের নিকট আসতেন।"
+  },
+          {
+            question: "শেষ নবীর নাম কী?",
+            answers: ["নবী মুসা (আ.)", "নবী ঈসা (আ.)", "নবী মুহাম্মাদ (ﷺ)", "নবী আদম (আ.)"],
+            correctAnswer: 2,
+            userAnswer: null,
+            explanation: "নবী মুহাম্মাদ (ﷺ) শেষ নবী এবং তাঁর পরে আর কোনো নবী আসবেন না।"
+  },
+          {
+            question: "নবী মুহাম্মাদ (ﷺ) কোথায় জন্মগ্রহণ করেন?",
+            answers: ["মদিনা", "মক্কা", "তায়েফ", "শাম"],
+            correctAnswer: 1,
+            userAnswer: null,
+            explanation: "নবী মুহাম্মাদ (ﷺ) সৌদি আরবের মক্কা নগরীতে জন্মগ্রহণ করেন।"
+  },
+          {
+            question: "নবী মুহাম্মাদ (ﷺ)-এর পিতার নাম কী?",
+            answers: ["আবু তালিব", "আব্দুল্লাহ", "আবু বকর", "উমর"],
+            correctAnswer: 1,
+            userAnswer: null,
+            explanation: "নবী মুহাম্মাদ (ﷺ)-এর পিতার নাম ছিল আব্দুল্লাহ।"
+  },
+          {
+            question: "নবী মুহাম্মাদ (ﷺ)-এর মায়ের নাম কী?",
+            answers: ["আমিনা", "হালিমা", "ফাতিমা", "আয়েশা"],
+            correctAnswer: 0,
+            userAnswer: null,
+            explanation: "নবী মুহাম্মাদ (ﷺ)-এর মায়ের নাম আমিনা (বিনতে ওহাব)।"
+  },
+          {
+            question: "একজন মুসলিমের দিনে কতবার সালাত আদায় করা উচিত?",
+            answers: ["৩ বার", "৫ বার", "৭ বার", "১০ বার"],
+            correctAnswer: 1,
+            userAnswer: null,
+            explanation: "প্রত্যেক মুসলিমের জন্য দিনে ৫ ওয়াক্ত সালাত ফরজ।"
+  },
+          {
+            question: "কিয়ামত কী?",
+            answers: ["আল্লাহর গুণ", "জান্নাতের নাম", "শেষ বিচার দিবস", "ইসলামের স্তম্ভ"],
+            correctAnswer: 2,
+            userAnswer: null,
+            explanation: "কিয়ামত হল সেই দিন, যেদিন সমস্ত মানুষ পুনরুত্থিত হবে এবং তাদের কর্মের হিসাব নেওয়া হবে।"
+  },
+          {
+            question: "জান্নাত কতটি?",
+            answers: ["৩", "৫", "৭", "৮"],
+            correctAnswer: 3,
+            userAnswer: null,
+            explanation: "জান্নাতের ৮টি দরজা রয়েছে এবং এটি মু’মিনদের জন্য প্রস্তুত করা হয়েছে।"
+  },
+          {
+            question: "জাহান্নাম কতটি?",
+            answers: ["৩", "৫", "৭", "৮"],
+            correctAnswer: 2,
+            userAnswer: null,
+            explanation: "জাহান্নামের ৭টি স্তর রয়েছে, যেখানে পাপীরা শাস্তি ভোগ করবে।"
+  },
+          {
+            question: "ফজরের নামাজে কয়টি রাকাত ফরজ?",
+            answers: ["২", "৪", "৬", "৮"],
+            correctAnswer: 0,
+            userAnswer: null,
+            explanation: "ফজরের ফরজ সালাত ২ রাকাত, যা সুবহে সাদিকের পর আদায় করা হয়।"
+  },
+          {
+            question: "সালাত শুরু করার দোয়ার নাম কী?",
+            answers: ["তাশাহুদ", "সানা", "দুরুদ", "রুকু"],
+            correctAnswer: 1,
+            userAnswer: null,
+            explanation: "সানা হলো সালাতের শুরুতে পড়া দোয়া, যা আল্লাহর প্রশংসাসূচক।"
+  },
+          {
+            question: "ইসলামের রোজার মাসের নাম কী?",
+            answers: ["মুহাররম", "শাবান", "রজব", "রমজান"],
+            correctAnswer: 3,
+            userAnswer: null,
+            explanation: "রমজান মাসে রোজা রাখা ফরজ এবং এটি কুরআন অবতীর্ণ হওয়ার মাস।"
+  }
+],
+        timer: 0,
+        score: 0,
+        correctCount: 0,
+        wrongCount: 0,
+        unansweredCount: 0,
+        quizFinished: false,
+        banglaNumber(number) {
+          return number.toString().split('').map(digit => '০১২৩৪৫৬৭৮৯' [digit] || digit).join('')
+        },
+        get allQuestionsAnswered() {
+          return this.questions.some(question => question.userAnswer !== null);
+        },
+
+        selectAnswer(qIndex, aIndex) {
+          if (this.questions[qIndex].userAnswer === null) {
+            this.questions[qIndex].userAnswer = aIndex;
+          }
+        },
+
+        submitQuiz() {
+          this.score = this.questions.reduce((total, question) => {
+            return total + (question.userAnswer === question.correctAnswer ? 1 : 0);
+          }, 0);
+
+          this.correctCount = this.questions.filter(
+            question => question.userAnswer === question.correctAnswer
+          ).length;
+
+          this.wrongCount = this.questions.filter(
+            question => question.userAnswer !== null && question.userAnswer !== question.correctAnswer
+          ).length;
+
+          this.unansweredCount = this.questions.filter(
+            question => question.userAnswer === null
+          ).length;
+
+          this.quizFinished = true;
+        },
+
+        resetQuiz() {
+          this.questions.forEach(question => {
+            question.userAnswer = null;
+          });
+          this.score = 0;
+          this.quizFinished = false;
+        },
+        init() {
+          setTimeout(() => {
+            this.submitQuiz()
+          }, 6000000)
+        }
+      }));
+    });
+  </script>
+</body>
+
+</html>
