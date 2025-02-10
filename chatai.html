@@ -1,0 +1,272 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>AI-powered Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+
+
+    .dot-animation {
+      display: inline-block;
+      margin-left: 4px;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .dot-animation:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot-animation:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-white">
+  <div class="w-full bg-white p-2">
+    <div class="hidden flex justify-between items-center mb-6">
+      <img alt="User profile picture" class="w-10 h-10 rounded-full" height="40" src="https://placehold.co/40x40" width="40" />
+      <i class="fas fa-edit text-gray-500"></i>
+    </div>
+    <div class="flex flex-col items-center mb-6">
+      <img alt="AI assistant logo" class="w-24 h-24 mb-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" width="100" />
+      <h1 class="text-xl font-semibold text-gray-800">
+        আপনার আলেম এসিস্ট্যান্ট
+      </h1>
+      <p class="text-gray-500 text-center">
+        আমাদের এ আই মডেলটি প্রাথমিক পর্যায়ে আছে তাই জটিল বা যেই বিষয়ে বিভান্ত আছে এমন কোনো প্রশ্ন করা থেকে বিরত থাকুন
+      </p>
+    </div>
+    <!-- Chat Bubble -->
+    <ul class="space-y-5 mb-48"></ul>
+    <!-- End Chat Bubble -->
+
+    <div class="w-full fixed bottom-0 left-0 p-2 bg-white">
+      <div class="flex space-x-2 mb-4 overflow-x-auto">
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-pen mr-2"></i>
+          নামাজে ইমামের পিছনে মুক্তাদীরা সুরা ফাতিহা পাঠ করবে?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-book mr-2"></i>
+          কুরআন তিলাওয়াতের সঠিক পদ্ধতি কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-praying-hands mr-2"></i>
+          নামাজের সময় কি কি কাজ করা নিষিদ্ধ?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-mosque mr-2"></i>
+          মসজিদে প্রবেশের আদব কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-star-and-crescent mr-2"></i>
+          রমজান মাসে রোজা রাখার নিয়ম কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-hands-helping mr-2"></i>
+          জাকাত কাকে দিতে হবে এবং কত টাকা দিতে হবে?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-quran mr-2"></i>
+          কুরআন মুখস্থ করার সহজ উপায় কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-hands-praying mr-2"></i>
+          দুআ কবুলের শর্তগুলো কি কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-balance-scale mr-2"></i>
+          ইসলামে ন্যায়বিচারের গুরুত্ব কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-hand-holding-heart mr-2"></i>
+          সাদাকাহ দেওয়ার নিয়ম কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-child mr-2"></i>
+          শিশুদের ইসলামিক শিক্ষা কিভাবে শুরু করব?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-globe mr-2"></i>
+          হজ্জের সময় কি কি কাজ করা আবশ্যক?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-hand-holding-water mr-2"></i>
+          ওজুর সঠিক পদ্ধতি কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-star mr-2"></i>
+          ইসলামে ঈমানের স্তরগুলো কি কি?
+        </button>
+        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
+          <i class="fas fa-heart mr-2"></i>
+          ইসলামে বিবাহের গুরুত্ব কি?
+        </button>
+      </div>
+      <div class="flex items-center border border-gray-300 rounded-lg p-4">
+        <input class="flex-1 outline-none" placeholder="আমাকে প্রশ্ন করুন..." type="text" />
+        <button class="ml-2 text-blue-500">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const API_KEY = "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g"; // Your API key here
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+      const chatInput = document.querySelector('input[type="text"]');
+      const sendButton = document.querySelector('.fa-paper-plane');
+      const chatContainer = document.querySelector('ul.space-y-5');
+
+      // প্রি-ডিফাইনড প্রশ্নগুলির জন্য ইভেন্ট লিসেনার
+      const predefinedButtons = document.querySelectorAll('.flex-none');
+      predefinedButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const question = button.textContent.trim();
+          sendMessage(question);
+        });
+      });
+
+      // ব্যবহারকারীর ইনপুট পাঠানোর ফাংশন
+      sendButton.addEventListener('click', () => {
+        const userMessage = chatInput.value.trim();
+        if (userMessage) {
+          sendMessage(userMessage);
+          chatInput.value = ''; // ইনপুট ফিল্ড ক্লিয়ার করুন
+        }
+      });
+
+      // প্রশ্নের উত্তর খুঁজে বের করার ফাংশন
+      async function getAnswer(question) {
+        const lowerCaseQuestion = question.toLowerCase();
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              role: "user",
+              parts: [{ text: lowerCaseQuestion }]
+          }]
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error.message);
+        // Get the API response text and remove asterisks from it
+        const apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+        return apiResponse;
+      }
+
+      // ব্যবহারকারীর মেসেজ তৈরি
+      function createUserMessage(message, chatContainer) {
+        const userMessageElement = document.createElement('li');
+        userMessageElement.className = 'flex ms-auto gap-x-2 sm:gap-x-4';
+        userMessageElement.innerHTML = `
+        <div class="grow text-end space-y-3">
+          <div class="inline-block bg-blue-600 rounded-2xl p-4 shadow-sm">
+            <p class="text-md text-white">${message}</p>
+          </div>
+        </div>
+        <span class="shrink-0 inline-flex items-center justify-center size-[38px] rounded-full bg-gray-600">
+          <i class="fa fa-user text-white leading-none"></i>
+        </span>
+      `;
+        chatContainer.appendChild(userMessageElement);
+        scrollToBottom(); // স্ক্রল নিচে নিয়ে যান
+      }
+
+      // বটের মেসেজ তৈরি (ডট এনিমেশন সহ)
+      function createBotMessage(chatContainer) {
+        const aiResponseElement = document.createElement('li');
+        aiResponseElement.className = 'max-w-lg flex gap-x-2 sm:gap-x-4 me-11';
+        aiResponseElement.innerHTML = `
+        <img class="inline-block size-9 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt="Avatar">
+        <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
+          <p class="text-md text-gray-800">
+            <span class="dot-animation">.</span>
+            <span class="dot-animation">.</span>
+            <span class="dot-animation">.</span>
+          </p>
+        </div>
+      `;
+        chatContainer.appendChild(aiResponseElement);
+        scrollToBottom(); // স্ক্রল নিচে নিয়ে যান
+        return aiResponseElement; // রিটার্ন করে দিচ্ছি যাতে পরে আপডেট করা যায়
+      }
+
+      // টাইপিং এফেক্ট ফাংশন
+      function typeMessage(message, element) {
+        element.classList.add('whitespace-pre-wrap')
+        let index = 0;
+        const typingSpeed = 30; // প্রতি অক্ষরের জন্য সময় (মিলিসেকেন্ড)
+
+        function type() {
+          if (index < message.length) {
+            element.innerHTML += message.charAt(index);
+            index++;
+            setTimeout(type, typingSpeed);
+            scrollToBottom(); // প্রতিটি অক্ষর টাইপ করার পরে স্ক্রল নিচে নিয়ে যান
+          }
+        }
+
+        type(); // টাইপিং শুরু করুন
+      }
+
+      // স্ক্রল নিচে নিয়ে যাওয়ার ফাংশন
+      function scrollToBottom() {
+        const chatBoxHeight = 200; // ফিক্সড চ্যাটবক্সের উচ্চতা
+        window.scrollTo({
+          top: document.body.scrollHeight - chatBoxHeight,
+          behavior: 'smooth'
+        });
+      }
+
+      // চ্যাট বাবলে মেসেজ প্রদর্শন
+      async function sendMessage(message) {
+        createUserMessage(message, chatContainer);
+
+        // প্রথমে ডট এনিমেশন দেখান
+        const botMessageElement = createBotMessage(chatContainer);
+
+        try {
+          // API থেকে উত্তর নিয়ে আসুন
+          const answer = await getAnswer(message);
+
+          // ডট এনিমেশন সরান এবং টাইপিং এফেক্ট শুরু করুন
+          setTimeout(() => {
+            botMessageElement.querySelector('p').innerHTML = ''; // ডট এনিমেশন সরান
+            typeMessage(answer, botMessageElement.querySelector('p'));
+          }, 2000); // 2 সেকেন্ড পরে টাইপিং শুরু করুন
+        } catch (error) {
+          // যদি API থেকে কোনো সমস্যা হয়, তাহলে একটি এরর মেসেজ দেখান
+          botMessageElement.querySelector('p').innerHTML = 'দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
+          console.error(error);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
