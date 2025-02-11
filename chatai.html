@@ -129,21 +129,24 @@
         <button class="ml-2 text-blue-500">
           <i class="fas fa-paper-plane"></i>
         </button>
+        <button class="ml-4 text-red-500 clearButton">
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
     </div>
   </div>
 
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const API_KEY = "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g"; // Your API key here
+      const API_KEY = "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g"; // Replace with your API key (or use a backend service)
       const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
       const chatInput = document.querySelector('input[type="text"]');
       const sendButton = document.querySelector('.fa-paper-plane');
       const chatContainer = document.querySelector('ul.space-y-5');
-            // লোকাল স্টোরেজ থেকে কনভারসেশন ইতিহাস লোড করুন
       let conversationHistory = JSON.parse(localStorage.getItem('conversationHistory')) || [];
 
-      // পূর্বের কনভারসেশন ইতিহাস লোড করুন (যদি থাকে)
+      // Load previous conversation history
       if (conversationHistory.length > 0) {
         conversationHistory.forEach(message => {
           if (message.role === "user") {
@@ -152,10 +155,10 @@
             createBotMessage(message.parts[0].text, chatContainer);
           }
         });
-        scrollToBottom(); // স্ক্রল নিচে নিয়ে যান
+        scrollToBottom();
       }
 
-      // প্রি-ডিফাইনড প্রশ্নগুলির জন্য ইভেন্ট লিসেনার
+      // Predefined buttons
       const predefinedButtons = document.querySelectorAll('.flex-none');
       predefinedButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -164,125 +167,148 @@
         });
       });
 
-      // ব্যবহারকারীর ইনপুট পাঠানোর ফাংশন
+      // Send user message
       sendButton.addEventListener('click', () => {
         const userMessage = chatInput.value.trim();
         if (userMessage) {
           sendMessage(userMessage);
-          chatInput.value = ''; // ইনপুট ফিল্ড ক্লিয়ার করুন
+          chatInput.value = '';
         }
       });
 
-      // প্রশ্নের উত্তর খুঁজে বের করার ফাংশন
+      // Get answer from API
       async function getAnswer(question) {
-        const lowerCaseQuestion = question.toLowerCase();
         conversationHistory.push({
           role: "user",
           parts: [{ text: question }]
         });
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: conversationHistory }),
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error.message);
-        // Get the API response text and remove asterisks from it
-        const apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
-        conversationHistory.push({
-          role: "model",
-          parts: [{ text: apiResponse }]
-        });
-        localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
-        return apiResponse;
+
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: conversationHistory }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+          }
+
+          const data = await response.json();
+          if (!data.candidates || !data.candidates[0].content.parts[0].text) {
+            throw new Error("Invalid API response structure");
+          }
+
+          const apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+          conversationHistory.push({
+            role: "model",
+            parts: [{ text: apiResponse }]
+          });
+
+          if (conversationHistory.length > 50) {
+            conversationHistory = conversationHistory.slice(-50);
+          }
+          localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+
+          return apiResponse;
+        } catch (error) {
+          console.error("Error fetching answer:", error);
+          return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+        }
       }
 
-      // ব্যবহারকারীর মেসেজ তৈরি
+      // Create user message
       function createUserMessage(message, chatContainer) {
         const userMessageElement = document.createElement('li');
         userMessageElement.className = 'flex ms-auto gap-x-2 sm:gap-x-4';
         userMessageElement.innerHTML = `
-        <div class="grow text-end space-y-3">
-          <div class="inline-block bg-blue-600 rounded-2xl p-4 shadow-sm">
-            <p class="text-md text-white">${message}</p>
-          </div>
+      <div class="grow text-end space-y-3">
+        <div class="inline-block bg-blue-600 rounded-2xl p-4 shadow-sm">
+          <p class="text-md text-white">${message}</p>
         </div>
-        <span class="shrink-0 inline-flex items-center justify-center size-[38px] rounded-full bg-gray-600">
-          <i class="fa fa-user text-white leading-none"></i>
-        </span>
-      `;
+      </div>
+      <span class="shrink-0 inline-flex items-center justify-center size-[38px] rounded-full bg-gray-600">
+        <i class="fa fa-user text-white leading-none"></i>
+      </span>
+    `;
         chatContainer.appendChild(userMessageElement);
-        scrollToBottom(); // স্ক্রল নিচে নিয়ে যান
+        scrollToBottom();
       }
 
-      // বটের মেসেজ তৈরি (ডট এনিমেশন সহ)
-      function createBotMessage(chatContainer) {
+      // Create bot message
+      function createBotMessage(message, chatContainer) {
         const aiResponseElement = document.createElement('li');
         aiResponseElement.className = 'max-w-lg flex gap-x-2 sm:gap-x-4 me-11';
         aiResponseElement.innerHTML = `
-        <img class="inline-block size-9 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt="Avatar">
-        <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
-          <p class="text-md text-gray-800">
-            <span class="dot-animation">.</span>
-            <span class="dot-animation">.</span>
-            <span class="dot-animation">.</span>
-          </p>
-        </div>
-      `;
+      <img class="inline-block size-9 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt="Avatar">
+      <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
+        <p class="text-md text-gray-800 whitespace-pre-wrap">
+          ${message}
+        </p>
+      </div>
+    `;
         chatContainer.appendChild(aiResponseElement);
-        scrollToBottom(); // স্ক্রল নিচে নিয়ে যান
-        return aiResponseElement; // রিটার্ন করে দিচ্ছি যাতে পরে আপডেট করা যায়
+        scrollToBottom();
+        return aiResponseElement;
       }
 
-      // টাইপিং এফেক্ট ফাংশন
+      // Typing effect
       function typeMessage(message, element) {
-        element.classList.add('whitespace-pre-wrap')
+        element.classList.add('whitespace-pre-wrap');
         let index = 0;
-        const typingSpeed = 30; // প্রতি অক্ষরের জন্য সময় (মিলিসেকেন্ড)
+        const typingSpeed = 30;
 
         function type() {
           if (index < message.length) {
             element.innerHTML += message.charAt(index);
             index++;
             setTimeout(type, typingSpeed);
-            scrollToBottom(); // প্রতিটি অক্ষর টাইপ করার পরে স্ক্রল নিচে নিয়ে যান
+            scrollToBottom();
           }
         }
 
-        type(); // টাইপিং শুরু করুন
+        type();
       }
 
-      // স্ক্রল নিচে নিয়ে যাওয়ার ফাংশন
+      // Scroll to bottom
       function scrollToBottom() {
-        const chatBoxHeight = 200; // ফিক্সড চ্যাটবক্সের উচ্চতা
         window.scrollTo({
-          top: document.body.scrollHeight - chatBoxHeight,
+          top: document.documentElement.scrollHeight,
           behavior: 'smooth'
         });
       }
 
-      // চ্যাট বাবলে মেসেজ প্রদর্শন
+      // Send message and display response
       async function sendMessage(message) {
         createUserMessage(message, chatContainer);
-
-        // প্রথমে ডট এনিমেশন দেখান
-        const botMessageElement = createBotMessage(chatContainer);
+        const botMessageElement = createBotMessage('<span class="dot-animation">.</span><span class="dot-animation">.</span><span class="dot-animation">.</span>', chatContainer);
 
         try {
-          // API থেকে উত্তর নিয়ে আসুন
           const answer = await getAnswer(message);
-
-          // ডট এনিমেশন সরান এবং টাইপিং এফেক্ট শুরু করুন
           setTimeout(() => {
-            botMessageElement.querySelector('p').innerHTML = ''; // ডট এনিমেশন সরান
+            botMessageElement.querySelector('p').innerHTML = '';
             typeMessage(answer, botMessageElement.querySelector('p'));
-          }, 2000); // 2 সেকেন্ড পরে টাইপিং শুরু করুন
+          }, 2000);
         } catch (error) {
-          // যদি API থেকে কোনো সমস্যা হয়, তাহলে একটি এরর মেসেজ দেখান
           botMessageElement.querySelector('p').innerHTML = 'দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
           console.error(error);
         }
       }
+
+
+      function clearConversation() {
+        const confirm = window.confirm('are you sure to delete this conversation!');
+        if (confirm) {
+          alert('your conversation successfuly deleted!')
+          localStorage.removeItem('conversationHistory');
+          conversationHistory = [];
+          chatContainer.innerHTML = '';
+        }
+      }
+
+      // কনভারসেশন ডিলিট করার বাটন যুক্ত করুন (যদি প্রয়োজন হয়)
+      const clearButton = document.querySelector('.clearButton')
+      clearButton.addEventListener('click', clearConversation);
     });
   </script>
 </body>
