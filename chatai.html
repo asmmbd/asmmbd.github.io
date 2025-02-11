@@ -140,7 +140,7 @@
       const chatInput = document.querySelector('input[type="text"]');
       const sendButton = document.querySelector('.fa-paper-plane');
       const chatContainer = document.querySelector('ul.space-y-5');
-
+      let conversationHistory = [];
       // প্রি-ডিফাইনড প্রশ্নগুলির জন্য ইভেন্ট লিসেনার
       const predefinedButtons = document.querySelectorAll('.flex-none');
       predefinedButtons.forEach(button => {
@@ -162,20 +162,23 @@
       // প্রশ্নের উত্তর খুঁজে বের করার ফাংশন
       async function getAnswer(question) {
         const lowerCaseQuestion = question.toLowerCase();
+        conversationHistory.push({
+          role: "user",
+          parts: [{ text: question }]
+        });
         const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              role: "user",
-              parts: [{ text: lowerCaseQuestion }]
-          }]
-          }),
+          body: body: JSON.stringify({ contents: conversationHistory }),
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error.message);
         // Get the API response text and remove asterisks from it
         const apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+        conversationHistory.push({
+          role: "model",
+          parts: [{ text: apiResponse }]
+        });
         return apiResponse;
       }
 
