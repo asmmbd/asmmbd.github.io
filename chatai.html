@@ -140,7 +140,21 @@
       const chatInput = document.querySelector('input[type="text"]');
       const sendButton = document.querySelector('.fa-paper-plane');
       const chatContainer = document.querySelector('ul.space-y-5');
-      let conversationHistory = [];
+            // লোকাল স্টোরেজ থেকে কনভারসেশন ইতিহাস লোড করুন
+      let conversationHistory = JSON.parse(localStorage.getItem('conversationHistory')) || [];
+
+      // পূর্বের কনভারসেশন ইতিহাস লোড করুন (যদি থাকে)
+      if (conversationHistory.length > 0) {
+        conversationHistory.forEach(message => {
+          if (message.role === "user") {
+            createUserMessage(message.parts[0].text, chatContainer);
+          } else if (message.role === "model") {
+            createBotMessage(message.parts[0].text, chatContainer);
+          }
+        });
+        scrollToBottom(); // স্ক্রল নিচে নিয়ে যান
+      }
+
       // প্রি-ডিফাইনড প্রশ্নগুলির জন্য ইভেন্ট লিসেনার
       const predefinedButtons = document.querySelectorAll('.flex-none');
       predefinedButtons.forEach(button => {
@@ -179,6 +193,7 @@
           role: "model",
           parts: [{ text: apiResponse }]
         });
+        localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
         return apiResponse;
       }
 
