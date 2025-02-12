@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     * {
       font-family: SolaimanLipi;
@@ -14,42 +15,42 @@
 
 
 
-    .dot-animation {
-      display: inline-block;
-      margin-left: 4px;
-      animation: bounce 1.4s infinite ease-in-out;
+    .dots {
+      width: 40px;
+      height: 19.2px;
+      background: radial-gradient(circle closest-side, #58585D 90%, #0000) 0% 50%,
+        radial-gradient(circle closest-side, #58585D 90%, #0000) 50% 50%,
+        radial-gradient(circle closest-side, #58585D 90%, #0000) 100% 50%;
+      background-size: calc(100%/3) 9.6px;
+      background-repeat: no-repeat;
+      animation: dots-7ar3yq 1s infinite linear;
     }
 
-    .dot-animation:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    .dot-animation:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
-    @keyframes bounce {
-
-      0%,
-      100% {
-        transform: translateY(0);
+    @keyframes dots-7ar3yq {
+      20% {
+        background-position: 0% 0%, 50% 50%, 100% 50%;
       }
 
-      50% {
-        transform: translateY(-6px);
+      40% {
+        background-position: 0% 100%, 50% 0%, 100% 50%;
+      }
+
+      60% {
+        background-position: 0% 50%, 50% 100%, 100% 0%;
+      }
+
+      80% {
+        background-position: 0% 50%, 50% 50%, 100% 100%;
       }
     }
+    [x-cloak] { display: none !important; }
   </style>
 </head>
 
 <body class="bg-white">
-  <div class="w-full bg-white p-2">
-    <div class="hidden flex justify-between items-center mb-6">
-      <img alt="User profile picture" class="w-10 h-10 rounded-full" height="40" src="https://placehold.co/40x40" width="40" />
-      <i class="fas fa-edit text-gray-500"></i>
-    </div>
+  <div x-data="alemai()" x-cloak class="w-full bg-white p-2">
     <div class="flex flex-col items-center mb-6">
-      <img alt="AI assistant logo" class="w-24 h-24 mb-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" width="100" />
+      <img alt="AI assistant logo" :class="conversationHistory.length ? 'w-20 h-20 my-4' : 'w-48 h-48 mb-4 mt-12'" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" />
       <h1 class="text-xl font-semibold text-gray-800">
         আপনার আলেম এসিস্ট্যান্ট
       </h1>
@@ -57,260 +58,186 @@
         আমাদের এ আই মডেলটি প্রাথমিক পর্যায়ে আছে তাই জটিল বা যেই বিষয়ে বিভান্ত আছে এমন কোনো প্রশ্ন করা থেকে বিরত থাকুন
       </p>
     </div>
-    <!-- Chat Bubble -->
-    <ul class="space-y-5 mb-48"></ul>
-    <!-- End Chat Bubble -->
+    <div id="feature-cards" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-48" :class="{'hidden': conversationHistory.length}">
+      <div class="border border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50">
+        <i class="fas fa-praying-hands text-2xl text-blue-500 mb-2"></i>
+        <p class="text-gray-700">নামাজের সময় কি কি কাজ করা নিষিদ্ধ?</p>
+      </div>
+      <div class="border border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50">
+        <i class="fas fa-book text-2xl text-blue-500 mb-2"></i>
+        <p class="text-gray-700">কুরআন তিলাওয়াতের সঠিক পদ্ধতি কি?</p>
+      </div>
+      <div class="border border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50">
+        <i class="fas fa-star-and-crescent text-2xl text-blue-500 mb-2"></i>
+        <p class="text-gray-700">রমজান মাসে রোজা রাখার নিয়ম কি?</p>
+      </div>
+      <!-- Add more cards as needed -->
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-white mb-40" x-ref="chatContainer">
+
+      <template x-for="(message, index) in conversationHistory" :key="index">
+        <div>
+          <template x-if="message.role === 'user'">
+            <div class="flex items-start justify-end space-x-2">
+              <div class="flex flex-col items-end">
+                <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm max-w-xs lg:max-w-md">
+                  <p x-text="message.parts[0].text"></p>
+                </div>
+              </div>
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde" alt="You" class="w-8 h-8 rounded-full object-cover">
+            </div>
+          </template>
+          <template x-if="message.role === 'model'">
+            <div class="flex items-start space-x-2">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" alt="Sarah" class="w-8 h-8 rounded-full object-cover">
+              <div>
+                <div class="bg-gray-100 p-3 rounded-lg shadow-sm max-w-xs lg:max-w-md">
+                  <p class="text-gray-800 whitespace-pre-wrap" x-text="message.parts[0].text"></p>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <div x-show="isLoading" class="flex items-start space-x-2">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" alt="Sarah" class="w-8 h-8 rounded-full object-cover">
+        <div class="bg-gray-100 p-3 rounded-lg shadow-sm max-w-xs lg:max-w-md">
+          <div class="dots"></div>
+        </div>
+      </div>
+    </div>
+
+
+
 
     <div class="w-full fixed bottom-0 left-0 p-2 bg-white">
-      <div class="flex space-x-2 mb-4 overflow-x-auto">
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-pen mr-2"></i>
-          নামাজে ইমামের পিছনে মুক্তাদীরা সুরা ফাতিহা পাঠ করবে?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-book mr-2"></i>
-          কুরআন তিলাওয়াতের সঠিক পদ্ধতি কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-praying-hands mr-2"></i>
-          নামাজের সময় কি কি কাজ করা নিষিদ্ধ?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-mosque mr-2"></i>
-          মসজিদে প্রবেশের আদব কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-star-and-crescent mr-2"></i>
-          রমজান মাসে রোজা রাখার নিয়ম কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-hands-helping mr-2"></i>
-          জাকাত কাকে দিতে হবে এবং কত টাকা দিতে হবে?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-quran mr-2"></i>
-          কুরআন মুখস্থ করার সহজ উপায় কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-hands-praying mr-2"></i>
-          দুআ কবুলের শর্তগুলো কি কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-balance-scale mr-2"></i>
-          ইসলামে ন্যায়বিচারের গুরুত্ব কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-hand-holding-heart mr-2"></i>
-          সাদাকাহ দেওয়ার নিয়ম কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-child mr-2"></i>
-          শিশুদের ইসলামিক শিক্ষা কিভাবে শুরু করব?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-globe mr-2"></i>
-          হজ্জের সময় কি কি কাজ করা আবশ্যক?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-hand-holding-water mr-2"></i>
-          ওজুর সঠিক পদ্ধতি কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-star mr-2"></i>
-          ইসলামে ঈমানের স্তরগুলো কি কি?
-        </button>
-        <button class="flex-none border border-gray-300 rounded-lg p-4 text-center text-gray-700 whitespace-nowrap">
-          <i class="fas fa-heart mr-2"></i>
-          ইসলামে বিবাহের গুরুত্ব কি?
-        </button>
+      <div class="hidde flex space-x-2 mb-2.5 overflow-x-auto">
+        <template x-for="(button, index) in predefinedButtons" :key="index">
+          <button class="flex-none border border-gray-300 rounded-lg p-2.5 text-center text-gray-700 whitespace-nowrap" @click="sendMessage(button.text)">
+            <i :class="button.icon + ' mr-2'"></i>
+            <span x-text="button.text"></span>
+          </button>
+        </template>
       </div>
-      <div class="flex items-center border border-gray-300 rounded-lg p-4">
-        <input class="flex-1 outline-none" placeholder="আমাকে প্রশ্ন করুন..." type="text" />
-        <button class="ml-2 text-blue-500">
+      <div class="flex items-center border border-gray-300 rounded-lg p-2.5">
+        <textarea x-model="inputText" class="flex-1 outline-none field-sizing-content" placeholder="আমাকে প্রশ্ন করুন..." type="text"></textarea>
+        <button @click="sendMessage(inputText)" class="ml-2 text-blue-500">
           <i class="fas fa-paper-plane"></i>
         </button>
-        <button class="ml-4 text-red-500 clearButton">
+        <button @click="clearConversation()" class="ml-4 text-red-500 clearButton">
           <i class="fas fa-trash"></i>
         </button>
+
       </div>
     </div>
   </div>
 
-
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const API_KEY = "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g"; // Replace with your API key (or use a backend service)
-      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-      const chatInput = document.querySelector('input[type="text"]');
-      const sendButton = document.querySelector('.fa-paper-plane');
-      const chatContainer = document.querySelector('ul.space-y-5');
-      let conversationHistory = JSON.parse(localStorage.getItem('conversationHistory')) || [];
+    function alemai() {
+      return {
+        API_KEY: "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g", // Your API key here
+        API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=",
+        inputText: '',
+        errorText: '',
+        isLoading: false,
+        conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
+        predefinedButtons: [
+          { icon: "fas fa-pen", text: "নামাজে ইমামের পিছনে মুক্তাদীরা সুরা ফাতিহা পাঠ করবে?" },
+          { icon: "fas fa-book", text: "কুরআন তিলাওয়াতের সঠিক পদ্ধতি কি?" },
+          { icon: "fas fa-praying-hands", text: "নামাজের সময় কি কি কাজ করা নিষিদ্ধ?" },
+          { icon: "fas fa-mosque", text: "মসজিদে প্রবেশের আদব কি?" },
+          { icon: "fas fa-star-and-crescent", text: "রমজান মাসে রোজা রাখার নিয়ম কি?" },
+          { icon: "fas fa-hands-helping", text: "জাকাত কাকে দিতে হবে এবং কত টাকা দিতে হবে?" },
+          { icon: "fas fa-quran", text: "কুরআন মুখস্থ করার সহজ উপায় কি?" },
+          { icon: "fas fa-hands-praying", text: "দুআ কবুলের শর্তগুলো কি কি?" },
+          { icon: "fas fa-balance-scale", text: "ইসলামে ন্যায়বিচারের গুরুত্ব কি?" },
+          { icon: "fas fa-hand-holding-heart", text: "সাদাকাহ দেওয়ার নিয়ম কি?" },
+          { icon: "fas fa-child", text: "শিশুদের ইসলামিক শিক্ষা কিভাবে শুরু করব?" },
+          { icon: "fas fa-globe", text: "হজ্জের সময় কি কি কাজ করা আবশ্যক?" },
+          { icon: "fas fa-hand-holding-water", text: "ওজুর সঠিক পদ্ধতি কি?" },
+          { icon: "fas fa-star", text: "ইসলামে ঈমানের স্তরগুলো কি কি?" },
+          { icon: "fas fa-heart", text: "ইসলামে বিবাহের গুরুত্ব কি?" },
+        ],
+        async sendMessage(question) {
+          if (!question.trim()) return;
+          this.scrollToBottom();
+          this.conversationHistory.push({ role: "user", parts: [{ text: question }] });
 
-      // Load previous conversation history
-      if (conversationHistory.length > 0) {
-        conversationHistory.forEach(message => {
-          if (message.role === "user") {
-            createUserMessage(message.parts[0].text, chatContainer);
-          } else if (message.role === "model") {
-            createBotMessage(message.parts[0].text, chatContainer);
+          this.inputText = '';
+          this.saveConversation();
+
+          try {
+            const answer = await this.getAnswer(question);
+            this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
+            this.saveConversation();
+
+            // Wait for the DOM to update
+            await this.$nextTick();
+
+            // Apply typing effect
+            this.typeMessage(answer, this.conversationHistory.length);
+            this.scrollToBottom();
+          } catch (error) {
+            this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+            console.error(error);
           }
-        });
-        scrollToBottom();
-      }
-
-      // Predefined buttons
-      const predefinedButtons = document.querySelectorAll('.flex-none');
-      predefinedButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const question = button.textContent.trim();
-          sendMessage(question);
-        });
-      });
-
-      // Send user message
-      sendButton.addEventListener('click', () => {
-        const userMessage = chatInput.value.trim();
-        if (userMessage) {
-          sendMessage(userMessage);
-          chatInput.value = '';
-        }
-      });
-
-      // Get answer from API
-      async function getAnswer(question) {
-        conversationHistory.push({
-          role: "user",
-          parts: [{ text: question }]
-        });
-
-        try {
-          const response = await fetch(API_URL, {
+        },
+        async getAnswer(question) {
+          this.isLoading = true;
+          this.scrollToBottom();
+          const response = await fetch(this.API_URL + this.API_KEY, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: conversationHistory }),
+            body: JSON.stringify({
+              contents: this.conversationHistory,
+            }),
           });
-
-          if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
-          }
-
           const data = await response.json();
-          if (!data.candidates || !data.candidates[0].content.parts[0].text) {
-            throw new Error("Invalid API response structure");
-          }
+          if (!response.ok) throw new Error(data.error.message);
+          this.isLoading = false;
+          this.scrollToBottom();
+          return data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+        },
+        typeMessage(message, index) {
+          let i = 0;
+          const typingSpeed = 30;
+          const messageElement = this.$refs.chatContainer.children[index].querySelector('.text-gray-800');
 
-          const apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
-          conversationHistory.push({
-            role: "model",
-            parts: [{ text: apiResponse }]
-          });
+          // Clear the existing text before typing
+          messageElement.innerHTML = '';
 
-          if (conversationHistory.length > 50) {
-            conversationHistory = conversationHistory.slice(-50);
-          }
-          localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+          const type = () => {
+            if (i < message.length) {
+              messageElement.innerHTML += message.charAt(i);
+              i++;
+              setTimeout(type, typingSpeed);
+              this.scrollToBottom();
+            }
+          };
 
-          return apiResponse;
-        } catch (error) {
-          console.error("Error fetching answer:", error);
-          return "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
-        }
-      }
+          type();
+        },
 
-      // Create user message
-      function createUserMessage(message, chatContainer) {
-        const userMessageElement = document.createElement('li');
-        userMessageElement.className = 'flex ms-auto gap-x-2 sm:gap-x-4';
-        userMessageElement.innerHTML = `
-      <div class="grow text-end space-y-3">
-        <div class="inline-block bg-blue-600 rounded-2xl p-4 shadow-sm">
-          <p class="text-md text-white">${message}</p>
-        </div>
-      </div>
-      <span class="shrink-0 inline-flex items-center justify-center size-[38px] rounded-full bg-gray-600">
-        <i class="fa fa-user text-white leading-none"></i>
-      </span>
-    `;
-        chatContainer.appendChild(userMessageElement);
-        scrollToBottom();
-      }
+        saveConversation() {
+          localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
+        },
 
-      // Create bot message
-      function createBotMessage(message, chatContainer) {
-        const aiResponseElement = document.createElement('li');
-        aiResponseElement.className = 'max-w-lg flex gap-x-2 sm:gap-x-4 me-11';
-        aiResponseElement.innerHTML = `
-      <img class="inline-block size-9 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt="Avatar">
-      <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
-        <p class="text-md text-gray-800 whitespace-pre-wrap">
-          ${message}
-        </p>
-      </div>
-    `;
-        chatContainer.appendChild(aiResponseElement);
-        scrollToBottom();
-        return aiResponseElement;
-      }
-
-      // Typing effect
-      function typeMessage(message, element) {
-        element.classList.add('whitespace-pre-wrap');
-        let index = 0;
-        const typingSpeed = 30;
-
-        function type() {
-          if (index < message.length) {
-            element.innerHTML += message.charAt(index);
-            index++;
-            setTimeout(type, typingSpeed);
-            scrollToBottom();
-          }
-        }
-
-        type();
-      }
-
-      // Scroll to bottom
-      function scrollToBottom() {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth'
-        });
-      }
-
-      // Send message and display response
-      async function sendMessage(message) {
-        createUserMessage(message, chatContainer);
-        const botMessageElement = createBotMessage('<span class="dot-animation">.</span><span class="dot-animation">.</span><span class="dot-animation">.</span>', chatContainer);
-
-        try {
-          const answer = await getAnswer(message);
-          setTimeout(() => {
-            botMessageElement.querySelector('p').innerHTML = '';
-            typeMessage(answer, botMessageElement.querySelector('p'));
-          }, 2000);
-        } catch (error) {
-          botMessageElement.querySelector('p').innerHTML = 'দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
-          console.error(error);
-        }
-      }
-
-
-      function clearConversation() {
-        const confirm = window.confirm('are you sure to delete this conversation!');
-        if (confirm) {
-          alert('your conversation successfuly deleted!')
+        clearConversation() {
+          this.conversationHistory = [];
           localStorage.removeItem('conversationHistory');
-          conversationHistory = [];
-          chatContainer.innerHTML = '';
+        },
+        scrollToBottom() {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+          });
         }
       }
-
-      // কনভারসেশন ডিলিট করার বাটন যুক্ত করুন (যদি প্রয়োজন হয়)
-      const clearButton = document.querySelector('.clearButton')
-      clearButton.addEventListener('click', clearConversation);
-    });
+    }
   </script>
+
 </body>
 
 </html>
