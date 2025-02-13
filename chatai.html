@@ -132,6 +132,20 @@
 
       </div>
     </div>
+
+    <!-- Custom Modal -->
+    <div x-show="showConfirmationModal" class="w-full fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="w-96 bg-white pb-3 pt-5 rounded-lg shadow-lg">
+        <h1 class="text-gray-800 px-4 text-2xl text-center">কনভারসেশন ডিলেট করুন</h1>
+        <p class="text-gray-800 mb-2 p-4 text-center">আপনি কি নিশ্চিত যে আপনি কনভারসেশন ডিলেট করতে চান? কনভারসেশন ডিলিট করলে নতুন কনভারসেশন শুরু হবে। এক্ষেত্রে আপনার পুরনো ইতিহাস গুলো মুছে যাবে।</p>
+        <div class="w-full">
+          <button @click="confirmDelete" class="w-full text-red-500 px-4 py-2 border-t">ডিলেট করুন</button>
+          <button @click="cancelDelete" class="w-full text-gray-500 px-4 py-2 border-t">এখন না</button>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
   <script>
@@ -142,6 +156,7 @@
         inputText: '',
         errorText: '',
         isLoading: false,
+        showConfirmationModal: false,
         conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
         predefinedButtons: [
           { icon: "fas fa-pen", text: "নামাজে ইমামের পিছনে মুক্তাদীরা সুরা ফাতিহা পাঠ করবে?" },
@@ -224,9 +239,25 @@
           localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
         },
 
-        clearConversation() {
+        openConfirmationModal() {
+          this.showConfirmationModal = true;
+        },
+
+        // Confirm delete
+        confirmDelete() {
           this.conversationHistory = [];
           localStorage.removeItem('conversationHistory');
+          this.showConfirmationModal = false;
+        },
+
+        // Cancel delete
+        cancelDelete() {
+          this.showConfirmationModal = false;
+        },
+
+        // Update clearConversation method
+        clearConversation() {
+          this.openConfirmationModal();
         },
         scrollToBottom() {
           window.scrollTo({
