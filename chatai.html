@@ -47,10 +47,11 @@
       display: none !important;
     }
 
-    .dark {
-      background-color: #1a1a1a;
-      color: #ffffff;
-
+    @media (prefers-color-scheme: dark) {
+      body{
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
       .bg-gray-100,
       button,
       textarea,
