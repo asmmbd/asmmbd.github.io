@@ -95,7 +95,7 @@
             <div class="flex items-start space-x-2">
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt=" Sarah" class="w-8 h-8 rounded-full object-cover">
               <div>
-                <div class="bg-gray-100 dark:bg-gray-700  p-3 rounded-lg shadow-sm w-full lg:max-w-md">
+                <div class="bg-gray-100 dark:bg-gray-900  p-3 rounded-lg shadow-sm w-full lg:max-w-md">
                   <p class="text-gray-800 dark:text-gray-50 whitespace-pre-wrap" x-text="message.parts[0].text"></p>
                 </div>
               </div>
@@ -106,7 +106,7 @@
 
       <div x-show="isLoading" class="flex items-start space-x-2">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt="Sarah" class="w-8 h-8 rounded-full object-cover">
-        <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow-sm max-w-xs lg:max-w-md">
+        <div class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg shadow-sm max-w-xs lg:max-w-md">
           <div class="dots"></div>
         </div>
       </div>
@@ -115,14 +115,14 @@
     <div class="w-full fixed bottom-0 left-0 p-2 bg-white dark:bg-black">
       <div class="flex space-x-2 mb-2.5 overflow-x-auto ps-0">
         <template x-for="(button, index) in predefinedButtons" :key="index">
-          <button class="flex-none border border-gray-300 rounded-lg p-2.5 text-center text-gray-700 whitespace-nowrap dark:border-none dark:bg-gray-700 dark:text-gray-50" @click="sendMessage(button.text)">
+          <button class="flex-none border border-gray-300 rounded-lg p-2.5 text-center text-gray-700 whitespace-nowrap dark:border-none dark:bg-gray-900 dark:text-gray-50" @click="sendMessage(button.text)">
             <i :class="button.icon + ' mr-2'"></i>
             <span x-text="button.text"></span>
           </button>
         </template>
       </div>
-      <div class="flex items-center border border-gray-300 dark:border-none dark:bg-gray-700 dark:text-gray-50 rounded-lg p-2.5">
-        <textarea x-model="inputText" class="flex-1 outline-none field-sizing-content dark:bg-gray-700 dark:text-gray-50" placeholder="আমাকে প্রশ্ন করুন..." type="text"></textarea>
+      <div class="flex items-center border border-gray-300 dark:border-none dark:bg-gray-900 dark:text-gray-50 rounded-lg p-2.5">
+        <textarea x-model="inputText" class="flex-1 outline-none field-sizing-content dark:bg-gray-900 dark:text-gray-50" placeholder="আমাকে প্রশ্ন করুন..." type="text"></textarea>
         <button @click="startVoiceInput" class="ml-2 text-blue-500">
           <i class="fas fa-microphone"></i>
         </button>
