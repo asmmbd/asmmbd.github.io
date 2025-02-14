@@ -137,7 +137,7 @@
     <div class="w-full fixed bottom-0 left-0 p-2 bg-white">
       <div class="flex space-x-2 mb-2.5 overflow-x-auto ps-0">
         <template x-for="(button, index) in predefinedButtons" :key="index">
-          <button class="flex-none border border-gray-300 rounded-lg p-2.5 text-center text-gray-700 whitespace-nowrap" @click="sendMessage(button.text)">
+          <button class="flex-none border border-gray-300 rounded-lg p-2.5 text-center text-gray-700 whitespace-nowrap dark:border-none dark:bg-gray-700 dark:text-gray-50" @click="sendMessage(button.text)">
             <i :class="button.icon + ' mr-2'"></i>
             <span x-text="button.text"></span>
           </button>
