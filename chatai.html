@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -12,8 +13,6 @@
     * {
       font-family: SolaimanLipi;
     }
-
-
 
     .dots {
       width: 40px;
@@ -43,14 +42,40 @@
         background-position: 0% 50%, 50% 50%, 100% 100%;
       }
     }
-    [x-cloak] { display: none !important; }
+
+    [x-cloak] {
+      display: none !important;
+    }
+
+    .dark {
+      background-color: #1a1a1a;
+      color: #ffffff;
+
+      .bg-gray-100,
+      button,
+      textarea,
+      .border-gray-300 {
+        background-color: #262626;
+        border: none;
+      }
+
+      .bg-white {
+        background-color: #171717;
+      }
+
+      .text-gray-800,
+      .text-gray-500,
+      button {
+        color: #ffffff;
+      }
+    }
   </style>
 </head>
 
 <body class="bg-white">
   <div x-data="alemai()" x-cloak class="w-full bg-white p-2">
     <div class="flex flex-col items-center mb-6">
-      <img alt="AI assistant logo" :class="conversationHistory.length ? 'w-20 h-20 my-4' : 'w-48 h-48 mb-4 mt-12'" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" />
+      <img alt="AI assistant logo" class="rounded-full" :class="conversationHistory.length ? 'w-20 h-20 my-4' : 'w-48 h-48 mb-4 mt-12'" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" />
       <h1 class="text-xl font-semibold text-gray-800">
         আপনার আলেম এসিস্ট্যান্ট
       </h1>
@@ -58,7 +83,7 @@
         আমাদের এ আই মডেলটি প্রাথমিক পর্যায়ে আছে তাই জটিল বা যেই বিষয়ে বিভান্ত আছে এমন কোনো প্রশ্ন করা থেকে বিরত থাকুন
       </p>
     </div>
-    <div id="feature-cards" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-48" :class="{'hidden': conversationHistory.length}">
+    <div id="feature-cards" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-48" :class="{ 'hidden': conversationHistory.length }">
       <div class="border border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50">
         <i class="fas fa-praying-hands text-2xl text-blue-500 mb-2"></i>
         <p class="text-gray-700">নামাজের সময় কি কি কাজ করা নিষিদ্ধ?</p>
@@ -90,7 +115,7 @@
           </template>
           <template x-if="message.role === 'model'">
             <div class="flex items-start space-x-2">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10"" alt="Sarah" class="w-8 h-8 rounded-full object-cover">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWdfHM48pVkJzuuf6FQZ8FYClrssSKccBL3Ct5S8Sa0WQMnqPj12T2P90&s=10" alt=" Sarah" class="w-8 h-8 rounded-full object-cover">
               <div>
                 <div class="bg-gray-100 p-3 rounded-lg shadow-sm w-full lg:max-w-md">
                   <p class="text-gray-800 whitespace-pre-wrap" x-text="message.parts[0].text"></p>
@@ -109,11 +134,8 @@
       </div>
     </div>
 
-
-
-
     <div class="w-full fixed bottom-0 left-0 p-2 bg-white">
-      <div class="hidde flex space-x-2 mb-2.5 overflow-x-auto">
+      <div class="flex space-x-2 mb-2.5 overflow-x-auto ps-0">
         <template x-for="(button, index) in predefinedButtons" :key="index">
           <button class="flex-none border border-gray-300 rounded-lg p-2.5 text-center text-gray-700 whitespace-nowrap" @click="sendMessage(button.text)">
             <i :class="button.icon + ' mr-2'"></i>
@@ -123,13 +145,18 @@
       </div>
       <div class="flex items-center border border-gray-300 rounded-lg p-2.5">
         <textarea x-model="inputText" class="flex-1 outline-none field-sizing-content" placeholder="আমাকে প্রশ্ন করুন..." type="text"></textarea>
+        <button @click="startVoiceInput" class="ml-2 text-blue-500">
+          <i class="fas fa-microphone"></i>
+        </button>
         <button @click="sendMessage(inputText)" class="ml-2 text-blue-500">
           <i class="fas fa-paper-plane"></i>
         </button>
         <button x-show="conversationHistory.length" @click="clearConversation()" class="ml-4 text-red-500 clearButton">
           <i class="fas fa-trash"></i>
         </button>
-
+        <button @click="toggleTheme" class="ml-2 text-blue-500">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
     </div>
 
@@ -137,15 +164,14 @@
     <div x-show="showConfirmationModal" class="w-full fixed inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center">
       <div class="w-96 bg-white pb-3 pt-5 rounded-lg shadow-lg">
         <h1 class="text-gray-800 px-4 text-2xl text-center">কনভারসেশন ডিলেট করুন</h1>
-        <p class="text-gray-800 mb-2 p-4 text-center">আপনি কি নিশ্চিত যে আপনি কনভারসেশন ডিলেট করতে চান? কনভারসেশন ডিলিট করলে নতুন কনভারসেশন শুরু হবে। এক্ষেত্রে আপনার পুরনো ইতিহাস গুলো মুছে যাবে।</p>
+        <p class="text-gray-800 mb-2 p-4 text-center">আপনি কি নিশ্চিত যে আপনি কনভারসেশন ডিলেট করতে চান? কনভারসেশন ডিলিট করলে
+          নতুন কনভারসেশন শুরু হবে। এক্ষেত্রে আপনার পুরনো ইতিহাস গুলো মুছে যাবে।</p>
         <div class="w-full">
           <button @click="confirmDelete" class="w-full text-red-500 px-4 py-2 border-t">ডিলেট করুন</button>
           <button @click="cancelDelete" class="w-full text-gray-500 px-4 py-2 border-t">এখন না</button>
         </div>
       </div>
     </div>
-
-
   </div>
 
   <script>
@@ -157,6 +183,9 @@
         errorText: '',
         isLoading: false,
         showConfirmationModal: false,
+        isDarkMode: false,
+        isVoiceOutputEnabled: false,
+        recognition: null,
         conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
         predefinedButtons: [
           { icon: "fas fa-pen", text: "নামাজে ইমামের পিছনে মুক্তাদীরা সুরা ফাতিহা পাঠ করবে?" },
@@ -175,6 +204,7 @@
           { icon: "fas fa-star", text: "ইসলামে ঈমানের স্তরগুলো কি কি?" },
           { icon: "fas fa-heart", text: "ইসলামে বিবাহের গুরুত্ব কি?" },
         ],
+
         async sendMessage(question) {
           if (!question.trim()) return;
           this.scrollToBottom();
@@ -187,18 +217,20 @@
             const answer = await this.getAnswer(question);
             this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
             this.saveConversation();
+            this.speakText(answer);
 
             // Wait for the DOM to update
             await this.$nextTick();
 
             // Apply typing effect
-            this.typeMessage(answer, this.conversationHistory.length);
+            this.typeMessage(answer, this.conversationHistory.length); // Use length - 1 to target the last message
             this.scrollToBottom();
           } catch (error) {
             this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
             console.error(error);
           }
         },
+
         async getAnswer(question) {
           this.isLoading = true;
           this.scrollToBottom();
@@ -215,10 +247,18 @@
           this.scrollToBottom();
           return data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
         },
+
         typeMessage(message, index) {
           let i = 0;
           const typingSpeed = 30;
+
+          // Find the message element after the DOM has been updated
           const messageElement = this.$refs.chatContainer.children[index].querySelector('.text-gray-800');
+
+          if (!messageElement) {
+            console.error("Message element not found!");
+            return;
+          }
 
           // Clear the existing text before typing
           messageElement.innerHTML = '';
@@ -243,32 +283,58 @@
           this.showConfirmationModal = true;
         },
 
-        // Confirm delete
         confirmDelete() {
           this.conversationHistory = [];
           localStorage.removeItem('conversationHistory');
           this.showConfirmationModal = false;
         },
 
-        // Cancel delete
         cancelDelete() {
           this.showConfirmationModal = false;
         },
 
-        // Update clearConversation method
         clearConversation() {
           this.openConfirmationModal();
         },
+
         scrollToBottom() {
           window.scrollTo({
             top: document.documentElement.scrollHeight,
             behavior: 'smooth'
           });
-        }
+        },
+
+        startVoiceInput() {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          this.recognition = new SpeechRecognition();
+          this.recognition.lang = 'bn-BD';
+          this.recognition.onresult = (event) => {
+            this.inputText = event.results[0][0].transcript;
+            this.sendMessage(this.inputText);
+          };
+          this.recognition.start();
+        },
+
+        toggleVoiceOutput() {
+          this.isVoiceOutputEnabled = !this.isVoiceOutputEnabled;
+        },
+
+        speakText(text) {
+          if (this.isVoiceOutputEnabled) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'bn-BD';
+            speechSynthesis.speak(utterance);
+          }
+        },
+
+
+        toggleTheme() {
+          this.isDarkMode = !this.isDarkMode;
+          document.body.classList.toggle('dark', this.isDarkMode);
+        },
       }
     }
   </script>
-
 </body>
 
 </html>
