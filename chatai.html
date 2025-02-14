@@ -46,30 +46,7 @@
     [x-cloak] {
       display: none !important;
     }
-
-    @media (prefers-color-scheme: dark) {
-      body{
-        background-color: #1a1a1a;
-        color: #ffffff;
-      }
-      .bg-gray-100,
-      button,
-      textarea,
-      .border-gray-300 {
-        background-color: #262626;
-        border: none;
-      }
-
-      .bg-white {
-        background-color: #171717;
-      }
-
-      .text-gray-800,
-      .text-gray-500,
-      button {
-        color: #ffffff;
-      }
-    }
+    
   </style>
 </head>
 
@@ -144,8 +121,8 @@
           </button>
         </template>
       </div>
-      <div class="flex items-center border border-gray-300 rounded-lg p-2.5">
-        <textarea x-model="inputText" class="flex-1 outline-none field-sizing-content" placeholder="আমাকে প্রশ্ন করুন..." type="text"></textarea>
+      <div class="flex items-center border border-gray-300 dark:border-none dark:bg-gray-700 dark:text-gray-50 rounded-lg p-2.5">
+        <textarea x-model="inputText" class="flex-1 outline-none field-sizing-content dark:bg-gray-700 dark:text-gray-50" placeholder="আমাকে প্রশ্ন করুন..." type="text"></textarea>
         <button @click="startVoiceInput" class="ml-2 text-blue-500">
           <i class="fas fa-microphone"></i>
         </button>
