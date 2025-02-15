@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাদ্রাসা ফি কালেকশন ইনভয়েস</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <style type="text/tailwindcss">
+    * {
+      font-family: SolaimanLipi;
+    }
+    input, select{
+      @apply w-full border border-gray-400 h-10 px-2 bg-gray-50 rounded-md outline-none;
+    }
+    table, tr,td,th,thead {
+      @apply border border-gray-400
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" x-data="invoiceApp()">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+      <h1 class="text-2xl font-bold mb-4 print:hidden">মাদ্রাসা ফি কালেকশন ইনভয়েস</h1>
+
+      <!-- ফি যোগ করার ফর্ম -->
+      <div class="mb-6 print:hidden">
+        <h2 class="text-xl font-semibold mb-2">ফি যোগ করুন</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4">
+          <!-- ফির নাম সিলেক্ট করুন -->
+          <select x-model="newFee.name" class="p-2 border rounded">
+            <option value="">ফি সিলেক্ট করুন</option>
+            <template x-for="fee in predefinedFees" :key="fee">
+              <option x-text="fee" :value="fee"></option>
+            </template>
+          </select>
+          <input x-model="newFee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded">
+          <input x-model="newFee.month" type="month" placeholder="বছর (যেমন: ২০২৫)" class="p-2 border rounded">
+          <button @click="addFee" class="bg-blue-500 text-white p-2 rounded print:hidden">যোগ করুন</button>
+        </div>
+      </div>
+
+      <!-- ফি তালিকা -->
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">ফি তালিকা</h2>
+        <table class="w-full  overflow-hidden">
+          <thead>
+            <tr>
+              <th class="p-2">নং</th>
+              <th class="p-2">ফির নাম</th>
+              <th class="p-2">পরিমাণ</th>
+              <th class="p-2 print:hidden">অ্যাকশন</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(fee, index) in fees" :key="index">
+              <tr class="border-b">
+                <td class="p-2" x-text="index + 1"></td>
+                <td class="p-2">
+                  <span x-text="fee.name"></span>
+                  <span x-text="fee.month === '' ? '' : monthFormat(fee.month)"></span>
+                </td>
+                <td class="p-2" x-text="`৳ ${fee.amount}`"></td>
+                <td class="p-2 space-x-2 print:hidden">
+                  <button @click="editFee(index)" class="text-yellow-500">এডিট</button>
+                  <button @click="removeFee(index)" class="text-red-500">মুছুন</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- মোট ফি -->
+      <div class="mb-6 flex flex-col items-end gap-2.5">
+        <div class="flex gap-3">
+          <h2 class="text-md">মোট ফি</h2>
+          <p class="text-md" x-text="`৳ ${totalFees}`"></p>
+        </div>
+        <div class="flex gap-3 items-center">
+          <h2 class="text-md">ছাড়</h2>
+          <input class="w-12 h-8" type="number" x-model="discount" />
+        </div>
+        <div class="flex gap-3">
+          <h2 class="text-md">মোট টাকা</h2>
+          <p class="text-md" x-text="`৳ ${total}`"></p>
+        </div>
+        <div class="flex gap-3 items-center">
+          <h2 class="text-md">জমা</h2>
+          <input class="w-12 h-8" type="number" x-model="deposit" />
+        </div>
+        <div class="flex gap-3">
+          <h2 class="text-md">বকেয়া</h2>
+          <p class="text-md" x-text="`৳ ${due}`"></p>
+        </div>
+      </div>
+
+      <!-- প্রিন্ট বাটন -->
+      <button @click="printInvoice" class="bg-green-500 text-white p-2 rounded print:hidden">প্রিন্ট করুন</button>
+
+      <!-- এডিট মোডাল -->
+      <div x-show="isEditing" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <h2 class="text-xl font-semibold mb-4">ফি এডিট করুন</h2>
+          <select x-model="editableFee.name" class="p-2 border rounded w-full mb-4">
+            <option value="">ফি সিলেক্ট করুন</option>
+            <template x-for="fee in predefinedFees" :key="fee">
+              <option x-text="fee" :value="fee"></option>
+            </template>
+          </select>
+          <input x-model="editableFee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded w-full mb-4">
+          <input x-model="editableFee.month" type="month" placeholder="বছর (যেমন: ২০২৫)" class="p-2 border rounded w-full mb-4">
+          <div class="flex justify-end space-x-2">
+            <button @click="isEditing = false" class="bg-gray-500 text-white p-2 rounded">বাতিল</button>
+            <button @click="saveEditedFee" class="bg-blue-500 text-white p-2 rounded">সেভ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function invoiceApp() {
+      return {
+        deposit: 0,
+        discount: 0,
+        get due() {
+          return this.totalFees - this.deposit - this.discount;
+        },
+        get total() {
+          return this.totalFees - this.discount;
+        },
+        newFee: {
+          name: '',
+          amount: 0,
+          month: '',
+        },
+        fees: [],
+        isEditing: false,
+        editableFee: {
+          name: '',
+          amount: 0,
+          month: '',
+          index: null
+        },
+        predefinedFees: [
+                    "মাসিক বেতন",
+                    "পরিবহন ফি",
+                    "বোর্ডিং ফি",
+                    "পরীক্ষা ফি",
+                    "লাইব্রেরি ফি"
+                ],
+        addFee() {
+          if (this.newFee.name && this.newFee.amount) {
+            this.fees.push({ ...this.newFee });
+            this.newFee.name = '';
+            this.newFee.amount = 0;
+            this.newFee.month = '';
+          }
+        },
+        removeFee(index) {
+          this.fees.splice(index, 1);
+        },
+        editFee(index) {
+          this.editableFee = { ...this.fees[index], index };
+          this.isEditing = true;
+        },
+        saveEditedFee() {
+          if (this.editableFee.name && this.editableFee.amount) {
+            this.fees[this.editableFee.index] = {
+              name: this.editableFee.name,
+              amount: this.editableFee.amount,
+              month: this.editableFee.month,
+            };
+            this.isEditing = false;
+          }
+        },
+        get totalFees() {
+          return this.fees.reduce((total, fee) => total + parseFloat(fee.amount), 0).toFixed(2);
+        },
+        monthFormat(month) {
+          const date = new Date(month);
+          const formattedDate = new Intl.DateTimeFormat('bn-BD', {
+            year: 'numeric',
+            month: 'long'
+          }).format(date);
+          return formattedDate;
+        },
+        printInvoice() {
+          //window.print()
+          const monthlyFeesMonths = this.fees
+            .filter(fee => fee.name === "মাসিক বেতন")
+            .map(fee => this.monthFormat(fee.month));
+
+          console.log(monthlyFeesMonths);
+        }
+      }
+    }
+  </script>
+</body>
+
+  </html>
