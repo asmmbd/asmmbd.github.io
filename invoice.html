@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>মাদ্রাসা ফি কালেকশন ইনভয়েস</title>
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
   <style type="text/tailwindcss">
     * {
@@ -22,57 +22,46 @@
 </head>
 
 <body class="bg-gray-100">
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" x-data="invoiceApp()">
+  <div class="fixed inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center p-4" x-data="invoiceApp()">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
       <h1 class="text-2xl font-bold mb-4 print:hidden">মাদ্রাসা ফি কালেকশন ইনভয়েস</h1>
 
       <!-- ফি যোগ করার ফর্ম -->
       <div class="mb-6 print:hidden">
         <h2 class="text-xl font-semibold mb-2">ফি যোগ করুন</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4">
-          <!-- ফির নাম সিলেক্ট করুন -->
-          <select x-model="newFee.name" class="p-2 border rounded">
-            <option value="">ফি সিলেক্ট করুন</option>
-            <template x-for="fee in predefinedFees" :key="fee">
-              <option x-text="fee" :value="fee"></option>
-            </template>
-          </select>
-          <input x-model="newFee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded">
-          <input x-model="newFee.month" type="month" placeholder="বছর (যেমন: ২০২৫)" class="p-2 border rounded">
-          <button @click="addFee" class="bg-blue-500 text-white p-2 rounded print:hidden">যোগ করুন</button>
-        </div>
+        <template x-for="(fee,index) in fees">
+          <div class="gap-4 mb-2" :class="{
+            'flex items-center' : fees.length > 1,
+            'grid grid-cols-3' : fees.length < 2,
+          }">
+            <!-- ফির নাম সিলেক্ট করুন -->
+            <select x-model="fee.name" class="p-2 border rounded ">
+              <option value="">ফি সিলেক্ট করুন</option>
+              <template x-for="item in predefinedFees" :key="item">
+                <option x-text="item" :value="item"></option>
+              </template>
+            </select>
+            <input x-model="fee.month" type="month" placeholder="বছর (যেমন: ২০২৫)" class="p-2 border rounded">
+            <input x-model="fee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded text-right">
+            <button @click="removeFee(index)" class="text-red-500" x-show="fees.length > 1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none">
+                <path d="M19.5 5.5L18.8803 15.5251C18.7219 18.0864 18.6428 19.3671 18.0008 20.2879C17.6833 20.7431 17.2747 21.1273 16.8007 21.416C15.8421 22 14.559 22 11.9927 22C9.42312 22 8.1383 22 7.17905 21.4149C6.7048 21.1257 6.296 20.7408 5.97868 20.2848C5.33688 19.3626 5.25945 18.0801 5.10461 15.5152L4.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M3 5.5H21M16.0557 5.5L15.3731 4.09173C14.9196 3.15626 14.6928 2.68852 14.3017 2.39681C14.215 2.3321 14.1231 2.27454 14.027 2.2247C13.5939 2 13.0741 2 12.0345 2C10.9688 2 10.436 2 9.99568 2.23412C9.8981 2.28601 9.80498 2.3459 9.71729 2.41317C9.32164 2.7167 9.10063 3.20155 8.65861 4.17126L8.05292 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M9.5 16.5L9.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M14.5 16.5L14.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+        </template>
+        <button @click="addFee" class="text-blue-500 flex gap-2 print:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none">
+            <path d="M12 8V16M16 12L8 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          যোগ করুন
+        </button>
       </div>
 
-      <!-- ফি তালিকা -->
-      <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">ফি তালিকা</h2>
-        <table class="w-full  overflow-hidden">
-          <thead>
-            <tr>
-              <th class="p-2">নং</th>
-              <th class="p-2">ফির নাম</th>
-              <th class="p-2">পরিমাণ</th>
-              <th class="p-2 print:hidden">অ্যাকশন</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template x-for="(fee, index) in fees" :key="index">
-              <tr class="border-b">
-                <td class="p-2" x-text="index + 1"></td>
-                <td class="p-2">
-                  <span x-text="fee.name"></span>
-                  <span x-text="fee.month === '' ? '' : monthFormat(fee.month)"></span>
-                </td>
-                <td class="p-2" x-text="`৳ ${fee.amount}`"></td>
-                <td class="p-2 space-x-2 print:hidden">
-                  <button @click="editFee(index)" class="text-yellow-500">এডিট</button>
-                  <button @click="removeFee(index)" class="text-red-500">মুছুন</button>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-      </div>
 
       <!-- মোট ফি -->
       <div class="mb-6 flex flex-col items-end gap-2.5">
@@ -100,25 +89,6 @@
 
       <!-- প্রিন্ট বাটন -->
       <button @click="printInvoice" class="bg-green-500 text-white p-2 rounded print:hidden">প্রিন্ট করুন</button>
-
-      <!-- এডিট মোডাল -->
-      <div x-show="isEditing" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-          <h2 class="text-xl font-semibold mb-4">ফি এডিট করুন</h2>
-          <select x-model="editableFee.name" class="p-2 border rounded w-full mb-4">
-            <option value="">ফি সিলেক্ট করুন</option>
-            <template x-for="fee in predefinedFees" :key="fee">
-              <option x-text="fee" :value="fee"></option>
-            </template>
-          </select>
-          <input x-model="editableFee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded w-full mb-4">
-          <input x-model="editableFee.month" type="month" placeholder="বছর (যেমন: ২০২৫)" class="p-2 border rounded w-full mb-4">
-          <div class="flex justify-end space-x-2">
-            <button @click="isEditing = false" class="bg-gray-500 text-white p-2 rounded">বাতিল</button>
-            <button @click="saveEditedFee" class="bg-blue-500 text-white p-2 rounded">সেভ করুন</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -133,50 +103,22 @@
         get total() {
           return this.totalFees - this.discount;
         },
-        newFee: {
+        fees: [{
           name: '',
           amount: 0,
           month: '',
-        },
-        fees: [],
-        isEditing: false,
-        editableFee: {
-          name: '',
-          amount: 0,
-          month: '',
-          index: null
-        },
-        predefinedFees: [
-                    "মাসিক বেতন",
-                    "পরিবহন ফি",
-                    "বোর্ডিং ফি",
-                    "পরীক্ষা ফি",
-                    "লাইব্রেরি ফি"
-                ],
+        }],
+        predefinedFees: ["মাসিক বেতন", "পরিবহন ফি", "বোর্ডিং ফি", "পরীক্ষা ফি", "লাইব্রেরি ফি"],
         addFee() {
-          if (this.newFee.name && this.newFee.amount) {
-            this.fees.push({ ...this.newFee });
-            this.newFee.name = '';
-            this.newFee.amount = 0;
-            this.newFee.month = '';
-          }
+          this.fees.push({
+            name: '',
+            amount: 0,
+            month: '',
+
+          });
         },
         removeFee(index) {
           this.fees.splice(index, 1);
-        },
-        editFee(index) {
-          this.editableFee = { ...this.fees[index], index };
-          this.isEditing = true;
-        },
-        saveEditedFee() {
-          if (this.editableFee.name && this.editableFee.amount) {
-            this.fees[this.editableFee.index] = {
-              name: this.editableFee.name,
-              amount: this.editableFee.amount,
-              month: this.editableFee.month,
-            };
-            this.isEditing = false;
-          }
         },
         get totalFees() {
           return this.fees.reduce((total, fee) => total + parseFloat(fee.amount), 0).toFixed(2);
@@ -195,11 +137,11 @@
             .filter(fee => fee.name === "মাসিক বেতন")
             .map(fee => this.monthFormat(fee.month));
 
-          console.log(monthlyFeesMonths);
+          console.log(new Set(monthlyFeesMonths));
         }
       }
     }
   </script>
 </body>
 
-  </html>
+</html>
