@@ -132,9 +132,6 @@
         <button x-show="conversationHistory.length" @click="clearConversation()" class="ml-4 text-red-500 clearButton">
           <i class="fas fa-trash"></i>
         </button>
-        <button @click="toggleTheme" class="ml-2 text-blue-500">
-          <i class="fas fa-moon"></i>
-        </button>
       </div>
     </div>
 
@@ -161,7 +158,6 @@
         errorText: '',
         isLoading: false,
         showConfirmationModal: false,
-        isDarkMode: false,
         isVoiceOutputEnabled: false,
         recognition: null,
         conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
@@ -306,10 +302,7 @@
         },
 
 
-        toggleTheme() {
-          this.isDarkMode = !this.isDarkMode;
-          document.body.classList.toggle('dark', this.isDarkMode);
-        },
+        
       }
     }
   </script>
