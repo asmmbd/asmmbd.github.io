@@ -304,7 +304,7 @@
         selectedStudent: null,
         selectedStudentFee: null,
         searchStudent() {
-          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(60)]);
+          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(120)]);
           promise.then((ress) => {
             this.students = ress.documents;
             console.log(this.students)
