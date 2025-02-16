@@ -1,235 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>বেতন রশিদ</title>
-  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
-  <!-- html2pdf CDN link -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাদ্রাসা রশিদ</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
   <style>
     * {
       font-family: SolaimanLipi;
     }
 
-    .page {
+    .paper {
       width: 14.8cm;
-      height: 21.0cm;
-
-    }
-
-    .page img {
-      width: 100%;
-      height: 100%;
+      height: 21cm;
     }
   </style>
 </head>
 
-<body>
-  <div class="relative page border border-0">
-    <img src="./src/img/receipt.jpg">
-    <div class="w-full absolute top-36 left-0 px-3 text-center">
-      <h1 class="font-bold text-xl"> বেতন রশিদ </h1>
-    </div>
-    <div class="w-full absolute top-48 left-0 px-4">
-      <table class="w-full text-sm text-left border border-gray-400">
-        <tbody>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-2 py-1 border-r border-gray-400">
-              নাম
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400">
-              আয়েশা সিদ্দিকা মনিরা
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              পিতা
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400">
-              আবদুল হামিদ
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-2 py-1 border-r border-gray-400">
-              জামাত
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400">
-              মিজান
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              বিভাগ
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400">
-              কিতাব বিভাগ
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-2 py-1 border-r border-gray-400">
-              মাসের নাম
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400">
-              জুলাই
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              তারিখ
-            </th>
-            <td class="px-2 py-1">
-              ২ জুলাই, ২০২৪
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-2 py-1 border-r border-gray-400">
-              আইডি নং
-            </th>
-            <td class="px-2 py-1 border-r border-gray-400">
-              ২০২৪০০০১
-            </td>
-            <th class="px-2 py-1 border-r border-gray-400">
-              রশিদ নং
-            </th>
-            <td class="px-2 py-1">
-              ২৪০০০১
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<body class="flex justify-center bg-green-50 print:bg-white p-6">
+  <div class="">
+    <div class="paper mx-auto bg-white rounded-lg shadow-lg p-4 print:shadow-none">
+      <div class="flex justify-between items-start mb-4">
+        <div class="w-full">
+          <h1 class="text-2xl font-bold text-emerald-800">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+          <div class="flex items-center mb-2 md:mb-0">
+            <img src="/images/20250101_223054.png" alt="Madrasa Logo" class="h-16 w-auto mr-4">
+            <div>
+              <p class="text-gray-600">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর </p>
+              <p class="text-gray-600">০১৫১৬৫৩২২৯৬, ০১৯৪৭৬৬০৫৬৩</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <h2 class="text-3xl font-bold text-emerald-600 mb-2">রশিদ</h2>
+          <p class="text-gray-600">#রশিদ-২০২৪-০০১</p>
+          <p class="text-gray-600 whitespace-nowrap">তারিখ: ১৫ জানুয়ারি, ২০২৪</p>
+        </div>
+      </div>
 
-      <table class="w-full text-sm text-left border border-gray-400 mt-4">
-        <thead class="text-xs">
-          <tr class="border-b border-gray-400 text-center">
-            <th scope="col" class="px-3 py-1 border-r border-gray-400 w-10">
-              ক্রমিক নং
-            </th>
-            <th scope="col" class="px-3 py-1 border-r border-gray-400">
-              বিবরণ
-            </th>
-            <th scope="col" class="px-3 py-1">
-              পরিমাণ
-            </th>
+      <div class="w-full mb-4">
+        <table class="w-full">
+          <tr class="border hover:bg-emerald-50">
+            <td class="px-4 py-2 text-gray-600 border-r">নাম</td>
+            <td class="px-4 py-2 text-gray-600 border-r">আব্দুল্লাহ আল সাইফ</td>
+            <td class="px-4 py-2 text-gray-600 border-r">আইডি নং</td>
+            <td class="px-4 py-2 text-gray-600">২০২৪০০০১</td>
           </tr>
-        </thead>
-        <tbody>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ১
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              ভর্তি ফি
-            </th>
-            <td class="px-3 py-1 text-center border-gray-400">
-              ১০০০
-            </td>
+          <tr class="border hover:bg-emerald-50">
+            <td class="px-4 py-2 text-gray-600 border-r">শ্রেণী</td>
+            <td class="px-4 py-2 text-gray-600 border-r">পঞ্চম</td>
+            <td class="px-4 py-2 text-gray-600 border-r">বিভাগ</td>
+            <td class="px-4 py-2 text-gray-600">কিতাব বিভাগ</td>
           </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ২
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              মাসিক বেতন
-            </th>
-            <td class="px-3 py-1 text-center">
-              ০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৩
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              সেশন ফি
-            </th>
-            <td class="px-3 py-1 text-center">
-              ০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৪
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              ডায়েরি
-            </th>
-            <td class="px-3 py-1 text-center">
-              ২০০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৫
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              আবাসিক ফি
-            </th>
-            <td class="px-3 py-1 text-center">
-              ০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৬
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              পরীক্ষা ফি
-            </th>
-            <td class="px-3 py-1 text-center">
-              ০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৭
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              আইডি কার্ড
-            </th>
-            <td class="px-3 py-1 text-center">
-              ০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th class="px-3 py-1 w-10 text-center border-r border-gray-400">
-              ৮
-            </th>
-            <th class="px-3 py-1 border-r border-gray-400">
-              বিবিধ
-            </th>
-            <td class="px-3 py-1 text-center">
-              ০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-3 py-1 font-bold  whitespace-nowrap text-right border-r border-gray-400" colspan="2">
-              মোট
-            </th>
-            <td class="px-3 py-1 font-bold text-center">
-              ১০০০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-3 py-1 font-bold  whitespace-nowrap text-right border-r border-gray-400" colspan="2">
-              জমা
-            </th>
-            <td class="px-3 py-1 font-bold text-center">
-              ১০০০
-            </td>
-          </tr>
-          <tr class="border-b border-gray-400">
-            <th scope="row" class="px-3 py-1 font-bold  whitespace-nowrap text-right border-r border-gray-400" colspan="2">
-              বকেয়া
-            </th>
-            <td class="px-3 py-1 font-bold text-center">
-              ০
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="p-3 mt-12 text-right">
-        <span> আদায়কারীর স্বাক্ষর</span>
+        </table>
+      </div>
+
+      <div class="overflow-x-auto mb-3">
+        <table class="w-full">
+          <thead>
+            <tr class="bg-emerald-100">
+              <th class="px-4 py-2 text-left text-gray-700">নং</th>
+              <th class="px-4 py-2 text-left text-gray-700">বিবরণ</th>
+              <th class="px-4 py-2 text-right text-gray-700">মোট</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600">১</td>
+              <td class="px-4 py-2 text-gray-600">মাসিক বেতন (জানুয়ারি)</td>
+              <td class="px-4 py-2 text-right text-gray-600">১,০০০.০০ ৳</td>
+            </tr>
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600">১</td>
+              <td class="px-4 py-2 text-gray-600">মাসিক বেতন (জানুয়ারি)</td>
+              <td class="px-4 py-2 text-right text-gray-600">১,০০০.০০ ৳</td>
+            </tr>
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600">১</td>
+              <td class="px-4 py-2 text-gray-600">মাসিক বেতন (জানুয়ারি)</td>
+              <td class="px-4 py-2 text-right text-gray-600">১,০০০.০০ ৳</td>
+            </tr>
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600">১</td>
+              <td class="px-4 py-2 text-gray-600">মাসিক বেতন (জানুয়ারি)</td>
+              <td class="px-4 py-2 text-right text-gray-600">১,০০০.০০ ৳</td>
+            </tr>
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600">১</td>
+              <td class="px-4 py-2 text-gray-600">মাসিক বেতন (জানুয়ারি)</td>
+              <td class="px-4 py-2 text-right text-gray-600">১,০০০.০০ ৳</td>
+            </tr>
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600">১</td>
+              <td class="px-4 py-2 text-gray-600">মাসিক বেতন (জানুয়ারি)</td>
+              <td class="px-4 py-2 text-right text-gray-600">১,০০০.০০ ৳</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end mb-3">
+        <div class="w-1/2">
+          <div class="flex justify-between py-0.5">
+            <span class="text-gray-600">মোট:</span>
+            <span class="text-gray-800">১,৫০০.০০ ৳</span>
+          </div>
+          <div class="flex justify-between py-0.5">
+            <span class="text-gray-600">ছাড় (১০%):</span>
+            <span class="text-gray-800">১৫০.০০ ৳</span>
+          </div>
+          <div class="flex justify-between py-0.5 border-t border-gray-200 mt-2">
+            <span class="text-lg font-semibold text-gray-700">সর্বমোট:</span>
+            <span class="text-lg font-bold text-emerald-600">১,৩৫০.০০ ৳</span>
+          </div>
+          <div class="flex justify-between py-0.5">
+            <span class="text-gray-600">জমা:</span>
+            <span class="text-gray-800">১৫০.০০ ৳</span>
+          </div>
+          <div class="flex justify-between py-0.5 border-t border-gray-200 mt-2">
+            <span class="text-lg font-semibold text-gray-700">বকেয়া:</span>
+            <span class="text-lg font-bold text-emerald-600">১,৩৫০.০০ ৳</span>
+          </div>
+        </div>
       </div>
 
 
     </div>
-
+    <div class="w-[14.8cm] mx-auto mt-5 flex justify-between items-center print:hidden">
+      <button class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition-colors">
+        <i class="fas fa-download mr-2"></i>পিডিএফ ডাউনলোড
+      </button>
+      <button class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors">
+        <i class="fas fa-print mr-2"></i>রশিদ প্রিন্ট
+      </button>
+    </div>
   </div>
 </body>
 
