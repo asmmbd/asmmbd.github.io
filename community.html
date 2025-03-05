@@ -416,7 +416,7 @@
                   <label class="text-sm text-gray-600 dark:text-gray-300">Upload Image</label>
                   <input type="file" accept="image/*" @change="handleImageUpload" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 dark:file:bg-gray-700 dark:file:text-gray-300 dark:hover:file:bg-gray-600">
                   <div x-show="imagePreview" class="mt-2">
-                    <img :src="imagePreview" alt="Image Preview" class="max-w-full h-auto rounded-lg">
+                    <img :src="imagePreview" alt="Image Preview" class="w-80 h-80 rounded-lg">
                     <button @click="imagePreview = null" class="mt-2 text-red-600 hover:text-red-800 text-sm dark:text-red-400 dark:hover:text-red-300">Remove Image</button>
                   </div>
                 </div>
