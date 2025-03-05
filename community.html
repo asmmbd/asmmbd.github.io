@@ -84,7 +84,7 @@
     },
     submitPost() {
         if (this.message.trim() !== '') {
-            this.posts.push({
+            this.posts.unshift({
                 id: this.posts.length + 1,
                 content: this.message,
                 category: this.selectedCategory,
