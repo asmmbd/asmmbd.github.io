@@ -20,7 +20,6 @@
     darkMode: false,
     showComments: false,
     message: '',
-    selectedCategory: '',
     tags: [],
     newTag: '',
     imagePreview: null,
@@ -38,10 +37,10 @@
         { id: 3, message: 'Yusuf sent you a message.', time: '1 hour ago' }
     ],
     posts: [
-        { id: 1, content: 'Alhamdulillah, completed my Tajweed course today.', category: 'Tajweed', tags: ['Quran', 'Learning'], time: '2 hours ago', userId: 1, likes: 0, showComments: false, comments: [{ user: 'Abdul Basit', text: 'MashaAllah, great achievement brother!', time: '2 mins ago' }], image: null },
-        { id: 2, content: 'Memorizing Surah Al-Baqarah has been a blessed journey.', category: 'Hifz', tags: ['Memorization', 'Quran'], time: '5 hours ago', userId: 1, likes: 0, showComments: false, comments: [], image: null },
-        { id: 3, content: 'Looking for Arabic grammar resources!', category: 'Arabic', tags: ['Arabic', 'Learning'], time: '1 day ago', userId: 2, likes: 0, showComments: false, comments: [], image: null },
-        { id: 4, content: 'Join our weekly Quran recitation circle.', category: 'Events', tags: ['Community', 'Quran'], time: '3 days ago', userId: 2, likes: 0, showComments: false, comments: [], image: null }
+        { id: 1, content: 'Alhamdulillah, completed my Tajweed course today.', tags: ['Quran', 'Learning'], time: '2 hours ago', userId: 1, likes: 0, showComments: false, comments: [{ user: 'Abdul Basit', text: 'MashaAllah, great achievement brother!', time: '2 mins ago' }], image: null },
+        { id: 2, content: 'Memorizing Surah Al-Baqarah has been a blessed journey.', tags: ['Memorization', 'Quran'], time: '5 hours ago', userId: 1, likes: 0, showComments: false, comments: [], image: null },
+        { id: 3, content: 'Looking for Arabic grammar resources!', tags: ['Arabic', 'Learning'], time: '1 day ago', userId: 2, likes: 0, showComments: false, comments: [], image: null },
+        { id: 4, content: 'Join our weekly Quran recitation circle.', tags: ['Community', 'Quran'], time: '3 days ago', userId: 2, likes: 0, showComments: false, comments: [], image: null }
     ],
     users: [
         { id: 1, name: 'Ahmad Rahman', following: false },
@@ -49,12 +48,6 @@
         { id: 3, name: 'Fatima Khan', following: false }
     ],
     currentUserId: 1,
-    filteredPosts() {
-        return this.posts.filter(post => 
-            post.content.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
-            (this.selectedCategory === '' || post.category === this.selectedCategory)
-        );
-    },
     toggleLike(post) { 
         post.likes = post.likes === 0 ? 1 : 0; 
         this.showToastMessage(post.likes > 0 ? 'Liked!' : 'Unliked!');
@@ -87,7 +80,6 @@
             this.posts.unshift({
                 id: this.posts.length + 1,
                 content: this.message,
-                category: this.selectedCategory,
                 tags: this.tags,
                 time: 'Just now',
                 userId: this.currentUserId,
@@ -97,7 +89,6 @@
                 image: this.imagePreview
             });
             this.message = '';
-            this.selectedCategory = '';
             this.tags = [];
             this.imagePreview = null;
             this.showCreatePostModal = false; // মোডাল বন্ধ করা
@@ -323,13 +314,6 @@
         <div class="bg-white dark:bg-gray-800 dark:text-white shadow p-4 flex items-center gap-4">
           <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" alt="User" class="w-10 h-10 rounded-full">
           <input @click="showCreatePostModal = true" type="button" value="Share what's on your mind..." class="flex-1 p-2 border rounded-lg outline-none text-left dark:bg-gray-700 dark:text-white dark:border-gray-600">
-          <select x-model="selectedCategory" class="hidden p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white dark:border-gray-600">
-            <option value="">All Categories</option>
-            <option value="Tajweed">Tajweed</option>
-            <option value="Hifz">Hifz</option>
-            <option value="Arabic">Arabic</option>
-            <option value="Events">Events</option>
-          </select>
           <!-- Create Post Button -->
           <button @click="showCreatePostModal = true" class="hidden px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 md:flex items-center space-x-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -379,18 +363,8 @@
                 </div>
                 
                 <!-- Category and Tags -->
-                <div class="flex flex-col sm:flex-row sm:space-x-4 mt-3">
-                  <div class="flex-1">
-                    <label class="text-sm text-gray-600 dark:text-gray-300">Category</label>
-                    <select x-model="selectedCategory" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white dark:border-gray-600">
-                      <option value="">Select Category</option>
-                      <option value="Tajweed">Tajweed</option>
-                      <option value="Hifz">Hifz</option>
-                      <option value="Arabic">Arabic</option>
-                      <option value="Events">Events</option>
-                    </select>
-                  </div>
-                  <div class="flex-1 mt-3 sm:mt-0">
+                <div class="w-full mt-3">
+                  <div class="w-full mt-3 sm:mt-0">
                     <label class="text-sm text-gray-600 dark:text-gray-300">Tags</label>
                     <div class="flex space-x-2">
                       <input x-model="newTag" @keyup.enter="addTag" placeholder="Add tag..." class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white dark:border-gray-600">
@@ -423,7 +397,7 @@
                 
                 <!-- Action Buttons -->
                 <div class="flex justify-end mt-4">
-                  <button @click="message = ''; selectedCategory = ''; tags = []; imagePreview = null;" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 mr-2 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">Clear</button>
+                  <button @click="message = ''; tags = []; imagePreview = null;" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 mr-2 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">Clear</button>
                   <button @click="submitPost" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Post</button>
                 </div>
               </div>
@@ -434,7 +408,7 @@
         <!-- Posts -->
         <div class="space-y-1.5 mb-20 md:mb-0">
           <!-- Post Card -->
-          <template x-for="post in filteredPosts()">
+          <template x-for="post in posts">
             <div class="bg-white dark:bg-gray-800 dark:text-white md:rounded-lg shadow">
               <div class="p-4">
                 <div class="flex items-center justify-between">
