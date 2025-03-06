@@ -431,7 +431,7 @@
                   </div>
                   <div class="relative flex items-center" x-data="{menuOpen: false}">
                     <button  @click="toggleBookmark(post.id)" class="px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                      <i class="ti ti-bookmark text-xl" :class="{ 'text-emerald-600 dark:text-emerald-400': bookmarkedPosts.includes(post.id) }"></i>
+                      <i class="ti ti-bookmark text-xl" :class="{ 'text-emerald-600 dark:text-emerald-400 ti-bookmark-filled': bookmarkedPosts.includes(post.id) }"></i>
                     </button>
                     <button x-show="post.userId === currentUserId" @click="menuOpen = !menuOpen" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
