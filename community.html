@@ -324,6 +324,9 @@
         <div class="bg-white dark:bg-gray-800 dark:text-white shadow p-4 flex items-center gap-4">
           <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" alt="User" class="w-10 h-10 rounded-full">
           <input @click="showCreatePostModal = true" type="button" value="Share what's on your mind..." class="flex-1 p-2 border rounded-lg outline-none text-left dark:bg-gray-700 dark:text-white dark:border-gray-600">
+          <button @click="showCreatePostModal = true" class="w-10 h-10 rounded bg-emerald-500 text-white md:hidden">
+            <i class="ti ti-photo"></i>
+          </button>
           <!-- Create Post Button -->
           <button @click="showCreatePostModal = true" class="hidden px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 md:flex items-center space-x-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
