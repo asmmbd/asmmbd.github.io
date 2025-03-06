@@ -532,20 +532,20 @@
         <a href="#" class="hover:text-emerald-200">
           <i class="ti ti-article text-2xl"></i>
         </a>
-        <div class="relative">
-          <a href="#" @click="showNotifications = !showNotifications" class="hover:text-emerald-200 flex items-center">
-            <i class="ti ti-bell text-2xl"></i>
-            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" x-text="notifications.length"></span>
-          </a>
-          <div x-show="showNotifications" class="absolute top-12 right-0 w-64 bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-lg p-4 space-y-2 text-gray-900" @click.away="showNotifications = false">
+         <a href="#" @click="showNotifications = !showNotifications" class="flex flex-col items-center space-y-1 p-2 hover:bg-emerald-700 relative">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+          <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" x-text="notifications.length"></span>
+          <div x-show="showNotifications" class="absolute bottom-16 right-0 w-64 bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-lg p-4 space-y-2 text-gray-900" @click.away="showNotifications = false">
             <template x-for="notification in notifications">
               <div class="border-b last:border-b-0 pb-2">
                 <p class="text-sm" x-text="notification.message"></p>
-                <p class="text-xs text-gray-500" x-text="notification.time"></p>
+                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="notification.time"></p>
               </div>
             </template>
           </div>
-        </div>
+         </a>
       </div>
     </nav>
     
