@@ -508,6 +508,35 @@
       
       <!-- Right Sidebar -->
       <aside class="hidden xl:block w-72">
+        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow p-4 mb-4">
+          <div class="flex items-center space-x-3 mb-4">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde" alt="User" class="w-12 h-12 rounded-full">
+            <div>
+              <h3 class="font-semibold">Ahmad Rahman</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Student</p>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <a href="#" class="block p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">My Profile</a>
+            <a href="#" class="block p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">My Courses</a>
+            <a href="#" class="block p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">Saved Posts</a>
+          </div>
+        </div>
+        <!-- Suggested Users to Follow -->
+        <div class="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow p-4">
+          <h3 class="font-semibold mb-4">Suggested Users</h3>
+          <div class="space-y-4">
+            <template x-for="user in users">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" alt="User" class="w-10 h-10 rounded-full">
+                  <p class="font-medium" x-text="user.name"></p>
+                </div>
+                <button @click="toggleFollow(user.id)" class="px-3 py-1 rounded-lg text-sm" :class="user.following ? 'bg-gray-300 text-gray-700' : 'bg-emerald-600 text-white'" x-text="user.following ? 'Unfollow' : 'Follow'"></button>
+              </div>
+            </template>
+          </div>
+        </div>
         <div class="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow p-4">
           <h3 class="font-semibold mb-4">Active Users</h3>
           <div class="space-y-4">
