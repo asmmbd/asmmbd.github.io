@@ -31,7 +31,7 @@
 </head>
 
 <body class="bg-gray-50 text-gray-900">
-  <div x-data="app()" class="min-h-screen dark:bg-gray-900 dark:text-white" :class="{ 'dark': darkMode }">
+  <div x-data="app()" x-effect="effect()" class="min-h-screen dark:bg-gray-900 dark:text-white overflow-hidden">
     <!-- Navigation Bar -->
     <nav class="bg-emerald-600 text-white shadow-lg fixed w-full z-50">
       <div class="px-4">
@@ -423,7 +423,7 @@
         </div>
         
         <!-- Create Post Modal -->
-        <div x-show="showCreatePostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2 md:px-0">
+        <div x-show="showCreatePostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 p-2 md:px-0">
           <div class="bg-white dark:bg-gray-800 dark:text-white rounded-lg p-6 w-full max-w-lg">
             <div class="flex justify-between items-center mb-4">
               <h3 class="font-semibold text-lg">Create a Post</h3>
@@ -445,8 +445,8 @@
                 </div>
                 
                 <!-- AI Integration Section -->
-                <div x-show="showAiBox" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2 md:px-0">
-                  <div class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-700 w-full max-w-lg">
+                <div x-show="showAiBox" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 p-2 md:p-0">
+                  <div class="mt-4 p-4 rounded-lg bg-white dark:bg-gray-800 w-full max-w-lg">
                     <div class="flex justify-between items-center mb-4">
                       <h3 class="font-semibold text-lg">Generate with AI</h3>
                       <button @click="showAiBox = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100">
@@ -455,8 +455,9 @@
                         </svg>
                       </button>
                     </div>
-                    <div class="w-full h-96 overflow-y-scroll mt-2 p-2 border rounded-lg bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200">
+                    <div class="w-full h-96 overflow-y-scroll mt-2 p-2 border-t border-b bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200">
                       <p class="whitespace-pre-wrap" x-text="aiGeneratedContent"></p>
+                      <p class="whitespace-pre-wrap" x-show="!aiGeneratedContent">Enter a prompt (e.g., Write a short post about learning Quran)</p>
                       <button x-show="aiGeneratedContent" @click="insertGeneratedContent(); showAiBox = false" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
                         Insert to Post
                       </button>
@@ -506,7 +507,7 @@
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between mt-4">
                   <div class="flex items-center gap-3">
-                    <label for="dropzone-file" class="flex items-center w-10 h-10 text-center bg-white cursor-pointer dark:bg-gray-900 rounded-md">
+                    <label for="dropzone-file" class="flex items-center w-10 h-10 justify-center bg-white cursor-pointer dark:bg-gray-900 rounded-md">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-gray-500 dark:text-gray-400">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                       </svg>
@@ -803,10 +804,10 @@
     </div>
     
     <!-- Edit Post Modal -->
-    <div x-show="editingPost" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div x-show="editingPost" class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 p-2">
       <div class="bg-white dark:bg-gray-800 dark:text-white rounded-lg p-6 w-full max-w-md">
         <h3 class="font-semibold mb-4">Edit Post</h3>
-        <textarea x-model="editContent" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white dark:border-gray-600" rows="4"></textarea>
+        <textarea x-model="editContent" class="w-full max-h-80 min-h-40 p-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white dark:border-gray-600"></textarea>
         <div class="flex justify-end space-x-2 mt-4">
           <button @click="editingPost = null" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">Cancel</button>
           <button @click="saveEdit()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save</button>
@@ -1170,6 +1171,9 @@
             this.aiPrompt = '';
             this.showToastMessage('Generated content added to post!');
           }
+        },
+        effect(){
+          this.editingPost ||  this.showAiBox || this.showCreatePostModal || this.chatOpen ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
         }
       }
     }
