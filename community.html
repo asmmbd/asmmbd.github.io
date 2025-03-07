@@ -444,6 +444,40 @@
                   </div>
                 </div>
                 
+                <!-- AI Integration Section -->
+                <div x-show="showAiBox" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2 md:px-0">
+                  <div class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-700 w-full max-w-lg">
+                    <div class="flex justify-between items-center mb-4">
+                      <h3 class="font-semibold text-lg">Generate with AI</h3>
+                      <button @click="showAiBox = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="w-full h-96 overflow-y-scroll mt-2 p-2 border rounded-lg bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200">
+                      <p class="whitespace-pre-wrap" x-text="aiGeneratedContent"></p>
+                      <button x-show="aiGeneratedContent" @click="insertGeneratedContent(); showAiBox = false" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+                        Insert to Post
+                      </button>
+                    </div>
+                    <div class="flex justify-between mt-2 gap-3">
+                      <input type="text" x-model="aiPrompt" placeholder="Enter a prompt (e.g., Write a short post about learning Quran)" class="w-full p-2 border outline-none rounded-lg dark:bg-gray-600 dark:text-white dark:border-gray-500">
+                      <button @click="generateContent" :disabled="isGenerating" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center space-x-2">
+                        <span x-show="!isGenerating">Generate</span>
+                        <span x-show="isGenerating" class="flex items-center space-x-2">
+                          <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          <span>Generating...</span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                
                 
                 <!-- Image Upload and Preview -->
                 <div class="mt-3">
@@ -479,9 +513,17 @@
                       <input accept="image/*" @change="handleImageUpload" id="dropzone-file" type="file" class="hidden" />
                     </label>
                     <button @click="showTagsBox = !showTagsBox" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">#</button>
+                    <button @click="showAiBox = !showAiBox" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.1706 20.8905C18.3536 20.6125 21.6856 17.2332 21.9598 12.9909C22.0134 12.1607 22.0134 11.3009 21.9598 10.4707C21.6856 6.22838 18.3536 2.84913 14.1706 2.57107C12.7435 2.47621 11.2536 2.47641 9.8294 2.57107C5.64639 2.84913 2.31441 6.22838 2.04024 10.4707C1.98659 11.3009 1.98659 12.1607 2.04024 12.9909C2.1401 14.536 2.82343 15.9666 3.62791 17.1746C4.09501 18.0203 3.78674 19.0758 3.30021 19.9978C2.94941 20.6626 2.77401 20.995 2.91484 21.2351C3.05568 21.4752 3.37026 21.4829 3.99943 21.4982C5.24367 21.5285 6.08268 21.1757 6.74868 20.6846C7.1264 20.4061 7.31527 20.2668 7.44544 20.2508C7.5756 20.2348 7.83177 20.3403 8.34401 20.5513C8.8044 20.7409 9.33896 20.8579 9.8294 20.8905C11.2536 20.9852 12.7435 20.9854 14.1706 20.8905Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                        <path d="M7.5 15L9.34189 9.47434C9.43631 9.19107 9.7014 9 10 9C10.2986 9 10.5637 9.19107 10.6581 9.47434L12.5 15M15.5 9V15M8.5 13H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
                   </div>
                   <div>
-                    <button @click="submitPost" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Post</button>
+                    <button @click="submitPost" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+                      Submit
+                    </button>
                   </div>
                 </div>
               </div>
@@ -631,7 +673,7 @@
     </div>
     
     <!-- Bottom Navigation Menu for Mobile -->
-    <nav class="fixed bottom-0 left-0 w-full bg-emerald-600 text-white shadow-lg z-50 md:hidden">
+    <nav class="fixed bottom-0 left-0 w-full bg-emerald-600 text-white shadow-lg z-40 md:hidden">
       <div class="flex justify-around items-center h-16">
         <a href="#" class="hover:text-emerald-200">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -676,7 +718,7 @@
     </nav>
     
     <!-- Live Chat Interface Button -->
-    <div class="fixed bottom-20 md:bottom-4 right-4 z-50">
+    <div class="fixed bottom-20 md:bottom-4 right-4 z-40">
       <button @click="chatOpen = !chatOpen" class="bg-emerald-600 text-white rounded-full p-4 shadow-lg hover:bg-emerald-700 transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -685,7 +727,7 @@
     </div>
     
     <!-- Live Chat Modal -->
-    <div x-show="chatOpen" class="fixed inset-0 sm:inset-auto sm:bottom-20 sm:right-4 sm:w-96 sm:max-h-[80vh] bg-white dark:bg-gray-800 dark:text-white sm:rounded-lg sm:shadow-xl z-50 overflow-y-auto" @click.away="chatOpen = false">
+    <div x-show="chatOpen" class="fixed inset-0 md:inset-auto md:right-4 md:bottom-20 md:w-96 md:h-96 bg-white dark:bg-gray-800 dark:text-white md:rounded-lg md:shadow-xl z-50 overflow-y-auto" @click.away="chatOpen = false">
       <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
         <h3 class="font-semibold">Live Chat</h3>
         <button @click="chatOpen = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100">
@@ -694,7 +736,7 @@
           </svg>
         </button>
       </div>
-      <div class="h-96 overflow-y-auto p-4 space-y-4">
+      <div class="h-full overflow-y-auto p-4 space-y-4">
         <!-- Chat Messages -->
         <div class="flex items-start space-x-2">
           <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" class="w-8 h-8 rounded-full" alt="User">
@@ -702,6 +744,43 @@
             <p class="font-semibold text-sm">Ahmed Khan</p>
             <p class="text-gray-700 dark:text-gray-200">Assalamu Alaikum, how can I help you today?</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:30 AM</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-2 justify-end">
+          <div class="bg-emerald-100 dark:bg-emerald-700 rounded-lg p-3 max-w-[80%]">
+            <p class="text-gray-700 dark:text-gray-200">Walaikum Assalam, I have a question about the Tajweed course.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:32 AM</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-2 justify-end">
+          <div class="bg-emerald-100 dark:bg-emerald-700 rounded-lg p-3 max-w-[80%]">
+            <p class="text-gray-700 dark:text-gray-200">Walaikum Assalam, I have a question about the Tajweed course.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:32 AM</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-2 justify-end">
+          <div class="bg-emerald-100 dark:bg-emerald-700 rounded-lg p-3 max-w-[80%]">
+            <p class="text-gray-700 dark:text-gray-200">Walaikum Assalam, I have a question about the Tajweed course.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:32 AM</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-2 justify-end">
+          <div class="bg-emerald-100 dark:bg-emerald-700 rounded-lg p-3 max-w-[80%]">
+            <p class="text-gray-700 dark:text-gray-200">Walaikum Assalam, I have a question about the Tajweed course.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:32 AM</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-2 justify-end">
+          <div class="bg-emerald-100 dark:bg-emerald-700 rounded-lg p-3 max-w-[80%]">
+            <p class="text-gray-700 dark:text-gray-200">Walaikum Assalam, I have a question about the Tajweed course.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:32 AM</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-2 justify-end">
+          <div class="bg-emerald-100 dark:bg-emerald-700 rounded-lg p-3 max-w-[80%]">
+            <p class="text-gray-700 dark:text-gray-200">Walaikum Assalam, I have a question about the Tajweed course.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:32 AM</p>
           </div>
         </div>
         <div class="flex items-start space-x-2 justify-end">
@@ -759,6 +838,7 @@
         toastMessage: '',
         showToast: false,
         showTagsBox: false,
+        showAiBox: false,
         activeTab: 'home',
         notifications: [
           { id: 1, message: 'Abdul liked your post.', time: '5 mins ago' },
@@ -1023,6 +1103,73 @@
           this.toastMessage = message;
           this.showToast = true;
           setTimeout(() => { this.showToast = false; }, 3000);
+        },
+        aiPrompt: '',
+        aiGeneratedContent: '',
+        isGenerating: false,
+        async generateContent() {
+          if (this.aiPrompt.trim() === '') {
+            this.showToastMessage('Please enter a prompt to generate content!');
+            return;
+          }
+          this.isGenerating = true;
+          
+          // API URL এবং API Key (আপনার সেটআপ অনুযায়ী আপডেট করুন)
+          const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'; // Gemini API এন্ডপয়েন্ট
+          const API_KEY = 'AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g'; // আপনার API কী
+          
+          try {
+            const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                contents: [
+                {
+                  role: "user",
+                  parts: [{ text: this.aiPrompt }]
+                }]
+              }),
+            });
+            
+            const data = await response.json();
+            if (!response.ok) {
+              throw new Error(data.error?.message || 'API request failed');
+            }
+            
+            // Gemini API থেকে জেনারেটেড টেক্সট এক্সট্রাক্ট করা
+            this.typeMessage(data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1'));
+            this.showToastMessage('Content generated successfully!');
+          } catch (error) {
+            console.error('Error:', error);
+            this.showToastMessage(`Error generating content: ${error.message}`);
+          } finally {
+            this.isGenerating = false;
+          }
+        },
+        typeMessage(message) {
+          let i = 0;
+          const typingSpeed = 30;
+          this.aiGeneratedContent = '';
+          
+          const type = () => {
+            if (i < message.length) {
+              this.aiGeneratedContent += message.charAt(i);
+              i++;
+              setTimeout(type, typingSpeed);
+            }
+          };
+          
+          type();
+        },
+        insertGeneratedContent() {
+          if (this.aiGeneratedContent) {
+            this.message += (this.message ? '\n' : '') + this.aiGeneratedContent;
+            this.aiGeneratedContent = '';
+            this.aiPrompt = '';
+            this.showToastMessage('Generated content added to post!');
+          }
         }
       }
     }
