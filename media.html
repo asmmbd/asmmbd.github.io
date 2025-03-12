@@ -17,40 +17,8 @@
 
 <body class="bg-gray-50">
   <div x-data="videoApp()">
-    <!-- Video Player -->
-    <template x-if="selectedVideo">
-      <div>
-        <!-- Full Video Player -->
-        <div :class="isMinimized ? 'w-96 bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-between gap-2 pe-4 rounded-md' : 'w-full top-0 left-0'" class="fixed z-50 bg-white shadow-md">
-          <iframe :class="isMinimized ? 'w-32 h-16 rounded-l-md' : 'w-full h-56'" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-          </iframe>
-          <div class="p-2" :class="isMinimized ? 'w-60' : 'w-full'" @click="isMinimized = false">
-            <h2 :class="isMinimized ? 'text-sm' : 'font-semibold'" x-text="selectedVideo.title" class="text-[#8b5e34] truncate"></h2>
-            <p class="text-[#8b5e34] text-sm">
-              <span x-text="selectedVideo.channel_name"></span> •
-              <span x-text="selectedVideo.category"></span> •
-              <span x-show="!isMinimized" x-text="formatDate(selectedVideo.createdAt)"></span>
-            </p>
-          </div>
-          <div :class="isMinimized ? 'flex gap-2' : 'absolute top-2 right-4 flex justify-end gap-2 mt-2'">
-            <button x-show="!isMinimized" @click="isMinimized = true" class="text-sm text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </button>
-            <button @click="closeVideo" class="text-sm" :class="isMinimized ? 'text-gray-900 absolute -top-2 -right-2 bg-white rounded-full' : 'text-white'">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </template>
-
     <!-- Navigation Bar -->
-    <nav class="sticky left-0 z-50 bg-white shadow-md w-full" :class="selectedVideo && !isMinimized ? 'top-[280px]' : 'top-0'">
+    <nav class="sticky top-0 left-0 z-50 bg-white shadow-md w-full">
       <ul class="flex gap-2 px-2 py-2 list-none rounded-md">
         <template x-for="(filter, index) in filters" :key="index">
           <li class="flex-auto text-center">
@@ -61,14 +29,35 @@
         </template>
       </ul>
     </nav>
-
+    
+    <!-- Video Player -->
+    <template x-if="selectedVideo">
+      <div>
+        <!-- Full Video Player -->
+        <div :class="isMinimized ? 'flex-row pe-4' : 'flex-col overflow-hidden'" class="fixed w-[408px] bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-between gap-2 rounded-md z-50 bg-white shadow-md">
+          <div x-show="!isMinimized" @click="isMinimized = !isMinimized" class="h-1.5 w-20 bg-gray-300 my-4 rounded-md"></div>
+          <iframe :class="isMinimized ? 'w-32 h-16 rounded-l-md' : 'w-full h-56'" :src="`https://www.youtube.com/embed/${selectedVideo.videoId}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+          </iframe>
+          <div class="p-2" :class="isMinimized ? 'w-60' : 'w-full'" @click="isMinimized = !isMinimized">
+            <h2 :class="isMinimized ? 'text-sm' : 'font-semibold'" x-text="selectedVideo.title" class="text-[#8b5e34] truncate"></h2>
+            <p class="text-[#8b5e34] text-sm">
+              <span x-text="selectedVideo.channel_name"></span> •
+              <span x-text="selectedVideo.category"></span> •
+              <span x-show="!isMinimized" x-text="formatDate(selectedVideo.createdAt)"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </template>
+    
+    
     <!-- Video List -->
-    <section class="p-2" :class="selectedVideo && !isMinimized ? 'mt-72' : ''">
+    <section class="p-2">
       <template x-for="video in filteredVideos" :key="video.id">
-        <div @click="selectVideo(video)" class="relative overflow-hidden mb-3 cursor-pointer" :class="selectedVideo && !isMinimized ? 'flex items-center' : ''">
-          <img :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" alt="Thumbnail" class="rounded-md" :class="selectedVideo && !isMinimized ? 'w-52 h-auto' : 'w-full h-52 object-cover'" onerror="this.onerror=null;this.src='https://via.placeholder.com/300';" />
+        <div @click="selectVideo(video)" class="relative overflow-hidden mb-3 cursor-pointer">
+          <img :src="`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`" alt="Thumbnail" class="rounded-md w-full h-52 object-cover" onerror="this.onerror=null;this.src='https://via.placeholder.com/300';" />
           <div class="p-2">
-            <h3 x-text="selectedVideo && !isMinimized ? video.title.slice(0,60) : video.title" class="text-[#8b5e34] font-semibold" :class="selectedVideo && !isMinimized ? '' : 'truncate'"></h3>
+            <h3 x-text="video.title" class="text-[#8b5e34] font-semibold"></h3>
             <p class="text-[#8b5e34] text-sm">
               <span x-text="video.channel_name"></span> •
               <span x-text="video.category"></span> •
@@ -77,14 +66,14 @@
           </div>
         </div>
       </template>
-
+      
       <!-- No Videos Found -->
       <template x-if="filteredVideos.length === 0">
         <div class="text-center text-gray-500 mt-80">No videos found for this category.</div>
       </template>
     </section>
   </div>
-
+  
   <!-- JavaScript Logic -->
   <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
   <script>
@@ -96,7 +85,7 @@
         filters: ['All', 'Hadis', 'Quran', 'Story', 'Nasheed', 'Advice'],
         activeFilter: 'All',
         isMinimized: false,
-
+        
         // Initialize the app
         init() {
           fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/media')
@@ -107,7 +96,7 @@
             })
             .catch(err => console.error('Failed to fetch videos:', err));
         },
-
+        
         // Apply selected filter
         applyFilter(filter) {
           this.activeFilter = filter;
@@ -115,19 +104,18 @@
             filter === 'All' || video.category.toLowerCase() === filter.toLowerCase()
           );
         },
-
+        
         // Select video to play
         selectVideo(video) {
           this.selectedVideo = video;
-          this.isMinimized = false;
         },
-
+        
         // Close the video player
         closeVideo() {
           this.selectedVideo = null;
           this.isMinimized = false;
         },
-
+        
         // Format date to "time ago" format
         formatDate(date) {
           return moment(new Date(date).toUTCString()).fromNow();
