@@ -22,26 +22,30 @@
     
     <div x-data="app()" class="space-y-6">
       <!-- Class and Exam Selection -->
-      <div class="flex items-center justify-center space-x-4 bg-white p-4 rounded-lg shadow-md">
-        <label class="text-gray-700 font-medium text-lg">শ্রেণি নির্বাচন করুন:</label>
-        <select x-model="selectedClass" @change="loadStudents(); loadResults()" class="border rounded-lg p-2 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <option value="শিশু">শিশু</option>
-          <option value="প্রথম">প্রথম</option>
-          <option value="দ্বিতীয়">দ্বিতীয়</option>
-          <option value="তৃতীয়">তৃতীয়</option>
-          <option value="চতুর্থ">চতুর্থ</option>
-          <option value="পঞ্চম">পঞ্চম</option>
-          <option value="ষষ্ঠ">ষষ্ঠ</option>
-          <option value="সপ্তম">সপ্তম</option>
-          <option value="অষ্টম">অষ্টম</option>
-          <option value="নবম">নবম</option>
-          <option value="দশম">দশম</option>
-        </select>
-        <label class="text-gray-700 font-medium text-lg">পরীক্ষা নির্বাচন করুন:</label>
-        <select x-model="selectedExam" @change="loadResults()" class="border rounded-lg p-2 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <option value="প্রথম সাময়িক পরীক্ষা ২০২৪">প্রথম সাময়িক পরীক্ষা ২০২৪</option>
-          <option value="বার্ষিক পরীক্ষা ২০২৪">বার্ষিক পরীক্ষা ২০২৪</option>
-        </select>
+      <div class="flex items-center justify-between space-x-4 bg-white p-4 rounded-lg shadow-md">
+        <div>
+          <label class="text-gray-700 font-medium text-lg">শ্রেণি নির্বাচন করুন:</label>
+          <select x-model="selectedClass" @change="loadStudents(); loadResults()" class="border rounded-lg p-2 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="শিশু">শিশু</option>
+            <option value="প্রথম">প্রথম</option>
+            <option value="দ্বিতীয়">দ্বিতীয়</option>
+            <option value="তৃতীয়">তৃতীয়</option>
+            <option value="চতুর্থ">চতুর্থ</option>
+            <option value="পঞ্চম">পঞ্চম</option>
+            <option value="ষষ্ঠ">ষষ্ঠ</option>
+            <option value="সপ্তম">সপ্তম</option>
+            <option value="অষ্টম">অষ্টম</option>
+            <option value="নবম">নবম</option>
+            <option value="দশম">দশম</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-gray-700 font-medium text-lg">পরীক্ষা নির্বাচন করুন:</label>
+          <select x-model="selectedExam" @change="loadResults()" class="border rounded-lg p-2 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="প্রথম সাময়িক পরীক্ষা ২০২৪">প্রথম সাময়িক পরীক্ষা ২০২৪</option>
+            <option value="বার্ষিক পরীক্ষা ২০২৪">বার্ষিক পরীক্ষা ২০২৪</option>
+          </select>
+        </div>
         <button @click="generateReport()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
           রিপোর্ট তৈরি করুন
         </button>
@@ -94,11 +98,18 @@
       <div x-show="showReport" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
           <div id="reportContent">
-            <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">মাদ্রাসার নাম: আল-মদিনা মাদ্রাসা</h2>
-            <h3 class="text-2xl font-semibold text-center mb-2 text-gray-700" x-text="selectedExam"></h3>
-            <h4 class="text-xl font-medium text-center mb-6 text-gray-600" x-text="`শ্রেণি: ${selectedClass}`"></h4>
+            <div class="print:hidden">
+              <h2 class="text-5xl font-bold text-center mb-4 text-gray-800">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h2>
+              <h3 class="text-2xl font-semibold text-center mb-2 text-gray-700" x-text="selectedExam"></h3>
+              <h4 class="text-xl font-medium text-center mb-6 text-gray-600" x-text="`শ্রেণি: ${selectedClass}`"></h4>
+            </div>
             <template x-for="student in sortedResults" :key="student.studentId">
-              <div class="mb-6 border p-4 rounded-lg">
+              <div class="w-[21cm] h-[29.7cm] mb-6 border p-4 rounded-lg">
+                <div>
+                  <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h2>
+                  <h3 class="text-2xl font-semibold text-center mb-2 text-gray-700" x-text="selectedExam"></h3>
+                  <h4 class="text-xl font-medium text-center mb-6 text-gray-600" x-text="`${selectedClass} শ্রেণীর ফলাফল`"></h4>
+                </div>
                 <div class="w-full grid grid-cols-3">
                   <p><strong>নাম:</strong> <span x-text="student.name"></span></p>
                   <p><strong>পিতার নাম:</strong> <span x-text="student.faName"></span></p>
@@ -134,7 +145,7 @@
               </div>
             </template>
           </div>
-          <div class="mt-6 flex justify-end space-x-2">
+          <div class="print:hidden mt-6 flex justify-end space-x-2">
             <button @click="printReport()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
               প্রিন্ট করুন
             </button>
