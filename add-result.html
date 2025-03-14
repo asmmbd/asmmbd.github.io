@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ছাত্রদের রেজাল্ট ম্যানেজমেন্ট</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <link href="https://fonts.maateen.me/noto-serif-bengali/font.css" rel="stylesheet">
+  
+  <style>
+    * {
+      font-family: 'Noto Serif Bengali', serif;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+  <div class="p-6">
+    <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">ছাত্রদের রেজাল্ট ম্যানেজমেন্ট</h1>
+    
+    <div x-data="app()" class="space-y-6">
+      <!-- Class and Exam Selection -->
+      <div class="flex items-center justify-center space-x-4 bg-white p-4 rounded-lg shadow-md">
+        <label class="text-gray-700 font-medium text-lg">শ্রেণি নির্বাচন করুন:</label>
+        <select x-model="selectedClass" @change="loadStudents(); loadResults()" class="border rounded-lg p-2 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="শিশু">শিশু</option>
+          <option value="প্রথম">প্রথম</option>
+          <option value="দ্বিতীয়">দ্বিতীয়</option>
+          <option value="তৃতীয়">তৃতীয়</option>
+          <option value="চতুর্থ">চতুর্থ</option>
+          <option value="পঞ্চম">পঞ্চম</option>
+          <option value="ষষ্ঠ">ষষ্ঠ</option>
+          <option value="সপ্তম">সপ্তম</option>
+          <option value="অষ্টম">অষ্টম</option>
+          <option value="নবম">নবম</option>
+          <option value="দশম">দশম</option>
+        </select>
+        <label class="text-gray-700 font-medium text-lg">পরীক্ষা নির্বাচন করুন:</label>
+        <select x-model="selectedExam" @change="loadResults()" class="border rounded-lg p-2 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="প্রথম সাময়িক পরীক্ষা ২০২৪">প্রথম সাময়িক পরীক্ষা ২০২৪</option>
+          <option value="বার্ষিক পরীক্ষা ২০২৪">বার্ষিক পরীক্ষা ২০২৪</option>
+        </select>
+        <button @click="generateReport()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+          রিপোর্ট তৈরি করুন
+        </button>
+      </div>
+      
+      <!-- Results Table -->
+      <div class="relative bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+        <table class="w-full text-center">
+          <thead>
+            <tr class="bg-indigo-600 text-white">
+              <th scope="col" class="p-3 border-b">ক্রমিক</th>
+              <th scope="col" class="p-3 border-b w-60">নাম</th>
+              <th scope="col" class="p-3 border-b">স্টুডেন্ট আইডি</th>
+              <template x-for="subject in classSubjects[selectedClass]" :key="subject.name">
+                <th scope="col" class="p-3 border-b" x-text="subject.name">
+                </th>
+                
+              </template>
+              <th scope="col" class="p-3 border-b">মোট নম্বর</th>
+              <th scope="col" class="p-3 border-b">গড়</th>
+              <th scope="col" class="p-3 border-b">স্ট্যাটাস</th>
+              <th scope="col" class="p-3 border-b">পজিশন</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(student, index) in sortedResults" :key="student.studentId">
+              <tr class="hover:bg-gray-100">
+                <td class="p-3 border-b text-center" x-text="index + 1"></td>
+                <td class="p-3 border-b" x-text="student.name"></td>
+                <td class="p-3 border-b text-center" x-text="student.studentId"></td>
+                <template x-for="(result, subjIndex) in student.results" :key="result.name">
+                  <td class="p-3 border-b">
+                    <div class="flex items-center gap-2">
+                      <input type="number" x-model.number="student.results[subjIndex].test" @change="updateStudent(student)" class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" min="0" max="20">
+                      <input type="number" x-model.number="student.results[subjIndex].mark" @change="updateStudent(student)" class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" min="0" max="80">
+                    </div>
+                  </td>
+                </template>
+                <td class="p-3 border-b text-center" x-text="calculateTotal(student.results)"></td>
+                <td class="p-3 border-b text-center" x-text="calculateAverage(student.results)"></td>
+                <td class="p-3 border-b text-center" x-text="calculateStatus(calculateAverage(student.results))"></td>
+                <td class="p-3 border-b text-center" x-text="calculatePosition(student)"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Report Modal -->
+      <div x-show="showReport" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <div id="reportContent">
+            <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">মাদ্রাসার নাম: আল-মদিনা মাদ্রাসা</h2>
+            <h3 class="text-2xl font-semibold text-center mb-2 text-gray-700" x-text="selectedExam"></h3>
+            <h4 class="text-xl font-medium text-center mb-6 text-gray-600" x-text="`শ্রেণি: ${selectedClass}`"></h4>
+            <template x-for="student in sortedResults" :key="student.studentId">
+              <div class="mb-6 border p-4 rounded-lg">
+                <div class="w-full grid grid-cols-3">
+                  <p><strong>নাম:</strong> <span x-text="student.name"></span></p>
+                  <p><strong>পিতার নাম:</strong> <span x-text="student.faName"></span></p>
+                  <p><strong>মাতার নাম:</strong> <span x-text="student.maName"></span></p>
+                  <p><strong>শ্রেণি:</strong> <span x-text="student.class"></span></p>
+                  <p><strong>গ্রুপ:</strong> <span x-text="student.group"></span></p>
+                  <p><strong>স্টুডেন্ট আইডি:</strong> <span x-text="student.studentId"></span></p>
+                  <p><strong>মোট নম্বর:</strong> <span x-text="calculateTotal(student.results)"></span></p>
+                  <p><strong>গড়:</strong> <span x-text="calculateAverage(student.results)"></span></p>
+                  <p><strong>স্ট্যাটাস:</strong> <span x-text="calculateStatus(calculateAverage(student.results))"></span></p>
+                </div>
+                <table class="w-full border-collapse mt-4">
+                  <thead>
+                    <tr class="bg-indigo-600 text-white">
+                      <th class="p-3 border">বিষয়</th>
+                      <th class="p-3 border">ক্লাস টেস্ট</th>
+                      <th class="p-3 border">পরীক্ষার মার্ক</th>
+                      <th class="p-3 border">মোট</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="result in student.results" :key="result.name">
+                      <tr class="border-b">
+                        <td class="p-3" x-text="result.name"></td>
+                        <td class="p-3 text-center" x-text="result.test"></td>
+                        <td class="p-3 text-center" x-text="result.mark"></td>
+                        <td class="p-3 text-center" x-text="result.total"></td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+                <p class="mt-2"><strong>মন্তব্য:</strong> <span x-text="student.comment || 'সুন্দর ফলাফলের জন্য অভিনন্দন। আগামীতে আরো ভালো ফলাফলের জন্য দোয়া ও প্রত্যাশা করছি।'"></span></p>
+              </div>
+            </template>
+          </div>
+          <div class="mt-6 flex justify-end space-x-2">
+            <button @click="printReport()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+              প্রিন্ট করুন
+            </button>
+            <button @click="showReport = false" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+              বন্ধ করুন
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function app() {
+      return {
+        selectedClass: 'পঞ্চম',
+        selectedExam: 'প্রথম সাময়িক পরীক্ষা ২০২৪',
+        showReport: false,
+        students: [
+          // শিশু শ্রেণী
+          { studentId: '20240001', name: 'সুমাইয়া আক্তার আসমা', faName: 'মোহাঃ আনোয়ার হোসেন', maName: 'নূরজাহান আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240002', name: 'আব্দুল্লাহ আল মামুন', faName: 'মোহাঃ আলী', maName: 'ফাতেমা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240003', name: 'রহিম উদ্দিন', faName: 'আব্দুল করিম', maName: 'রহিমা খাতুন', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240004', name: 'ফাতেমা বেগম', faName: 'মোহাঃ হোসেন', maName: 'জাহানারা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240005', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240006', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240007', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240008', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240009', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240010', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240011', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240012', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          
+          // প্রথম শ্রেণী
+          { studentId: '20240013', name: 'আসমা আক্তার', faName: 'মোহাঃ রহিম', maName: 'রেহানা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240014', name: 'মোহাম্মদ রফিক', faName: 'মোহাঃ করিম', maName: 'ফাতেমা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240015', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240016', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240017', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240018', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240019', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240020', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240021', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240022', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240023', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240024', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          
+          // দ্বিতীয় শ্রেণী
+          { studentId: '20240025', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240026', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240027', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240028', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240029', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240030', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240031', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240032', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240033', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240034', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240035', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240036', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          
+          // তৃতীয় শ্রেণী
+          { studentId: '20240037', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240038', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240039', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240040', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240041', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240042', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240043', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240044', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240045', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240046', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240047', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240048', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          
+          // চতুর্থ শ্রেণী
+          { studentId: '20240049', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240050', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240051', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240052', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240053', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240054', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240055', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240056', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240057', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240058', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240059', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240060', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          // পঞ্চম শ্রেণী
+          { studentId: '20240061', name: 'সুমাইয়া আক্তার আসমা', faName: 'মোহাঃ আনোয়ার হোসেন', maName: 'নূরজাহান আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240062', name: 'আব্দুল্লাহ আল মামুন', faName: 'মোহাঃ আলী', maName: 'ফাতেমা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240063', name: 'রহিম উদ্দিন', faName: 'আব্দুল করিম', maName: 'রহিমা খাতুন', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240064', name: 'ফাতেমা বেগম', faName: 'মোহাঃ হোসেন', maName: 'জাহানারা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240065', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240066', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240067', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240068', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240069', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240070', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240071', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240072', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          
+          // ষষ্ঠ শ্রেণী
+          { studentId: '20240073', name: 'আসমা আক্তার', faName: 'মোহাঃ রহিম', maName: 'রেহানা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240074', name: 'মোহাম্মদ রফিক', faName: 'মোহাঃ করিম', maName: 'ফাতেমা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240075', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240076', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240077', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240078', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240079', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240080', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240081', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বে���ম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240082', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240083', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240084', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          
+          // সপ্তম শ্রেণী
+          { studentId: '20240085', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240086', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240087', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240088', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240089', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240090', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240091', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240092', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240093', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240094', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240095', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240096', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          
+          // অষ্টম শ্রেণী
+          { studentId: '20240097', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240098', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240099', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240100', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240101', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240102', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240103', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240104', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240105', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240106', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240107', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240108', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          
+          // নবম শ্রেণী
+          { studentId: '20240109', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240110', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240111', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240112', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240113', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240114', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240115', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240116', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240117', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240118', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240119', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240120', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          
+          // দশম শ্রেণী
+          { studentId: '20240121', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240122', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240123', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240124', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240125', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240126', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240127', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240128', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240129', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240130', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240131', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240132', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' }
+        ],
+        classSubjects: {
+          'শিশু': [
+            { name: 'বাংলা' },
+            { name: 'ইংরেজি' },
+            { name: 'গণিত' },
+            { name: 'চিত্রাঙ্কন' },
+            { name: 'সাধারণ জ্ঞান' }
+          ],
+          'প্রথম': [
+            { name: 'বাংলা' },
+            { name: 'ইংরেজি' },
+            { name: 'গণিত' },
+            { name: 'প্রাথমিক বিজ্ঞান' },
+            { name: 'চিত্রাঙ্কন' },
+            { name: 'সাধারণ জ্ঞান' }
+          ],
+          'দ্বিতীয়': [
+            { name: 'বাংলা' },
+            { name: 'ইংরেজি' },
+            { name: 'গণিত' },
+            { name: 'প্রাথমিক বিজ্ঞান' },
+            { name: 'চিত্রাঙ্কন' },
+            { name: 'সাধারণ জ্ঞান' }
+          ],
+          'তৃতীয়': [
+            { name: 'বাংলা' },
+            { name: 'ইংরেজি' },
+            { name: 'গণিত' },
+            { name: 'প্রাথমিক বিজ্ঞান' },
+            { name: 'সামাজিক বিজ্ঞান' },
+            { name: 'চিত্রাঙ্কন' },
+            { name: 'সাধারণ জ্ঞান' }
+          ],
+          'চতুর্থ': [
+            { name: 'বাংলা' },
+            { name: 'ইংরেজি' },
+            { name: 'গণিত' },
+            { name: 'প্রাথমিক বিজ্ঞান' },
+            { name: 'সামাজিক বিজ্ঞান' },
+            { name: 'চিত্রাঙ্কন' },
+            { name: 'সাধারণ জ্ঞান' }
+          ],
+          'পঞ্চম': [
+            { name: 'বাংলা ও ব্যাকরণ' },
+            { name: 'কুরআন ও তাজবীদ' },
+            { name: 'ইংরেজি ১ম ও ইংরেজি ২য়' },
+            { name: 'ইতিহাস ও ভূগোল' },
+            { name: 'তালিমুল ইসলাম ও ইসলামী তাহজিব' },
+            { name: 'গণিত' },
+            { name: 'এসো আরবি শিখি' },
+            { name: 'আমলী' }
+          ],
+          'ষষ্ঠ': [
+            { name: 'বাংলা ও ব্যাকরণ' },
+            { name: 'কুরআন ও তাজবীদ' },
+            { name: 'ইংরেজি ১ম ও ইংরেজি ২য়' },
+            { name: 'ইতিহাস ও ভূগোল' },
+            { name: 'তাফসির ও হাদিস' },
+            { name: 'গণিত' },
+            { name: 'আরবি সাহিত্য' }
+          ],
+          'সপ্তম': [
+            { name: 'বাংলা ও ব্যাকরণ' },
+            { name: 'কুরআন ও তাজবীদ' },
+            { name: 'ইংরেজি ১ম ও ইংরেজি ২য়' },
+            { name: 'ইতিহাস ও ভূগোল' },
+            { name: 'তাফসির ও হাদিস' },
+            { name: 'গণিত' },
+            { name: 'আরবি সাহিত্য' },
+            { name: 'বিজ্ঞান' }
+          ],
+          'অষ্টম': [
+            { name: 'বাংলা ও ব্যাকরণ' },
+            { name: 'কুরআন ও তাজবীদ' },
+            { name: 'ইংরেজি ১ম ও ইংরেজি ২য়' },
+            { name: 'ইতিহাস ও ভূগোল' },
+            { name: 'তাফসির ও হাদিস' },
+            { name: 'গণিত' },
+            { name: 'আরবি সাহিত্য' },
+            { name: 'বিজ্ঞান' }
+          ],
+          'নবম': [
+            { name: 'বাংলা ও ব্যাকরণ' },
+            { name: 'কুরআন ও তাজবীদ' },
+            { name: 'ইংরেজি ১ম ও ইংরেজি ২য়' },
+            { name: 'ইতিহাস ও ভূগোল' },
+            { name: 'তাফসির ও হাদিস' },
+            { name: 'গণিত' },
+            { name: 'আরবি সাহিত্য' },
+            { name: 'বিজ্ঞান' },
+            { name: 'পদার্থবিজ্ঞান' },
+            { name: 'রসায়ন' },
+            { name: 'জীববিজ্ঞান' }
+          ],
+          'দশম': [
+            { name: 'বাংলা ও ব্যাকরণ' },
+            { name: 'কুরআন ও তাজবীদ' },
+            { name: 'ইংরেজি ১ম ও ইংরেজি ২য়' },
+            { name: 'ইতিহাস ও ভূগোল' },
+            { name: 'তাফসির ও হাদিস' },
+            { name: 'গণিত' },
+            { name: 'আরবি সাহিত্য' },
+            { name: 'বিজ্ঞান' },
+            { name: 'পদার্থবিজ্ঞান' },
+            { name: 'রসায়ন' },
+            { name: 'জীববিজ্ঞান' }
+          ]
+        },
+        results: [],
+        resultRecords: {},
+        
+        // Initialize: Load saved results from localStorage
+        init() {
+          console.log('Initializing app...');
+          const savedRecords = localStorage.getItem('resultRecords');
+          if (savedRecords) {
+            this.resultRecords = JSON.parse(savedRecords);
+            console.log('Loaded from localStorage:', this.resultRecords);
+          }
+          this.loadStudents();
+          this.loadResults();
+          console.log('Initial results:', this.results);
+        },
+        
+        // Load students for the selected class
+        loadStudents() {
+          this.results = this.students
+            .filter(student => student.class === this.selectedClass)
+            .map(student => ({
+              examName: this.selectedExam,
+              name: student.name,
+              faName: student.faName,
+              maName: student.maName,
+              class: student.class,
+              group: student.group,
+              studentId: student.studentId,
+              results: this.classSubjects[this.selectedClass].map(subject => ({
+                name: subject.name,
+                test: 0, // Class Test (max 20)
+                mark: 0, // Exam Mark (max 80)
+                total: 0
+              })),
+              total: 0,
+              avg: 0,
+              status: '',
+              comment: 'সুন্দর ফলাফলের জন্য অভিনন্দন। আগামীতে আরো ভালো ফলাফলের জন্য দোয়া ও প্রত্যাশা করছি।'
+            }));
+          console.log('Loaded students:', this.results);
+        },
+        
+        // Load results for the selected exam and class
+        loadResults() {
+          const examKey = `${this.selectedExam}_${this.selectedClass}`;
+          const savedResults = this.resultRecords[examKey] || [];
+          this.results = this.results.map(student => {
+            const saved = savedResults.find(r => r.studentId === student.studentId);
+            if (saved) {
+              const updatedResults = this.classSubjects[this.selectedClass].map((subject, index) => {
+                const savedResult = saved.results.find(r => r.name === subject.name) || { test: 0, mark: 0, total: 0 };
+                return {
+                  name: subject.name,
+                  test: savedResult.test,
+                  mark: savedResult.mark,
+                  total: savedResult.test + savedResult.mark
+                };
+              });
+              return {
+                ...student,
+                results: updatedResults,
+                total: this.calculateTotal(updatedResults),
+                avg: this.calculateAverage(updatedResults),
+                status: this.calculateStatus(this.calculateAverage(updatedResults)),
+                comment: saved.comment
+              };
+            }
+            return student;
+          });
+          console.log('Loaded results:', this.results);
+        },
+        
+        // Update student data and save
+        updateStudent(student) {
+          student.results = student.results.map(result => ({
+            ...result,
+            total: (result.test || 0) + (result.mark || 0)
+          }));
+          student.total = this.calculateTotal(student.results);
+          student.avg = this.calculateAverage(student.results);
+          student.status = this.calculateStatus(student.avg);
+          this.saveResults();
+          console.log('Updated student:', student);
+        },
+        
+        // Save results to localStorage
+        saveResults() {
+          const examKey = `${this.selectedExam}_${this.selectedClass}`;
+          this.resultRecords[examKey] = this.results;
+          localStorage.setItem('resultRecords', JSON.stringify(this.resultRecords));
+          console.log('Saved to localStorage:', this.resultRecords);
+        },
+        
+        // Sorted results by total marks for position
+        get sortedResults() {
+          return this.results.slice().sort((a, b) => this.calculateTotal(b.results) - this.calculateTotal(a.results));
+        },
+        
+        // Calculate total marks
+        calculateTotal(results) {
+          return results.reduce((sum, result) => sum + result.total, 0);
+        },
+        
+        // Calculate average
+        calculateAverage(results) {
+          const total = this.calculateTotal(results);
+          return Math.round(total / results.length);
+        },
+        
+        // Calculate status based on average
+        calculateStatus(avg) {
+          if (avg >= 90) return 'মুমতায';
+          if (avg >= 80) return 'জায়্যিদ জিদ্দান';
+          if (avg >= 70) return 'জায়্যিদ';
+          if (avg >= 60) return 'মাকবুল';
+          return 'রাসিব';
+        },
+        
+        // Calculate position based on total marks
+        calculatePosition(student) {
+          const sorted = this.sortedResults;
+          return sorted.findIndex(s => s.studentId === student.studentId) + 1;
+        },
+        
+        // Generate report
+        generateReport() {
+          if (this.results.length === 0) {
+            alert('কোনো ছাত্রের তথ্য নেই। দয়া করে প্রথমে রেজাল্ট এন্ট্রি করুন।');
+            return;
+          }
+          this.showReport = true;
+        },
+        
+        // Print report
+        printReport() {
+          const printContent = document.getElementById('reportContent').innerHTML;
+          const originalContent = document.body.innerHTML;
+          document.body.innerHTML = printContent;
+          window.print();
+          document.body.innerHTML = originalContent;
+          window.location.reload();
+        }
+      };
+    }
+  </script>
+</body>
+
+</html>
