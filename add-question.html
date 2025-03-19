@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাদ্রাসা প্রশ্ন তৈরি সিস্টেম</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.maateen.me/noto-serif-bengali/font.css" rel="stylesheet">
+  <style>
+    
+    body {
+      font-family: 'Noto Serif Bengali', serif;
+    }
+    
+    .arabic {
+      font-family: 'Arial', sans-serif;
+      direction: rtl;
+      text-align: right;
+    }
+    
+    @media print {
+      .no-print {
+        display: none;
+      }
+    }
+    
+    .modal {
+      transition: opacity 0.3s ease;
+    }
+    
+    .toast {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 p-6">
+  <div x-data="questionGenerator()" x-init="loadQuestionsFromStorage(); updateSubjects()">
+    <!-- ট্যাব নেভিগেশন -->
+    <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-lg">
+      <div class="flex border-b">
+        <button @click="currentTab = 'generate'" :class="{'bg-blue-600 text-white': currentTab === 'generate', 'bg-gray-200': currentTab !== 'generate'}" class="flex-1 p-4 text-center font-semibold">প্রশ্নপত্র তৈরি</button>
+        <button @click="currentTab = 'manage'" :class="{'bg-blue-600 text-white': currentTab === 'manage', 'bg-gray-200': currentTab !== 'manage'}" class="flex-1 p-4 text-center font-semibold">প্রশ্ন ব্যবস্থাপনা</button>
+      </div>
+      
+      <!-- প্রশ্নপত্র তৈরি ট্যাব -->
+      <div x-show="currentTab === 'generate'" class="p-6">
+        <h1 class="text-2xl font-bold text-center mb-6 no-print">প্রশ্নপত্র তৈরি করুন</h1>
+        
+        <!-- ফর্ম -->
+        <div class="mb-6 no-print">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">শ্রেণি</label>
+              <select @change="updateSubjects" x-model="form.class" class="mt-1 block w-full p-2 border rounded-md">
+                <option value="শিশু">শিশু</option>
+                <option value="ক্লাস ১">ক্লাস ১</option>
+                <option value="ক্লাস ৫">ক্লাস ৫</option>
+                <option value="ক্লাস ১০">ক্লাস ১০</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">বিষয়</label>
+              <select @change="updateQuestionTypes" x-model="form.subject" class="mt-1 block w-full p-2 border rounded-md">
+                <template x-for="subject in availableSubjects" :key="subject">
+                  <option :value="subject" x-text="subject"></option>
+                </template>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">প্রশ্নের ধরন</label>
+              <select x-model="form.questionType" class="mt-1 block w-full p-2 border rounded-md">
+                <template x-for="type in availableQuestionTypes" :key="type">
+                  <option :value="type" x-text="type"></option>
+                </template>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">কঠিনতা</label>
+              <select x-model="form.difficulty" class="mt-1 block w-full p-2 border rounded-md">
+                <option value="সহজ">সহজ</option>
+                <option value="মাঝারি">মাঝারি</option>
+                <option value="কঠিন">কঠিন</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">প্রশ্নের সংখ্যা</label>
+              <input type="number" x-model="form.questionCount" class="mt-1 block w-full p-2 border rounded-md" min="1" max="10">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">পূর্ণমান</label>
+              <input type="number" x-model="form.totalMarks" class="mt-1 block w-full p-2 border rounded-md" min="10" max="100">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">সময় (ঘণ্টা)</label>
+              <input type="number" x-model="form.time" class="mt-1 block w-full p-2 border rounded-md" min="1" max="3">
+            </div>
+          </div>
+          <button @click="generateQuestionPaper" class="mt-4 w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">প্রশ্নপত্র তৈরি করুন</button>
+        </div>
+        
+        <!-- প্রশ্নপত্র প্রদর্শন -->
+        <div x-show="questionPaper" class="mt-6 p-4 border rounded-md" id="questionPaper">
+          <h2 class="text-xl font-bold text-center">মারকাযু মসজিদ পঞ্চগড়, কলেজ মডেল মসজিদপুর</h2>
+          <h3 class="text-lg font-semibold text-center">নিয়মিত পরীক্ষা - ২০২৪</h3>
+          <p class="text-center">শ্রেণি: <span x-text="form.class"></span></p>
+          <p class="text-center">বিষয়: <span x-text="form.subject"></span></p>
+          <p class="text-center">সময়: <span x-text="form.time"></span> ঘণ্টা</p>
+          <p class="text-center">পূর্ণমান: <span x-text="form.totalMarks"></span></p>
+          <hr class="my-4">
+          <div>
+            <template x-for="(question, index) in questionPaper" :key="index">
+              <div class="mb-4">
+                <!-- প্রধান প্রশ্ন -->
+                <p class="font-semibold">
+                  <span x-text="index + 1"></span>.
+                  <span x-text="question.mainQuestion" :class="{'arabic': question.isArabic}"></span>
+                  (<span x-text="question.marks"></span>)
+                </p>
+                <!-- সাব-প্রশ্ন (ক, খ, গ, ঘ) -->
+                <template x-if="question.subQuestions && question.subQuestions.length">
+                  <div class="ml-6 mt-2">
+                    <template x-for="(subQuestion, subIndex) in question.subQuestions" :key="subIndex">
+                      <p>
+                        <span x-text="String.fromCharCode(2437 + subIndex)"></span>.
+                        <span x-text="subQuestion" :class="{'arabic': question.isArabic}"></span>
+                      </p>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </div>
+          <button @click="printQuestionPaper" class="mt-4 w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700 no-print">প্রশ্নপত্র প্রিন্ট করুন</button>
+        </div>
+      </div>
+      
+      <!-- প্রশ্ন ব্যবস্থাপনা ট্যাব -->
+      <div x-show="currentTab === 'manage'" class="p-6">
+        <h1 class="text-2xl font-bold text-center mb-6">প্রশ্ন ব্যবস্থাপনা</h1>
+        <button @click="openAddQuestionModal" class="mb-4 bg-green-600 text-white p-2 rounded-md hover:bg-green-700">নতুন প্রশ্ন যোগ করুন</button>
+        
+        <!-- প্রশ্নের তালিকা -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border">
+            <thead>
+              <tr>
+                <th class="p-2 border">শ্রেণি</th>
+                <th class="p-2 border">বিষয়</th>
+                <th class="p-2 border">প্রশ্নের ধরন</th>
+                <th class="p-2 border">কঠিনতা</th>
+                <th class="p-2 border">প্রধান প্রশ্ন</th>
+                <th class="p-2 border">ক্রিয়া</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="(question, index) in questions" :key="index">
+                <tr>
+                  <td class="p-2 border" x-text="question.class"></td>
+                  <td class="p-2 border" x-text="question.subject"></td>
+                  <td class="p-2 border" x-text="question.type"></td>
+                  <td class="p-2 border" x-text="question.difficulty"></td>
+                  <td class="p-2 border" x-text="question.mainQuestion"></td>
+                  <td class="p-2 border">
+                    <button @click="openEditQuestionModal(index)" class="text-blue-600 hover:underline">এডিট</button>
+                    <button @click="deleteQuestion(index)" class="text-red-600 hover:underline ml-2">ডিলিট</button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- প্রশ্ন যোগ/এডিট করার মডাল -->
+    <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center modal" @click.self="showModal = false">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 class="text-xl font-bold mb-4" x-text="editMode ? 'প্রশ্ন এডিট করুন' : 'নতুন প্রশ্ন যোগ করুন'"></h2>
+        <div class="grid grid-cols-1 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">শ্রেণি</label>
+            <select x-model="newQuestion.class" class="mt-1 block w-full p-2 border rounded-md">
+              <option value="শিশু">শিশু</option>
+              <option value="ক্লাস ১">ক্লাস ১</option>
+              <option value="ক্লাস ৫">ক্লাস ৫</option>
+              <option value="ক্লাস ১০">ক্লাস ১০</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">বিষয়</label>
+            <select x-model="newQuestion.subject" class="mt-1 block w-full p-2 border rounded-md">
+              <option value="কুরআন">কুরআন</option>
+              <option value="আরবি ভাষা">আরবি ভাষা</option>
+              <option value="আরবি সাহিত্য">আরবি সাহিত্য</option>
+              <option value="গণিত">গণিত</option>
+              <option value="হাদিস">হাদিস</option>
+              <option value="ফিকহ">ফিকহ</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">প্রশ্নের ধরন</label>
+            <select x-model="newQuestion.type" class="mt-1 block w-full p-2 border rounded-md">
+              <option value="তিলাওয়াত">তিলাওয়াত</option>
+              <option value="হিফয">হিফয</option>
+              <option value="অনুবাদ">অনুবাদ</option>
+              <option value="বাক্য রচনা">বাক্য রচনা</option>
+              <option value="ব্যাকরণ">ব্যাকরণ</option>
+              <option value="গাণিতিক সমস্যা">গাণিতিক সমস্যা</option>
+              <option value="MCQ">MCQ</option>
+              <option value="ব্যাখ্যা">ব্যাখ্যা</option>
+              <option value="প্রশ্নোত্তর">প্রশ্নোত্তর</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">কঠিনতা</label>
+            <select x-model="newQuestion.difficulty" class="mt-1 block w-full p-2 border rounded-md">
+              <option value="সহজ">সহজ</option>
+              <option value="মাঝারি">মাঝারি</option>
+              <option value="কঠিন">কঠিন</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">প্রধান প্রশ্ন</label>
+            <input type="text" x-model="newQuestion.mainQuestion" class="mt-1 block w-full p-2 border rounded-md" placeholder="প্রধান প্রশ্ন লিখুন">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">আরবি প্রশ্ন কিনা?</label>
+            <input type="checkbox" x-model="newQuestion.isArabic" class="mt-1">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">সাব-প্রশ্ন (একটি করে লিখুন, এন্টার চাপুন)</label>
+            <div class="flex gap-2">
+              <input type="text" x-model="subQuestionInput" @keyup.enter="addSubQuestion" class="mt-1 block w-full p-2 border rounded-md" placeholder="সাব-প্রশ্ন লিখুন">
+              <button @click="addSubQuestion" class="mt-1 bg-blue-600 text-white p-2 rounded-md">যোগ</button>
+            </div>
+            <ul class="mt-2">
+              <template x-for="(subQuestion, index) in newQuestion.subQuestions" :key="index">
+                <li class="flex justify-between items-center p-1">
+                  <span x-text="subQuestion"></span>
+                  <button @click="newQuestion.subQuestions.splice(index, 1)" class="text-red-600 hover:underline">মুছুন</button>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4 flex gap-2">
+          <button @click="editMode ? updateQuestion() : addQuestion()" class="flex-1 bg-green-600 text-white p-2 rounded-md hover:bg-green-700" x-text="editMode ? 'আপডেট করুন' : 'যোগ করুন'"></button>
+          <button @click="showModal = false" class="flex-1 bg-red-600 text-white p-2 rounded-md hover:bg-red-700">বন্ধ করুন</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- টোস্ট নোটিফিকেশন -->
+    <div x-show="showToast" class="fixed top-4 right-4 bg-green-600 text-white p-4 rounded-md shadow-lg toast" x-text="toastMessage" @click="showToast = false"></div>
+  </div>
+  
+  <script>
+    function questionGenerator() {
+      return {
+        currentTab: 'generate',
+        form: {
+          class: 'শিশু',
+          subject: '',
+          questionType: '',
+          difficulty: 'সহজ',
+          questionCount: 5,
+          totalMarks: 100,
+          time: 2
+        },
+        questionPaper: null,
+        availableSubjects: [],
+        availableQuestionTypes: [],
+        questions: [],
+        showModal: false,
+        editMode: false,
+        editIndex: null,
+        newQuestion: {
+          class: 'শিশু',
+          subject: 'কুরআন',
+          type: 'তিলাওয়াত',
+          difficulty: 'সহজ',
+          mainQuestion: '',
+          isArabic: false,
+          subQuestions: []
+        },
+        subQuestionInput: '',
+        showToast: false,
+        toastMessage: '',
+        // শ্রেণি এবং বিষয়ের ম্যাপিং
+        classSubjectMap: {
+          'শিশু': ['কুরআন', 'আরবি ভাষা'],
+          'ক্লাস ১': ['কুরআন', 'আরবি ভাষা', 'গণিত'],
+          'ক্লাস ৫': ['কুরআন', 'আরবি সাহিত্য', 'গণিত', 'হাদিস'],
+          'ক্লাস ১০': ['কুরআন', 'আরবি সাহিত্য', 'হাদিস', 'ফিকহ', 'গণিত']
+        },
+        // বিষয় এবং প্রশ্নের ধরনের ম্যাপিং
+        subjectQuestionTypeMap: {
+          'কুরআন': ['তিলাওয়াত', 'হিফয'],
+          'আরবি ভাষা': ['অনুবাদ', 'বাক্য রচনা'],
+          'আরবি সাহিত্য': ['অনুবাদ', 'বাক্য রচনা', 'ব্যাকরণ'],
+          'গণিত': ['গাণিতিক সমস্যা', 'MCQ'],
+          'হাদিস': ['ব্যাখ্যা', 'হিফয'],
+          'ফিকহ': ['ব্যাখ্যা', 'প্রশ্নোত্তর']
+        },
+        // localStorage থেকে প্রশ্ন লোড করা
+        loadQuestionsFromStorage() {
+          const storedQuestions = localStorage.getItem('questions');
+          if (storedQuestions) {
+            this.questions = JSON.parse(storedQuestions);
+          } else {
+            // ডিফল্ট প্রশ্ন
+            this.questions = [
+            {
+              class: 'শিশু',
+              subject: 'কুরআন',
+              type: 'তিলাওয়াত',
+              difficulty: 'সহজ',
+              mainQuestion: 'নিচের আয়াতগুলো সঠিকভাবে তিলাওয়াত কর।',
+              subQuestions: [
+                'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+                'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ'
+              ],
+              isArabic: true
+            },
+            {
+              class: 'ক্লাস ৫',
+              subject: 'আরবি সাহিত্য',
+              type: 'অনুবাদ',
+              difficulty: 'মাঝারি',
+              mainQuestion: 'নিচের বাক্যগুলো বাংলায় অনুবাদ কর।',
+              subQuestions: [
+                'يَذْهَبُ الطَّالِبُ إِلَى الْمَدْرَسَةِ كُلَّ يَوْمٍ.',
+                'كَتَبَ الْوَلَدُ الدَّرْسَ.'
+              ],
+              isArabic: true
+            },
+            {
+              class: 'ক্লাস ১০',
+              subject: 'গণিত',
+              type: 'MCQ',
+              difficulty: 'কঠিন',
+              mainQuestion: 'নিচের প্রশ্নগুলোর সঠিক উত্তর নির্বাচন কর।',
+              subQuestions: [
+                '২x + ৩ = ৭ হলে x = ? (ক) ২ (খ) ৩ (গ) ৪ (ঘ) ৫',
+                '১০০ এর ২০% কত? (ক) ১০ (খ) ২০ (গ) ৩০ (ঘ) ৪০'
+              ],
+              isArabic: false
+            }];
+            localStorage.setItem('questions', JSON.stringify(this.questions));
+          }
+        },
+        updateSubjects() {
+          this.availableSubjects = this.classSubjectMap[this.form.class] || [];
+          this.form.subject = this.availableSubjects[0] || '';
+          this.updateQuestionTypes();
+        },
+        updateQuestionTypes() {
+          this.availableQuestionTypes = this.subjectQuestionTypeMap[this.form.subject] || [];
+          this.form.questionType = this.availableQuestionTypes[0] || '';
+        },
+        generateQuestionPaper() {
+          // প্রশ্ন ফিল্টার করা (শ্রেণি, বিষয়, প্রশ্নের ধরন এবং কঠিনতার ভিত্তিতে)
+          const filteredQuestions = this.questions.filter(q =>
+            q.class === this.form.class &&
+            q.subject === this.form.subject &&
+            q.type === this.form.questionType &&
+            q.difficulty === this.form.difficulty
+          );
+          if (filteredQuestions.length === 0) {
+            this.showToastMessage('কোনো প্রশ্ন পাওয়া যায়নি! দয়া করে প্রশ্ন যোগ করুন।');
+            return;
+          }
+          // এলোমেলোভাবে প্রশ্ন সিলেক্ট করা
+          const shuffled = filteredQuestions.sort(() => 0.5 - Math.random());
+          const selectedQuestions = shuffled.slice(0, this.form.questionCount);
+          // প্রতিটি প্রশ্নের জন্য নম্বর বরাদ্দ
+          const marksPerQuestion = Math.floor(this.form.totalMarks / this.form.questionCount);
+          this.questionPaper = selectedQuestions.map(q => ({
+            ...q,
+            marks: marksPerQuestion
+          }));
+          this.showToastMessage('প্রশ্নপত্র তৈরি হয়েছে!');
+        },
+        printQuestionPaper() {
+          window.print();
+        },
+        openAddQuestionModal() {
+          this.editMode = false;
+          this.newQuestion = {
+            class: 'শিশু',
+            subject: 'কুরআন',
+            type: 'তিলাওয়াত',
+            difficulty: 'সহজ',
+            mainQuestion: '',
+            isArabic: false,
+            subQuestions: []
+          };
+          this.subQuestionInput = '';
+          this.showModal = true;
+        },
+        openEditQuestionModal(index) {
+          this.editMode = true;
+          this.editIndex = index;
+          this.newQuestion = { ...this.questions[index] };
+          this.subQuestionInput = '';
+          this.showModal = true;
+        },
+        addSubQuestion() {
+          if (this.subQuestionInput.trim()) {
+            this.newQuestion.subQuestions.push(this.subQuestionInput.trim());
+            this.subQuestionInput = '';
+          }
+        },
+        addQuestion() {
+          this.questions.push({ ...this.newQuestion });
+          localStorage.setItem('questions', JSON.stringify(this.questions));
+          this.showModal = false;
+          this.showToastMessage('প্রশ্ন সফলভাবে যোগ করা হয়েছে!');
+        },
+        updateQuestion() {
+          this.questions[this.editIndex] = { ...this.newQuestion };
+          localStorage.setItem('questions', JSON.stringify(this.questions));
+          this.showModal = false;
+          this.showToastMessage('প্রশ্ন সফলভাবে আপডেট করা হয়েছে!');
+        },
+        deleteQuestion(index) {
+          if (confirm('আপনি কি এই প্রশ্নটি মুছতে চান?')) {
+            this.questions.splice(index, 1);
+            localStorage.setItem('questions', JSON.stringify(this.questions));
+            this.showToastMessage('প্রশ্ন সফলভাবে মুছে ফেলা হয়েছে!');
+          }
+        },
+        showToastMessage(message) {
+          this.toastMessage = message;
+          this.showToast = true;
+          setTimeout(() => {
+            this.showToast = false;
+          }, 3000);
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
