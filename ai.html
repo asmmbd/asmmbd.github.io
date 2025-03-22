@@ -338,7 +338,7 @@
             
             // Wait for the DOM to update
             await this.$nextTick();
-            
+            this.typeMessage(answer, this.conversationHistory.length);
             this.scrollToBottom();
           } catch (error) {
             this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
@@ -362,8 +362,33 @@
           this.scrollToBottom();
           return data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
         },
-        
-        
+        typeMessage(message, index) {
+          let i = 0;
+          const typingSpeed = 30;
+          const messageElement = this.$refs.chatContainer.children[index].querySelector('.text-gray-800');
+          
+          if (!messageElement) {
+            console.error("Message element not found!");
+            return;
+          }
+          
+          // Clear the existing text before typing
+          messageElement.innerHTML = '';
+          
+          const type = () => {
+            if (i < message.length) {
+              messageElement.innerHTML += message.charAt(i);
+              i++;
+              setTimeout(type, typingSpeed);
+              this.scrollToBottom();
+            }else {
+               messageElement.innerHTML = marked.parse(message);
+            }
+          };
+          
+          type();
+          
+        },
         saveConversation() {
           localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
         },
