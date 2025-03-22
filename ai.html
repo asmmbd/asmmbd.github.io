@@ -108,7 +108,7 @@
           <!-- Predefined Buttons -->
           <div class="mb-4 px-4 sm:px-6 lg:px-8">
             <template x-for="(message, index) in conversationHistory" :key="index">
-              <button x-show="message.role === 'user'" @click="sendMessage(message.parts[0].text)" class="w-full mb-2 px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600">
+              <button x-show="message.role === 'user'" @click="sendMessage(message.parts[0].text)" class="w-full truncate mb-2 px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600">
                 <span x-text="message.parts[0].text"></span>
               </button>
             </template>
