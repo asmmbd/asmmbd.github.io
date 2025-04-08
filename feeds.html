@@ -54,8 +54,8 @@
   
   
   <div class="flex gap-4 mt-2 bg-white rounded-md">
-    <div class="left w-3/4 h-80 hidden md:block"></div>
-    <div class="py-2">
+    <div class="left w-[264px] h-80 hidden md:block"></div>
+    <div class="py-2 flex-1">
       <div class="create-post">
         <div class="bg-white">
           <div x-show="showPostPage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="bg-white shadow-lg border rounded-lg p-4 fixed top-20 left-5 right-5 z-50 flex items-start max-w-2xl mx-auto">
@@ -262,8 +262,8 @@
                 <div class="flex items-center gap-4 my-2.5 px-2">
                   <button class="flex items-center gap-1" @click="toggleLike(post)">
                     <svg :class="isPostLiked(post) ? 'text-red-500 fill-current' : 'text-gray-600'" class="size-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-</svg>
+                      <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
                     <span x-text="formatNumber(post.likes.length)"></span>
                   </button>
                   <button class="flex items-center gap-1">
@@ -333,7 +333,7 @@
       </div>
       
     </div>
-    <div class="left w-3/4 h-80 hidden md:block"></div>
+    <div class="left w-[264px] h-80 hidden md:block"></div>
     
     
     <!-- Bottom Navigation -->
