@@ -16,7 +16,7 @@
 </head>
 
 <body class="bg-gray-200 text-gray-20" x-data="data()">
-
+  
   <header class="z-50 sticky top-0 left-0 w-full h-14 bg-gray-50 text-gray-700 shadow-md rounded-md px-2 flex">
     <div class="w-full h-full flex items-center justify-start gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
@@ -51,32 +51,47 @@
       <img class='w-7 h-7 rounded-full' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
     </div>
   </header>
-
-
+  
+  
   <div class="flex gap-4 mt-2 bg-white rounded-md">
     <div class="left w-3/4 h-80 hidden md:block"></div>
     <div class="py-2">
       <div class="create-post">
         <div class="bg-white">
-          <div x-show="showPostPage" class="bg-white shadow-md border rounded-md p-2 fixed top-20 left-5 right-5 z-50 flex items-start">
-            <img class='w-9 h-9 rounded-full' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
-            <div class='ml-1.5 flex-1'>
-              <h1 class="pl-1 mb-0 text-md font-semibold text-gray-800">Abdullah Al Saif</h1>
-              <textarea x-model="postContent" class="pl-1 text-gray-400 w-full border-0 outline-0" placeholder="what's on your mind?"></textarea>
-              <div :class="postUrl && 'p-2'">
-                <img :src="postUrl" alt="" class="rounded-md">
+          <div x-show="showPostPage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="bg-white shadow-lg border rounded-lg p-4 fixed top-20 left-5 right-5 z-50 flex items-start max-w-2xl mx-auto">
+            
+            <!-- Avatar -->
+            <img class='w-10 h-10 rounded-full ring-2 ring-gray-200' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
+            
+            <div class='ml-2 flex-1'>
+              <!-- Username -->
+              <h1 class="pl-1 mb-1 text-lg font-semibold text-gray-800">Abdullah Al Saif</h1>
+              
+              <!-- Textarea -->
+              <textarea x-model="postContent" class="pl-1 text-gray-600 w-full border-0 outline-0 rounded-md resize-none focus:ring-2 focus:ring-blue-200 transition" placeholder="What's on your mind?" rows="3"></textarea>
+              
+              <!-- Live Preview -->
+              <div class="text-gray-500 mt-2 text-sm leading-relaxed" x-text="postContent || 'Your post preview...'"></div>
+              
+              <!-- Uploaded Image Preview -->
+              <div :class="postUrl && 'p-2 mt-2'" class="transition-all">
+                <img :src="postUrl" alt="Uploaded image" class="rounded-md max-h-64 object-cover w-full">
               </div>
-              <div class='mt-1.5 flex items-center gap-4'>
-                <label for="postImage">
-                  <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 19L7.07189 15.2455C7.69252 14.4869 8.00284 14.1076 8.40938 14.0633C8.47386 14.0563 8.53887 14.0555 8.60349 14.0611C9.01094 14.0961 9.32986 14.4682 9.9677 15.2123C10.6306 15.9857 10.962 16.3723 11.381 16.4005C11.4473 16.4049 11.5139 16.4027 11.5797 16.394C11.996 16.3387 12.3016 15.9312 12.9127 15.1164L14.4826 13.0232C15.182 12.0906 15.5317 11.6243 16.0157 11.6119C16.4996 11.5995 16.8728 12.0473 17.619 12.9428L21 17M21 17V9M21 17C21 19.2091 19.2091 21 17 21H11C7.22876 21 5.34315 21 4.17157 19.8284C3 18.6569 3 16.7712 3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H15" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                    <path d="M12 9C12 10.1046 11.1046 11 10 11C8.89543 11 8 10.1046 8 9C8 7.89543 8.89543 7 10 7C11.1046 7 12 7.89543 12 9Z" stroke="currentColor" stroke-width="null" class="my-path"></path>
-                    <path d="M19 3L19 7" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                    <path d="M21 5H17" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+              
+              <!-- Action Buttons -->
+              <div class='mt-3 flex items-center gap-4 relative'>
+                <label for="postImage" class="cursor-pointer">
+                  <svg class='w-5 h-5 hover:text-blue-500 transition-colors' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19L7.07189 15.2455C7.69252 14.4869 8.00284 14.1076 8.40938 14.0633C8.47386 14.0563 8.53887 14.0555 8.60349 14.0611C9.01094 14.0961 9.32986 14.4682 9.9677 15.2123C10.6306 15.9857 10.962 16.3723 11.381 16.4005C11.4473 16.4049 11.5139 16.4027 11.5797 16.394C11.996 16.3387 12.3016 15.9312 12.9127 15.1164L14.4826 13.0232C15.182 12.0906 15.5317 11.6243 16.0157 11.6119C16.4996 11.5995 16.8728 12.0473 17.619 12.9428L21 17M21 17V9M21 17C21 19.2091 19.2091 21 17 21H11C7.22876 21 5.34315 21 4.17157 19.8284C3 18.6569 3 16.7712 3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    <path d="M12 9C12 10.1046 11.1046 11 10 11C8.89543 11 8 10.1046 8 9C8 7.89543 8.89543 7 10 7C11.1046 7 12 7.89543 12 9Z" stroke="currentColor" stroke-width="1.5"></path>
+                    <path d="M19 3L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    <path d="M21 5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
                   </svg>
-                  <input type="file" id="postImage" hidden @change="(e)=> {postUrl = URL.createObjectURL(e.target.files[0]); postFile = e.target.files[0]}" />
+                  <input type="file" id="postImage" hidden @change="(e) => { postUrl = URL.createObjectURL(e.target.files[0]); postFile = e.target.files[0] }" />
                 </label>
-                <button>
+                
+                <!-- Video Button -->
+                <button class="hover:text-blue-500 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
                     <path d="M17 6C19.3456 6 20.0184 6 20.8263 6.61994C21.0343 6.77954 21.2205 6.96572 21.3801 7.17372C22 7.98164 22 9.15442 22 11.5V16C22 18.8284 22 20.2426 21.1213 21.1213C20.2426 22 18.8284 22 16 22H8C5.17157 22 3.75736 22 2.87868 21.1213C2 20.2426 2 18.8284 2 16V11.5C2 9.15442 2 7.98164 2.61994 7.17372C2.77954 6.96572 2.96572 6.77954 3.17372 6.61994C3.98164 6 4.65442 6 7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                     <path d="M17 7L16.1142 4.78543C15.732 3.82996 15.3994 2.7461 14.4166 2.25955C13.8924 2 13.2616 2 12 2C10.7384 2 10.1076 2 9.58335 2.25955C8.6006 2.7461 8.26801 3.82996 7.88583 4.78543L7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -84,34 +99,52 @@
                     <path d="M11.9998 6H12.0088" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
-                <button>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
-                    <path d="M17 7V11C17 13.7614 14.7614 16 12 16C9.23858 16 7 13.7614 7 11V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7Z" stroke="currentColor" stroke-width="1.5" />
-                    <path d="M17 7H14M17 11H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M20 11C20 15.4183 16.4183 19 12 19M12 19C7.58172 19 4 15.4183 4 11M12 19V22M12 22H15M12 22H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                  </svg>
-                </button>
-                <button>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
-                    <path d="M9.14339 10.691L9.35031 10.4841C11.329 8.50532 14.5372 8.50532 16.5159 10.4841C18.4947 12.4628 18.4947 15.671 16.5159 17.6497L13.6497 20.5159C11.671 22.4947 8.46279 22.4947 6.48405 20.5159C4.50532 18.5372 4.50532 15.329 6.48405 13.3503L6.9484 12.886" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M17.0516 11.114L17.5159 10.6497C19.4947 8.67095 19.4947 5.46279 17.5159 3.48405C15.5372 1.50532 12.329 1.50532 10.3503 3.48405L7.48405 6.35031C5.50532 8.32904 5.50532 11.5372 7.48405 13.5159C9.46279 15.4947 12.671 15.4947 14.6497 13.5159L14.8566 13.309" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                  </svg>
-                </button>
+                
+                <!-- Emoji Picker Button and Picker -->
+                <div x-data="{ showEmojiPicker: false }" class="relative">
+                  <button @click="showEmojiPicker = !showEmojiPicker" class="hover:text-blue-500 transition-colors">
+                    <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 14C16 15.6569 14 17 12 17C10 17 8 15.6569 8 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM10 9C10 9.55228 9.55228 10 9 10C8.44772 10 8 9.55228 8 9C8 8.44772 8.44772 8 9 8C9.55228 8 10 8.44772 10 9ZM16 9C16 9.55228 15.5523 10 15 10C14.4477 10 14 9.55228 14 9C14 8.44772 14.4477 8 15 8C15.5523 8 16 8.44772 16 9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                  </button>
+                  
+                  <!-- Emoji Picker -->
+                  <div x-show="showEmojiPicker" @click.away="showEmojiPicker = false" class="absolute z-10 mt-2 bg-white border rounded-lg shadow-lg p-2 w-48 grid grid-cols-5 gap-2">
+                    <button @click="postContent += '😊'" class="text-lg hover:bg-gray-100 rounded p-1">😊</button>
+                    <button @click="postContent += '😂'" class="text-lg hover:bg-gray-100 rounded p-1">😂</button>
+                    <button @click="postContent += '❤️'" class="text-lg hover:bg-gray-100 rounded p-1">❤️</button>
+                    <button @click="postContent += '👍'" class="text-lg hover:bg-gray-100 rounded p-1">👍</button>
+                    <button @click="postContent += '😍'" class="text-lg hover:bg-gray-100 rounded p-1">😍</button>
+                    <button @click="postContent += '😢'" class="text-lg hover:bg-gray-100 rounded p-1">😢</button>
+                    <button @click="postContent += '😡'" class="text-lg hover:bg-gray-100 rounded p-1">😡</button>
+                    <button @click="postContent += '🙌'" class="text-lg hover:bg-gray-100 rounded p-1">🙌</button>
+                    <button @click="postContent += '🎉'" class="text-lg hover:bg-gray-100 rounded p-1">🎉</button>
+                    <button @click="postContent += '🤔'" class="text-lg hover:bg-gray-100 rounded p-1">🤔</button>
+                  </div>
+                </div>
               </div>
-
-              <div class="w-full py-2 flex items-center justify-between">
-                <span class="text-gray-600">Anyone can reply & quote</span>
-                <button class="bg-blue-700 px-2 py-1 rounded-md text-gray-200" @click="()=> createPost()">post</button>
+              
+              <!-- Footer Section -->
+              <div class="w-full py-3 flex items-center justify-between">
+                <span class="text-gray-600 text-sm">Anyone can reply & quote</span>
+                <button class="bg-gradient-to-r from-blue-600 to-blue-800 px-3 py-1 rounded-md text-gray-200 flex items-center gap-2" @click="createPost()" :disabled="loading">
+                  <span x-text="loading ? 'Posting...' : 'Post'"></span>
+                  <svg x-show="loading" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </button>
               </div>
             </div>
-            <button @click="showPostPage = false">
+            
+            <!-- Close Button -->
+            <button @click="showPostPage = false" class="ml-2 hover:text-red-500 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
               </svg>
             </button>
           </div>
         </div>
-
+        
         <div class='w-full flex items-start my-2 px-2'>
           <img class='w-9 h-9 rounded-full' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
           <div class='ml-1.5 flex-1' @click="showPostPage = true">
@@ -151,7 +184,7 @@
           </div>
         </div>
       </div>
-
+      
       <div class="posts">
         <template x-for="post in posts">
           <div class="mb-0 py-2 border-t">
@@ -169,32 +202,69 @@
                       <path d="M12.041 12.001L11.991 12.001" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="my-path"></path>
                       <path d="M17.0547 12.001L17.0047 12.001" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="my-path"></path>
                     </svg>
-
-                    <div x-show="isOpen" class="fixed bottom-0 right-0 bg-gray-100 rounded-lg p-4 w-full shadow-md z-50">
-                      <ul class="w-full bg-gray-300 rounded-lg divide-y">
-                        <li class="p-3">Save Post</li>
-                        <li class="p-3">Copy link</li>
-                        <li class="p-3">Not interested</li>
-                        <li class="p-3">Notify me</li>
-                        <li class="p-3">Mute</li>
-                        <li class="p-3">Unfollow</li>
-                        <li class="p-3 text-red-800">Report</li>
+                    
+                    <div x-show="isOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="absolute top-8 right-0 bg-white rounded-lg shadow-xl border border-gray-200 w-56 z-50 overflow-hidden">
+                      <ul class="divide-y divide-gray-200">
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12H19M19 12L15 8M19 12L15 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Save Post</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.8284 10.1716H16.4142L11.4142 15.1716C10.6332 15.9526 10.6332 17.239 11.4142 18.02C12.1953 18.801 13.4817 18.801 14.2627 18.02L19.2627 13.02C20.0437 12.239 20.0437 10.9526 19.2627 10.1716C18.4817 9.39062 17.1953 9.39062 16.4142 10.1716L15.8284 10.7574" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M4.73731 13.02L9.73731 18.02C10.5183 18.801 11.8047 18.801 12.5857 18.02C13.3667 17.239 13.3667 15.9526 12.5857 15.1716L7.58566 10.1716H10.1715" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Copy Link</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 15L15 9M15 15L9 9M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Not Interested</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 6V18M18 12H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Notify Me</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 8H21M3 16H15M10 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Mute</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 8C16 11.3137 13.3137 14 10 14C6.68629 14 4 11.3137 4 8C4 4.68629 6.68629 2 10 2C13.3137 2 16 4.68629 16 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M10 14L20 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Unfollow</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-red-50 transition-colors cursor-pointer text-red-600">
+                          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-sm">Report</span>
+                        </li>
                       </ul>
                     </div>
                   </div>
                 </div>
                 <div class='px-2'>
                   <p class="my-1" x-text="post.content">
-
+                    
                   </p>
-                  <img :src="`https://cloud.appwrite.io/v1/storage/buckets/653bc7811a3ca0417dd5/files/${post.id}/view?project=652c1374db243c864a6c`" class="w-full rounded-md my-2">
+                  <img :src="post.thumbnail" class="w-full rounded-md my-2">
                 </div>
                 <div class="flex items-center gap-4 my-2.5 px-2">
-                  <button class="flex items-center gap-1" x-data="{isLiked: false}" @click="isLiked = !isLiked;">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" :color="isLiked ? 'red' : 'currentColor'" :fill="isLiked ? 'red' : 'none'">
-                      <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" :stroke="isLiked ? 'red' : 'currentColor'" stroke-width="1.5" stroke-linecap="round" />
-                    </svg>
-                    <span x-text="formatNumber(post.likes.length)">${likes}</span>
+                  <button class="flex items-center gap-1" @click="toggleLike(post)">
+                    <svg :class="isPostLiked(post) ? 'text-red-500 fill-current' : 'text-gray-600'" class="size-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+</svg>
+                    <span x-text="formatNumber(post.likes.length)"></span>
                   </button>
                   <button class="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5 rotate-[270deg]" color="#000000" fill="none">
@@ -224,26 +294,30 @@
                     <span x-text="formatNumber(post.share)">${share}</span>
                   </button>
                 </div>
-                <hr class="hidden" />
-                <div class='px-2 mt-1.5 w-full flex items-center hidden'>
-                  <img class='w-9 h-9 rounded-full' src='/src/avatar.png' alt='Media rounded avatar'>
-                  <div class='ml-2.5 flex-1 relative'>
-                    <input class='w-full h-9 bg-gray-100 rounded-full px-3 outline-0' placeholder='write a comment...' />
-                    <div class='absolute top-2 right-2 flex items-center gap-2'>
-                      <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16.2858 8.86328L9.56825 15.9883C8.98246 16.6096 8.03271 16.6096 7.44693 15.9883C6.86114 15.367 6.86114 14.3596 7.44693 13.7383L14.1644 6.61328M13.4571 7.36328L14.8713 5.86327C16.0429 4.62063 17.9424 4.62063 19.114 5.86328C20.2856 7.10592 20.2856 9.12064 19.114 10.3633L17.6998 11.8633M18.4073 11.1133L11.6898 18.2383C9.93243 20.1023 7.08319 20.1023 5.32583 18.2383C3.56847 16.3743 3.56847 13.3522 5.32583 11.4883L12.0433 4.36328" stroke="currentColor" stroke-width="null" stroke-linecap="round" stroke-linejoin="round" class="my-path"></path>
+                <hr class="hidde" />
+                <!-- কমেন্ট সেকশন -->
+                <div class="mt-2">
+                  <!-- কমেন্ট লিস্ট -->
+                  <div class="space-y-2 max-h-40 overflow-y-auto">
+                    <template x-for="(comment, index) in post.comments" :key="index">
+                      <div class="flex items-start gap-2">
+                        <img class="w-6 h-6 rounded-full" src="https://alsaifdev.github.io/images/profile.jpg" alt="User">
+                        <div>
+                          <span class="text-sm font-semibold text-gray-800" x-text="comment.username"></span>
+                          <p class="text-sm text-gray-600" x-text="comment.content"></p>
+                          <span class="text-xs text-gray-400" x-text="fromNow(comment.date)"></span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                  <!-- কমেন্ট ইনপুট -->
+                  <div class="flex items-center gap-2 mt-2">
+                    <input x-model="newComment[post.$id]" @keyup.enter="addComment(post, $event.target.value)" class="w-full h-9 bg-gray-100 rounded-full px-3 outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="Write a comment..." type="text">
+                    <button @click="addComment(post, newComment[post.$id])" class="text-blue-600 hover:text-blue-800 transition-colors">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4L3 11L10 14L13 21L20 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
-                      <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 14C16 15.6569 14 17 12 17C10 17 8 15.6569 8 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM10 9C10 9.55228 9.55228 10 9 10C8.44772 10 8 9.55228 8 9C8 8.44772 8.44772 8 9 8C9.55228 8 10 8.44772 10 9ZM16 9C16 9.55228 15.5523 10 15 10C14.4477 10 14 9.55228 14 9C14 8.44772 14.4477 8 15 8C15.5523 8 16 8.44772 16 9Z" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                      </svg>
-
-                      <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 19L7.07189 15.2455C7.69252 14.4869 8.00284 14.1076 8.40938 14.0633C8.47386 14.0563 8.53887 14.0555 8.60349 14.0611C9.01094 14.0961 9.32986 14.4682 9.9677 15.2123C10.6306 15.9857 10.962 16.3723 11.381 16.4005C11.4473 16.4049 11.5139 16.4027 11.5797 16.394C11.996 16.3387 12.3016 15.9312 12.9127 15.1164L14.4826 13.0232C15.182 12.0906 15.5317 11.6243 16.0157 11.6119C16.4996 11.5995 16.8728 12.0473 17.619 12.9428L21 17M21 17V9M21 17C21 19.2091 19.2091 21 17 21H11C7.22876 21 5.34315 21 4.17157 19.8284C3 18.6569 3 16.7712 3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H15" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                        <path d="M12 9C12 10.1046 11.1046 11 10 11C8.89543 11 8 10.1046 8 9C8 7.89543 8.89543 7 10 7C11.1046 7 12 7.89543 12 9Z" stroke="currentColor" stroke-width="null" class="my-path"></path>
-                        <path d="M19 3L19 7" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                        <path d="M21 5H17" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
-                      </svg>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -251,26 +325,69 @@
           </div>
         </template>
       </div>
-
+      
       <div x-show="loading" class="loading">
         <div class="grid place-items-center mb-3">
           <div class="w-12 h-12 rounded-full border-2 border-l-blue-400 animate-sping"></div>
         </div>
       </div>
-
+      
     </div>
     <div class="left w-3/4 h-80 hidden md:block"></div>
+    
+    
+    <!-- Bottom Navigation -->
+    <nav x-data="{ active: 'home' }" class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 flex justify-around items-center h-14 md:hidden">
+      
+      <!-- Home -->
+      <a href="#" @click="active = 'home'" :class="active === 'home' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'home' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M2.35157 13.2135C1.99855 10.9162 1.82204 9.76763 2.25635 8.74938C2.69065 7.73112 3.65421 7.03443 5.58132 5.64106L7.02117 4.6C9.41847 2.86667 10.6171 2 12.0002 2C13.3832 2 14.5819 2.86667 16.9792 4.6L18.419 5.64106C20.3462 7.03443 21.3097 7.73112 21.744 8.74938C22.1783 9.76763 22.0018 10.9162 21.6488 13.2135L21.3478 15.1724C20.8473 18.4289 20.5971 20.0572 19.4292 21.0286C18.2613 22 16.5538 22 13.139 22H10.8614C7.44652 22 5.73909 22 4.57118 21.0286C3.40327 20.0572 3.15305 18.4289 2.65261 15.1724L2.35157 13.2135Z" />
+        </svg>
+      </a>
+      
+      <!-- Search -->
+      <a href="#" @click="active = 'search'" :class="active === 'search' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'search' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M17.5 17.5L22 22" stroke-linecap="round" />
+          <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" />
+        </svg>
+      </a>
+      
+      <!-- Post -->
+      <a href="#" @click="active = 'post'; showPostPage = true" :class="active === 'post' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'post' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 4V20M20 12H4" stroke-linecap="round" />
+        </svg>
+      </a>
+      
+      <!-- Notifications -->
+      <a href="#" @click="active = 'notifications'" :class="active === 'notifications' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'notifications' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M2.52992 14.7696C2.31727 16.1636 3.268 17.1312 4.43205 17.6134C8.89481 19.4622 15.1052 19.4622 19.5679 17.6134C20.732 17.1312 21.6827 16.1636 21.4701 14.7696C21.3394 13.9129 20.6932 13.1995 20.2144 12.5029C19.5873 11.5793 19.525 10.5718 19.5249 9.5C19.5249 5.35786 16.1559 2 12 2C7.84413 2 4.47513 5.35786 4.47513 9.5C4.47503 10.5718 4.41272 11.5793 3.78561 12.5029C3.30684 13.1995 2.66061 13.9129 2.52992 14.7696Z" />
+          <path d="M8 19C8.45849 20.7252 10.0755 22 12 22C13.9245 22 15.5415 20.7252 16 19" />
+        </svg>
+      </a>
+      
+      <!-- Profile -->
+      <a href="#" @click="active = 'profile'" :class="active === 'profile' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'profile' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M15 8C15 9.65685 13.6569 11 12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8Z" />
+          <path d="M13.7143 14H10.2857C7.91876 14 5.99998 15.9188 5.99998 18.2857C5.99998 19.2325 6.76749 20 7.71426 20H16.2857C17.2325 20 18 19.2325 18 18.2857C18 15.9188 16.0812 14 13.7143 14Z" />
+        </svg>
+      </a>
+    </nav>
   </div>
-
-
-
-
-
-
+  
+  
+  
+  
+  
+  
   <!--<blog-toast show="true"></blog-toast>-->
-
-
-
+  
+  
+  
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
   <script>
     const { Client, Databases, Storage, Query, ID } = Appwrite;
@@ -281,78 +398,203 @@
     const databases = new Databases(client);
     const storage = new Storage(client);
     Date.prototype.fromNow = function() {
-
+      
       // console.log(this.toUTCString())
       const now = new Date();
-
+      
       const diffInSeconds = Math.floor((now - this) / 1000);
-
+      
       const units = [
         { name: 'year', seconds: 60 * 60 * 24 * 365 },
         { name: 'month', seconds: 60 * 60 * 24 * 30 },
         { name: 'day', seconds: 60 * 60 * 24 },
         { name: 'hour', seconds: 60 * 60 },
         { name: 'minute', seconds: 60 },
-        { name: 'second', seconds: 1 }, ];
-
+        { name: 'second', seconds: 1 },
+      ];
+      
       for (const unit of units) {
         const quotient = Math.floor(diffInSeconds / unit.seconds);
         if (quotient > 0) {
           return `${quotient} ${unit.name}${quotient > 1 ? 's' : ''} ago`;
         }
       }
-
+      
       return 'just now';
     };
-
+    
     function data() {
       return {
         showPostPage: false,
         postUrl: '',
         postFile: null,
         postContent: '',
+        loading: false, // নতুন
         posts: [],
         perpage: 25,
-        loading: false,
         categories: [],
-        submitPostImage(id) {
-          const promise = storage.createFile(
-            '653bc7811a3ca0417dd5',
-            id,
-            this.postFile
-          );
-          promise.then(function(response) {
-            console.log(response); // Success
+        newComment: {},
+        currentUserId: 'user123',
+        async submitPostImage(id) {
+          try {
+            const response = await storage.createFile(
+              '653bc7811a3ca0417dd5', // Bucket ID
+              id, // File ID (post ID)
+              this.postFile // File object
+            );
+            console.log('Image uploaded:', response);
             this.postFile = null;
-          }, function(error) {
-            console.log(error); // Failure
-          });
+            return response.$id; // ফাইল আইডি রিটার্ন করা হচ্ছে
+          } catch (error) {
+            console.error('Image upload failed:', error);
+            throw error;
+          }
         },
-        createPost() {
+        
+        async createPost() {
+          this.loading = true;
           const post = {
             username: 'Abdullah Al Saif',
             id: crypto.randomUUID(),
             content: this.postContent,
-            thumbnail: this.postUrl,
             likes: [],
             comments: [],
             share: 0,
-            date: new Date().toLocaleDateString()
-          }
-          const promise = databases.createDocument('652c16162f939c821f75', '675d991f003af378778c', post.id, { ...post });
-          promise.then((response) => {
-            if(this.postFile){
-              this.submitPostImage(post.id);
+            date: new Date().toISOString()
+          };
+          
+          try {
+            if (this.postFile) {
+              const fileId = await this.submitPostImage(post.id);
+              const docResponse = await databases.createDocument(
+                '652c16162f939c821f75', // Database ID
+                '675d991f003af378778c', // Collection ID
+                post.id, { ...post, thumbnail: `https://cloud.appwrite.io/v1/storage/buckets/653bc7811a3ca0417dd5/files/${fileId}/view?project=652c1374db243c864a6c` }
+              );
             }
-            console.log(response);
+            else {
+              const docResponse = await databases.createDocument(
+                '652c16162f939c821f75', // Database ID
+                '675d991f003af378778c', // Collection ID
+                post.id, { ...post, thumbnail: '' }
+              );
+            }
             this.postContent = '';
             this.postUrl = '';
+            this.postFile = null;
             this.showPostPage = false;
-          }, function(error) {
-            console.log(error);
+            this.loading = false;
+          } catch (error) {
+            console.error('Post creation failed:', error);
+            this.loading = false;
+            alert('Failed to create post: ' + error.message);
+          }
+        },
+        async addComment(post, content) {
+          if (!content || content.trim() === '') return; // খালি কমেন্ট প্রতিরোধ
+          
+          const comment = {
+            id: crypto.randomUUID(),
+            username: 'Abdullah Al Saif', // বর্তমানে হার্ডকোডেড, পরে ডায়নামিক করা যাবে
+            content: content.trim(),
+            date: new Date().toISOString()
+          };
+          
+          try {
+            // পোস্টের কমেন্ট অ্যারে আপডেট
+            const updatedComments = [comment, ...post.comments]; // নতুন কমেন্ট প্রথমে
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              post.$id, { comments: updatedComments }
+            );
+            
+            // UI আপডেট
+            post.comments.unshift(comment);
+            this.newComment[post.$id] = ''; // ইনপুট খালি করা
+          } catch (error) {
+            console.error('Failed to add comment:', error);
+            alert('Failed to add comment: ' + error.message);
+          }
+        },
+        async toggleLike(post) {
+          const userId = this.currentUserId;
+          const isLiked = post.likes.includes(userId);
+          const updatedLikes = isLiked ?
+            post.likes.filter(id => id !== userId) : [...post.likes, userId];
+          
+          try {
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              post.$id, { likes: updatedLikes }
+            );
+            post.likes = updatedLikes; // UI আপডেট
+          } catch (error) {
+            console.error('Failed to toggle like:', error);
+            alert('Failed to toggle like: ' + error.message);
+          }
+        },
+        
+        async toggleCommentLike(post, comment) {
+          const userId = this.currentUserId;
+          const isLiked = comment.likes && comment.likes.includes(userId);
+          const updatedLikes = isLiked ?
+            comment.likes.filter(id => id !== userId) : [...(comment.likes || []), userId];
+          
+          try {
+            const updatedComments = post.comments.map(c =>
+              c.id === comment.id ? { ...c, likes: updatedLikes } : c
+            );
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              post.$id, { comments: updatedComments }
+            );
+            comment.likes = updatedLikes; // UI আপডেট
+          } catch (error) {
+            console.error('Failed to toggle comment like:', error);
+            alert('Failed to toggle comment like: ' + error.message);
+          }
+        },
+        
+        isPostLiked(post) {
+          return post.likes.includes(this.currentUserId);
+        },
+        
+        isCommentLiked(comment) {
+          return comment.likes && comment.likes.includes(this.currentUserId);
+        },
+        
+        async listPost() {
+          try {
+            this.loading = true;
+            const response = await databases.listDocuments(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              [
+                Query.orderDesc('date')
+              ]
+            );
+            this.posts = response.documents;
+            this.loading = false;
+          } catch (error) {
+            console.error('Failed to list posts:', error);
+            this.loading = false;
+          }
+        },
+        
+        init() {
+          this.listPost();
+          client.subscribe('databases.652c16162f939c821f75.collections.675d991f003af378778c.documents', response => {
+            const updatedPost = response.payload;
+            const index = this.posts.findIndex(p => p.$id === updatedPost.$id);
+            if (index !== -1) {
+              this.posts[index] = updatedPost; // আপডেটেড পোস্ট রিয়েল-টাইমে
+            } else {
+              this.posts.unshift(updatedPost); // নতুন পোস্ট
+            }
           });
-
-
         },
         formatNumber(num) {
           if (num >= 1_000_000) {
@@ -368,19 +610,7 @@
             .then(ress => ress.json())
             .then(data => this.posts = data)
         },
-        async listPost() {
-          const promise = await databases.listDocuments('652c16162f939c821f75', '675d991f003af378778c');
-          console.log(promise.documents);
-          this.posts = promise.documents;
-        },
-        init() {
-          //this.fetcher();
-          this.listPost();
-          client.subscribe('databases.652c16162f939c821f75.collections.675d991f003af378778c.documents', response => {
-            // Callback will be executed on changes for documents A and all files.
-            this.posts.unshift(response.payload);
-          });
-        }
+        
       }
     }
   </script>
