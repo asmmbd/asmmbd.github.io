@@ -102,8 +102,49 @@
   
   
   <div class="flex gap-4 mt-2 bg-white rounded-md">
-    <div class="left w-[264px] h-80 hidden md:block"></div>
-    <div class="py-2 flex-1">
+<aside class="left hidden lg:block fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 shadow-md z-40 overflow-y-auto">
+  <div class="p-4">
+    <ul class="space-y-2">
+      <li>
+        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 21V15H15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="font-medium">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" />
+            <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="font-medium">Create Post</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5" />
+            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <span class="font-medium">Profile</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15C15.3137 15 18 12.3137 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 12.3137 8.68629 15 12 15Z" stroke="currentColor" stroke-width="1.5" />
+            <path d="M12 15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          <span class="font-medium">Friends</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+    <div class="py-2 flex-1 px-4 pt-20 md:ml-64 lg:mr-80">
       <div class="create-post">
         <div class="bg-white">
           <div x-show="showPostPage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="bg-white shadow-lg border rounded-lg p-4 fixed top-20 left-5 right-5 z-50 flex items-start max-w-2xl mx-auto">
@@ -381,7 +422,53 @@
       </div>
       
     </div>
-    <div class="left w-[264px] h-80 hidden md:block"></div>
+<aside class="fixed top-16 right-0 w-80 h-[calc(100vh-4rem)] bg-white shadow-md hidden lg:block overflow-y-auto">
+  <div class="p-4">
+    <!-- ট্রেন্ডিং সেকশন -->
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Trending</h3>
+    <ul class="space-y-4">
+      <li class="border-b pb-2">
+        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+          <span class="block font-medium">#TechNews</span>
+          <span class="text-sm text-gray-500">1.2k posts</span>
+        </a>
+      </li>
+      <li class="border-b pb-2">
+        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+          <span class="block font-medium">#AIRevolution</span>
+          <span class="text-sm text-gray-500">850 posts</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+          <span class="block font-medium">#SpaceX</span>
+          <span class="text-sm text-gray-500">620 posts</span>
+        </a>
+      </li>
+    </ul>
+    
+    <!-- ফলো সাজেশন -->
+    <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-4">Who to Follow</h3>
+    <ul class="space-y-4">
+      <li class="flex items-center gap-3">
+        <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
+        <div class="flex-1">
+          <p class="text-gray-800 font-medium">Jane Doe</p>
+          <p class="text-gray-500 text-sm">@janedoe</p>
+        </div>
+        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+      </li>
+      <li class="flex items-center gap-3">
+        <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
+        <div class="flex-1">
+          <p class="text-gray-800 font-medium">John Smith</p>
+          <p class="text-gray-500 text-sm">@johnsmith</p>
+        </div>
+        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+      </li>
+    </ul>
+  </div>
+</aside>
     
     
     <!-- Bottom Navigation -->
