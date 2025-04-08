@@ -17,133 +17,122 @@
 
 <body class="bg-gray-200 text-gray-20" x-data="data()">
   
-<header class="bg-white shadow-md sticky top-0 left-0 right-0 z-50">
-  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-    <!-- বামদিকে টাইটেল -->
-    <div class="flex items-center gap-3">
-      <a href="#" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
-        AL IKHYAH
-      </a>
-    </div>
-
-    <!-- মাঝে সার্চ বক্স (বড় স্ক্রীনে দৃশ্যমান) -->
-    <div class="hidden md:flex flex-1 justify-center">
-      <div class="relative w-full max-w-md">
-        <input type="text" 
-               placeholder="Search posts, people..." 
-               class="w-full py-2 pl-10 pr-4 bg-gray-100 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all duration-200" />
-        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5"/>
-        </svg>
+  <header class="bg-white shadow-md sticky top-0 left-0 right-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- বামদিকে টাইটেল -->
+      <div class="flex items-center gap-3">
+        <a href="#" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
+          AL IKHYAH
+        </a>
       </div>
-    </div>
-
-    <!-- ডানদিকে নেভিগেশন -->
-    <div class="flex items-center gap-4">
-      <!-- নোটিফিকেশন -->
-      <button class="text-gray-600 hover:text-blue-600 transition-colors relative">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.52992 14.7696C2.31727 16.1636 3.268 17.1312 4.43205 17.6134C8.89481 19.4622 15.1052 19.4622 19.5679 17.6134C20.732 17.1312 21.6827 16.1636 21.4701 14.7696C21.3394 13.9129 20.6932 13.1995 20.2144 12.5029C19.5873 11.5793 19.525 10.5718 19.5249 9.5C19.5249 5.35786 16.1559 2 12 2C7.84413 2 4.47513 5.35786 4.47513 9.5C4.47503 10.5718 4.41272 11.5793 3.78561 12.5029C3.30684 13.1995 2.66061 13.9129 2.52992 14.7696Z" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M8 19C8.45849 20.7252 10.0755 22 12 22C13.9245 22 15.5415 20.7252 16 19" stroke="currentColor" stroke-width="1.5"/>
-        </svg>
-        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
-      </button>
-
-      <!-- প্রোফাইল -->
-      <div class="relative" x-data="{ profileOpen: false }">
-        <button @click="profileOpen = !profileOpen" class="flex items-center gap-2">
-          <img class="w-8 h-8 rounded-full" src="https://alsaifdev.github.io/images/profile.jpg" alt="Profile">
-          <span class="hidden md:inline text-gray-800 font-medium">Abdullah</span>
-          <svg class="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      
+      <!-- মাঝে সার্চ বক্স (বড় স্ক্রীনে দৃশ্যমান) -->
+      <div class="hidden md:flex flex-1 justify-center">
+        <div class="relative w-full max-w-md">
+          <input type="text" placeholder="Search posts, people..." class="w-full py-2 pl-10 pr-4 bg-gray-100 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all duration-200" />
+          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5" />
           </svg>
-        </button>
-        <!-- প্রোফাইল ড্রপডাউন -->
-        <div x-show="profileOpen" 
-             x-transition:enter="transition ease-out duration-200" 
-             x-transition:enter-start="opacity-0 translate-y-2" 
-             x-transition:enter-end="opacity-100 translate-y-0" 
-             x-transition:leave="transition ease-in duration-150" 
-             x-transition:leave-start="opacity-100 translate-y-0" 
-             x-transition:leave-end="opacity-0 translate-y-2"
-             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
-          <ul class="py-1">
-            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Profile</li>
-            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Settings</li>
-            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600">Logout</li>
-          </ul>
         </div>
       </div>
-
-      <!-- মোবাইল মেনু টগল -->
-      <button class="md:hidden text-gray-600 hover:text-blue-600" @click="mobileMenuOpen = !mobileMenuOpen">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      
+      <!-- ডানদিকে নেভিগেশন -->
+      <div class="flex items-center gap-4">
+        <!-- নোটিফিকেশন -->
+        <button class="text-gray-600 hover:text-blue-600 transition-colors relative">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.52992 14.7696C2.31727 16.1636 3.268 17.1312 4.43205 17.6134C8.89481 19.4622 15.1052 19.4622 19.5679 17.6134C20.732 17.1312 21.6827 16.1636 21.4701 14.7696C21.3394 13.9129 20.6932 13.1995 20.2144 12.5029C19.5873 11.5793 19.525 10.5718 19.5249 9.5C19.5249 5.35786 16.1559 2 12 2C7.84413 2 4.47513 5.35786 4.47513 9.5C4.47503 10.5718 4.41272 11.5793 3.78561 12.5029C3.30684 13.1995 2.66061 13.9129 2.52992 14.7696Z" stroke="currentColor" stroke-width="1.5" />
+            <path d="M8 19C8.45849 20.7252 10.0755 22 12 22C13.9245 22 15.5415 20.7252 16 19" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+        </button>
+        
+        <!-- প্রোফাইল -->
+        <div class="relative" x-data="{ profileOpen: false }">
+          <button @click="profileOpen = !profileOpen" class="flex items-center gap-2">
+            <img class="w-8 h-8 rounded-full" src="https://alsaifdev.github.io/images/profile.jpg" alt="Profile">
+            <span class="hidden md:inline text-gray-800 font-medium">Abdullah</span>
+            <svg class="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <!-- প্রোফাইল ড্রপডাউন -->
+          <div x-show="profileOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+            <ul class="py-1">
+              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Profile</li>
+              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Settings</li>
+              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600">Logout</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- মোবাইল মেনু টগল -->
+        <button class="md:hidden text-gray-600 hover:text-blue-600" @click="mobileMenuOpen = !mobileMenuOpen">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- মোবাইল সার্চ (ছোট স্ক্রীনে) -->
+    <div x-show="mobileMenuOpen" class="md:hidden px-4 py-2 bg-gray-50">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="w-full py-2 pl-10 pr-4 bg-white rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200" />
+        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5" />
         </svg>
-      </button>
+      </div>
     </div>
-  </div>
-
-  <!-- মোবাইল সার্চ (ছোট স্ক্রীনে) -->
-  <div x-show="mobileMenuOpen" class="md:hidden px-4 py-2 bg-gray-50">
-    <div class="relative">
-      <input type="text" 
-             placeholder="Search..." 
-             class="w-full py-2 pl-10 pr-4 bg-white rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200" />
-      <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-    </div>
-  </div>
-</header>
-
+  </header>
   
   
-  <div class="flex gap-4 mt-2 bg-white rounded-md">
-<aside class="left hidden lg:block fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 shadow-md z-40 overflow-y-auto">
-  <div class="p-4">
-    <ul class="space-y-2">
-      <li>
-        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M9 21V15H15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <span class="font-medium">Home</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" />
-            <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <span class="font-medium">Create Post</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5" />
-            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5" />
-          </svg>
-          <span class="font-medium">Profile</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 15C15.3137 15 18 12.3137 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 12.3137 8.68629 15 12 15Z" stroke="currentColor" stroke-width="1.5" />
-            <path d="M12 15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-          <span class="font-medium">Friends</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-</aside>
+  
+  <div class="flex gap-4 mt-2 md:mt-0 bg-white rounded-md">
+    <aside class="left hidden lg:block fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 shadow-sm z-40 overflow-y-auto">
+      <div class="p-4">
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M9 21V15H15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="font-medium">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="font-medium">Create Post</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <span class="font-medium">Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15C15.3137 15 18 12.3137 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 12.3137 8.68629 15 12 15Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <span class="font-medium">Friends</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
     <div class="py-2 flex-1 px-4 pt-2 md:ml-64 lg:mr-80">
       <!-- স্টোরি সেকশন -->
       <section class="py-4">
@@ -164,7 +153,7 @@
             <!-- স্টোরি লিস্ট -->
             <template x-for="story in stories" :key="story.id">
               <div class="flex-shrink-0">
-                <div class="relative">
+                <div class="relative cursor-pointer" @click="openStory(story)">
                   <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 p-1">
                     <img :src="story.image" class="w-full h-full rounded-full object-cover border-2 border-white" alt="Story">
                   </div>
@@ -175,7 +164,26 @@
           </div>
         </div>
       </section>
-     
+      
+      <!-- স্টোরি মডাল -->
+      <div x-show="selectedStory" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" @click.away="closeStory()">
+        <div class="relative w-full h-full max-w-md bg-white rounded-lg overflow-hidden z-50">
+          <!-- স্টোরি ইমেজ -->
+          <img :src="selectedStory?.image" class="w-full h-full object-cover" alt="Selected Story">
+          <!-- হেডার -->
+          <div class="absolute top-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-b from-black to-transparent">
+            <div class="flex items-center gap-2">
+              <img :src="selectedStory?.image" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+              <span class="text-white font-semibold" x-text="selectedStory?.username"></span>
+            </div>
+            <button @click="closeStory()" class="text-white hover:text-gray-300">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="create-post">
         <div class="bg-white">
           <div x-show="showPostPage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="bg-white shadow-lg border rounded-lg p-4 fixed top-20 left-5 right-5 z-50 flex items-start max-w-2xl mx-auto">
@@ -453,57 +461,57 @@
       </div>
       
     </div>
-<aside class="fixed top-16 right-0 w-80 h-[calc(100vh-4rem)] bg-white shadow-md hidden lg:block overflow-y-auto">
-  <div class="p-4">
-    <!-- ট্রেন্ডিং সেকশন -->
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">Trending</h3>
-    <ul class="space-y-4">
-      <li class="border-b pb-2">
-        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
-          <span class="block font-medium">#TechNews</span>
-          <span class="text-sm text-gray-500">1.2k posts</span>
-        </a>
-      </li>
-      <li class="border-b pb-2">
-        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
-          <span class="block font-medium">#AIRevolution</span>
-          <span class="text-sm text-gray-500">850 posts</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
-          <span class="block font-medium">#SpaceX</span>
-          <span class="text-sm text-gray-500">620 posts</span>
-        </a>
-      </li>
-    </ul>
-    
-    <!-- ফলো সাজেশন -->
-    <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-4">Who to Follow</h3>
-    <ul class="space-y-4">
-      <li class="flex items-center gap-3">
-        <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
-        <div class="flex-1">
-          <p class="text-gray-800 font-medium">Jane Doe</p>
-          <p class="text-gray-500 text-sm">@janedoe</p>
-        </div>
-        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
-      </li>
-      <li class="flex items-center gap-3">
-        <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
-        <div class="flex-1">
-          <p class="text-gray-800 font-medium">John Smith</p>
-          <p class="text-gray-500 text-sm">@johnsmith</p>
-        </div>
-        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
-      </li>
-    </ul>
-  </div>
-</aside>
+    <aside class="fixed top-16 right-0 w-80 h-[calc(100vh-4rem)] bg-white shadow-sm hidden lg:block overflow-y-auto">
+      <div class="p-4">
+        <!-- ট্রেন্ডিং সেকশন -->
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Trending</h3>
+        <ul class="space-y-4">
+          <li class="border-b pb-2">
+            <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <span class="block font-medium">#TechNews</span>
+              <span class="text-sm text-gray-500">1.2k posts</span>
+            </a>
+          </li>
+          <li class="border-b pb-2">
+            <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <span class="block font-medium">#AIRevolution</span>
+              <span class="text-sm text-gray-500">850 posts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <span class="block font-medium">#SpaceX</span>
+              <span class="text-sm text-gray-500">620 posts</span>
+            </a>
+          </li>
+        </ul>
+        
+        <!-- ফলো সাজেশন -->
+        <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-4">Who to Follow</h3>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3">
+            <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
+            <div class="flex-1">
+              <p class="text-gray-800 font-medium">Jane Doe</p>
+              <p class="text-gray-500 text-sm">@janedoe</p>
+            </div>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+          </li>
+          <li class="flex items-center gap-3">
+            <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
+            <div class="flex-1">
+              <p class="text-gray-800 font-medium">John Smith</p>
+              <p class="text-gray-500 text-sm">@johnsmith</p>
+            </div>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+          </li>
+        </ul>
+      </div>
+    </aside>
     
     
     <!-- Bottom Navigation -->
-    <nav x-data="{ active: 'home' }" class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 flex justify-around items-center h-14 md:hidden">
+    <nav x-data="{ active: 'home' }" class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40 flex justify-around items-center h-14 md:hidden">
       
       <!-- Home -->
       <a href="#" @click="active = 'home'" :class="active === 'home' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
@@ -592,6 +600,7 @@
     function data() {
       return {
         stories: [],
+        selectedStory: null,
         mobileMenuOpen: false,
         showPostPage: false,
         postUrl: '',
@@ -751,6 +760,23 @@
             this.loading = false;
           }
         },
+        async addStory() {
+          const newStory = {
+            id: crypto.randomUUID(),
+            username: 'Abdullah Al Saif',
+            image: 'https://alsaifdev.github.io/images/profile.jpg',
+            date: new Date().toISOString()
+          };
+          this.stories.unshift(newStory);
+        },
+        
+        openStory(story) {
+          this.selectedStory = story; // সিলেক্ট করা স্টোরি সেট করা
+        },
+        
+        closeStory() {
+          this.selectedStory = null; // মডাল বন্ধ করা
+        },
         
         init() {
           this.listPost();
@@ -763,7 +789,7 @@
               this.posts.unshift(updatedPost); // নতুন পোস্ট
             }
           });
-
+          
           this.stories = [
             { id: '1', username: 'Jane', image: 'https://alsaifdev.github.io/images/profile.jpg', date: new Date().toISOString() },
             { id: '2', username: 'John', image: 'https://alsaifdev.github.io/images/profile.jpg', date: new Date().toISOString() },
