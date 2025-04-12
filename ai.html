@@ -1,59 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 
 <head>
-  <!-- Required Meta Tags Always Come First -->
   <meta charset="utf-8">
   <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <link rel="canonical" href="https://preline.co/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Sidebar Application AI Prompt using Tailwind CSS for Preline UI, a product of Htmlstream.">
+  <meta name="description" content="ইসলামিক চ্যাট বট">
   
   <meta name="twitter:site" content="@preline">
   <meta name="twitter:creator" content="@preline">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Sidebar Application AI Prompt using Tailwind CSS | Preline UI, crafted with Tailwind CSS">
-  <meta name="twitter:description" content="Sidebar Application AI Prompt using Tailwind CSS for Preline UI, a product of Htmlstream.">
+  <meta name="twitter:title" content="ইসলামিক চ্যাট বট">
+  <meta name="twitter:description" content="ইসলামিক চ্যাট বট">
   <meta name="twitter:image" content="https://preline.co/assets/img/og-image.png">
   
   <meta property="og:url" content="https://preline.co/">
-  <meta property="og:locale" content="en_US">
+  <meta property="og:locale" content="bn_BD">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Preline">
-  <meta property="og:title" content="Sidebar Application AI Prompt using Tailwind CSS | Preline UI, crafted with Tailwind CSS">
-  <meta property="og:description" content="Sidebar Application AI Prompt using Tailwind CSS for Preline UI, a product of Htmlstream.">
+  <meta property="og:site_name" content="ইসলামিক সহায়ক">
+  <meta property="og:title" content="ইসলামিক চ্যাট বট">
+  <meta property="og:description" content="ইসলামিক চ্যাট বট।">
   <meta property="og:image" content="https://preline.co/assets/img/og-image.png">
   
-  <!-- Title -->
-  <title>Sidebar Application AI Prompt using Tailwind CSS | Preline UI, crafted with Tailwind CSS</title>
+  <title>ইসলামিক চ্যাট বট</title>
   
-  <!-- Favicon -->
   <link rel="shortcut icon" href="https://preline.co/favicon.ico">
-  
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Theme Check and Update -->
   <script>
     const html = document.querySelector('html');
     const isLightOrAuto = localStorage.getItem('hs_theme') === 'light' || (localStorage.getItem('hs_theme') === 'auto' && !window.matchMedia('(prefers-color-scheme: dark)').matches);
     const isDarkOrAuto = localStorage.getItem('hs_theme') === 'dark' || (localStorage.getItem('hs_theme') === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
     if (isLightOrAuto && html.classList.contains('dark')) html.classList.remove('dark');
     else if (isDarkOrAuto && html.classList.contains('light')) html.classList.remove('light');
     else if (isDarkOrAuto && !html.classList.contains('dark')) html.classList.add('dark');
     else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
   </script>
   
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
-    a {
-      font-family: ui-sans-serif, system-ui, sans-serif, SolaimanLipi, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    * {
+      font-family: SolaimanLipi;
     }
-    
     
     [x-cloak] {
       display: none !important;
@@ -61,7 +53,7 @@
     
     pre {
       width: 100%;
-      background: oklch(0.967 0.003 264.542) !important;
+      background: oklch(0.9 0.1 150) !important;
       color: #000 !important;
       overflow-x: auto;
       padding: 12px;
@@ -69,37 +61,35 @@
     }
     
     .whitespace-pre-wrap {
-      whitespace: pre-wrap;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 
 <body class="dark:bg-neutral-900">
   <div x-data="alemai()" x-cloak>
-    <div x-show="sidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="transform -translate-x-full" x-transition:enter-end="transform translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="transform translate-x-0" x-transition:leave-end="transform -translate-x-full" class="fixed top-0 start-0 bottom-0 z-60 w-80 lg:w-64 h-full bg-white border-e border-gray-200 md:block md:translate-x-0 md:end-auto md:bottom-0 dark:bg-neutral-900 dark:border-neutral-700 z-50" role="dialog" tabindex="-1" aria-label="Sidebar">
+    <div x-show="sidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="transform -translate-x-full" x-transition:enter-end="transform translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="transform translate-x-0" x-transition:leave-end="transform -translate-x-full" class="fixed top-0 start-0 bottom-0 z-60 w-80 lg:w-64 h-full bg-white border-e border-gray-200 md:block md:translate-x-0 md:end-auto md:bottom-0 dark:bg-neutral-900 dark:border-neutral-700 z-50" role="dialog" tabindex="-1" aria-label="সাইডবার">
       <nav class="size-full flex flex-col">
-        <div class="flex items-center justify-between pt-4 pe-4 ps-7">
-          <!-- Logo -->
-          <a class="flex-none focus:outline-hidden focus:opacity-80" href="https://preline.co/templates.html" aria-label="Preline">
-            <svg class="w-28 h-auto" width="116" height="32" viewBox="0 0 116 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 28.9786V15.9786C1 9.35116 6.37258 3.97858 13 3.97858C19.6274 3.97858 25 9.35116 25 15.9786C25 22.606 19.6274 27.9786 13 27.9786H12" class="stroke-blue-600 dark:stroke-white" stroke="currentColor" stroke-width="2" />
-              <path d="M5 28.9786V16.1386C5 11.6319 8.58172 7.97858 13 7.97858C17.4183 7.97858 21 11.6319 21 16.1386C21 20.6452 17.4183 24.2986 13 24.2986H12" class="stroke-blue-600 dark:stroke-white" stroke="currentColor" stroke-width="2" />
-              <circle cx="13" cy="16" r="5" fill="currentColor" class="fill-blue-600 dark:fill-white" />
+        <div class="flex items-center justify-between pt-4 px-4">
+          <a class="flex-none focus:outline-hidden focus:opacity-80" href="/" aria-label="ইসলামিক সহায়ক">
+            <svg class="shrink-0 size-9.5 rounded-full" width="30" height="30" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="38" height="38" rx="6" fill="#15803d" />
+              <path d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25" stroke="white" stroke-width="1.5" />
+              <path d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25" stroke="white" stroke-width="1.5" />
+              <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
             </svg>
           </a>
-          <!-- End Logo -->
-          <a @click="clearConversation()" class="shrink-0 flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-300 dark:focus:bg-neutral-900 dark:focus:text-neutral-300" >
-             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-               <path d="M5 12h14" />
-               <path d="M12 5v14" />
-             </svg>
-             New chat
+          <a @click="clearConversation()" class="shrink-0 flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-300 dark:focus:bg-neutral-900 dark:focus:text-neutral-300">
+            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            নতুন চ্যাট
           </a>
         </div>
         
         <div class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-          <!-- Predefined Buttons -->
-          <div class="mb-4 px-4 sm:px-6 lg:px-8">
+          <div class="my-4 px-4">
             <template x-for="(message, index) in conversationHistory" :key="index">
               <button x-show="message.role === 'user'" @click="sendMessage(message.parts[0].text)" class="w-full truncate mb-2 px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600">
                 <span x-text="message.parts[0].text"></span>
@@ -108,12 +98,10 @@
           </div>
         </div>
         
-        <!-- Footer -->
         <div class="mt-auto">
-          
           <div class="p-4 border-t border-gray-200 dark:border-neutral-700">
             <a class="flex justify-between items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-300 dark:focus:text-neutral-300" href="#">
-              Sign in
+              সাইন ইন
               <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                 <polyline points="10 17 15 12 10 7" />
@@ -122,60 +110,60 @@
             </a>
           </div>
         </div>
-        <!-- End Footer -->
       </nav>
     </div>
-    <!-- End Sidebar -->
     
-    <!-- Content -->
     <div class="relative h-screen w-full lg:ps-64">
       <div class="py-10 lg:py-14">
-        <!-- Title -->
         <div class="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
           <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
-            Welcome to Personal AI
+            স্বাগতম ইসলামিক সহায়কে
           </h1>
           <p class="mt-3 text-gray-600 dark:text-neutral-400">
-            Your AI-powered copilot for the web
+            আপনার ইসলামিক জ্ঞানের সঙ্গী
           </p>
         </div>
-        <!-- End Title -->
+        
+        <div x-show="!conversationHistory" class="p-4 mt-20">
+          <template x-for="question in islamicQuestions">
+            <div>
+              <h1 class="text-center my-4  text-lg" x-text="question.category"></h1>
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <template x-for="q in question.questions">
+                                  <button @click="sendMessage(q)" class="truncate px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600" x-text="q">
+                </button>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+        
         
         <ul class="mt-16 space-y-5" x-ref="chatContainer">
-          
-          
-          <!-- Chat Bubble -->
           <template x-for="(message, index) in conversationHistory" :key="index">
             <li class="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
               <svg x-show="message.role === 'model'" class="shrink-0 size-9.5 rounded-full" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="38" height="38" rx="6" fill="#2563EB" />
+                <rect width="38" height="38" rx="6" fill="#15803d" />
                 <path d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25" stroke="white" stroke-width="1.5" />
                 <path d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25" stroke="white" stroke-width="1.5" />
                 <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
               </svg>
               <svg x-show="message.role === 'user'" class="shrink-0 size-9.5 rounded-full" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Circle background -->
-                <circle cx="19" cy="19" r="18" fill="#2563EB" />
-                <!-- Graphical representation of "y" -->
+                <circle cx="19" cy="19" r="18" fill="#15803d" />
                 <path d="M14 12L19 20L24 12M19 20V28" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               
               <div class="grow max-w-[90%] md:max-w-2xl w-full space-y-3">
-                <!-- Card -->
-                <div class="space-y-3">
-                  <p class="text-sm text-gray-800 dark:text-white whitespace-pre-wrap" x-html="marked.parse(message.parts[0].text)">
-                    
-                  </p>
+                <div class="space-y-3 prose prose-p:mt-0">
+                  <p class="text-gray-800 dark:text-white " x-html="marked.parse(message.parts[0].text)"></p>
                 </div>
-                <!-- End Card -->
-                <!-- Button Group -->
-                <div x-show="message.role === 'model'" class="inline-flex border border-gray-200 rounded-full p-0.5 dark:border-neutral-700">
+                <div x-show="message.role === 'model' && !isTyping" class="inline-flex border border-gray-200 rounded-full p-0.5 dark:border-neutral-700">
                   <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                     <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
                       <path d="M21 3v5h-5" />
                     </svg>
-                    New answer
+                    নতুন উত্তর
                   </button>
                   <button @click="navigator.clipboard.writeText(message.parts[0].text)" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                     <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -184,90 +172,74 @@
                       <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
                     </svg>
                   </button>
-                  <button type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-full text-gray-500 hover:bg-blue-100 hover:text-blue-800 focus:z-10 focus:outline-hidden focus:bg-blue-100 focus:text-blue-800 dark:text-neutral-500 dark:hover:bg-blue-900 dark:hover:text-blue-200 dark:focus:bg-blue-900 dark:focus:text-blue-200">
-                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M7 10v12" />
-                      <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
+                  <button @click="toggleSpeech(message.parts[0].text, index)" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 focus:outline-hidden focus:bg-green-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-green-800">
+                    <svg x-show="!isSpeaking[index]" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
                     </svg>
-                  </button>
-                  <button type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-full text-gray-500 hover:bg-blue-100 hover:text-blue-800 focus:z-10 focus:outline-hidden focus:bg-blue-100 focus:text-blue-800 dark:text-neutral-500 dark:hover:bg-blue-900 dark:hover:text-blue-200 dark:focus:bg-blue-900 dark:focus:text-blue-200">
-                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M17 14V2" />
-                      <path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z" />
+                    <svg x-show="isSpeaking[index]" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <line x1="22" y1="9" x2="16" y2="15" />
                     </svg>
                   </button>
                 </div>
-                
-                <!-- End Button Group -->
               </div>
             </li>
           </template>
-          <!-- End Chat Bubble -->
           <li x-show="isLoading" class="w-full max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
             <svg class="shrink-0 size-9.5 rounded-full" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="38" height="38" rx="6" fill="#2563EB" />
+              <rect width="38" height="38" rx="6" fill="#15803d" />
               <path d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25" stroke="white" stroke-width="1.5" />
               <path d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25" stroke="white" stroke-width="1.5" />
               <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
             </svg>
-            
             <div class="w-full space-y-1.5 animate-pulse">
-              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
-              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
               <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
               <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
               <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
             </div>
           </li>
-          
-          
         </ul>
       </div>
       
-      <!-- Textarea -->
       <div class="max-w-4xl mx-auto sticky bottom-0 z-10 p-3 sm:py-6">
         <div class="md:hidden flex justify-end mb-2 sm:mb-3">
-          <button @click="sidebar = !sidebar" type="button" class="p-2 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-application-sidebar" aria-label="Toggle navigation" data-hs-overlay="#hs-application-sidebar">
+          <button @click="sidebar = !sidebar" type="button" class="p-2 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" aria-label="সাইডবার টগল">
             <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" x2="21" y1="6" y2="6" />
               <line x1="3" x2="21" y1="12" y2="12" />
               <line x1="3" x2="21" y1="18" y2="18" />
             </svg>
-            <span>Sidebar</span>
+            সাইডবার
           </button>
         </div>
         
-        <!-- Input -->
         <div class="relative">
-          <textarea x-model="inputText" class="p-3 sm:p-4 pb-12 sm:pb-12 block w-full bg-gray-100 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Ask me anything..."></textarea>
+          <textarea x-model="inputText" class="p-3 sm:p-4 pb-12 sm:pb-12 block w-full bg-gray-100 border-gray-200 rounded-lg sm:text-sm focus:border-green-500 focus:ring-green-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="আমাকে কিছু জিজ্ঞাসা করুন..."></textarea>
           
-          <!-- Toolbar -->
           <div class="absolute bottom-px inset-x-px p-2 rounded-b-lg bg-gray-100 dark:bg-neutral-800">
             <div class="flex flex-wrap justify-between items-center gap-2">
-              <!-- Button Group -->
               <div class="flex items-center">
-                <!-- Mic Button -->
                 <button @click="clearConversation()" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                   <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect width="18" height="18" x="3" y="3" rx="2" />
                     <line x1="9" x2="15" y1="15" y2="9" />
                   </svg>
                 </button>
-                <!-- End Mic Button -->
-                
-                <!-- Attach Button -->
-                <button type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                  <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                <button @click="toggleVoiceOutput()" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                  <svg x-show="!isVoiceOutputEnabled" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <line x1="22" y1="9" x2="16" y2="15" />
+                  </svg>
+                  <svg x-show="isVoiceOutputEnabled" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
                   </svg>
                 </button>
-                <!-- End Attach Button -->
               </div>
-              <!-- End Button Group -->
-              
-              <!-- Button Group -->
               <div class="flex items-center gap-x-1">
-                <!-- Mic Button -->
                 <button @click="startVoiceInput()" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                   <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
@@ -275,32 +247,22 @@
                     <line x1="12" x2="12" y1="19" y2="22" />
                   </svg>
                 </button>
-                <!-- End Mic Button -->
-                
-                <!-- Send Button -->
-                <button @click="sendMessage(inputText)" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-white bg-blue-600 hover:bg-blue-500 focus:z-10 focus:outline-hidden focus:bg-blue-500">
+                <button @click="sendMessage(inputText)" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-white bg-green-600 hover:bg-green-500 focus:z-10 focus:outline-hidden focus:bg-green-500">
                   <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
                   </svg>
                 </button>
-                <!-- End Send Button -->
               </div>
-              <!-- End Button Group -->
             </div>
           </div>
-          <!-- End Toolbar -->
         </div>
-        <!-- End Input -->
       </div>
-      <!-- End Textarea -->
     </div>
     
-    <!-- Custom Modal -->
     <div x-show="showConfirmationModal" class="w-full fixed inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center">
       <div class="w-96 bg-white pb-3 pt-5 rounded-lg shadow-lg">
         <h1 class="text-gray-800 px-4 text-2xl text-center">কনভারসেশন ডিলেট করুন</h1>
-        <p class="text-gray-800 mb-2 p-4 text-center">আপনি কি নিশ্চিত যে আপনি কনভারসেশন ডিলেট করতে চান? কনভারসেশন ডিলিট করলে
-          নতুন কনভারসেশন শুরু হবে। এক্ষেত্রে আপনার পুরনো ইতিহাস গুলো মুছে যাবে।</p>
+        <p class="text-gray-800 mb-2 p-4 text-center">আপনি কি নিশ্চিত যে আপনি কনভারসেশন ডিলেট করতে চান? কনভারসেশন ডিলিট করলে নতুন কনভারসেশন শুরু হবে। এক্ষেত্রে আপনার পুরনো ইতিহাস গুলো মুছে যাবে।</p>
         <div class="w-full">
           <button @click="confirmDelete" class="w-full text-red-500 px-4 py-2 border-t">ডিলেট করুন</button>
           <button @click="cancelDelete" class="w-full text-gray-500 px-4 py-2 border-t">এখন না</button>
@@ -312,21 +274,75 @@
   <script>
     function alemai() {
       return {
-        API_KEY: "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g", // Your API key here
+        islamicQuestions: [
+        {
+          category: "কুরআন",
+          questions: [
+            "কুরআন মাজিদে মোট কতটি সূরা আছে?",
+            "কুরআনের দীর্ঘতম সূরা কোনটি?",
+            "বিসমিল্লাহির রাহমানির রাহিম কতটি সূরায় নেই?",
+            "কুরআনে কারিমে মোট কতটি আয়াত আছে?",
+            "কোন সূরাকে কুরআনের হার্ট বলা হয়?"
+          ]
+        },
+        {
+          category: "হাদিস",
+          questions: [
+            "হাদিস শাস্ত্র অনুযায়ী ঈমানের শাখা কতটি?",
+            "রাসূল (সা.) এর মোট কতটি হাদিস বর্ণিত হয়েছে?",
+            "সহিহ বুখারি হাদিস গ্রন্থে মোট কতটি হাদিস আছে?",
+            "কিয়ামতের ছোট নিদর্শন有哪些?",
+            "রাসূল (সা.) এর শেষ হাদিস কী ছিল?"
+          ]
+        },
+        {
+          category: "ফিকহ",
+          questions: [
+            "নামাজের ফরজ কয়টি?",
+            "ওযুর ফরজ কয়টি?",
+            "রোজা ভঙ্গের কারণ有哪些?",
+            "হজ্জের ফরজ কয়টি?",
+            "যাকাতের নিসাব কত?"
+          ]
+        },
+        {
+          category: "ইতিহাস",
+          questions: [
+            "ইসলামের প্রথম মুয়াযযিন কে ছিলেন?",
+            "বদর যুদ্ধ কত সালে সংঘটিত হয়?",
+            "মক্কা বিজয়ের বছর কোনটি?",
+            "খুলাফায়ে রাশিদীন কে কে?",
+            "আন্দালুস (স্পেন) কত বছর মুসলিম শাসনাধীন ছিল?"
+          ]
+        },
+        {
+          category: "ঈমান ও আকিদা",
+          questions: [
+            "ঈমানের রুকন কয়টি?",
+            "আল্লাহর ৯৯টি নাম কী কী?",
+            "কিয়ামতের বড় নিদর্শন有哪些?",
+            "মালাইকা (ফেরেশতা) সম্পর্কে ইসলাম কী বলে?",
+            "তাকদীরে বিশ্বাস করা কেন জরুরি?"
+          ]
+        }],
+        API_KEY: "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g", // আপনার Gemini API কী এখানে বসান
         API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=",
         inputText: '',
         errorText: '',
         isLoading: false,
         showConfirmationModal: false,
-        isVoiceOutputEnabled: false,
+        isVoiceOutputEnabled: true,
         recognition: null,
+        isTyping: false,
+        isSpeaking: {}, // কোন মেসেজ পড়ছে তা ট্র্যাক করার জন্য
+        speechInstance: null,
         sidebar: window.innerWidth < 768 ? false : true,
         conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
+        
         async sendMessage(question) {
           if (!question.trim()) return;
           this.scrollToBottom();
           this.conversationHistory.push({ role: "user", parts: [{ text: question }] });
-          
           this.inputText = '';
           this.saveConversation();
           
@@ -334,9 +350,7 @@
             const answer = await this.getAnswer(question);
             this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
             this.saveConversation();
-            this.speakText(answer);
-            
-            // Wait for the DOM to update
+            // speakText এখানে কল করা হবে না
             await this.$nextTick();
             this.typeMessage(answer, this.conversationHistory.length);
             this.scrollToBottom();
@@ -349,19 +363,25 @@
         async getAnswer(question) {
           this.isLoading = true;
           this.scrollToBottom();
+          const islamicPrompt = `তুমি একটি ইসলামিক চ্যাট বট। তোমাকে কুরআন, হাদিস, এবং বিশ্বস্ত ইসলামিক উৎসের ভিত্তিতে সঠিক ও সম্মানজনক উত্তর দিতে হবে। আর কেউ যদি তোমার নাম জানতে চাই তাহলে বলবে আমি একটা ইসলামিক চ্যাট বট। আর উত্তরটা যদি ইসলামিক হয়ে থাকে তাহলে সব শেষে এই কথাটি যুক্ত করে দিবে '*দ্রষ্টব্য: উত্তরটি কুরআন ও হাদিসের আলোকে দেওয়ার চেষ্টা করা হয়েছে।*'। ব্যবহার কারীর প্রশ্ন: ${question}`;
           const response = await fetch(this.API_URL + this.API_KEY, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              contents: this.conversationHistory,
+              contents: [
+                ...this.conversationHistory,
+                { role: "user", parts: [{ text: islamicPrompt }] }
+              ],
             }),
           });
           const data = await response.json();
           if (!response.ok) throw new Error(data.error.message);
           this.isLoading = false;
           this.scrollToBottom();
-          return data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+          let answer = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+          return answer;
         },
+        
         typeMessage(message, index) {
           let i = 0;
           const typingSpeed = 30;
@@ -374,21 +394,23 @@
           
           // Clear the existing text before typing
           messageElement.innerHTML = '';
-          
+          this.isTyping = true;
           const type = () => {
             if (i < message.length) {
               messageElement.innerHTML += message.charAt(i);
               i++;
               setTimeout(type, typingSpeed);
               this.scrollToBottom();
-            }else {
-               messageElement.innerHTML = marked.parse(message);
+            } else {
+              messageElement.innerHTML = marked.parse(message);
+              this.isTyping = false;
             }
           };
           
           type();
           
         },
+        
         saveConversation() {
           localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
         },
@@ -433,11 +455,23 @@
           this.isVoiceOutputEnabled = !this.isVoiceOutputEnabled;
         },
         
-        speakText(text) {
-          if (this.isVoiceOutputEnabled) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'bn-BD';
-            speechSynthesis.speak(utterance);
+        toggleSpeech(text, index) {
+          if (this.isSpeaking[index]) {
+            // পড়া বন্ধ করা
+            speechSynthesis.cancel();
+            this.isSpeaking[index] = false;
+          } else {
+            // পড়া শুরু করা
+            this.speechInstance = new SpeechSynthesisUtterance(text);
+            this.speechInstance.lang = 'bn-BD';
+            this.speechInstance.volume = 1.0;
+            this.speechInstance.rate = 1.0;
+            this.speechInstance.pitch = 1.0;
+            this.speechInstance.onend = () => {
+              this.isSpeaking[index] = false;
+            };
+            speechSynthesis.speak(this.speechInstance);
+            this.isSpeaking[index] = true;
           }
         },
         
@@ -446,11 +480,9 @@
             this.sidebar = window.innerWidth < 768 ? this.sidebar : true;
           });
         }
-        
       }
     }
   </script>
-  
 </body>
 
 </html>
