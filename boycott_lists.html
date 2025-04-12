@@ -131,20 +131,25 @@
     <!-- Product List Section -->
     <div class="p-3">
       <div class="grid grid-cols-3 gap-2">
-        <template x-for="product in products.filter(p => p.attributes.name.toLowerCase().includes(searchQuery.toLowerCase()))" :key="product.id">
+        <template x-for="product in filteredProducts" :key="product.id">
           <div class="bg-white p-2 rounded-xl shadow-lg flex flex-col items-center product-card" @click="selectedProduct = product">
-            <img :src="product.attributes.imageUrl" :alt="product.name + ' Logo'" class="mb-3 rounded-lg object-contain" loading="lazy">
+            <img 
+            :src="product.attributes.imageUrl" 
+            :alt="product.name + ' Logo'"
+            class="mb-3 rounded-lg object-contain" 
+            loading="lazy" 
+            @error="product.attributes.imageUrl = 'https://via.placeholder.com/150?text=No+Image'">
             <p class="text-sm text-gray-800 text-center font-medium" x-text="product.attributes.name"></p>
           </div>
         </template>
       </div>
       <!-- Empty State -->
-      <div x-show="products.length !== 0 && searchQuery" class="text-center py-8">
-        <p class="text-gray-500">No products found matching "<span x-text="searchQuery"></span>"</p>
+      <div x-show="filteredProducts.length === 0 && debouncedSearch" class="text-center py-8">
+        <p class="text-gray-500">No products found matching "<span x-text="debouncedSearch"></span>"</p>
       </div>
       <!-- Loading State -->
       <div x-show="isLoading" class="text-center py-8">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-red-500"></div>
         <p class="mt-2">Loading boycott list...</p>
       </div>
     </div>
@@ -217,6 +222,9 @@
         isNewProduct: false,
         scanBarcode() {
           alert('Barcode scanning functionality is not implemented in this demo. You can integrate a library like QuaggaJS or ZXing for real barcode scanning.');
+        },
+        get filteredProducts() {
+          return this.products.filter(p => p.attributes.name.toLowerCase().includes(this.debouncedSearch.toLowerCase()))
         },
         init() {
           this.$watch('searchQuery', Alpine.debounce(() => {
