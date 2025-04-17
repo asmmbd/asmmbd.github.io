@@ -58,7 +58,7 @@
             <td class="px-2 py-1 border-r border-gray-400">বোর্ডিং ফি</td>
             <td class="px-2 py-1 border-r border-gray-400">সর্বমোট</td>
         </tr>
-        <template x-for="(student,index) in students">
+        <template x-for="(student,index) in students.filter(student => student.active)">
           <tr class="border-b border-gray-400" :class="student.active ? '' : 'bg-gray-200'">
             <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)"></td>
             <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.studentId)"></td>
