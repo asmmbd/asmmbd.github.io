@@ -72,12 +72,8 @@
       <nav class="size-full flex flex-col">
         <div class="flex items-center justify-between pt-4 px-4">
           <a class="flex-none focus:outline-hidden focus:opacity-80" href="/" aria-label="ইসলামিক সহায়ক">
-            <svg class="shrink-0 size-9.5 rounded-full" width="30" height="30" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="38" height="38" rx="6" fill="#15803d" />
-              <path d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25" stroke="white" stroke-width="1.5" />
-              <path d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25" stroke="white" stroke-width="1.5" />
-              <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
-            </svg>
+            <img src="./images/logo.png" alt="" class="shrink-0 size-8 rounded-full" />
+            
           </a>
           <a @click="clearConversation()" class="shrink-0 flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-300 dark:focus:bg-neutral-900 dark:focus:text-neutral-300">
             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -116,6 +112,8 @@
     <div class="relative h-screen w-full lg:ps-64">
       <div class="py-10 lg:py-14">
         <div class="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
+          <img src="./images/Logo.png" alt="" class="shrink-0 size-48 rounded-full mx-auto mb-4" />
+          
           <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
             স্বাগতম ইসলামিক সহায়কে
           </h1>
@@ -130,8 +128,8 @@
               <h1 class="text-center my-4  text-lg" x-text="question.category"></h1>
               <div class="flex flex-wrap items-center justify-center gap-3">
                 <template x-for="q in question.questions">
-                                  <button @click="sendMessage(q)" class="truncate px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600" x-text="q">
-                </button>
+                  <button @click="sendMessage(q)" class="truncate px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600" x-text="q">
+                  </button>
                 </template>
               </div>
             </div>
@@ -142,16 +140,8 @@
         <ul class="mt-16 space-y-5" x-ref="chatContainer">
           <template x-for="(message, index) in conversationHistory" :key="index">
             <li class="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
-              <svg x-show="message.role === 'model'" class="shrink-0 size-9.5 rounded-full" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="38" height="38" rx="6" fill="#15803d" />
-                <path d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25" stroke="white" stroke-width="1.5" />
-                <path d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25" stroke="white" stroke-width="1.5" />
-                <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
-              </svg>
-              <svg x-show="message.role === 'user'" class="shrink-0 size-9.5 rounded-full" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="19" cy="19" r="18" fill="#15803d" />
-                <path d="M14 12L19 20L24 12M19 20V28" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
+              <img x-show="message.role === 'model'" src="./images/logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+              <img x-show="message.role === 'user'" src="./images/user.png" alt="" class="shrink-0 size-10 rounded-full" />
               
               <div class="grow max-w-[90%] md:max-w-2xl w-full space-y-3">
                 <div class="space-y-3 prose prose-p:mt-0">
@@ -188,12 +178,8 @@
             </li>
           </template>
           <li x-show="isLoading" class="w-full max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
-            <svg class="shrink-0 size-9.5 rounded-full" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="38" height="38" rx="6" fill="#15803d" />
-              <path d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25" stroke="white" stroke-width="1.5" />
-              <path d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25" stroke="white" stroke-width="1.5" />
-              <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
-            </svg>
+            <img src="./images/logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+            
             <div class="w-full space-y-1.5 animate-pulse">
               <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
               <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
