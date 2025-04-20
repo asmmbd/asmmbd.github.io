@@ -319,7 +319,7 @@
         </div>
       </div>
       
-      <div class="posts">
+      <div class="posts mb-20">
         <template x-for="post in posts">
           <div class="mb-0 py-2 border-t">
             <div class='px-2 w-full flex items-start'>
@@ -517,7 +517,7 @@
     
     
     <!-- Bottom Navigation -->
-    <nav x-data="{ active: 'home' }" class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40 flex justify-around items-center h-14 md:hidden">
+    <nav x-data="{ active: 'home' }" class="w-full max-w-96 fixed bottom-4 left-1/2 -translate-x-1/2 bg-white border-t shadow-lg rounded-lg z-40 flex justify-around items-center h-14 md:hidden">
       
       <!-- Home -->
       <a href="#" @click="active = 'home'" :class="active === 'home' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
