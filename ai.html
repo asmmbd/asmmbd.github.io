@@ -72,7 +72,7 @@
       <nav class="size-full flex flex-col">
         <div class="flex items-center justify-between pt-4 px-4">
           <a class="flex-none focus:outline-hidden focus:opacity-80" href="/" aria-label="ইসলামিক সহায়ক">
-            <img src="./images/logo.png" alt="" class="shrink-0 size-8 rounded-full" />
+            <img src="./src/img/ai_logo.png" alt="" class="shrink-0 size-8 rounded-full" />
             
           </a>
           <a @click="clearConversation()" class="shrink-0 flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-300 dark:focus:bg-neutral-900 dark:focus:text-neutral-300">
@@ -112,7 +112,7 @@
     <div class="relative h-screen w-full lg:ps-64">
       <div class="py-10 lg:py-14">
         <div class="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
-          <img src="./images/Logo.png" alt="" class="shrink-0 size-48 rounded-full mx-auto mb-4" />
+          <img src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-48 rounded-full mx-auto mb-4" />
           
           <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
             স্বাগতম ইসলামিক সহায়কে
@@ -140,8 +140,8 @@
         <ul class="mt-16 space-y-5" x-ref="chatContainer">
           <template x-for="(message, index) in conversationHistory" :key="index">
             <li class="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
-              <img x-show="message.role === 'model'" src="./images/logo.png" alt="" class="shrink-0 size-10 rounded-full" />
-              <img x-show="message.role === 'user'" src="./images/user.png" alt="" class="shrink-0 size-10 rounded-full" />
+              <img x-show="message.role === 'model'" src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+              <img x-show="message.role === 'user'" src="./src/img/ai_user_logo.png" alt="" class="shrink-0 size-10 rounded-full" />
               
               <div class="grow max-w-[90%] md:max-w-2xl w-full space-y-3">
                 <div class="space-y-3 prose prose-p:mt-0">
@@ -178,7 +178,7 @@
             </li>
           </template>
           <li x-show="isLoading" class="w-full max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
-            <img src="./images/logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+            <img src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-10 rounded-full" />
             
             <div class="w-full space-y-1.5 animate-pulse">
               <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
