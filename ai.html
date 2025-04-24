@@ -345,8 +345,8 @@
             this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
             this.saveConversation();
             // speakText এখানে কল করা হবে না
-            await this.$nextTick();
-            this.typeMessage(answer, this.conversationHistory.length);
+           // await this.$nextTick();
+           // this.typeMessage(answer, this.conversationHistory.length);
             this.scrollToBottom();
           } catch (error) {
             this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
