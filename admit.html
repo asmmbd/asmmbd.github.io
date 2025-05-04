@@ -99,7 +99,7 @@
     <div class="w-full admit flex flex-col items-center justify-center">
       <template x-for="student in getFilteredStudents">
         <div class="page relative">
-          <img :src="student.studentId.startsWith('ASMM-') ? '/images/asmm-admit.jpg' : '/images/juai-admit.jpg' " alt="">
+          <img :src="student.studentId.startsWith('ASMM-') ? '/src/img/asmm-admit.jpg' : '/src/img/juai-admit.jpg' " alt="">
           <div class="w-full absolute top-36 left-0 px-10">
             <h1 class="text-center font-bold text-2xl mt-2 mb-4" x-text="examName + ' - প্রবেশ পত্র'"></h1>
             <table class="w-full text-2xl text-left border border-gray-400">
