@@ -302,7 +302,7 @@
           return retStr;
         },
         getFilteredStudents() {
-          let filtered = this.students;
+          let filtered = this.students.filter(s => s.studentId.startsWith('ASMM-'));
           
           // যদি শিক্ষার্থী আইডি দেওয়া থাকে
           if (this.studentId) {
