@@ -4,8 +4,8 @@
   "description": "আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসার অফিসিয়াল ওয়েবসাইট",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#065f46",
-  "theme_color": "#065f46",
+  "background_color": "#ffffff",
+  "theme_color": "#166534",
   "orientation": "portrait",
   "icons": [
   {
