@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Admission Form</title>
+  <meta content="" name="description" />
+  <meta content="" name="keywords" />
+  <link rel="shortcut icon" href="src/img/asmmlogo.jpg" type="image/x-icon" />
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://raw.githubusercontent.com/alsaifdev/hpapp/main/20230219_150910.jpg" rel="icon" />
+  <link rel="stylesheet" href="src/css/index.css" />
+  <style>
+    .student-img {
+      width: 50px;
+      height: 50px;
+      position: relative;
+    }
+    
+    .student-img img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+    
+    .student-img .bi {
+      position: absolute;
+      bottom: 0;
+      right: -6px;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <main id="main" class="main container">
+    <!-- End Page Title -->
+    <div class="row my-4 text-center">
+      <h1 class="h1">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+      <span>মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর </span>
+      <p class="text-bold mt-2 fs-3">ভর্তি ফরম</p>
+      <p>( নিবন্ধন পত্র অনুযায়ী সমস্ত তথ্য সঠিকভাবে পূরণ করতে হবে )</p>
+    </div>
+    <section class="section">
+      <form class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- Multi Columns Form -->
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label for="name" class="form-label">
+                    ছাত্রীর নাম (বাংলায়)*</label>
+                  <input type="text" class="form-control" id="stname" name="stname" />
+                </div>
+                <div class="col-md-4">
+                  <label for="aname" class="form-label">আরবিতেঃ</label>
+                  <input type="text" class="form-control" id="staname" name="staname" />
+                </div>
+                <div class="col-md-4">
+                  <label for="stiname" class="form-label">ইংরেজিতে (বড় অক্ষরে)*</label>
+                  <input type="text" class="form-control" id="stiname" name="stiname" />
+                </div>
+                <div class="col-md-3">
+                  <label for="class" class="form-label">শ্রেণিঃ </label>
+                  <select id="class" name="class" class="form-select">
+                    <option value="প্লে">প্লে</option>
+                    <option value="নার্সারি">নার্সারি</option>
+                    <option value="প্রথম">প্রথম</option>
+                    <option value="দ্বিতীয়">দ্বিতীয়</option>
+                    <option value="তৃতীয়">তৃতীয়</option>
+                    <option value="চতুর্থ">চতুর্থ</option>
+                    <option value="পঞ্চম">পঞ্চম</option>
+                    <option value="মিজান">মিজান</option>
+                    <option value="নাহবেমির">নাহবেমির</option>
+                    <option value="হিফজখানা">হিফজখানা</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="group" class="form-label">বিভাগঃ </label>
+                  <select id="group" name="group" class="form-select">
+                    <option value="হিফজ বিভাগ">হিফজ বিভাগ</option>
+                    <option value="নূরানী বিভাগ">নূরানী বিভাগ</option>
+                    <option value="কিতাব বিভাগ">কিতাব বিভাগ</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="category" class="form-label">আবাসিক/আনাবাসিক/ডে-কেয়ার
+                  </label>
+                  <select id="category" name="category" class="form-select">
+                    <option value="আবাসিক" selected>আবাসিক</option>
+                    <option value="আনাবাসিক">আনাবাসিক</option>
+                    <option value="ডে-কেয়ার">ডে-কেয়ার</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="birthDate" class="form-label">জন্ম তারিখঃ
+                  </label>
+                  <input type="date" class="form-control" id="birthDate" name="birthDate" />
+                </div>
+                <div class="col-md-4">
+                  <label for="age" class="form-label">বয়সঃ </label>
+                  <input type="number" class="form-control" id="age" name="age" />
+                </div>
+                <div class="col-md-5">
+                  <label for="stbirthId" class="form-label">জন্ম নিবন্ধন নংঃ</label>
+                  <input type="number" class="form-control" id="stbirthId" name="stbirthId" />
+                </div>
+                <!--
+                <div class="col-md-3">
+                  <label for="bloodGroup" class="form-label"> রক্তের গ্রুপঃ
+                  </label>
+                  <select type="text" class="form-select" id="bloodGroup" name="bloodGroup">
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                  </select>
+                </div>
+                
+              
+                <div class="col-md-3">
+                  <label for="file" class="form-label"> ছবিঃ
+                  </label>
+                  <input type="file" id="file" class="form-control" />
+                </div>
+
+                <div class="col-md-9">
+
+                </div>
+                <div class="col-md-3">
+                  <div class="student-img">
+                    <img src="https://asmmbd.github.io/src/img/images.png" id="studentImg" />
+                    <i class="bi bi-trash-fill d-none"></i>
+                  </div>
+                </div>
+                -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="card mt-4">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label for="faName" class="form-label">পিতার নাম(বাংলায়)*</label>
+                  <input type="text" class="form-control" id="faName" name="faName" />
+                </div>
+                <div class="col-md-4">
+                  <label for="faNameIng" class="form-label">পিতার নাম(ইংরেজিতে)*</label>
+                  <input type="text" class="form-control" id="faNameIng" name="faNameIng" />
+                </div>
+                <div class="col-md-4">
+                  <label for="faIdNum" class="form-label">ভোটার আইডি/জন্ম নিবন্ধন নংঃ</label>
+                  <input type="number" class="form-control" id="faIdNum" name="faIdNum" />
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="faProfession" class="form-label">পেশাঃ</label>
+                  <select type="text" class="form-select" id="faProfession" name="faProfession">
+                    <option>নির্বাচন করুন</option>
+                    <option value="শিক্ষক">শিক্ষক</option>
+                    <option value="ডাক্তার">ডাক্তার</option>
+                    <option value="ব্যবসায়ী">ব্যবসায়ী</option>
+                    <option value="প্রকৌশলী">প্রকৌশলী</option>
+                    <option value="কৃষক">কৃষক</option>
+                    <option value="তাঁতি">তাঁতি</option>
+                    <option value="গৃহিণী">গৃহিণী</option>
+                    <option value="সরকারি চাকরিজীবী">সরকারি চাকরিজীবী</option>
+                    <option value="বেসরকারি চাকরিজীব">বেসরকারি চাকরিজীব</option>
+                    <option value="কামার">কামার</option>
+                    <option value="কুমার">কুমার</option>
+                    <option value="শ্রমিক">শ্রমিক</option>
+                    <option value="জেলে">জেলে</option>
+                    <option value="আইনজীবী">আইনজীবী</option>
+                    <option value="অবসরপ্রাপ্ত">অবসরপ্রাপ্ত</option>
+                    <option value="মৃত">মৃত</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                  </select>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="faPhone" class="form-label">মোবাইল নংঃ</label>
+                  <input type="number" class="form-control" id="faPhone" name="faPhone" />
+                </div>
+              </div>
+              <div class="row g-3 mt-2">
+                <div class="col-md-4">
+                  <label for="maName" class="form-label">মাতার নাম(বাংলায়)*</label>
+                  <input type="text" class="form-control" id="maName" name="maName" />
+                </div>
+                <div class="col-md-4">
+                  <label for="maNameIng" class="form-label">মাতার নাম(ইংরেজিতে)*</label>
+                  <input type="text" class="form-control" id="maNameIng" name="maNameIng" />
+                </div>
+                <div class="col-md-4">
+                  <label for="maIdNum" class="form-label">ভোটার আইডি/জন্ম নিবন্ধন নংঃ</label>
+                  <input type="number" class="form-control" id="maIdNum" name="maIdNum" />
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="maProfession" class="form-label">পেশাঃ</label>
+                  <select type="text" class="form-select" id="maProfession" name="maProfession">
+                    <option>নির্বাচন করুন</option>
+                    <option value="শিক্ষক">শিক্ষক</option>
+                    <option value="ডাক্তার">ডাক্তার</option>
+                    <option value="ব্যবসায়ী">ব্যবসায়ী</option>
+                    <option value="প্রকৌশলী">প্রকৌশলী</option>
+                    <option value="কৃষক">কৃষক</option>
+                    <option value="তাঁতি">তাঁতি</option>
+                    <option value="গৃহিণী">গৃহিণী</option>
+                    <option value="সরকারি চাকরিজীবী">সরকারি চাকরিজীবী</option>
+                    <option value="বেসরকারি চাকরিজীব">বেসরকারি চাকরিজীব</option>
+                    <option value="কামার">কামার</option>
+                    <option value="কুমার">কুমার</option>
+                    <option value="শ্রমিক">শ্রমিক</option>
+                    <option value="জেলে">জেলে</option>
+                    <option value="আইনজীবী">আইনজীবী</option>
+                    <option value="অবসরপ্রাপ্ত">অবসরপ্রাপ্ত</option>
+                    <option value="মৃত">মৃত</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                  </select>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="maPhone" class="form-label">মোবাইল নংঃ</label>
+                  <input type="number" class="form-control" id="maPhone" name="maPhone" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-4">
+            <div class="card-body">
+              <h5>বর্তমান ঠিকানাঃ</h5>
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label for="preVillage" class="form-label">গ্রাম/মহল্লাঃ
+                  </label>
+                  <input type="text" class="form-control" id="preVillage" name="preVillage" placeholder="মেহেরপুর" />
+                </div>
+                <div class="col-md-2">
+                  <label for="preWord" class="form-label">ওয়ার্ড নংঃ </label>
+                  <input type="text" class="form-control" id="preWord" name="preWord" placeholder="১ নং ওয়ার্ড " />
+                </div>
+                <div class="col-md-2">
+                  <label for="prePost" class="form-label">ডাকঘরঃ </label>
+                  <input type="text" class="form-control" id="prePost" name="prePost" />
+                </div>
+                <div class="col-md-2">
+                  <label for="preUni" class="form-label">ইউনিয়নঃ </label>
+                  <input type="text" class="form-control" id="preUni" name="preUni" />
+                </div>
+                <div class="col-md-2">
+                  <label for="preUpojela" class="form-label">উপজেলাঃ </label>
+                  <select id="preUpojela" name="preUpojela" class="form-select">
+                    <option selected>মেহেরপুর সদর</option>
+                    <option>মুজিবনগর</option>
+                    <option>গাংনি</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="preJela" class="form-label">জেলাঃ </label>
+                  <select id="preJela" name="preJela" class="form-select">
+                    <option selected>মেহেরপুর</option>
+                    <option>চুয়াডাঙ্গা</option>
+                    <option>কুষ্টিয়া</option>
+                  </select>
+                </div>
+              </div>
+              <h5 class="mt-4">স্থায়ী ঠিকানাঃ</h5>
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label for="parVillage" class="form-label">গ্রাম/মহল্লাঃ
+                  </label>
+                  <input type="text" class="form-control" id="parVillage" name="parVillage" placeholder="মেহেরপুর" />
+                </div>
+                <div class="col-md-2">
+                  <label for="parWord" class="form-label">ওয়ার্ড নংঃ </label>
+                  <input type="text" class="form-control" id="parWord" name="parWord" placeholder="১ নং ওয়ার্ড " />
+                </div>
+                <div class="col-md-2">
+                  <label for="parPost" class="form-label">ডাকঘরঃ </label>
+                  <input type="text" class="form-control" id="parPost" name="parPost" />
+                </div>
+                <div class="col-md-2">
+                  <label for="parUni" class="form-label">ইউনিয়নঃ </label>
+                  <input type="text" class="form-control" id="parUni" name="parUni" />
+                </div>
+                <div class="col-md-2">
+                  <label for="parUpojela" class="form-label">উপজেলাঃ </label>
+                  <select id="parUpojela" name="parUpojela" class="form-select">
+                    <option selected>মেহেরপুর সদর</option>
+                    <option>মুজিবনগর</option>
+                    <option>গাংনি</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="parJela" class="form-label">জেলাঃ </label>
+                  <select id="parJela" name="parJela" class="form-select">
+                    <option selected>মেহেরপুর</option>
+                    <option>চুয়াডাঙ্গা</option>
+                    <option>কুষ্টিয়া</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-4">
+            <div class="card-body">
+              <h6>অভিভাবক/অভিভাবিকা (পিতার অবর্তমানে)</h6>
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <label for="ovivabok" class="form-label">নামঃ</label>
+                  <input type="text" class="form-control" id="ovivabok" name="ovivabok" />
+                </div>
+                <div class="col-md-3">
+                  <label for="ovivabokNum" class="form-label">মোবাঃ</label>
+                  <input type="number" class="form-control" id="ovivabokNum" name="ovivabokNum" />
+                </div>
+                <div class="col-md-3">
+                  <label for="ovivabokProf" class="form-label">পেশাঃ</label>
+                  <select type="text" class="form-select" id="ovivabokProf" name="ovivabokProf">
+                    <option>নির্বাচন করুন</option>
+                    <option value="শিক্ষক">শিক্ষক</option>
+                    <option value="ডাক্তার">ডাক্তার</option>
+                    <option value="ব্যবসায়ী">ব্যবসায়ী</option>
+                    <option value="প্রকৌশলী">প্রকৌশলী</option>
+                    <option value="কৃষক">কৃষক</option>
+                    <option value="তাঁতি">তাঁতি</option>
+                    <option value="গৃহিণী">গৃহিণী</option>
+                    <option value="সরকারি চাকরিজীবী">সরকারি চাকরিজীবী</option>
+                    <option value="বেসরকারি চাকরিজীব">বেসরকারি চাকরিজীব</option>
+                    <option value="কামার">কামার</option>
+                    <option value="কুমার">কুমার</option>
+                    <option value="শ্রমিক">শ্রমিক</option>
+                    <option value="জেলে">জেলে</option>
+                    <option value="আইনজীবী">আইনজীবী</option>
+                    <option value="অবসরপ্রাপ্ত">অবসরপ্রাপ্ত</option>
+                    <option value="মৃত">মৃত</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="oviRelation" class="form-label">সম্পর্কঃ
+                  </label>
+                  <input type="text" class="form-control" id="oviRelation" name="oviRelation" placeholder="চাচা " />
+                </div>
+                <div class="col-md-12">
+                  <label for="oviAdress" class="form-label">ঠিকানাঃ</label>
+                  <input type="text" class="form-control" id="oviAdress" name="oviAdress" placeholder="পূর্ণ ঠিকানা....." />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-4">
+            <div class="card-body">
+              <h5>পূর্বে যে প্রতিষ্ঠানে অধ্যয়নরত ছিল</h5>
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label for="preInsName" class="form-label">প্রতিষ্ঠানের নামঃ</label>
+                  <input type="text" class="form-control" id="preInsName" name="preInsName" />
+                </div>
+                <div class="col-md-3">
+                  <label for="preInsVillage" class="form-label">গ্রাম/মহল্লাঃ
+                  </label>
+                  <input type="text" class="form-control" id="preInsVillage" name="preInsVillage" placeholder="মেহেরপুর" />
+                </div>
+                
+                <div class="col-md-3">
+                  <label for="preInsPost" class="form-label">ডাকঘরঃ </label>
+                  <input type="text" class="form-control" id="preInsPost" name="preInsPost" />
+                </div>
+                <div class="col-md-2">
+                  <label for="preInsUni" class="form-label">ইউনিয়নঃ </label>
+                  <input type="text" class="form-control" id="preInsUni" name="preInsUni" />
+                </div>
+                <div class="col-md-2">
+                  <label for="preInsUpojela" class="form-label">উপজেলাঃ
+                  </label>
+                  <select id="preInsUpojela" name="preInsUpojela" class="form-select">
+                    <option selected>মেহেরপুর সদর</option>
+                    <option>মুজিবনগর</option>
+                    <option>গাংনি</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="preInsJela" class="form-label">জেলাঃ </label>
+                  <select id="preInsJela" name="preInsJela" class="form-select">
+                    <option selected>মেহেরপুর</option>
+                    <option>চুয়াডাঙ্গা</option>
+                    <option>কুষ্টিয়া</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 text-center my-4">
+          <button class="btn btn-primary" type='submit'>Submit</button>
+          <button class="btn btn-danger" onclick='location.reload()'>Reset</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+            Print
+          </button>
+          <a href='/src/img/admission-form.pdf' class="btn btn-primary" download>Download</a>
+        </div>
+      </form>
+    </section>
+    
+    <!-- modal box start -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">পিতার মোবাইল নাম্বার:</label>
+                <input type="text" class="form-control student-print-Value" id="recipient-name" required />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="button" class="btn btn-primary student-print-btn">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal box end -->
+  </main>
+  
+  <!-- End #main -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Storage, ID, Query } = Appwrite;
+    const client = new Client();
+    // const bucketId = '653bc7811a3ca0417dd5';
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const storage = new Storage(client);
+    const databases = new Databases(client);
+    
+    
+    let stPrintBtn = document.querySelector(".student-print-btn");
+    let stPrintValue = document.querySelector(".student-print-Value");
+    stPrintBtn.addEventListener("click", () => {
+      let number = stPrintValue.value;
+      if (number !== "") {
+        location.assign(`/print-student?faPhone=${number}`);
+        stPrintValue.vale = "";
+      }
+    });
+    
+    let studentId;
+    let form = document.querySelector("form");
+    /*  let files = document.querySelector("#file");
+      let studentImg = document.querySelector("#studentImg");
+      let deleteBtn = document.querySelector(".bi-trash-fill");
+
+      let imageUrl = null;
+      let studentId;
+
+      files.addEventListener('change', (e) => {
+        let file = e.target.files[0];
+        const promise = storage.createFile(bucketId, studentId, file);
+        promise.then(function({ bucketId, $id }) {
+          const result = storage.getFilePreview(bucketId, $id);
+          imageUrl = result;
+          studentImg.src = result;
+          
+          alert(result)
+          console.log(imageUrl)
+          deleteBtn.classList.remove('d-none')
+          // alert(result.href); // Resource URL
+        }, function(error) {
+          console.log(error); // Failure
+        });
+      })
+
+      deleteBtn.addEventListener('click', () => {
+        const promise = storage.deleteFile(bucketId, studentId);
+        promise.then(function(response) {
+          console.log(response); // Success
+          imageUrl = null;
+          studentImg.src = 'https://asmmbd.github.io/src/img/images.png';
+          deleteBtn.classList.add('d-none');
+          file.value = '';
+          console.log(file.files);
+        }, function(error) {
+          console.log(error); // Failure
+        });
+      }) */
+    
+    function addPost(student) {
+      const promise = databases.createDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', studentId, student)
+      promise.then(function(response) {
+        alert('registation');
+        console.log(response)
+        // location.reload()
+      }, function(error) {
+        console.log(error)
+        alert(error.code);
+        // location.reload()
+      });
+    }
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let data = new FormData(form);
+      let student = Object.fromEntries(data)
+      addPost({ ...student, active: true, studentId: studentId })
+    })
+    const createId = (id) => {
+      let year = new Date().getFullYear()
+      if (id < 10) {
+        return `${year}000${id}`
+      }
+      else if (id < 100) {
+        return `${year}00${id}`
+      }
+      else if (id < 1000) {
+        return `${year}0${id}`
+      }
+      else if (id < 10000) {
+        return `${year}${id}`
+      }
+    }
+    
+    /* async function generateStudentId(institute) {
+       const year = new Date().getFullYear();
+       const prefix = institute === "asmm" ? `ASMM-${year}` : `JUAI-${year}`;
+       
+       const response = await databases.listDocuments(
+         "652c16162f939c821f75",
+         "652c16266c0f7c2fccd8",
+         [
+           Query.orderDesc("studentId"),
+           Query.limit(1)
+         ]
+       );
+       
+       let nextId = 1;
+       if (response.documents.length) {
+         const lastId = response.documents.length;
+         nextId = lastId + 1;
+       }
+       
+       let id = `${prefix}${String(nextId).padStart(4, '0')}`;
+       
+       console.log(id)
+     }
+     generateStudentId('juai');*/
+    
+    
+    function cleanStudentData(obj) {
+      const cleaned = {};
+      
+      for (const [key, value] of Object.entries(obj)) {
+        // বাদ দেবো যদি $ দিয়ে শুরু হয় বা 24-digit hex হয়
+        const isSystemField = key.startsWith("$") || /^[0-9a-f]{24}$/.test(key);
+        
+        if (!isSystemField && value !== null && value !== undefined) {
+          cleaned[key] = value;
+        }
+      }
+      
+      return cleaned;
+    }
+    
+    async function addStudent(docId, student) {
+      
+      //console.log(docId, student)
+      try {
+        const response = await databases.updateDocument(
+          '652c16162f939c821f75',
+          '65d42b3c83e7217b2aac',
+          docId,
+          student
+        );
+        console.log('Added:', response.studentId);
+      } catch (error) {
+        console.error('Error adding student:', error);
+        alert(error.code);
+      }
+    }
+    
+    async function getAllStudents() {
+      try {
+        const response = await databases.listDocuments(
+          '652c16162f939c821f75',
+          '65d42b3c83e7217b2aac',
+          [
+            Query.limit(150)
+          ]
+        );
+        
+        console.log(response.documents)
+        
+        const students = response.documents;
+        
+        for (const student of students) {
+          await addStudent(student.$id, {
+            studentId: `ASMM-${student.studentId}`
+          });
+        }
+        
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    }
+    
+    getAllStudents()
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+</body>
+
+</html>

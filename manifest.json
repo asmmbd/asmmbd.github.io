@@ -1,0 +1,46 @@
+{
+  "name": "আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা",
+  "short_name": "ASMM",
+  "description": "আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসার অফিসিয়াল ওয়েবসাইট",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#065f46",
+  "theme_color": "#065f46",
+  "orientation": "portrait",
+  "icons": [
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "72x72",
+    "type": "image/png"
+  },
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "96x96",
+    "type": "image/png"
+  },
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "128x128",
+    "type": "image/png"
+  },
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "144x144",
+    "type": "image/png"
+  },
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "152x152",
+    "type": "image/png"
+  },
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "192x192",
+    "type": "image/png"
+  },
+  {
+    "src": "./images/logo.jpg",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}

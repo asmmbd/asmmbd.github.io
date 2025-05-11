@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> প্রবেশ পত্র </title>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+    
+    .page {
+      height: 29.7cm;
+      width: 21cm;
+    }
+    
+    .page img {
+      width: 100%;
+      height: 100%;
+    }
+    .details  th{
+      padding-block: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="w-full" x-data="data()">
+    <div class="w-full print:hidden p-4 bg-gray-100 mb-4">
+      <h2 class="text-xl font-bold mb-4">প্রবেশ পত্র ফিল্টার</h2>
+      
+      <div class="w-full grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+        <!-- শিক্ষার্থী আইডি দিয়ে খুঁজুন -->
+        <div>
+          <label class="block mb-2">শিক্ষার্থী আইডি দিয়ে খুঁজুন</label>
+          <div class="relative">
+            <input type="text" x-model="studentId" placeholder="শিক্ষার্থী আইডি লিখুন" class="w-full p-2 border rounded pr-10">
+            <button @click="studentId = ''" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700">
+              ✕
+            </button>
+          </div>
+        </div>
+        
+        <!-- ক্লাস দিয়ে ফিল্টার -->
+        <div>
+          <label class="block mb-2">ক্লাস/জামাত নির্বাচন করুন</label>
+          <select x-model="selectedClass" class="w-full p-2 border rounded">
+            <option value="">সকল ক্লাস</option>
+            <template x-for="cls in allClasses" :key="cls">
+              <option x-text="cls" :value="cls"></option>
+            </template>
+          </select>
+        </div>
+        
+        <!-- একাধিক ক্লাস নির্বাচন -->
+        <div>
+          <label class="block mb-2">একাধিক ক্লাস নির্বাচন</label>
+          <select x-model="selectedClasses" multiple class="w-full p-2 border rounded min-h-[42px] max-h-[120px] overflow-auto">
+            <template x-for="cls in allClasses" :key="cls">
+              <option x-text="cls" :value="cls"></option>
+            </template>
+          </select>
+        </div>
+        
+        <button @click="resetFilters()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+          ফিল্টার রিসেট করুন
+        </button>
+        <button @click="printFiltered()" :disabled="isPrinting" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 flex items-center">
+          <template x-if="isPrinting">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </template>
+          নির্বাচিত প্রবেশ পত্র প্রিন্ট করুন
+          <template x-if="getFilteredStudents.length > 0">
+            <span class="ml-2 bg-blue-700 text-white px-2 py-1 rounded-full text-xs" x-text="getFilteredStudents.length"></span>
+          </template>
+        </button>
+      </div>
+      <div class="my-3 flex items-center gap-3">
+        নির্বাচিত ক্লাসসমূহ:
+        <!-- নির্বাচিত ক্লাস প্রিভিউ -->
+        <template x-if="selectedClasses.length > 0">
+          <div class="mt-2 flex flex-wrap gap-1">
+            <template x-for="cls in selectedClasses" :key="cls">
+              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm flex items-center">
+                <span x-text="cls"></span>
+                <button @click.stop="selectedClasses = selectedClasses.filter(c => c !== cls)" class="ml-1 text-blue-600 hover:text-blue-800">
+                  ✕
+                </button>
+              </span>
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+    <div class="w-full admit flex flex-col items-center justify-center">
+      <template x-for="student in getFilteredStudents">
+        <div class="page border">
+          <div class="w-full px-10">
+            <h1 class="text-center font-bold text-5xl mb-2 mt-12">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+            <h1 class="text-center font-bold text-3xl">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর</h1>
+            <h1 class="text-center font-bold text-2xl mt-2 mb-4" x-text="examName"></h1>
+            <table class="w-full text-2xl text-left border border-gray-400">
+              <tbody>
+                <tr class="border-b border-gray-400">
+                  <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                    নাম
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="student?.stname">
+                    আয়েশা সিদ্দিকা মনিরা
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    আইডি নং
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.studentId.slice(5,13))">
+                    ২০২৪০০০১
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-400">
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    পিতার নাম
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="student?.faName">
+                    আলামীন হোসেন
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    জামাত
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="student?.class">
+                    মিজান
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-400">
+                  <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                    মাতার নাম
+                  </th>
+                  <td class="px-2 py-1 border-r border-gray-400" x-text="student?.maName">
+                    আমেনা খাতুন
+                  </td>
+                  <th class="px-2 py-1 border-r border-gray-400">
+                    বিভাগ
+                  </th>
+                  <td class="px-2 py-1" x-text="student?.group">
+                    কিতাব বিভাগ
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="details w-full text-2xl text-left border border-gray-400 text-center mt-6">
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  বিষয়
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                  তারিখ
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                  শিক্ষার্থীর সাক্ষর
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                  কক্ষ পরিদর্শকের সাক্ষর
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              <tr class="border-b border-gray-400">
+                <th class="px-2 py-1 border-r border-gray-400">
+                  &nbsp;
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+                <th class="px-2 py-1 border-r border-gray-400">
+                </th>
+              </tr>
+              
+            </table>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+    
+    function data() {
+      return {
+        isPrinting: false,
+        selectedClass: '',
+        selectedClasses: [],
+        studentId: '',
+        allClasses: [],
+        students: [],
+        examName: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
+        searchStudent() {
+          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(150)]);
+          promise.then((ress) => {
+            this.students = ress.documents.filter(s => s.active);
+            this.filteredStudents = this.students;
+            this.allClasses = [...new Set(this.students.map(s => s.class))]
+            console.log(ress)
+          }, function(error) {
+            console.log(error);
+          });
+        },
+        getBangla(x) {
+          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+          var retStr = String(x);
+          for (let n in numbers) {
+            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+          }
+          return retStr;
+        },
+        getFilteredStudents() {
+          let filtered = this.students.filter(s => s.studentId.startsWith('ASMM-'));
+          
+          // যদি শিক্ষার্থী আইডি দেওয়া থাকে
+          if (this.studentId) {
+            filtered = filtered.filter(s =>
+              s.studentId.includes(this.studentId.toUpperCase())
+            );
+          }
+          
+          // যদি একটি ক্লাস নির্বাচন করা থাকে
+          if (this.selectedClass) {
+            filtered = filtered.filter(s => s.class === this.selectedClass);
+          }
+          
+          // যদি একাধিক ক্লাস নির্বাচন করা থাকে
+          if (this.selectedClasses && this.selectedClasses.length > 0) {
+            filtered = filtered.filter(s =>
+              this.selectedClasses.includes(s.class)
+            );
+          }
+          
+          return filtered;
+        },
+        
+        // ফিল্টার অনুযায়ী প্রিন্ট করবে
+        printFiltered() {
+          this.filteredStudents = this.getFilteredStudents();
+          setTimeout(() => {
+            window.print();
+          }, 500);
+        },
+        
+        resetFilters() {
+          this.studentId = '';
+          this.selectedClass = '';
+          this.selectedClasses = [];
+        },
+        async printFiltered() {
+          this.isPrinting = true;
+          await this.$nextTick(); // DOM আপডেট হতে দেয়
+          setTimeout(() => {
+            window.print();
+            this.isPrinting = false;
+          }, 500);
+        },
+        init() {
+          this.searchStudent()
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

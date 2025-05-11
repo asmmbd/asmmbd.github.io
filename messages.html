@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="bn" x-data="chatApp()" x-init="fetchContacts()">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>আল-হেরা চ্যাট</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    
+    .chat-container {
+      height: calc(100vh - 64px);
+    }
+    
+    .contacts-list {
+      height: calc(100vh - 190px);
+    }
+    
+    .messages-container {
+      height: calc(100vh - 190px);
+    }
+    
+    .typing-indicator:after {
+      content: '...';
+      animation: typing 1.5s infinite;
+    }
+    
+    @keyframes typing {
+      0% {
+        content: '.';
+      }
+      
+      33% {
+        content: '..';
+      }
+      
+      66% {
+        content: '...';
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 pb-14 md:pb-0">
+  <!-- হেডার -->
+  <header class="bg-green-800 text-white shadow-l">
+    <div class="px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <img src="./images/logo.jpg" alt="লোগো" class="h-10 rounded-full">
+        <h1 class="text-lg font-bold">আল-হেরা চ্যাট</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button @click="notificationsOpen = !notificationsOpen" class="relative">
+          <i class="far fa-bell text-xl"></i>
+          <span x-show="unreadNotifications > 0" x-text="unreadNotifications" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+        </button>
+        <div class="relative" x-data="{ open: false }">
+          <button @click="open = !open" class="flex items-center space-x-1">
+            <img :src="currentUser.avatar" alt="প্রোফাইল" class="h-8 w-8 rounded-full">
+            <span x-text="currentUser.name" class="hidden md:inline"></span>
+            <i class="fas fa-chevron-down text-xs"></i>
+          </button>
+          <div x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">প্রোফাইল</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">সেটিংস</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">লগ আউট</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- মেইন চ্যাট কন্টেইনার -->
+  <main>
+    <div class="bg-white overflow-hidden chat-container">
+      <div class="flex flex-col md:flex-row h-full">
+        <!-- কন্টাক্ট লিস্ট -->
+        <div class="w-full md:w-1/3 md:border-r bg-gray-50">
+          <div class="p-3 border-b bg-green-700 text-white">
+            <h2 class="text-lg font-bold">চ্যাট তালিকা</h2>
+          </div>
+          <div class="p-3 border-b">
+            <div class="relative">
+              <input x-model="searchQuery" type="text" placeholder="খুঁজুন..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500">
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+          </div>
+          <div class="overflow-y-auto contacts-list">
+            <template x-for="contact in filteredContacts" :key="contact.id">
+              <div @click="selectContact(contact)" :class="{ 'bg-green-100': contact.id === activeContact.id }" class="flex items-center p-3 border-b hover:bg-gray-100 cursor-pointer">
+                <div class="relative">
+                  <img :src="contact.avatar" :alt="contact.name" class="h-12 w-12 rounded-full">
+                  <span x-show="contact.online" class="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
+                </div>
+                <div class="ml-3 flex-1">
+                  <div class="flex justify-between items-center">
+                    <h3 x-text="contact.name" class="font-medium"></h3>
+                    <span x-text="contact.lastMessage.time" class="text-xs text-gray-500"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <p x-text="contact.lastMessage.text" class="text-sm text-gray-600 truncate w-40"></p>
+                    <span x-show="contact.unread > 0" x-text="contact.unread" class="bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        
+        <!-- মেসেজিং এরিয়া -->
+        <div class="w-full md:w-2/3 flex flex-col" x-show="activeContact">
+          <!-- চ্যাট হেডার -->
+          <div class="p-3 border-b flex items-center justify-between bg-gray-50">
+            <div class="flex items-center">
+              <div class="relative">
+                <img :src="activeContact.avatar" :alt="activeContact.name" class="h-10 w-10 rounded-full">
+                <span x-show="activeContact.online" class="absolute bottom-0 right-0 h-2 w-2 bg-green-500 rounded-full border-2 border-white"></span>
+              </div>
+              <div class="ml-3">
+                <h3 x-text="activeContact.name" class="font-bold"></h3>
+                <p x-text="activeContact.online ? 'অনলাইন' : 'অফলাইন'" class="text-xs text-gray-500"></p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button class="text-gray-500 hover:text-green-600 p-1">
+                <i class="fas fa-phone-alt"></i>
+              </button>
+              <button class="text-gray-500 hover:text-green-600 p-1">
+                <i class="fas fa-video"></i>
+              </button>
+              <button class="text-gray-500 hover:text-green-600 p-1">
+                <i class="fas fa-info-circle"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- মেসেজেস -->
+          <div class="flex-1 overflow-y-auto p-4 bg-gray-100 messages-container">
+            <template x-for="message in activeContact.messages" :key="message.id">
+              <div :class="{ 'justify-end': message.sender === 'me', 'justify-start': message.sender !== 'me' }" class="flex mb-4">
+                <div :class="{ 'bg-green-500 text-white': message.sender === 'me', 'bg-white': message.sender !== 'me' }" class="max-w-xs md:max-w-md rounded-lg p-3 shadow">
+                  <p x-text="message.text"></p>
+                  <div class="flex justify-end items-center mt-1">
+                    <span x-text="message.time" class="text-xs opacity-70"></span>
+                    <span x-show="message.sender === 'me'" class="ml-1">
+                      <i x-show="message.read" class="fas fa-check-double text-blue-500 text-xs"></i>
+                      <i x-show="!message.read" class="fas fa-check text-gray-400 text-xs"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <div x-show="activeContact.typing" class="flex mb-4">
+              <div class="bg-white rounded-lg p-3 shadow">
+                <p class="typing-indicator">টাইপ করছেন</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- মেসেজ ইনপুট -->
+          <div class="p-3 border-t bg-gray-50">
+            <div class="flex items-center">
+              <button class="text-gray-500 hover:text-green-600 p-2">
+                <i class="fas fa-paperclip"></i>
+              </button>
+              <input x-model="newMessage" @keyup.enter="sendMessage" type="text" placeholder="মেসেজ লিখুন..." class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500">
+              <button @click="sendMessage" class="ml-2 bg-green-600 hover:bg-green-700 text-white rounded-full h-10 w-10 flex items-center justify-center">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- নো কন্টাক্ট সিলেক্টেড ভিউ -->
+        <div x-show="!activeContact" class="hidden md:flex md:w-2/3 items-center justify-center bg-gray-100">
+          <div class="text-center p-6">
+            <i class="fas fa-comments text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-500 mb-2">কোনো চ্যাট নির্বাচন করা হয়নি</h3>
+            <p class="text-gray-500">বাম পাশ থেকে একজনকে নির্বাচন করুন চ্যাট শুরু করতে</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <include src="/src/components/bottom-nav"></include>
+  <script src="/src/index.js"></script>
+  
+  <script>
+    function chatApp() {
+      return {
+        // ইউজার ডাটা
+        currentUser: {
+          id: 1,
+          name: "আব্দুল্লাহ আল মামুন",
+          avatar: "./images/logo.jpg",
+          batch: "২০২৩ ব্যাচ",
+          department: "হাদিস বিভাগ"
+        },
+        
+        // অ্যাপ স্টেট
+        searchQuery: '',
+        activeContact: null,
+        newMessage: '',
+        notificationsOpen: false,
+        unreadNotifications: 2,
+        
+        // কন্টাক্ট লিস্ট
+        contacts: [],
+        
+        // কম্পিউটেড প্রপার্টিজ
+        get filteredContacts() {
+          return this.contacts.filter(contact =>
+            contact.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+        },
+        
+        // মেথডস
+        fetchContacts() {
+          // ডেমো ডাটা - বাস্তবে এখানে API কল হবে
+          this.contacts = [
+          {
+            id: 1,
+            name: "মুহাম্মদ ইব্রাহিম",
+            avatar: "./images/logo.jpg",
+            online: true,
+            batch: "২০২৩ ব্যাচ",
+            department: "ফিকহ বিভাগ",
+            unread: 2,
+            typing: false,
+            lastMessage: {
+              text: "আপনি কি কালকের ক্লাসে ছিলেন?",
+              time: "10:30 AM"
+            },
+            messages: [
+            {
+              id: 1,
+              text: "আসসালামু আলাইকুম ভাই",
+              time: "10:20 AM",
+              sender: "them",
+              read: true
+            },
+            {
+              id: 2,
+              text: "ওয়া আলাইকুম আসসালাম",
+              time: "10:22 AM",
+              sender: "me",
+              read: true
+            },
+            {
+              id: 3,
+              text: "আপনি কি কালকের ক্লাসে ছিলেন?",
+              time: "10:30 AM",
+              sender: "them",
+              read: false
+            }]
+          },
+          {
+            id: 2,
+            name: "আয়েশা সিদ্দিকা",
+            avatar: "./images/logo.jpg",
+            online: false,
+            batch: "২০২২ ব্যাচ",
+            department: "তাফসীর বিভাগ",
+            unread: 0,
+            typing: false,
+            lastMessage: {
+              text: "আপনার কাছে কি বইটা আছে?",
+              time: "গতকাল"
+            },
+            messages: [
+            {
+              id: 1,
+              text: "ভাইয়া, আপনাকে একটা জিনিস জিজ্ঞাসা করব",
+              time: "গতকাল",
+              sender: "them",
+              read: true
+            },
+            {
+              id: 2,
+              text: "জি বলুন",
+              time: "গতকাল",
+              sender: "me",
+              read: true
+            },
+            {
+              id: 3,
+              text: "আপনার কাছে কি বইটা আছে?",
+              time: "গতকাল",
+              sender: "them",
+              read: true
+            }]
+          },
+          {
+            id: 3,
+            name: "ওমর ফারুক",
+            avatar: "./images/logo.jpg",
+            online: true,
+            batch: "২০২৩ ব্যাচ",
+            department: "হাদিস বিভাগ",
+            unread: 0,
+            typing: true,
+            lastMessage: {
+              text: "গ্রুপ স্টাডির সময়টা কখন হবে?",
+              time: "11:45 AM"
+            },
+            messages: [
+            {
+              id: 1,
+              text: "আসসালামু আলাইকুম",
+              time: "11:30 AM",
+              sender: "them",
+              read: true
+            },
+            {
+              id: 2,
+              text: "ওয়া আলাইকুম আসসালাম",
+              time: "11:32 AM",
+              sender: "me",
+              read: true
+            },
+            {
+              id: 3,
+              text: "গ্রুপ স্টাডির সময়টা কখন হবে?",
+              time: "11:45 AM",
+              sender: "them",
+              read: true
+            }]
+          }];
+          
+          // ডিফল্ট হিসেবে প্রথম কন্টাক্ট সিলেক্ট করুন
+          if (this.contacts.length > 0) {
+            this.activeContact = this.contacts[0];
+          }
+        },
+        
+        selectContact(contact) {
+          this.activeContact = contact;
+          this.activeContact.unread = 0;
+          // মোবাইল ভিউতে কন্টাক্ট লিস্ট হাইড করার লজিক এখানে যোগ করতে পারেন
+        },
+        
+        sendMessage() {
+          if (!this.newMessage.trim() || !this.activeContact) return;
+          
+          const newMsg = {
+            id: Date.now(),
+            text: this.newMessage,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            sender: 'me',
+            read: false
+          };
+          
+          // কারেন্ট ইউজারের মেসেজ লিস্টে যোগ করুন
+          this.activeContact.messages.push(newMsg);
+          
+          // লাস্ট মেসেজ আপডেট করুন
+          this.activeContact.lastMessage = {
+            text: this.newMessage,
+            time: 'এক্ষুনি'
+          };
+          
+          // রিসেট ইনপুট ফিল্ড
+          this.newMessage = '';
+          
+          // ডেমো রেস্পন্স - বাস্তবে এখানে API কল/সকেট ইভেন্ট পাঠানো হবে
+          setTimeout(() => {
+            this.activeContact.typing = true;
+            
+            setTimeout(() => {
+              this.activeContact.typing = false;
+              
+              const replyMsg = {
+                id: Date.now(),
+                text: this.getRandomReply(),
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                sender: 'them',
+                read: true
+              };
+              
+              this.activeContact.messages.push(replyMsg);
+              this.activeContact.lastMessage = {
+                text: replyMsg.text,
+                time: 'এক্ষুনি'
+              };
+            }, 2000);
+          }, 500);
+        },
+        
+        getRandomReply() {
+          const replies = [
+            "জি, ঠিক আছে",
+            "ধন্যবাদ আপনাকে",
+            "আমি চেক করে দেখছি",
+            "আপনি কি আরো বিস্তারিত বলবেন?",
+            "কালকে ক্লাসে দেখা হবে ইনশাআল্লাহ"
+          ];
+          return replies[Math.floor(Math.random() * replies.length)];
+        }
+      };
+    }
+  </script>
+</body>
+
+</html>

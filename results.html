@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফলাফল - আল-হেরা ইসলামিক একাডেমি</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        
+        .result-table th {
+            background-color: #2E8B57;
+            color: white;
+        }
+        
+        .result-table tr:nth-child(even) {
+            background-color: #f0fdf4;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 pb-14 md:pb-0" x-data="data()">
+    <!-- হেডার সেকশন -->
+    <include src="/src/components/header"></include>
+    
+    <!-- রেজাল্ট হিরো সেকশন -->
+    <section class="print:hidden bg-green-700 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">পরীক্ষার ফলাফল</h1>
+            <p class="text-xl">আপনার ফলাফল দেখতে রোল নম্বর ও পরীক্ষার নাম নির্বাচন করুন</p>
+        </div>
+    </section>
+    
+    <!-- রেজাল্ট সার্চ ফর্ম -->
+    <section class="print:hidden py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto bg-gray-50 p-6 md:p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-green-800 mb-6 text-center">ফলাফল অনুসন্ধান</h2>
+                
+                <div id="resultForm" class="space-y-6">
+                    <div>
+                        <label for="exam-type" class="block text-gray-700 font-medium mb-2">পরীক্ষার ধরন *</label>
+                        <select id="exam-type" x-model="examName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <template x-for="examNan in examNames">
+                                <option :value="examNan" x-text="examNan"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="class" class="block text-gray-700 font-medium mb-2">শ্রেণী *</label>
+                        <select id="class" x-model="className" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <template x-for="cls in classes">
+                                <option :value="cls" x-text="cls"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    
+                    <div>
+                        <label for="registration" class="block text-gray-700 font-medium mb-2">রেজিস্ট্রেশন নম্বর</label>
+                        <input x-model="studentId" type="text" id="registration" placeholder="প্রযোজ্য ক্ষেত্রে" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    
+                    <button @click="searchResult()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md transition">
+                        ফলাফল দেখুন
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- রেজাল্ট ডিসপ্লে সেকশন -->
+    <section class="py-12 bg-gray-50" id="resultSection">
+        <div class="container mx-auto px-4 print:p-0">
+            <!-- রেজাল্ট কার্ড -->
+            <template x-if="result">
+                <div class="max-w-[21cm] mx-auto bg-white rounded-xl shadow-lg print:shadow-none overflow-hidden mb-8">
+                    <div class="p-6 md:p-8 print:p-0">
+                        
+                        <h1 class="text-center font-bold text-5xl"> আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+                        <h1 class="text-center font-bold text-2xl my-2"> মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর। স্থাপিতঃ ২০২২ খ্রি.</h1>
+                        <h1 class="text-center font-bold text-xl my-2" x-text="result.examName"></h1>
+                        
+                        <div class="flex  justify-center items-center mb-4">
+                            <div class="mt-4 md:mt-0 bg-green-100 text-green-800 px-4 py-2 rounded-full" x-text="`${result.class} শ্রেণির ফলাফল`">
+                                রোল: ১২৩৪৫ | রেজি: ২০২৩১০১২৩
+                            </div>
+                        </div>
+                        
+                        <!-- স্টুডেন্ট ইনফো -->
+                        <table class="w-full text-md text-left border border-gray-400 mb-4">
+                            <tbody>
+                                <tr class="border-b border-gray-400">
+                                    <th class="px-2 py-1 border-r border-gray-400">
+                                        নাম
+                                    </th>
+                                    <td class="px-2 py-1 border-r border-gray-400" x-text="result.name">
+                                        আয়েশা সিদ্দিকা মনিরা
+                                    </td>
+                                    <th class="px-2 py-1 border-r border-gray-400">
+                                        আইডি নং
+                                    </th>
+                                    <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(result.studentId)">
+                                        ২০২৪০০০১
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-400">
+                                    <th class="px-2 py-1 border-r border-gray-400">
+                                        পিতার নাম
+                                    </th>
+                                    <td class="px-2 py-1 border-r border-gray-400" x-text="result.faName">
+                                        আব্দুল মালেক
+                                    </td>
+                                    <th class="px-2 py-1 border-r border-gray-400">
+                                        জামাত
+                                    </th>
+                                    <td class="px-2 py-1 border-r border-gray-400" x-text="result.class">
+                                        মিজান
+                                    </td>
+                                    
+                                </tr>
+                                <tr class="border-b border-gray-400">
+                                    <th scope="row" class="px-2 py-1 border-r border-gray-400">
+                                        মাতার নাম
+                                    </th>
+                                    <td class="px-2 py-1 border-r border-gray-400" x-text="result.maName">
+                                        আমেনা খাতুন
+                                    </td>
+                                    <th class="px-2 py-1 border-r border-gray-400">
+                                        বিভাগ
+                                    </th>
+                                    <td class="px-2 py-1 border-r border-gray-400" x-text="result.group">
+                                        কিতাব বিভাগ
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- রেজাল্ট টেবিল -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full result-table">
+                                <thead>
+                                    <tr class="border-b border-gray-400">
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            ক্রমিক
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            বিষয়
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            পূর্ণমান
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            প্রাপ্ত নাম্বার
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            ক্লাসটেস্ট
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            মোট নম্বর
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            সর্বমোট
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            গড় নম্বর
+                                        </th>
+                                        <th class="px-2 py-1 border-r border-gray-400">
+                                            বিভাগ
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <template x-for="(r,index) in JSON.parse(result.results)" :key="index">
+                                        <tr class="border-b border-gray-400">
+                                            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)">
+                                                ১
+                                            </td>
+                                            <td class="px-2 py-1 border-r border-gray-400 text-left" x-text="r.name">
+                                                বাংলা
+                                            </td>
+                                            <td class="px-2 py-1 border-r border-gray-400">
+                                                ১০০
+                                            </td>
+                                            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(r.test)">
+                                                ৯৬
+                                            </td>
+                                            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(r.mark)">
+                                                ৯৬
+                                            </td>
+                                            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(r.total)">
+                                                ৯৬
+                                            </td>
+                                            <template x-if="index === Math.floor((JSON.parse(result.results).length / JSON.parse(result.results).length) - 1)">
+                                                <td :rowspan="JSON.parse(result.results).length" class="px-2 py-1 border-r border-gray-400" style="vertical-align: middle;" x-text="getBangla(result.total)">
+                                                    ৯৬
+                                                </td>
+                                            </template>
+                                            <template x-if="index === Math.floor((JSON.parse(result.results).length / JSON.parse(result.results).length) - 1)">
+                                                <td :rowspan="JSON.parse(result.results).length + 1" class="px-2 py-1 border-r border-gray-400" style="vertical-align: middle;" x-text="getBangla(result.avg)">
+                                                    ৯৬
+                                                </td>
+                                            </template>
+                                            <template x-if="index === Math.floor((JSON.parse(result.results).length / JSON.parse(result.results).length) - 1)">
+                                                <td :rowspan="JSON.parse(result.results).length + 1" class="px-2 py-1 border-r border-gray-400 w-10" style="vertical-align: middle;" x-text="result.status">
+                                                    ৯৬
+                                                </td>
+                                            </template>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- সামারি -->
+                        <div class="grid grid-cols-3 gap-4 mt-8">
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="text-gray-600">মোট বিষয়</p>
+                                <p class="text-2xl font-bold text-green-800" x-text="getBangla(JSON.parse(result.results).length)">7</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="text-gray-600">মোট প্রাপ্ত নম্বর</p>
+                                <p class="text-2xl font-bold text-green-800" x-text="getBangla(result.total)">635</p>
+                            </div>
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <p class="text-gray-600">গড় নম্বর</p>
+                                <p class="text-2xl font-bold text-green-800" x-text="getBangla(result.avg)">5.00</p>
+                            </div>
+                        </div>
+                        
+                        <!-- একশন বাটন -->
+                        <div class="print:hidden flex flex-col sm:flex-row justify-center gap-4 mt-8">
+                            <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md">
+                                প্রিন্ট করুন
+                            </button>
+                            <button class="bg-white hover:bg-gray-100 border border-green-600 text-green-700 px-6 py-2 rounded-md">
+                                পিডিএফ ডাউনলোড
+                            </button>
+                            <button @click="result = null" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-md">
+                                নতুন অনুসন্ধান
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!-- নোটিশ বোর্ড -->
+            <div class="print:hidden max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="bg-green-800 text-white px-6 py-3">
+                    <h3 class="text-lg font-bold">ফলাফল সংক্রান্ত নোটিশ</h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="pb-4 border-b border-gray-200">
+                            <h4 class="font-bold text-green-800">ফলাফল পুনঃনিরীক্ষণের আবেদন</h4>
+                            <p class="text-gray-700 mt-1">যারা ফলাফল পুনঃনিরীক্ষণ করাতে চান, তারা ৩০ দিনের মধ্যে অফিসে যোগাযোগ করুন।</p>
+                            <p class="text-sm text-gray-500 mt-2">প্রকাশের তারিখ: ১৫ ডিসেম্বর, ২০২৩</p>
+                        </div>
+                        <div class="pb-4 border-b border-gray-200">
+                            <h4 class="font-bold text-green-800">পরবর্তী শ্রেণীতে উত্তীর্ণ শিক্ষার্থীদের তথ্য</h4>
+                            <p class="text-gray-700 mt-1">উত্তীর্ণ সকল শিক্ষার্থী ১০ জানুয়ারির মধ্যে নতুন শ্রেণীতে রেজিস্ট্রেশন সম্পন্ন করুন।</p>
+                            <p class="text-sm text-gray-500 mt-2">প্রকাশের তারিখ: ১০ ডিসেম্বর, ২০২৩</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ফুটার -->
+    <footer class="print:hidden bg-green-900 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p>&copy; ২০২৩ আল-হেরা ইসলামিক একাডেমি। সকল স্বত্ব সংরক্ষিত।</p>
+                <p class="mt-2 text-green-300 text-sm">ডিজাইন ও ডেভেলপমেন্ট: আল-হেরা আইটি বিভাগ</p>
+            </div>
+        </div>
+    </footer>
+    <include src="/src/components/bottom-nav"></include>
+    <script src="/src/includes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+    
+    <script>
+        const { Client, Databases, ID, Query } = Appwrite;
+        const client = new Client();
+        client
+            .setEndpoint('https://cloud.appwrite.io/v1')
+            .setProject('652c1374db243c864a6c');
+        const databases = new Databases(client);
+        
+        function data() {
+            return {
+                examNames: ['প্রথম সাময়িক পরীক্ষা ২০২৪', 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৪'],
+                classes: [
+                    'শিশু',
+                    'প্রথম',
+                    'দ্বিতীয়',
+                    'তৃতীয়',
+                    'চতুর্থ',
+                    'পঞ্চম',
+                    'হেফজখানা', ' নাহবেমির',
+                    'মিযান'
+                ],
+                result: null,
+                className: '',
+                examName: '',
+                studentId: '',
+                async searchResult() {
+                    console.log(this.examName, this.className, this.studentId)
+                    try {
+                        const response = await databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.equal("studentId", this.studentId), Query.equal("class", this.className), Query.equal("examName", this.examName)]);
+                        console.log(response.documents)
+                        this.result = response.documents[0];
+                    } catch (error) {
+                        console.error('Error fetching students:', error);
+                    }
+                },
+                getGrade(score) {
+                    let grade
+                    if (score >= 80) {
+                        grade = "মুমতায";
+                    } else if (score >= 65) {
+                        grade = "জায়্যিদ জিদ্দান";
+                    } else if (score >= 50) {
+                        grade = "জায়্যিদ";
+                    } else if (score >= 40) {
+                        grade = "মাকবুল";
+                    } else {
+                        grade = "রাসিব";
+                    }
+                    return grade
+                },
+                getBangla(x) {
+                    let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+                    var retStr = String(x);
+                    for (let n in numbers) {
+                        retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+                    }
+                    return retStr;
+                },
+            }
+        }
+        
+        function printResult() {
+            window.print();
+        }
+    </script>
+</body>
+
+</html>
