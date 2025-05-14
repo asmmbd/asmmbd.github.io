@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    .rotate-360 {
+      transform: rotate(270deg);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-200 text-gray-20" x-data="data()">
+  
+  <header class="bg-white shadow-md sticky top-0 left-0 right-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- বামদিকে টাইটেল -->
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-7" color="#000000" fill="none">
+          <path d="M22 6.75003H19.2111C18.61 6.75003 18.3094 6.75003 18.026 6.66421C17.7426 6.5784 17.4925 6.41168 16.9923 6.07823C16.2421 5.57806 15.3862 5.00748 14.961 4.87875C14.5359 4.75003 14.085 4.75003 13.1833 4.75003C11.9571 4.75003 11.1667 4.75003 10.6154 4.97839C10.0641 5.20675 9.63056 5.6403 8.76347 6.50739L8.00039 7.27047C7.80498 7.46588 7.70727 7.56359 7.64695 7.66005C7.42335 8.01764 7.44813 8.47708 7.70889 8.80854C7.77924 8.89796 7.88689 8.98459 8.10218 9.15785C8.89796 9.79827 10.0452 9.73435 10.7658 9.00945L12 7.76789H13L19 13.8036C19.5523 14.3592 19.5523 15.2599 19 15.8155C18.4477 16.3711 17.5523 16.3711 17 15.8155L16.5 15.3125M13.5 12.2947L16.5 15.3125M16.5 15.3125C17.0523 15.8681 17.0523 16.7689 16.5 17.3244C15.9477 17.88 15.0523 17.88 14.5 17.3244L13.5 16.3185M13.5 16.3185C14.0523 16.874 14.0523 17.7748 13.5 18.3304C12.9477 18.8859 12.0523 18.8859 11.5 18.3304L10 16.8214M13.5 16.3185L11.5 14.3185M9.5 16.3185L10 16.8214M10 16.8214C10.5523 17.377 10.5523 18.2778 10 18.8334C9.44772 19.3889 8.55229 19.3889 8 18.8334L5.17637 15.9509C4.59615 15.3586 4.30604 15.0625 3.93435 14.9062C3.56266 14.75 3.14808 14.75 2.31894 14.75H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M22 14.75H19.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M8.5 6.75003L2 6.75003" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <a href="#" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
+          Al-Ittihad
+        </a>
+      </div>
+      
+      
+      <!-- মাঝে সার্চ বক্স (বড় স্ক্রীনে দৃশ্যমান) -->
+      <div class="hidden md:flex flex-1 justify-center">
+        <div class="relative w-full max-w-md">
+          <input type="text" placeholder="Search posts, people..." class="w-full py-2 pl-10 pr-4 bg-gray-100 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all duration-200" />
+          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </div>
+      </div>
+      
+      <!-- ডানদিকে নেভিগেশন -->
+      <div class="flex items-center gap-4">
+        <!-- নোটিফিকেশন -->
+        <button class="text-gray-600 hover:text-blue-600 transition-colors relative">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.52992 14.7696C2.31727 16.1636 3.268 17.1312 4.43205 17.6134C8.89481 19.4622 15.1052 19.4622 19.5679 17.6134C20.732 17.1312 21.6827 16.1636 21.4701 14.7696C21.3394 13.9129 20.6932 13.1995 20.2144 12.5029C19.5873 11.5793 19.525 10.5718 19.5249 9.5C19.5249 5.35786 16.1559 2 12 2C7.84413 2 4.47513 5.35786 4.47513 9.5C4.47503 10.5718 4.41272 11.5793 3.78561 12.5029C3.30684 13.1995 2.66061 13.9129 2.52992 14.7696Z" stroke="currentColor" stroke-width="1.5" />
+            <path d="M8 19C8.45849 20.7252 10.0755 22 12 22C13.9245 22 15.5415 20.7252 16 19" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+        </button>
+        
+        <!-- প্রোফাইল -->
+        <div class="relative" x-data="{ profileOpen: false }">
+          <button @click="profileOpen = !profileOpen" class="flex items-center gap-2">
+            <img class="w-8 h-8 rounded-full" src="https://alsaifdev.github.io/images/profile.jpg" alt="Profile">
+            <span class="hidden md:inline text-gray-800 font-medium">Abdullah</span>
+            <svg class="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <!-- প্রোফাইল ড্রপডাউন -->
+          <div x-show="profileOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+            <ul class="py-1">
+              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Profile</li>
+              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Settings</li>
+              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600">Logout</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- মোবাইল মেনু টগল -->
+        <button class="md:hidden text-gray-600 hover:text-blue-600" @click="mobileMenuOpen = !mobileMenuOpen">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- মোবাইল সার্চ (ছোট স্ক্রীনে) -->
+    <div x-show="mobileMenuOpen" class="md:hidden px-4 py-2 bg-gray-50">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="w-full py-2 pl-10 pr-4 bg-white rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200" />
+        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </div>
+    </div>
+  </header>
+  
+  
+  
+  <div class="flex gap-4 mt-2 md:mt-0 bg-white rounded-md">
+    <aside class="left hidden lg:block fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 shadow-sm z-40 overflow-y-auto">
+      <div class="p-4">
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M9 21V15H15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="font-medium">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="font-medium">Create Post</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <span class="font-medium">Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15C15.3137 15 18 12.3137 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 12.3137 8.68629 15 12 15Z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 15V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <span class="font-medium">Friends</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <div class="py-2 flex-1 px-4 pt-2 md:ml-64 lg:mr-80">
+      <!-- স্টোরি সেকশন -->
+      <section class="py-4">
+        <div class="overflow-x-auto scrollbar-hide">
+          <div class="inline-flex gap-4">
+            <!-- নিজের স্টোরি যোগ করার বাটন -->
+            <div class="flex-shrink-0">
+              <div class="relative">
+                <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center border-2 border-dashed border-gray-400 cursor-pointer hover:bg-gray-300 transition-colors" @click="addStory()">
+                  <svg class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <span class="block text-center text-sm text-gray-600 mt-1">Your Story</span>
+              </div>
+            </div>
+            
+            <!-- স্টোরি লিস্ট -->
+            <template x-for="story in stories" :key="story.id">
+              <div class="flex-shrink-0">
+                <div class="relative cursor-pointer" @click="openStory(story)">
+                  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 p-1">
+                    <img :src="story.image" class="w-full h-full rounded-full object-cover border-2 border-white" alt="Story">
+                  </div>
+                  <span class="block text-center text-sm text-gray-600 mt-1 truncate w-16" x-text="story.username"></span>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </section>
+      
+      <!-- স্টোরি মডাল -->
+      <div x-show="selectedStory" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" @click.away="closeStory()">
+        <div class="relative w-full h-full max-w-md bg-white rounded-lg overflow-hidden z-50">
+          <!-- স্টোরি ইমেজ -->
+          <img :src="selectedStory?.image" class="w-full h-full object-cover" alt="Selected Story">
+          <!-- হেডার -->
+          <div class="absolute top-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-b from-black to-transparent">
+            <div class="flex items-center gap-2">
+              <img :src="selectedStory?.image" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+              <span class="text-white font-semibold" x-text="selectedStory?.username"></span>
+            </div>
+            <button @click="closeStory()" class="text-white hover:text-gray-300">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="create-post">
+        <div class="bg-white">
+          <div x-show="showPostPage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="bg-white shadow-lg border rounded-lg p-4 fixed top-20 left-5 right-5 z-50 flex items-start max-w-2xl mx-auto">
+            
+            <!-- Avatar -->
+            <img class='w-10 h-10 rounded-full ring-2 ring-gray-200' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
+            
+            <div class='ml-2 flex-1'>
+              <!-- Username -->
+              <h1 class="pl-1 mb-1 text-lg font-semibold text-gray-800">Abdullah Al Saif</h1>
+              
+              <!-- Textarea -->
+              <textarea x-model="postContent" class="pl-1 text-gray-600 w-full border-0 outline-0 rounded-md resize-none focus:ring-2 focus:ring-blue-200 transition" placeholder="What's on your mind?" rows="3"></textarea>
+              
+              <!-- Live Preview -->
+              <div class="text-gray-500 mt-2 text-sm leading-relaxed" x-text="postContent || 'Your post preview...'"></div>
+              
+              <!-- Uploaded Image Preview -->
+              <div :class="postUrl && 'p-2 mt-2'" class="transition-all">
+                <img :src="postUrl" alt="Uploaded image" class="rounded-md max-h-64 object-cover w-full">
+              </div>
+              
+              <!-- Action Buttons -->
+              <div class='mt-3 flex items-center gap-4 relative'>
+                <label for="postImage" class="cursor-pointer">
+                  <svg class='w-5 h-5 hover:text-blue-500 transition-colors' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19L7.07189 15.2455C7.69252 14.4869 8.00284 14.1076 8.40938 14.0633C8.47386 14.0563 8.53887 14.0555 8.60349 14.0611C9.01094 14.0961 9.32986 14.4682 9.9677 15.2123C10.6306 15.9857 10.962 16.3723 11.381 16.4005C11.4473 16.4049 11.5139 16.4027 11.5797 16.394C11.996 16.3387 12.3016 15.9312 12.9127 15.1164L14.4826 13.0232C15.182 12.0906 15.5317 11.6243 16.0157 11.6119C16.4996 11.5995 16.8728 12.0473 17.619 12.9428L21 17M21 17V9M21 17C21 19.2091 19.2091 21 17 21H11C7.22876 21 5.34315 21 4.17157 19.8284C3 18.6569 3 16.7712 3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    <path d="M12 9C12 10.1046 11.1046 11 10 11C8.89543 11 8 10.1046 8 9C8 7.89543 8.89543 7 10 7C11.1046 7 12 7.89543 12 9Z" stroke="currentColor" stroke-width="1.5"></path>
+                    <path d="M19 3L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    <path d="M21 5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                  </svg>
+                  <input type="file" id="postImage" hidden @change="(e) => { postUrl = URL.createObjectURL(e.target.files[0]); postFile = e.target.files[0] }" />
+                </label>
+                
+                <!-- Video Button -->
+                <button class="hover:text-blue-500 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                    <path d="M17 6C19.3456 6 20.0184 6 20.8263 6.61994C21.0343 6.77954 21.2205 6.96572 21.3801 7.17372C22 7.98164 22 9.15442 22 11.5V16C22 18.8284 22 20.2426 21.1213 21.1213C20.2426 22 18.8284 22 16 22H8C5.17157 22 3.75736 22 2.87868 21.1213C2 20.2426 2 18.8284 2 16V11.5C2 9.15442 2 7.98164 2.61994 7.17372C2.77954 6.96572 2.96572 6.77954 3.17372 6.61994C3.98164 6 4.65442 6 7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M17 7L16.1142 4.78543C15.732 3.82996 15.3994 2.7461 14.4166 2.25955C13.8924 2 13.2616 2 12 2C10.7384 2 10.1076 2 9.58335 2.25955C8.6006 2.7461 8.26801 3.82996 7.88583 4.78543L7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15.5 14C15.5 15.933 13.933 17.5 12 17.5C10.067 17.5 8.5 15.933 8.5 14C8.5 12.067 10.067 10.5 12 10.5C13.933 10.5 15.5 12.067 15.5 14Z" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M11.9998 6H12.0088" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+                
+                <!-- Emoji Picker Button and Picker -->
+                <div x-data="{ showEmojiPicker: false }" class="relative">
+                  <button @click="showEmojiPicker = !showEmojiPicker" class="hover:text-blue-500 transition-colors">
+                    <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 14C16 15.6569 14 17 12 17C10 17 8 15.6569 8 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM10 9C10 9.55228 9.55228 10 9 10C8.44772 10 8 9.55228 8 9C8 8.44772 8.44772 8 9 8C9.55228 8 10 8.44772 10 9ZM16 9C16 9.55228 15.5523 10 15 10C14.4477 10 14 9.55228 14 9C14 8.44772 14.4477 8 15 8C15.5523 8 16 8.44772 16 9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                  </button>
+                  
+                  <!-- Emoji Picker -->
+                  <div x-show="showEmojiPicker" @click.away="showEmojiPicker = false" class="absolute z-10 mt-2 bg-white border rounded-lg shadow-lg p-2 w-48 grid grid-cols-5 gap-2">
+                    <button @click="postContent += '😊'" class="text-lg hover:bg-gray-100 rounded p-1">😊</button>
+                    <button @click="postContent += '😂'" class="text-lg hover:bg-gray-100 rounded p-1">😂</button>
+                    <button @click="postContent += '❤️'" class="text-lg hover:bg-gray-100 rounded p-1">❤️</button>
+                    <button @click="postContent += '👍'" class="text-lg hover:bg-gray-100 rounded p-1">👍</button>
+                    <button @click="postContent += '😍'" class="text-lg hover:bg-gray-100 rounded p-1">😍</button>
+                    <button @click="postContent += '😢'" class="text-lg hover:bg-gray-100 rounded p-1">😢</button>
+                    <button @click="postContent += '😡'" class="text-lg hover:bg-gray-100 rounded p-1">😡</button>
+                    <button @click="postContent += '🙌'" class="text-lg hover:bg-gray-100 rounded p-1">🙌</button>
+                    <button @click="postContent += '🎉'" class="text-lg hover:bg-gray-100 rounded p-1">🎉</button>
+                    <button @click="postContent += '🤔'" class="text-lg hover:bg-gray-100 rounded p-1">🤔</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Footer Section -->
+              <div class="w-full py-3 flex items-center justify-between">
+                <span class="text-gray-600 text-sm">Anyone can reply & quote</span>
+                <button class="bg-gradient-to-r from-blue-600 to-blue-800 px-3 py-1 rounded-md text-gray-200 flex items-center gap-2" @click="createPost()" :disabled="loading">
+                  <span x-text="loading ? 'Posting...' : 'Post'"></span>
+                  <svg x-show="loading" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Close Button -->
+            <button @click="showPostPage = false" class="ml-2 hover:text-red-500 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class='w-full flex items-start my-2 px-2'>
+          <img class='w-9 h-9 rounded-full' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
+          <div class='ml-1.5 flex-1' @click="showPostPage = true">
+            <h1 class="pl-1 mb-0 text-md font-semibold text-gray-800">Abdullah Al Saif</h1>
+            <h3 class="pl-1 -mt-1 text-gray-400">what's on your mind?</h3>
+            <div class='mt-1.5 flex items-center gap-4'>
+              <label for="postImage">
+                <svg class='w-5 h-5' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 19L7.07189 15.2455C7.69252 14.4869 8.00284 14.1076 8.40938 14.0633C8.47386 14.0563 8.53887 14.0555 8.60349 14.0611C9.01094 14.0961 9.32986 14.4682 9.9677 15.2123C10.6306 15.9857 10.962 16.3723 11.381 16.4005C11.4473 16.4049 11.5139 16.4027 11.5797 16.394C11.996 16.3387 12.3016 15.9312 12.9127 15.1164L14.4826 13.0232C15.182 12.0906 15.5317 11.6243 16.0157 11.6119C16.4996 11.5995 16.8728 12.0473 17.619 12.9428L21 17M21 17V9M21 17C21 19.2091 19.2091 21 17 21H11C7.22876 21 5.34315 21 4.17157 19.8284C3 18.6569 3 16.7712 3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H15" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                  <path d="M12 9C12 10.1046 11.1046 11 10 11C8.89543 11 8 10.1046 8 9C8 7.89543 8.89543 7 10 7C11.1046 7 12 7.89543 12 9Z" stroke="currentColor" stroke-width="null" class="my-path"></path>
+                  <path d="M19 3L19 7" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                  <path d="M21 5H17" stroke="currentColor" stroke-width="null" stroke-linecap="round" class="my-path"></path>
+                </svg>
+              </label>
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                  <path d="M17 6C19.3456 6 20.0184 6 20.8263 6.61994C21.0343 6.77954 21.2205 6.96572 21.3801 7.17372C22 7.98164 22 9.15442 22 11.5V16C22 18.8284 22 20.2426 21.1213 21.1213C20.2426 22 18.8284 22 16 22H8C5.17157 22 3.75736 22 2.87868 21.1213C2 20.2426 2 18.8284 2 16V11.5C2 9.15442 2 7.98164 2.61994 7.17372C2.77954 6.96572 2.96572 6.77954 3.17372 6.61994C3.98164 6 4.65442 6 7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M17 7L16.1142 4.78543C15.732 3.82996 15.3994 2.7461 14.4166 2.25955C13.8924 2 13.2616 2 12 2C10.7384 2 10.1076 2 9.58335 2.25955C8.6006 2.7461 8.26801 3.82996 7.88583 4.78543L7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M15.5 14C15.5 15.933 13.933 17.5 12 17.5C10.067 17.5 8.5 15.933 8.5 14C8.5 12.067 10.067 10.5 12 10.5C13.933 10.5 15.5 12.067 15.5 14Z" stroke="currentColor" stroke-width="1.5" />
+                  <path d="M11.9998 6H12.0088" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                  <path d="M17 7V11C17 13.7614 14.7614 16 12 16C9.23858 16 7 13.7614 7 11V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7Z" stroke="currentColor" stroke-width="1.5" />
+                  <path d="M17 7H14M17 11H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M20 11C20 15.4183 16.4183 19 12 19M12 19C7.58172 19 4 15.4183 4 11M12 19V22M12 22H15M12 22H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </button>
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                  <path d="M9.14339 10.691L9.35031 10.4841C11.329 8.50532 14.5372 8.50532 16.5159 10.4841C18.4947 12.4628 18.4947 15.671 16.5159 17.6497L13.6497 20.5159C11.671 22.4947 8.46279 22.4947 6.48405 20.5159C4.50532 18.5372 4.50532 15.329 6.48405 13.3503L6.9484 12.886" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M17.0516 11.114L17.5159 10.6497C19.4947 8.67095 19.4947 5.46279 17.5159 3.48405C15.5372 1.50532 12.329 1.50532 10.3503 3.48405L7.48405 6.35031C5.50532 8.32904 5.50532 11.5372 7.48405 13.5159C9.46279 15.4947 12.671 15.4947 14.6497 13.5159L14.8566 13.309" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="posts mb-20">
+        <template x-for="post in posts">
+          <div class="mb-0 py-2 border-t">
+            <div class='px-2 w-full flex items-start'>
+              <img class='w-9 h-9 rounded-full' src='https://alsaifdev.github.io/images/profile.jpg' alt='Media rounded avatar'>
+              <div>
+                <div class="flex items-center justify-between">
+                  <div class='font-medium ml-2.5'>
+                    <h5 class='text-md font-semibold text-gray-600 -mb-1.5' x-text="post.username">John Deo alive</h5>
+                    <span class='text-sm text-gray-500 hidden' x-text="new Date(post.date).fromNow()"></span>
+                  </div>
+                  <div class="flex items-center gap-3 ml-auto relative" x-data="{isOpen: false}">
+                    <svg @click="isOpen = !isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.02736 12.001L6.97736 12.001" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="my-path"></path>
+                      <path d="M12.041 12.001L11.991 12.001" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="my-path"></path>
+                      <path d="M17.0547 12.001L17.0047 12.001" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="my-path"></path>
+                    </svg>
+                    
+                    <div x-show="isOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="absolute top-8 right-0 bg-white rounded-lg shadow-xl border border-gray-200 w-56 z-50 overflow-hidden">
+                      <ul class="divide-y divide-gray-200">
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12H19M19 12L15 8M19 12L15 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Save Post</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.8284 10.1716H16.4142L11.4142 15.1716C10.6332 15.9526 10.6332 17.239 11.4142 18.02C12.1953 18.801 13.4817 18.801 14.2627 18.02L19.2627 13.02C20.0437 12.239 20.0437 10.9526 19.2627 10.1716C18.4817 9.39062 17.1953 9.39062 16.4142 10.1716L15.8284 10.7574" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M4.73731 13.02L9.73731 18.02C10.5183 18.801 11.8047 18.801 12.5857 18.02C13.3667 17.239 13.3667 15.9526 12.5857 15.1716L7.58566 10.1716H10.1715" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Copy Link</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 15L15 9M15 15L9 9M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Not Interested</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 6V18M18 12H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Notify Me</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 8H21M3 16H15M10 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Mute</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-gray-100 transition-colors cursor-pointer">
+                          <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 8C16 11.3137 13.3137 14 10 14C6.68629 14 4 11.3137 4 8C4 4.68629 6.68629 2 10 2C13.3137 2 16 4.68629 16 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M10 14L20 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-gray-700 text-sm">Unfollow</span>
+                        </li>
+                        <li class="p-3 flex items-center gap-2 hover:bg-red-50 transition-colors cursor-pointer text-red-600">
+                          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <span class="text-sm">Report</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class='px-2'>
+                  <p class="my-1" x-text="post.content">
+                    
+                  </p>
+                  <img :src="post.thumbnail" class="w-full rounded-md my-2">
+                </div>
+                <div class="flex items-center gap-4 my-2.5 px-2">
+                  <button class="flex items-center gap-1" @click="toggleLike(post)">
+                    <svg :class="isPostLiked(post) ? 'text-red-500 fill-current' : 'text-gray-600'" class="size-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <span x-text="formatNumber(post.likes.length)"></span>
+                  </button>
+                  <button class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5 rotate-[270deg]" color="#000000" fill="none">
+                      <path d="M22 11.5667C22 16.8499 17.5222 21.1334 12 21.1334C11.3507 21.1343 10.7032 21.0742 10.0654 20.9545C9.60633 20.8682 9.37678 20.8251 9.21653 20.8496C9.05627 20.8741 8.82918 20.9948 8.37499 21.2364C7.09014 21.9197 5.59195 22.161 4.15111 21.893C4.69874 21.2194 5.07275 20.4112 5.23778 19.5448C5.33778 19.0148 5.09 18.5 4.71889 18.1231C3.03333 16.4115 2 14.1051 2 11.5667C2 6.28357 6.47778 2 12 2C17.5222 2 22 6.28357 22 11.5667Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>
+                    <span x-text="formatNumber(post.comments.length)">${comments}</span>
+                  </button>
+                  <button class="flex items-center gap-1">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M7 17L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M12 17L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M17 17L17 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>-->
+                    <svg aria-label="Repost" role="img" viewBox="0 0 18 18" class="size-5">
+                      <title>Repost</title>
+                      <path d="M6.41256 1.23531C6.6349 0.971277 7.02918 0.937481 7.29321 1.15982L9.96509 3.40982C10.1022 3.52528 10.1831 3.69404 10.1873 3.87324C10.1915 4.05243 10.1186 4.2248 9.98706 4.34656L7.31518 6.81971C7.06186 7.05419 6.66643 7.03892 6.43196 6.7856C6.19748 6.53228 6.21275 6.13685 6.46607 5.90237L7.9672 4.51289H5.20312C3.68434 4.51289 2.45312 5.74411 2.45312 7.26289V9.51289V11.7629C2.45312 13.2817 3.68434 14.5129 5.20312 14.5129C5.5483 14.5129 5.82812 14.7927 5.82812 15.1379C5.82812 15.4831 5.5483 15.7629 5.20312 15.7629C2.99399 15.7629 1.20312 13.972 1.20312 11.7629V9.51289V7.26289C1.20312 5.05375 2.99399 3.26289 5.20312 3.26289H7.85002L6.48804 2.11596C6.22401 1.89362 6.19021 1.49934 6.41256 1.23531Z"></path>
+                      <path d="M11.5874 17.7904C11.3651 18.0545 10.9708 18.0883 10.7068 17.8659L8.03491 15.6159C7.89781 15.5005 7.81687 15.3317 7.81267 15.1525C7.80847 14.9733 7.8814 14.801 8.01294 14.6792L10.6848 12.206C10.9381 11.9716 11.3336 11.9868 11.568 12.2402C11.8025 12.4935 11.7872 12.8889 11.5339 13.1234L10.0328 14.5129H12.7969C14.3157 14.5129 15.5469 13.2816 15.5469 11.7629V9.51286V7.26286C15.5469 5.74408 14.3157 4.51286 12.7969 4.51286C12.4517 4.51286 12.1719 4.23304 12.1719 3.88786C12.1719 3.54269 12.4517 3.26286 12.7969 3.26286C15.006 3.26286 16.7969 5.05373 16.7969 7.26286V9.51286V11.7629C16.7969 13.972 15.006 15.7629 12.7969 15.7629H10.15L11.512 16.9098C11.776 17.1321 11.8098 17.5264 11.5874 17.7904Z"></path>
+                    </svg>
+                    <span x-text="formatNumber(post.share)">${comments}</span>
+                  </button>
+                  <button class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5" color="#000000" fill="none">
+                      <path d="M21.0477 3.05293C18.8697 0.707363 2.48648 6.4532 2.50001 8.551C2.51535 10.9299 8.89809 11.6617 10.6672 12.1581C11.7311 12.4565 12.016 12.7625 12.2613 13.8781C13.3723 18.9305 13.9301 21.4435 15.2014 21.4996C17.2278 21.5892 23.1733 5.342 21.0477 3.05293Z" stroke="currentColor" stroke-width="1.5" />
+                      <path d="M11.5 12.5L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span x-text="formatNumber(post.share)">${share}</span>
+                  </button>
+                </div>
+                <hr class="hidde" />
+                <!-- কমেন্ট সেকশন -->
+                <div class="mt-2">
+                  <!-- কমেন্ট লিস্ট -->
+                  <div class="space-y-2 max-h-40 overflow-y-auto">
+                    <template x-for="(comment, index) in post.comments" :key="index">
+                      <div class="flex items-start gap-2">
+                        <img class="w-6 h-6 rounded-full" src="https://alsaifdev.github.io/images/profile.jpg" alt="User">
+                        <div>
+                          <span class="text-sm font-semibold text-gray-800" x-text="comment.username"></span>
+                          <p class="text-sm text-gray-600" x-text="comment.content"></p>
+                          <span class="text-xs text-gray-400" x-text="fromNow(comment.date)"></span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                  <!-- কমেন্ট ইনপুট -->
+                  <div class="flex items-center gap-2 mt-2">
+                    <input x-model="newComment[post.$id]" @keyup.enter="addComment(post, $event.target.value)" class="w-full h-9 bg-gray-100 rounded-full px-3 outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="Write a comment..." type="text">
+                    <button @click="addComment(post, newComment[post.$id])" class="text-blue-600 hover:text-blue-800 transition-colors">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4L3 11L10 14L13 21L20 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      
+      <div x-show="loading" class="loading">
+        <div class="grid place-items-center mb-3">
+          <div class="w-12 h-12 rounded-full border-2 border-l-blue-400 animate-sping"></div>
+        </div>
+      </div>
+      
+    </div>
+    <aside class="fixed top-16 right-0 w-80 h-[calc(100vh-4rem)] bg-white shadow-sm hidden lg:block overflow-y-auto">
+      <div class="p-4">
+        <!-- ট্রেন্ডিং সেকশন -->
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Trending</h3>
+        <ul class="space-y-4">
+          <li class="border-b pb-2">
+            <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <span class="block font-medium">#TechNews</span>
+              <span class="text-sm text-gray-500">1.2k posts</span>
+            </a>
+          </li>
+          <li class="border-b pb-2">
+            <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <span class="block font-medium">#AIRevolution</span>
+              <span class="text-sm text-gray-500">850 posts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <span class="block font-medium">#SpaceX</span>
+              <span class="text-sm text-gray-500">620 posts</span>
+            </a>
+          </li>
+        </ul>
+        
+        <!-- ফলো সাজেশন -->
+        <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-4">Who to Follow</h3>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3">
+            <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
+            <div class="flex-1">
+              <p class="text-gray-800 font-medium">Jane Doe</p>
+              <p class="text-gray-500 text-sm">@janedoe</p>
+            </div>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+          </li>
+          <li class="flex items-center gap-3">
+            <img class="w-8 h-8 rounded-full" src="https://via.placeholder.com/40" alt="User">
+            <div class="flex-1">
+              <p class="text-gray-800 font-medium">John Smith</p>
+              <p class="text-gray-500 text-sm">@johnsmith</p>
+            </div>
+            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    
+    
+    <!-- Bottom Navigation -->
+    <nav x-data="{ active: 'home' }" class="w-full max-w-96 fixed bottom-4 left-1/2 -translate-x-1/2 bg-white border-t shadow-lg rounded-lg z-40 flex justify-around items-center h-14 md:hidden">
+      
+      <!-- Home -->
+      <a href="#" @click="active = 'home'" :class="active === 'home' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'home' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M2.35157 13.2135C1.99855 10.9162 1.82204 9.76763 2.25635 8.74938C2.69065 7.73112 3.65421 7.03443 5.58132 5.64106L7.02117 4.6C9.41847 2.86667 10.6171 2 12.0002 2C13.3832 2 14.5819 2.86667 16.9792 4.6L18.419 5.64106C20.3462 7.03443 21.3097 7.73112 21.744 8.74938C22.1783 9.76763 22.0018 10.9162 21.6488 13.2135L21.3478 15.1724C20.8473 18.4289 20.5971 20.0572 19.4292 21.0286C18.2613 22 16.5538 22 13.139 22H10.8614C7.44652 22 5.73909 22 4.57118 21.0286C3.40327 20.0572 3.15305 18.4289 2.65261 15.1724L2.35157 13.2135Z" />
+        </svg>
+      </a>
+      
+      <!-- Search -->
+      <a href="#" @click="active = 'search'" :class="active === 'search' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'search' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M17.5 17.5L22 22" stroke-linecap="round" />
+          <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" />
+        </svg>
+      </a>
+      
+      <!-- Post -->
+      <a href="#" @click="active = 'post'; showPostPage = true" :class="active === 'post' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'post' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 4V20M20 12H4" stroke-linecap="round" />
+        </svg>
+      </a>
+      
+      <!-- Notifications -->
+      <a href="#" @click="active = 'notifications'" :class="active === 'notifications' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'notifications' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M2.52992 14.7696C2.31727 16.1636 3.268 17.1312 4.43205 17.6134C8.89481 19.4622 15.1052 19.4622 19.5679 17.6134C20.732 17.1312 21.6827 16.1636 21.4701 14.7696C21.3394 13.9129 20.6932 13.1995 20.2144 12.5029C19.5873 11.5793 19.525 10.5718 19.5249 9.5C19.5249 5.35786 16.1559 2 12 2C7.84413 2 4.47513 5.35786 4.47513 9.5C4.47503 10.5718 4.41272 11.5793 3.78561 12.5029C3.30684 13.1995 2.66061 13.9129 2.52992 14.7696Z" />
+          <path d="M8 19C8.45849 20.7252 10.0755 22 12 22C13.9245 22 15.5415 20.7252 16 19" />
+        </svg>
+      </a>
+      
+      <!-- Profile -->
+      <a href="#" @click="active = 'profile'" :class="active === 'profile' ? 'text-blue-600' : 'text-gray-600'" class="flex flex-col items-center gap-1 p-2 hover:text-blue-500 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" :fill="active === 'profile' ? '#2563eb' : 'none'" stroke="currentColor" stroke-width="1.5">
+          <path d="M15 8C15 9.65685 13.6569 11 12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8Z" />
+          <path d="M13.7143 14H10.2857C7.91876 14 5.99998 15.9188 5.99998 18.2857C5.99998 19.2325 6.76749 20 7.71426 20H16.2857C17.2325 20 18 19.2325 18 18.2857C18 15.9188 16.0812 14 13.7143 14Z" />
+        </svg>
+      </a>
+    </nav>
+  </div>
+  
+  
+  
+  
+  
+  
+  <!--<blog-toast show="true"></blog-toast>-->
+  
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Storage, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+    const storage = new Storage(client);
+    Date.prototype.fromNow = function() {
+      
+      // console.log(this.toUTCString())
+      const now = new Date();
+      
+      const diffInSeconds = Math.floor((now - this) / 1000);
+      
+      const units = [
+        { name: 'year', seconds: 60 * 60 * 24 * 365 },
+        { name: 'month', seconds: 60 * 60 * 24 * 30 },
+        { name: 'day', seconds: 60 * 60 * 24 },
+        { name: 'hour', seconds: 60 * 60 },
+        { name: 'minute', seconds: 60 },
+        { name: 'second', seconds: 1 },
+      ];
+      
+      for (const unit of units) {
+        const quotient = Math.floor(diffInSeconds / unit.seconds);
+        if (quotient > 0) {
+          return `${quotient} ${unit.name}${quotient > 1 ? 's' : ''} ago`;
+        }
+      }
+      
+      return 'just now';
+    };
+    
+    function data() {
+      return {
+        stories: [],
+        selectedStory: null,
+        mobileMenuOpen: false,
+        showPostPage: false,
+        postUrl: '',
+        postFile: null,
+        postContent: '',
+        loading: false, // নতুন
+        posts: [],
+        perpage: 25,
+        categories: [],
+        newComment: {},
+        currentUserId: 'user123',
+        async submitPostImage(id) {
+          try {
+            const response = await storage.createFile(
+              '653bc7811a3ca0417dd5', // Bucket ID
+              id, // File ID (post ID)
+              this.postFile // File object
+            );
+            console.log('Image uploaded:', response);
+            this.postFile = null;
+            return response.$id; // ফাইল আইডি রিটার্ন করা হচ্ছে
+          } catch (error) {
+            console.error('Image upload failed:', error);
+            throw error;
+          }
+        },
+        
+        async createPost() {
+          this.loading = true;
+          const post = {
+            username: 'Abdullah Al Saif',
+            id: crypto.randomUUID(),
+            content: this.postContent,
+            likes: [],
+            comments: [],
+            share: 0,
+            date: new Date().toISOString()
+          };
+          
+          try {
+            if (this.postFile) {
+              const fileId = await this.submitPostImage(post.id);
+              const docResponse = await databases.createDocument(
+                '652c16162f939c821f75', // Database ID
+                '675d991f003af378778c', // Collection ID
+                post.id, { ...post, thumbnail: `https://cloud.appwrite.io/v1/storage/buckets/653bc7811a3ca0417dd5/files/${fileId}/view?project=652c1374db243c864a6c` }
+              );
+            }
+            else {
+              const docResponse = await databases.createDocument(
+                '652c16162f939c821f75', // Database ID
+                '675d991f003af378778c', // Collection ID
+                post.id, { ...post, thumbnail: '' }
+              );
+            }
+            this.postContent = '';
+            this.postUrl = '';
+            this.postFile = null;
+            this.showPostPage = false;
+            this.loading = false;
+          } catch (error) {
+            console.error('Post creation failed:', error);
+            this.loading = false;
+            alert('Failed to create post: ' + error.message);
+          }
+        },
+        async addComment(post, content) {
+          if (!content || content.trim() === '') return; // খালি কমেন্ট প্রতিরোধ
+          
+          const comment = {
+            id: crypto.randomUUID(),
+            username: 'Abdullah Al Saif', // বর্তমানে হার্ডকোডেড, পরে ডায়নামিক করা যাবে
+            content: content.trim(),
+            date: new Date().toISOString()
+          };
+          
+          try {
+            // পোস্টের কমেন্ট অ্যারে আপডেট
+            const updatedComments = [comment, ...post.comments]; // নতুন কমেন্ট প্রথমে
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              post.$id, { comments: updatedComments }
+            );
+            
+            // UI আপডেট
+            post.comments.unshift(comment);
+            this.newComment[post.$id] = ''; // ইনপুট খালি করা
+          } catch (error) {
+            console.error('Failed to add comment:', error);
+            alert('Failed to add comment: ' + error.message);
+          }
+        },
+        async toggleLike(post) {
+          const userId = this.currentUserId;
+          const isLiked = post.likes.includes(userId);
+          const updatedLikes = isLiked ?
+            post.likes.filter(id => id !== userId) : [...post.likes, userId];
+          
+          try {
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              post.$id, { likes: updatedLikes }
+            );
+            post.likes = updatedLikes; // UI আপডেট
+          } catch (error) {
+            console.error('Failed to toggle like:', error);
+            alert('Failed to toggle like: ' + error.message);
+          }
+        },
+        
+        async toggleCommentLike(post, comment) {
+          const userId = this.currentUserId;
+          const isLiked = comment.likes && comment.likes.includes(userId);
+          const updatedLikes = isLiked ?
+            comment.likes.filter(id => id !== userId) : [...(comment.likes || []), userId];
+          
+          try {
+            const updatedComments = post.comments.map(c =>
+              c.id === comment.id ? { ...c, likes: updatedLikes } : c
+            );
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              post.$id, { comments: updatedComments }
+            );
+            comment.likes = updatedLikes; // UI আপডেট
+          } catch (error) {
+            console.error('Failed to toggle comment like:', error);
+            alert('Failed to toggle comment like: ' + error.message);
+          }
+        },
+        
+        isPostLiked(post) {
+          return post.likes.includes(this.currentUserId);
+        },
+        
+        isCommentLiked(comment) {
+          return comment.likes && comment.likes.includes(this.currentUserId);
+        },
+        
+        async listPost() {
+          try {
+            this.loading = true;
+            const response = await databases.listDocuments(
+              '652c16162f939c821f75',
+              '675d991f003af378778c',
+              [
+                Query.orderDesc('date')
+              ]
+            );
+            this.posts = response.documents;
+            this.loading = false;
+          } catch (error) {
+            console.error('Failed to list posts:', error);
+            this.loading = false;
+          }
+        },
+        async addStory() {
+          const newStory = {
+            id: crypto.randomUUID(),
+            username: 'Abdullah Al Saif',
+            image: 'https://alsaifdev.github.io/images/profile.jpg',
+            date: new Date().toISOString()
+          };
+          this.stories.unshift(newStory);
+        },
+        
+        openStory(story) {
+          this.selectedStory = story; // সিলেক্ট করা স্টোরি সেট করা
+        },
+        
+        closeStory() {
+          this.selectedStory = null; // মডাল বন্ধ করা
+        },
+        
+        init() {
+          this.listPost();
+          client.subscribe('databases.652c16162f939c821f75.collections.675d991f003af378778c.documents', response => {
+            const updatedPost = response.payload;
+            const index = this.posts.findIndex(p => p.$id === updatedPost.$id);
+            if (index !== -1) {
+              this.posts[index] = updatedPost; // আপডেটেড পোস্ট রিয়েল-টাইমে
+            } else {
+              this.posts.unshift(updatedPost); // নতুন পোস্ট
+            }
+          });
+          
+          this.stories = [
+            { id: '1', username: 'Jane', image: 'https://alsaifdev.github.io/images/profile.jpg', date: new Date().toISOString() },
+            { id: '2', username: 'John', image: 'https://alsaifdev.github.io/images/profile.jpg', date: new Date().toISOString() },
+            { id: '3', username: 'Alice', image: 'https://alsaifdev.github.io/images/profile.jpg', date: new Date().toISOString() },
+            { id: '4', username: 'Bob', image: 'https://alsaifdev.github.io/images/profile.jpg', date: new Date().toISOString() }
+          ];
+        },
+        formatNumber(num) {
+          if (num >= 1_000_000) {
+            return (num / 1_000_000).toFixed(1) + 'M';
+          } else if (num >= 1_000) {
+            return (num / 1_000).toFixed(1) + 'K';
+          } else {
+            return num.toString();
+          }
+        },
+        fetcher() {
+          fetch('https://asmmbd.github.io/src/postsdata.json')
+            .then(ress => ress.json())
+            .then(data => this.posts = data)
+        },
+        
+      }
+    }
+  </script>
+</body>
+
+</html>
