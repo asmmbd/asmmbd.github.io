@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bn" x-data="socialProfile()" x-init="fetchProfileData()">
+<html lang="bn" x-data="videoApp()">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>প্রোফাইল - আল-হেরা সোশ্যাল</title>
+  <title>ভিডিও লাইব্রেরি - আল-হেরা স্টুডেন্ট নেটওয়ার্ক</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,577 +12,452 @@
   <style>
     body {
       font-family: 'Hind Siliguri', sans-serif;
+      padding-top: 60px;
     }
     
-    .profile-header {
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://via.placeholder.com/1200x400?text=Profile+Cover');
-      background-size: cover;
-      background-position: center;
+    .video-player-container {
+      transition: all 0.3s ease;
     }
     
-    .tab-button.active {
-      border-bottom: 3px solid #059669;
-      font-weight: 600;
-      color: #065f46;
+    
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
     
-    .grid-gallery {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4px;
+    .video-thumbnail {
+      transition: transform 0.3s ease;
+    }
+    
+    .video-card:hover .video-thumbnail {
+      transform: scale(1.03);
     }
   </style>
 </head>
 
-<body class="bg-gray-100 pb-14 md:pb-0">
+<body class="bg-gray-100">
   <!-- হেডার -->
-  <header class="bg-green-800 text-white shadow-lg">
+  <header class="bg-green-800 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <img src="./images/logo.jpg" alt="লোগো" class="h-10 rounded-full">
-        <h1 class="text-lg font-bold">আল-হেরা সোশ্যাল</h1>
+        <h1 class="text-lg font-bold">আল-হেরা ভিডিও লাইব্রেরি</h1>
       </div>
       <div class="flex items-center space-x-4">
-        <button @click="notificationsOpen = !notificationsOpen" class="relative">
-          <i class="far fa-bell text-xl"></i>
-          <span x-show="unreadNotifications > 0" x-text="unreadNotifications" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+        <div class="relative hidden md:block">
+          <input type="text" placeholder="ভিডিও খুঁজুন..." class="bg-green-700 text-white placeholder-green-200 rounded-full px-4 py-2 pl-10 focus:outline-none focus:bg-white focus:text-gray-800 w-64 transition">
+          <i class="fas fa-search absolute left-3 top-3 text-green-200"></i>
+        </div>
+        <button @click="showUploadModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+          <i class="fas fa-upload mr-2"></i> আপলোড
         </button>
-        <a href="profile.html" class="flex items-center space-x-1">
-          <img :src="currentUser.avatar" alt="প্রোফাইল" class="h-8 w-8 rounded-full">
-        </a>
       </div>
     </div>
   </header>
   
-  <!-- প্রোফাইল হেডার -->
-  <div class="profile-header text-white">
-    <div class="container mx-auto px-4 py-12">
-      <div class="flex flex-col md:flex-row items-center md:items-end">
-        <div class="relative -mb-16 md:mb-0">
-          <img :src="profile.avatar" :alt="profile.name" class="h-32 w-32 rounded-full border-4 border-white shadow-lg">
-          <button x-show="isCurrentUser" @click="editAvatar = true" class="absolute bottom-2 right-2 bg-green-600 text-white p-2 rounded-full">
-            <i class="fas fa-camera"></i>
+  <!-- ভিডিও প্লেয়ার (ফিক্সড টপ) -->
+  <div x-show="currentVideo" x-transition class="video-player-container" :class="isMinimized ? 'w-48 h-32 rounded-lg fixed bottom-20 right-2 z-50 overflow-hidden' : 'w-full fixed top-0 left-0 z-50'">
+    <div class="shadow-lg">
+      <div x-show="!isMinimized" class="flex justify-between items-center bg-gray-800 text-white px-3 py-2">
+        <div class="flex space-x-2">
+          <button @click="toggleMinimize()" class="text-white hover:text-gray-300">
+            <i :class="isMinimized ? 'fas fa-expand' : 'fas fa-compress'"></i>
+          </button>
+          <button @click="closeVideo()" class="text-white hover:text-gray-300">
+            <i class="fas fa-times"></i>
           </button>
         </div>
-        <div class="md:ml-8 mt-20 md:mt-0 text-center md:text-left">
-          <h1 class="text-3xl font-bold" x-text="profile.name"></h1>
-          <p class="text-xl" x-text="profile.batch + ' - ' + profile.department"></p>
-          <div class="flex justify-center md:justify-start space-x-4 mt-3">
-            <div class="text-center">
-              <span x-text="profile.posts.length" class="font-bold block"></span>
-              <span class="text-sm">পোস্ট</span>
-            </div>
-            <div class="text-center">
-              <span x-text="profile.friends" class="font-bold block"></span>
-              <span class="text-sm">বন্ধু</span>
-            </div>
-            <div class="text-center">
-              <span x-text="profile.followers" class="font-bold block"></span>
-              <span class="text-sm">ফলোয়ার</span>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 md:mt-0 md:ml-auto">
-          <template x-if="isCurrentUser">
-            <button @click="editProfile = true" class="bg-white text-green-800 hover:bg-gray-100 px-4 py-2 rounded-lg font-medium">
-              <i class="fas fa-edit mr-1"></i> প্রোফাইল এডিট
-            </button>
-          </template>
-          <template x-if="!isCurrentUser">
-            <div class="flex space-x-2">
-              <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
-                <i class="fas fa-user-plus mr-1"></i> ফ্রেন্ড রিকোয়েস্ট
-              </button>
-              <button class="bg-white text-green-800 hover:bg-gray-100 px-4 py-2 rounded-lg font-medium">
-                <i class="fas fa-envelope mr-1"></i> মেসেজ
-              </button>
-            </div>
-          </template>
+      </div>
+      <div :class="isMinimized ? 'w-full h-full z-50 rounded-lg' : 'w-full h-52 bg-black'">
+        <iframe x-show="!isMinimized" :src="'https://www.youtube.com/embed/' + getYouTubeId(currentVideo?.youtube_url) + '?autoplay=1'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+        <div x-show="isMinimized" class="w-full h-full bg-white z-50 relative rounded-lg">
+          <img :src="currentVideo?.thumbnail" :alt="currentVideo?.title" class="w-full h-full opacity-100 z-50 rounded-lg">
+          <button @click="toggleMinimize()" class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white text-2xl">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button @click="closeVideo()" class="absolute top-2 right-2 text-white text-2xl">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       </div>
-    </div>
-  </div>
-  
-  <!-- প্রোফাইল নেভিগেশন -->
-  <div class="bg-white shadow">
-    <div class="container mx-auto px-4">
-      <div class="flex overflow-x-auto">
-        <button @click="activeTab = 'posts'" :class="{ 'active': activeTab === 'posts' }" class="px-6 py-3 font-medium whitespace-nowrap tab-button">
-          <i class="far fa-newspaper mr-1"></i> পোস্ট
-        </button>
-        <button @click="activeTab = 'about'" :class="{ 'active': activeTab === 'about' }" class="px-6 py-3 font-medium whitespace-nowrap tab-button">
-          <i class="far fa-user mr-1"></i> সম্পর্কে
-        </button>
-        <button @click="activeTab = 'friends'" :class="{ 'active': activeTab === 'friends' }" class="px-6 py-3 font-medium whitespace-nowrap tab-button">
-          <i class="fas fa-users mr-1"></i> বন্ধু <span x-text="profile.friends" class="bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full text-xs ml-1"></span>
-        </button>
-        <button @click="activeTab = 'photos'" :class="{ 'active': activeTab === 'photos' }" class="px-6 py-3 font-medium whitespace-nowrap tab-button">
-          <i class="far fa-images mr-1"></i> ছবি <span x-text="profile.photos.length" class="bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full text-xs ml-1"></span>
-        </button>
+      <div x-show="!isMinimized" class="p-3 bg-white">
+        
+        <h3 x-text="currentVideo?.title" class="font-medium truncate"></h3>
+        <p x-text="currentVideo?.description" class="text-sm text-gray-700 line-clamp-2"></p>
       </div>
     </div>
   </div>
   
   <!-- মেইন কন্টেন্ট -->
-  <main class="container mx-auto px-4 py-6">
-    <div class="flex flex-col lg:flex-row gap-6">
-      <!-- লেফট সাইডবার (About এবং Friends) -->
-      <div class="lg:w-1/3 space-y-6" x-show="activeTab === 'about' || activeTab === 'friends'">
-        <!-- সম্পর্কে সেকশন -->
-        <div x-show="activeTab === 'about'" class="bg-white rounded-lg shadow p-5">
-          <h3 class="text-xl font-bold mb-4 border-b pb-2">সাধারণ তথ্য</h3>
-          <div class="space-y-4">
-            <div>
-              <p class="text-gray-500 text-sm">ব্যাচ</p>
-              <p x-text="profile.batch" class="font-medium"></p>
-            </div>
-            <div>
-              <p class="text-gray-500 text-sm">বিভাগ</p>
-              <p x-text="profile.department" class="font-medium"></p>
-            </div>
-            <div>
-              <p class="text-gray-500 text-sm">জন্ম তারিখ</p>
-              <p x-text="profile.dob || '--'" class="font-medium"></p>
-            </div>
-            <div>
-              <p class="text-gray-500 text-sm">বর্তমান শহর</p>
-              <p x-text="profile.city || '--'" class="font-medium"></p>
-            </div>
-            <div>
-              <p class="text-gray-500 text-sm">জন্মস্থান</p>
-              <p x-text="profile.hometown || '--'" class="font-medium"></p>
+  <main class="container mx-auto px-2 py-3" :class="{'mt-72' : !isMinimized && currentVideo}">
+    <!-- ভিডিও ফিল্টার ট্যাব -->
+    <div class="bg-white rounded-lg shadow mb-3 sticky top-16 z-40">
+      <div class="flex overflow-x-auto">
+        <button @click="activeCategory = 'all'" :class="{ 'border-b-2 border-green-600 text-green-600': activeCategory === 'all' }" class="flex-shrink-0 px-6 py-3">
+          সব ভিডিও
+        </button>
+        <template x-for="category in categories" :key="category">
+          <button @click="activeCategory = category" :class="{ 'border-b-2 border-green-600 text-green-600': activeCategory === category }" class="flex-shrink-0 px-6 py-3">
+            <span x-text="category"></span>
+          </button>
+        </template>
+      </div>
+    </div>
+    
+    <!-- ভিডিও গ্রিড -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+      <template x-for="video in filteredVideos" :key="video.id">
+        <div @click="playVideo(video)" class="video-card bg-white rounded-lg shadow overflow-hidden cursor-pointer transition z-20">
+          <div class="relative z-40">
+            <img loading="lazy" :src="video.thumbnail" :alt="video.title" class="video-thumbnail w-full h-40 object-cover z-10">
+            <span class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
+              <span x-text="formatDuration(video.duration)"></span>
+            </span>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black bg-opacity-30 transition z-10">
+              <span class="bg-white bg-opacity-80 text-green-600 rounded-full p-3">
+                <i class="fas fa-play text-lg"></i>
+              </span>
             </div>
           </div>
-          
-          <h3 class="text-xl font-bold mb-4 border-b pb-2 mt-6">যোগাযোগ তথ্য</h3>
-          <div class="space-y-4">
-            <div>
-              <p class="text-gray-500 text-sm">ইমেইল</p>
-              <p x-text="profile.email || '--'" class="font-medium"></p>
-            </div>
-            <div>
-              <p class="text-gray-500 text-sm">মোবাইল</p>
-              <p x-text="profile.phone || '--'" class="font-medium"></p>
-            </div>
+          <div class="p-3">
+            <h3 class="font-medium line-clamp-2" x-text="video.title"></h3>
           </div>
         </div>
+      </template>
+    </div>
+    
+    <!-- ভিডিও না থাকলে মেসেজ -->
+    <div x-show="filteredVideos.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
+      <i class="fas fa-video-slash text-4xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-bold text-gray-600">কোন ভিডিও পাওয়া যায়নি</h3>
+      <p class="text-gray-500 mt-2">এই ক্যাটাগরিতে এখনো কোন ভিডিও আপলোড করা হয়নি</p>
+    </div>
+  </main>
+  
+  <!-- ভিডিও আপলোড মোডাল -->
+  <div x-show="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div @click.outside="closeUploadModal()" class="bg-white rounded-lg w-full max-w-2xl overflow-hidden">
+      <!-- মোডাল হেডার -->
+      <div class="bg-green-800 text-white p-4 flex justify-between items-center">
+        <h3 class="text-xl font-bold">নতুন ভিডিও আপলোড</h3>
+        <button @click="closeUploadModal()" class="text-white hover:text-gray-200">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      
+      <!-- পাসওয়ার্ড ভেরিফিকেশন স্টেপ -->
+      <div x-show="!uploadVerified" class="p-6">
+        <h4 class="font-bold text-lg mb-4 text-center">অনুমোদন প্রয়োজন</h4>
+        <p class="text-gray-600 text-center mb-6">শুধুমাত্র অনুমোদিত ব্যবহারকারীরা ভিডিও আপলোড করতে পারবেন</p>
         
-        <!-- বন্ধু সেকশন -->
-        <div x-show="activeTab === 'friends'" class="bg-white rounded-lg shadow p-5">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold">বন্ধু</h3>
-            <span x-text="profile.friends + ' জন'" class="text-gray-500"></span>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 mb-2">পাসওয়ার্ড</label>
+            <input x-model="uploadPassword" type="password" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500">
+            <p x-show="uploadError" class="text-red-500 text-sm mt-1" x-text="uploadError"></p>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <template x-for="friend in profile.friendsList.slice(0, 6)" :key="friend.id">
-              <a href="profile.html?id=' + friend.id" class="text-center">
-                <img :src="friend.avatar" :alt="friend.name" class="h-24 w-24 rounded-full mx-auto mb-2">
-                <p x-text="friend.name" class="font-medium text-sm"></p>
-              </a>
-            </template>
-          </div>
-          <button x-show="profile.friends > 6" class="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg">
-            সব বন্ধু দেখুন
+          
+          <button @click="verifyUpload()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-medium">
+            যাচাই করুন
           </button>
         </div>
       </div>
       
-      <!-- মিডিল কন্টেন্ট (Posts এবং Photos) -->
-      <div class="lg:w-2/3">
-        <!-- পোস্ট সেকশন -->
-        <div x-show="activeTab === 'posts'" class="space-y-4">
-          <!-- পোস্ট ক্রিয়েট -->
-          <div x-show="isCurrentUser" class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center space-x-3">
-              <img :src="currentUser.avatar" alt="প্রোফাইল" class="h-10 w-10 rounded-full">
-              <button @click="newPostOpen = true" class="flex-grow bg-gray-100 hover:bg-gray-200 text-gray-600 text-left px-4 py-2 rounded-full transition">
-                আজকে কী শিখলেন?
-              </button>
-            </div>
+      <!-- ভিডিও আপলোড ফর্ম (পাসওয়ার্ড ভেরিফাই হলে দেখাবে) -->
+      <div x-show="uploadVerified" class="p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 mb-2">ভিডিও টাইটেল <span class="text-red-500">*</span></label>
+            <input x-model="videoData.title" type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="ভিডিওর শিরোনাম লিখুন">
           </div>
           
-          <!-- পোস্ট লিস্ট -->
-          <template x-for="post in profile.posts" :key="post.id">
-            <div class="bg-white rounded-lg shadow p-4">
-              <div class="flex justify-between items-start mb-3">
-                <div class="flex items-center space-x-3">
-                  <img :src="profile.avatar" :alt="profile.name" class="h-10 w-10 rounded-full">
-                  <div>
-                    <h4 x-text="profile.name" class="font-bold"></h4>
-                    <p class="text-gray-500 text-sm" x-text="post.time"></p>
-                  </div>
-                </div>
-                <button class="text-gray-400 hover:text-gray-600">
-                  <i class="fas fa-ellipsis-h"></i>
-                </button>
-              </div>
-              
-              <p class="mb-3" x-text="post.text"></p>
-              
-              <div x-show="post.image" class="mb-3">
-                <img :src="post.image" :alt="post.text" class="w-full rounded-lg">
-              </div>
-              
-              <div class="flex justify-between text-gray-500 border-t border-b py-2 mb-3">
-                <button @click="toggleLike(post.id)" class="flex items-center space-x-1 hover:text-green-600">
-                  <i :class="post.liked ? 'fas fa-thumbs-up text-green-600' : 'far fa-thumbs-up'"></i>
-                  <span x-text="post.likes"></span>
-                </button>
-                <button @click="showComments(post.id)" class="flex items-center space-x-1 hover:text-green-600">
-                  <i class="far fa-comment"></i>
-                  <span x-text="post.comments.length"></span>
-                </button>
-                <button class="flex items-center space-x-1 hover:text-green-600">
-                  <i class="far fa-share-square"></i>
-                  <span>শেয়ার</span>
-                </button>
-              </div>
-              
-              <!-- কমেন্ট সেকশন -->
-              <div x-show="post.showComments" class="space-y-3">
-                <div class="flex items-center space-x-2">
-                  <img :src="currentUser.avatar" alt="প্রোফাইল" class="h-8 w-8 rounded-full">
-                  <input x-model="post.newComment" @keyup.enter="addComment(post.id)" type="text" placeholder="মন্তব্য করুন..." class="flex-grow border rounded-full px-3 py-1 focus:outline-none">
-                </div>
-                
-                <template x-for="comment in post.comments" :key="comment.id">
-                  <div class="flex space-x-2">
-                    <img :src="comment.user.avatar" :alt="comment.user.name" class="h-8 w-8 rounded-full">
-                    <div class="bg-gray-100 rounded-lg p-2 flex-grow">
-                      <h5 x-text="comment.user.name" class="font-bold text-sm"></h5>
-                      <p x-text="comment.text" class="text-sm"></p>
-                      <div class="flex space-x-3 text-xs text-gray-500 mt-1">
-                        <span x-text="comment.time"></span>
-                        <button class="hover:text-green-600">লাইক</button>
-                        <button class="hover:text-green-600">রিপ্লাই</button>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </template>
-        </div>
-        
-        <!-- ছবি সেকশন -->
-        <div x-show="activeTab === 'photos'" class="bg-white rounded-lg shadow p-4">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold">ছবি</h3>
-            <span x-text="profile.photos.length + ' টি ছবি'" class="text-gray-500"></span>
-          </div>
-          <div class="grid-gallery">
-            <template x-for="photo in profile.photos" :key="photo.id">
-              <a href="#" @click.prevent="openPhoto(photo)" class="block">
-                <img :src="photo.url" :alt="photo.caption" class="w-full h-32 object-cover rounded">
-              </a>
-            </template>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-  
-  <!-- এডিট প্রোফাইল মোডাল -->
-  <div x-show="editProfile" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div @click.outside="editProfile = false" class="bg-white rounded-lg w-full max-w-2xl p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-bold">প্রোফাইল এডিট করুন</h3>
-        <button @click="editProfile = false" class="text-gray-500 hover:text-gray-700">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      
-      <div class="grid md:grid-cols-2 gap-6">
-        <div>
-          <h4 class="font-medium mb-3 border-b pb-2">সাধারণ তথ্য</h4>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">পুরো নাম</label>
-              <input x-model="editProfileData.name" type="text" class="w-full border rounded-lg px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">জন্ম তারিখ</label>
-              <input x-model="editProfileData.dob" type="date" class="w-full border rounded-lg px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">বর্তমান শহর</label>
-              <input x-model="editProfileData.city" type="text" class="w-full border rounded-lg px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">জন্মস্থান</label>
-              <input x-model="editProfileData.hometown" type="text" class="w-full border rounded-lg px-3 py-2">
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <h4 class="font-medium mb-3 border-b pb-2">যোগাযোগ তথ্য</h4>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">ইমেইল</label>
-              <input x-model="editProfileData.email" type="email" class="w-full border rounded-lg px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">মোবাইল নম্বর</label>
-              <input x-model="editProfileData.phone" type="tel" class="w-full border rounded-lg px-3 py-2">
-            </div>
+          <div>
+            <label class="block text-gray-700 mb-2">ইউটিউব ভিডিও URL <span class="text-red-500">*</span></label>
+            <input x-model="videoData.youtube_url" type="url" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="https://www.youtube.com/watch?v=...">
+            <p class="text-gray-500 text-sm mt-1">আপাতত শুধুমাত্র ইউটিউব লিংক গ্রহণযোগ্য</p>
           </div>
           
-          <h4 class="font-medium mb-3 border-b pb-2 mt-6">একাডেমিক তথ্য</h4>
-          <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 mb-2">ভিডিও বিবরণ</label>
+            <textarea x-model="videoData.description" rows="3" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="ভিডিওর বিবরণ লিখুন..."></textarea>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-gray-600 text-sm mb-1">ব্যাচ</label>
-              <input x-model="editProfileData.batch" type="text" class="w-full border rounded-lg px-3 py-2">
-            </div>
-            <div>
-              <label class="block text-gray-600 text-sm mb-1">বিভাগ</label>
-              <select x-model="editProfileData.department" class="w-full border rounded-lg px-3 py-2">
-                <option value="হাদিস বিভাগ">হাদিস বিভাগ</option>
-                <option value="তাফসীর বিভাগ">তাফসীর বিভাগ</option>
-                <option value="ফিকহ বিভাগ">ফিকহ বিভাগ</option>
-                <option value="আরবি ভাষা">আরবি ভাষা</option>
+              <label class="block text-gray-700 mb-2">ক্যাটাগরি</label>
+              <select x-model="videoData.category" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500">
+                <option value="">ক্যাটাগরি নির্বাচন করুন</option>
+                <option value="lecture">লেকচার</option>
+                <option value="tutorial">টিউটোরিয়াল</option>
+                <option value="discussion">আলোচনা</option>
+                <option value="event">ইভেন্ট</option>
+                <option value="other">অন্যান্য</option>
               </select>
             </div>
+            
+            <div>
+              <label class="block text-gray-700 mb-2">থাম্বনেইল</label>
+              <input type="text" x-model="videoData.thumbnail" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500">
+            </div>
+          </div>
+          
+          <div>
+            <label class="flex items-center space-x-2">
+              <input x-model="videoData.duration" type="number" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500">
+            </label>
           </div>
         </div>
+        
+        <div class="flex justify-end space-x-3 mt-6 pt-4 border-t">
+          <button @click="closeUploadModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+            বাতিল করুন
+          </button>
+          <button @click="submitVideo()" :disabled="!canSubmit" :class="{'bg-green-600 hover:bg-green-700': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit}" class="text-white px-4 py-2 rounded-lg">
+            আপলোড করুন
+          </button>
+        </div>
       </div>
+    </div>
+  </div>
+  
+  <nav x-show="!currentVideo || isMinimized" class="print:hidden fixed bottom-0 left-0 right-0 bg-white z-50 md:hidden rounded-t-lg shadow-md">
+    <div class="flex h-16">
+      <!-- হোম -->
+      <a href="/" class="nav-item active flex flex-col items-center justify-center flex-1 relative">
+        <div class="nav-icon mb-1">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 10L12 2L21 10V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="text-xs mt-1">হোম</span>
+      </a>
       
-      <div class="flex justify-end space-x-3 mt-6">
-        <button @click="editProfile = false" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
-          বাতিল
-        </button>
-        <button @click="saveProfile()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
-          সংরক্ষণ করুন
-        </button>
-      </div>
+      <!-- ক্লাস রুটিন -->
+      <a href="/" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+        <div class="nav-icon mb-1">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M3 10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M8 14H8.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M12 14H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16 14H16.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M8 18H8.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16 18H16.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="text-xs mt-1">রুটিন</span>
+      </a>
+      
+      <!-- অনলাইন ক্লাস (গুরুত্বপূর্ণ আইটেম) -->
+      <a href="videos" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+        <div class="nav-icon mb-1">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23 7L16 12L23 17V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M14 5H3C1.89543 5 1 5.89543 1 7V17C1 18.1046 1.89543 19 3 19H14C15.1046 19 16 18.1046 16 17V7C16 5.89543 15.1046 5 14 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="text-xs mt-1">অনলাইন ক্লাস</span>
+      </a>
+      
+      <!-- ফলাফল -->
+      <a href="/" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+        <div class="nav-icon mb-1">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 8V16M12 11V16M8 14V16M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="text-xs mt-1">ফলাফল</span>
+      </a>
+      
+      <!-- প্রোফাইল -->
+      <a href="/profile" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+        <div class="nav-icon mb-1">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="text-xs mt-1">প্রোফাইল</span>
+      </a>
     </div>
-  </div>
-  
-  <!-- ভিউ ফটো মোডাল -->
-  <div x-show="viewPhoto" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-    <div @click.outside="viewPhoto = false" class="relative w-full max-w-4xl">
-      <button @click="viewPhoto = false" class="absolute top-4 right-4 text-white text-2xl">
-        <i class="fas fa-times"></i>
-      </button>
-      <img :src="selectedPhoto.url" :alt="selectedPhoto.caption" class="w-full max-h-screen rounded-lg">
-      <div x-show="selectedPhoto.caption" class="bg-white p-3 rounded-b-lg">
-        <p x-text="selectedPhoto.caption"></p>
-      </div>
+    <div class="offline-alert w-full bg-red-600 text-white p-3 text-center hidden">
+      আপনি অফলাইনে আছেন। কিছু ফিচার সীমিত থাকতে পারে।
     </div>
-  </div>
-  <include src="/src/components/bottom-nav"></include>
-  <script src="/src/index.js"></script>
-  
-  
+  </nav>
   <script>
-    function socialProfile() {
+    function videoApp() {
       return {
-        // অ্যাপ স্টেট
-        profile: {},
-        currentUser: {
+        currentVideo: null,
+        isMinimized: false,
+        activeCategory: 'all',
+        uploadModal: false,
+        uploadVerified: false,
+        uploadPassword: '',
+        correctPassword: 'alhera123', // আপনার পাসওয়ার্ড এখানে সেট করুন
+        uploadError: '',
+        videoData: {
+          title: "",
+          youtube_url: "",
+          thumbnail: "",
+          duration: 0,
+          category: "",
+          description: "",
+        },
+        videos: [
+        {
           id: 1,
-          name: "আব্দুল্লাহ আল মামুন",
-          avatar: "./images/logo.jpg",
-          batch: "২০২৩ ব্যাচ",
-          department: "হাদিস বিভাগ"
+          title: "হাদিসের মৌলিক নীতিমালা - পর্ব ১ | আল-হেরা ইসলামিক স্টাডিজ",
+          youtube_url: "https://youtu.be/aAS6kNcPYWo?si=ty9t87JzHXT72rsv",
+          thumbnail: "./images/default-thumb.jpg",
+          duration: 1254,
+          category: "lecture",
+          description: "এই ভিডিওতে আমরা হাদিস শাস্ত্রের মৌলিক নীতিমালা নিয়ে আলোচনা করব। বিশেষভাবে আমরা হাদিস গ্রহণ ও বর্জনের মানদণ্ড সম্পর্কে জানব।",
         },
-        isCurrentUser: false,
-        activeTab: 'posts',
-        editProfile: false,
-        editProfileData: {},
-        viewPhoto: false,
-        selectedPhoto: {},
-        newPostOpen: false,
-        notificationsOpen: false,
-        unreadNotifications: 3,
-        
-        // ইনিশিয়ালাইজেশন
-        init() {
-          this.checkIfCurrentUser();
+        {
+          id: 2,
+          title: "হাদিসের মৌলিক নীতিমালা - পর্ব ১ | আল-হেরা ইসলামিক স্টাডিজ",
+          youtube_url: "https://youtu.be/aAS6kNcPYWo?si=ty9t87JzHXT72rsv",
+          thumbnail: "./images/default-thumb.jpg",
+          duration: 1254,
+          category: "lecture",
+          description: "এই ভিডিওতে আমরা হাদিস শাস্ত্রের মৌলিক নীতিমালা নিয়ে আলোচনা করব। বিশেষভাবে আমরা হাদিস গ্রহণ ও বর্জনের মানদণ্ড সম্পর্কে জানব।",
         },
+        {
+          id: 3,
+          title: "হাদিসের মৌলিক নীতিমালা - পর্ব ১ | আল-হেরা ইসলামিক স্টাডিজ",
+          youtube_url: "https://youtu.be/aAS6kNcPYWo?si=ty9t87JzHXT72rsv",
+          thumbnail: "./images/default-thumb.jpg",
+          duration: 1254,
+          category: "lecture",
+          description: "এই ভিডিওতে আমরা হাদিস শাস্ত্রের মৌলিক নীতিমালা নিয়ে আলোচনা করব। বিশেষভাবে আমরা হাদিস গ্রহণ ও বর্জনের মানদণ্ড সম্পর্কে জানব।",
+        },
+        {
+          id: 4,
+          title: "হাদিসের মৌলিক নীতিমালা - পর্ব ১ | আল-হেরা ইসলামিক স্টাডিজ",
+          youtube_url: "https://youtu.be/aAS6kNcPYWo?si=ty9t87JzHXT72rsv",
+          thumbnail: "./images/default-thumb.jpg",
+          duration: 1254,
+          category: "lecture",
+          description: "এই ভিডিওতে আমরা হাদিস শাস্ত্রের মৌলিক নীতিমালা নিয়ে আলোচনা করব। বিশেষভাবে আমরা হাদিস গ্রহণ ও বর্জনের মানদণ্ড সম্পর্কে জানব।",
+        }],
         
-        // প্রোফাইল ডাটা ফেচ করা
-        fetchProfileData() {
-          // URL থেকে আইডি নেওয়া
-          const urlParams = new URLSearchParams(window.location.search);
-          const profileId = urlParams.get('id') || 1; // ডিফল্ট হিসেবে 1
-          
-          // ডেমো ডাটা - বাস্তবে এখানে API কল হবে
-          const demoProfiles = [
-          {
-            id: 1,
-            name: "আব্দুল্লাহ আল মামুন",
-            avatar: "./images/logo.jpg",
-            dob: "2000-05-15",
-            phone: "01712345678",
-            email: "mamun@example.com",
-            city: "ঢাকা",
-            hometown: "চট্টগ্রাম",
-            batch: "২০২৩ ব্যাচ",
-            department: "হাদিস বিভাগ",
-            posts: 28,
-            friends: 124,
-            followers: 215,
-            friendsList: [
-              { id: 2, name: "মুহাম্মদ ইব্রাহিম", avatar: "./images/logo.jpg" },
-              { id: 3, name: "আয়েশা সিদ্দিকা", avatar: "./images/logo.jpg" },
-              { id: 4, name: "ওমর ফারুক", avatar: "./images/logo.jpg" },
-              { id: 5, name: "ফাতিমা জাহরা", avatar: "./images/logo.jpg" },
-              { id: 6, name: "আব্দুর রহমান", avatar: "./images/logo.jpg" },
-              { id: 7, name: "আমিনা খাতুন", avatar: "./images/logo.jpg" }
-            ],
-            photos: [
-              { id: 1, url: "./images/logo.jpg", caption: "বার্ষিক মিলাদ মাহফিল" },
-              { id: 2, url: "./images/logo.jpg", caption: "গ্রুপ স্টাডি" },
-              { id: 3, url: "./images/logo.jpg", caption: "" },
-              { id: 4, url: "./images/logo.jpg", caption: "ক্যাম্পাসের সৌন্দর্য" },
-              { id: 5, url: "./images/logo.jpg", caption: "বন্ধুদের সাথে" },
-              { id: 6, url: "./images/logo.jpg", caption: "প্রেজেন্টেশন" }
-            ],
-            posts: [
-            {
-              id: 1,
-              text: "আজকে আমাদের ফিকহ ক্লাসে আমরা নামাজের ফরজ ও ওয়াজিব সম্পর্কে আলোচনা করেছি। বিশেষ করে সিজদায় যাওয়ার সময় পা কিভাবে রাখতে হবে সে বিষয়ে বিস্তারিত জানলাম।",
-              image: "./images/logo.jpg",
-              time: "২ ঘন্টা আগে",
-              likes: 15,
-              liked: false,
-              comments: [
-              {
-                id: 1,
-                user: { name: "আয়েশা সিদ্দিকা", avatar: "./images/logo.jpg" },
-                text: "আপনার পোস্ট থেকে অনেক কিছু শিখলাম!",
-                time: "১ ঘন্টা আগে"
-              }],
-              showComments: false,
-              newComment: ""
-            },
-            {
-              id: 2,
-              text: "কেউ কি আমাকে সাহায্য করতে পারবেন? আমি আরবি ব্যাকরণের 'ইননা ও أخواتها' অধ্যায়টি ভালোভাবে বুঝতে পারছি না।",
-              time: "৫ ঘন্টা আগে",
-              likes: 8,
-              liked: true,
-              comments: [
-              {
-                id: 1,
-                user: { name: "ওমর ফারুক", avatar: "./images/logo.jpg" },
-                text: "আমি আপনাকে সাহায্য করতে পারি। আমাদের গ্রুপ স্টাডিতে যোগ দিন।",
-                time: "৩ ঘন্টা আগে"
-              },
-              {
-                id: 2,
-                user: { name: "ফাতিমা জাহরা", avatar: "./images/logo.jpg" },
-                text: "এই ভিডিওটি দেখতে পারেন: https://youtu.be/example",
-                time: "২ ঘন্টা আগে"
-              }],
-              showComments: false,
-              newComment: ""
-            }]
-          },
-          {
-            id: 2,
-            name: "মুহাম্মদ ইব্রাহিম",
-            avatar: "./images/logo.jpg",
-            dob: "2001-03-22",
-            phone: "01787654321",
-            email: "ibrahim@example.com",
-            city: "ঢাকা",
-            batch: "২০২৩ ব্যাচ",
-            department: "ফিকহ বিভাগ",
-            posts: 42,
-            friends: 98,
-            followers: 176,
-            friendsList: [
-              { id: 1, name: "আব্দুল্লাহ আল মামুন", avatar: "./images/logo.jpg" },
-              { id: 3, name: "আয়েশা সিদ্দিকা", avatar: "./images/logo.jpg" },
-              { id: 8, name: "ইব্রাহিম খলিল", avatar: "./images/logo.jpg" },
-              { id: 9, name: "মারিয়াম বেগম", avatar: "./images/logo.jpg" }
-            ],
-            photos: [
-              { id: 1, url: "./images/logo.jpg", caption: "ক্লাস প্রেজেন্টেশন" },
-              { id: 2, url: "./images/logo.jpg", caption: "" },
-              { id: 3, url: "./images/logo.jpg", caption: "পরীক্ষার প্রস্তুতি" }
-            ],
-            posts: [
-            {
-              id: 1,
-              text: "আজকে ফিকহের ক্লাসে নতুন অধ্যায় শুরু হয়েছে। ইনশাআল্লাহ আগামীকাল গ্রুপ স্টাডি হবে।",
-              time: "১ দিন আগে",
-              likes: 23,
-              liked: false,
-              comments: [],
-              showComments: false,
-              newComment: ""
-            }]
-          }];
-          
-          this.profile = demoProfiles.find(p => p.id == profileId) || demoProfiles[0];
-          this.editProfileData = JSON.parse(JSON.stringify(this.profile));
-          
-          // কারেন্ট ইউজার চেক করুন
-          this.checkIfCurrentUser();
+        // কম্পিউটেড প্রপার্টিজ
+        get categories() {
+          return [...new Set(this.videos.map(v => v.category))];
+        },
+        get filteredVideos() {
+          if (this.activeCategory === 'all') return this.videos;
+          return this.videos.filter(v => v.category === this.activeCategory);
+        },
+        get canSubmit() {
+          return this.videoData.title.trim() &&
+            this.videoData.youtube_url.trim() &&
+            this.getYouTubeId(this.videoData.youtube_url);
         },
         
-        // কারেন্ট ইউজার কি না চেক করা
-        checkIfCurrentUser() {
-          this.isCurrentUser = this.profile.id === this.currentUser.id;
+        // মেথডস
+        playVideo(video) {
+          this.currentVideo = video;
+          this.isMinimized = false;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         },
-        
-        // প্রোফাইল সেভ করা
-        saveProfile() {
-          // বাস্তবে এখানে API কল করতে হবে
-          this.profile = {
-            ...this.profile,
-            name: this.editProfileData.name,
-            dob: this.editProfileData.dob,
-            phone: this.editProfileData.phone,
-            email: this.editProfileData.email,
-            city: this.editProfileData.city,
-            hometown: this.editProfileData.hometown,
-            batch: this.editProfileData.batch,
-            department: this.editProfileData.department
+        closeVideo() {
+          this.currentVideo = null;
+        },
+        toggleMinimize() {
+          this.isMinimized = !this.isMinimized;
+        },
+        formatDuration(seconds) {
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        },
+        getYouTubeId(url) {
+          if (!url) return null;
+          const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+          const match = url.match(regExp);
+          return (match && match[2].length === 11) ? match[2] : null;
+        },
+        showUploadModal() {
+          this.uploadModal = true;
+          this.uploadVerified = false;
+          this.uploadError = '';
+          this.videoData = {
+            title: "",
+            youtube_url: "https://youtu.be/aAS6kNcPYWo?si=ty9t87JzHXT72rsv",
+            thumbnail: "./images/default-thumb.jpg",
+            duration: 0,
+            category: "lecture",
+            description: "",
           };
+        },
+        closeUploadModal() {
+          this.uploadModal = false;
+          this.uploadVerified = false;
+          this.uploadError = '';
+        },
+        verifyUpload() {
+          if (this.uploadPassword === this.correctPassword) {
+            this.uploadVerified = true;
+            this.uploadError = '';
+          } else {
+            this.uploadError = 'ভুল পাসওয়ার্ড! আবার চেষ্টা করুন';
+          }
+        },
+        handleThumbnailUpload(event) {
+          const file = event.target.files[0];
+          if (file) {
+            // Here you would typically upload the file and get the URL
+            // For demo, we'll just show a placeholder
+            this.videoData.thumbnail = './images/default-thumb.jpg';
+          }
+        },
+        submitVideo() {
+          if (!this.canSubmit) return;
           
-          this.editProfile = false;
-          alert("প্রোফাইল সফলভাবে আপডেট করা হয়েছে");
+          let newVideo = {
+            id: this.videos.length + 1,
+            ...this.videoData
+          };
+          // Add to videos array
+          this.videos.unshift(newVideo);
+          
+          // Close modal and show success
+          this.uploadModal = false;
+          alert('ভিডিও সফলভাবে সাবমিট করা হয়েছে!');
+          
+          // Reset form
+          this.videoData = {
+            id: v.id,
+            title: v.title,
+            youtube_url: `https://youtu.be/${v.id}`,
+            thumbnail: "./images/default-thumb.jpg",
+            duration: 0,
+            category: "lecture",
+            description: v.content,
+          };
         },
-        
-        // ফটো ওপেন করা
-        openPhoto(photo) {
-          this.selectedPhoto = photo;
-          this.viewPhoto = true;
-        },
-        
-        // পোস্ট লাইক টগল
-        toggleLike(postId) {
-          const post = this.profile.posts.find(p => p.id === postId);
-          if (post) {
-            post.liked = !post.liked;
-            post.likes += post.liked ? 1 : -1;
-          }
-        },
-        
-        // কমেন্ট শো/হাইড
-        showComments(postId) {
-          const post = this.profile.posts.find(p => p.id === postId);
-          if (post) {
-            post.showComments = !post.showComments;
-          }
-        },
-        
-        // কমেন্ট অ্যাড
-        addComment(postId) {
-          const post = this.profile.posts.find(p => p.id === postId);
-          if (post && post.newComment.trim()) {
-            post.comments.push({
-              id: Date.now(),
-              user: { ...this.currentUser },
-              text: post.newComment,
-              time: "এক্ষুনি"
-            });
-            post.newComment = '';
-          }
+        init() {
+          fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/media')
+            .then(ress => ress.json())
+            .then(data => {
+              this.videos = data.map(v => {
+                return {
+                  id: v.id,
+                  title: v.title,
+                  youtube_url: `https://youtu.be/${v.id}`,
+                  thumbnail: `https://i.ytimg.com/vi/${v.id}/hq720.jpg`,
+                  duration: 0,
+                  category: v.category,
+                  description: v.content,
+                }
+              })
+              
+            })
         }
       };
     }
