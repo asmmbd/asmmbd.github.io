@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>আল-হেরা স্টুডেন্ট নেটওয়ার্ক</title>
+  <title>স্টুডেন্ট নেটওয়ার্ক</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,6 +28,21 @@
       font-weight: 600;
       color: #065f46;
     }
+    
+    @keyframes progress {
+      from {
+        width: 0%;
+      }
+      
+      to {
+        width: 100%;
+      }
+    }
+    
+    .animate-progress {
+      animation-name: progress;
+      animation-timing-function: linear;
+    }
   </style>
 </head>
 
@@ -37,7 +52,7 @@
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <img src="./images/logo.jpg" alt="লোগো" class="h-10 rounded-full">
-        <h1 class="text-lg font-bold">আল-হেরা স্টুডেন্ট নেটওয়ার্ক</h1>
+        <h1 class="text-lg font-bold"> স্টুডেন্ট নেটওয়ার্ক</h1>
       </div>
       <div class="flex items-center space-x-4">
         <button @click="notificationsOpen = !notificationsOpen" class="relative">
@@ -124,6 +139,76 @@
       
       <!-- মিডিল ফিড -->
       <div class="lg:col-span-2 space-y-4 order-1 lg:order-2">
+        <!-- স্টোরি সেকশন -->
+        <div class="bg-white rounded-lg shadow p-4 mb-4 overflow-x-auto">
+          <div class="flex space-x-4">
+            <!-- ইউজার নিজের স্টোরি আপলোড -->
+            <div class="flex-shrink-0 flex flex-col items-center space-y-1">
+              <div class="relative">
+                <img :src="currentUser.avatar" alt="আপনার স্টোরি" class="h-16 w-16 rounded-full border-2 border-green-500 p-0.5">
+                <div class="absolute bottom-0 right-0 bg-green-500 text-white rounded-full p-1">
+                  <i class="fas fa-plus text-xs"></i>
+                </div>
+              </div>
+              <span class="text-xs">আপনার স্টোরি</span>
+            </div>
+            
+            <!-- অন্যান্য ইউজারদের স্টোরি -->
+            <template x-for="story in stories" :key="story.id">
+              <div class="flex-shrink-0 flex flex-col items-center space-y-1">
+                <div class="relative">
+                  <img :src="story.user.avatar" :alt="story.user.name" class="h-16 w-16 rounded-full border-2 border-green-500 p-0.5 cursor-pointer" @click="openStory(story.id)">
+                  <span x-show="!story.viewed" class="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full"></span>
+                </div>
+                <span x-text="story.user.name" class="text-xs"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+        
+        <!-- স্টোরি ভিউয়ার মোডাল -->
+        <div x-show="storyViewerOpen" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+          <div class="relative w-full max-w-md h-[70vh]">
+            <button @click="storyViewerOpen = false" class="absolute top-4 right-4 text-white z-10">
+              <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <div x-show="currentStory" class="h-full flex flex-col">
+              <!-- প্রগ্রেস বার -->
+              <div class="flex space-x-1 px-2 pt-2">
+                <template x-for="(s, index) in stories" :key="s.id">
+                  <div class="h-1 flex-1 bg-gray-600 rounded-full">
+                    <div class="h-full bg-white rounded-full" :class="{ 'animate-progress': currentStoryIndex === index, 'w-full': s.viewed }" :style="currentStoryIndex === index ? `animation-duration: ${currentStory?.duration}s` : ''">
+                    </div>
+                  </div>
+                </template>
+              </div>
+              
+              <!-- স্টোরি কন্টেন্ট -->
+              <div class="flex-grow relative">
+                <img x-show="currentStory?.type === 'image'" :src="currentStory?.content" class="absolute inset-0 w-full h-full object-cover">
+                
+                <video x-show="currentStory?.type === 'video'" :src="currentStory?.content" autoplay class="absolute inset-0 w-full h-full object-cover"></video>
+                
+                <div class="absolute bottom-4 left-4 text-white">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <img :src="currentStory?.user?.avatar" class="h-8 w-8 rounded-full">
+                    <span x-text="currentStory?.user?.name" class="font-bold"></span>
+                  </div>
+                  <p x-text="currentStory?.caption" class="text-sm"></p>
+                </div>
+              </div>
+              
+              <!-- নেভিগেশন বাটন -->
+              <button @click="prevStory()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button @click="nextStory()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
         <!-- পোস্ট ক্রিয়েট -->
         <div class="bg-white rounded-lg shadow p-4">
           <div class="flex items-center space-x-3 mb-4">
@@ -376,7 +461,7 @@
     </div>
   </main>
   <include src="/src/components/bottom-nav"></include>
-  <script src="/src/index.js"></script>
+  <script src="/src/includes.js"></script>
   
   <script>
     function socialApp() {
@@ -560,7 +645,80 @@
             });
             post.newComment = '';
           }
+        },
+        stories: [
+        {
+          id: 1,
+          user: { id: 2, name: "মুহাম্মদ ইব্রাহিম", avatar: "./images/logo.jpg" },
+          content: "./images/story1.jpg",
+          type: "image",
+          caption: "আজকের দরসে হাদিস",
+          duration: 5,
+          viewed: false
+        },
+        {
+          id: 2,
+          user: { id: 3, name: "আয়েশা সিদ্দিকা", avatar: "./images/logo.jpg" },
+          content: "./images/story2.jpg",
+          type: "image",
+          caption: "নতুন বই পেয়েছি!",
+          duration: 7,
+          viewed: false
+        },
+        {
+          id: 3,
+          user: { id: 4, name: "ওমর ফারুক", avatar: "./images/logo.jpg" },
+          content: "./images/story-video.mp4",
+          type: "video",
+          caption: "আমাদের ক্লাস প্রেজেন্টেশন",
+          duration: 10,
+          viewed: false
+        }],
+        storyViewerOpen: false,
+        currentStoryIndex: 0,
+        currentStory: null,
+        
+        // মেথডস
+        openStory(storyId) {
+          this.currentStoryIndex = this.stories.findIndex(s => s.id === storyId);
+          this.currentStory = this.stories[this.currentStoryIndex];
+          this.storyViewerOpen = true;
+          this.currentStory.viewed = true;
+          
+          // অটোমেটিক নেক্সট স্টোরি
+          setTimeout(() => {
+            this.nextStory();
+          }, this.currentStory.duration * 1000);
+        },
+        
+        nextStory() {
+          if (this.currentStoryIndex < this.stories.length - 1) {
+            this.currentStoryIndex++;
+            this.currentStory = this.stories[this.currentStoryIndex];
+            this.currentStory.viewed = true;
+            
+            // অটোমেটিক নেক্সট স্টোরি
+            setTimeout(() => {
+              this.nextStory();
+            }, this.currentStory.duration * 1000);
+          } else {
+            this.storyViewerOpen = false;
+          }
+        },
+        
+        prevStory() {
+          if (this.currentStoryIndex > 0) {
+            this.currentStoryIndex--;
+            this.currentStory = this.stories[this.currentStoryIndex];
+            this.currentStory.viewed = true;
+            
+            // অটোমেটিক নেক্সট স্টোরি
+            setTimeout(() => {
+              this.nextStory();
+            }, this.currentStory.duration * 1000);
+          }
         }
+        
       };
     }
   </script>
