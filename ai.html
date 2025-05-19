@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://preline.co/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ইসলামিক চ্যাট বট">
+  
+  <meta name="twitter:site" content="@alemai">
+  <meta name="twitter:creator" content="@alemai">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ইসলামিক চ্যাট বট">
+  <meta name="twitter:description" content="ইসলামিক চ্যাট বট">
+  <meta name="twitter:image" content="./src/img/ai_notext_logo.png">
+  
+  <meta property="og:url" content="https://asmmbd.github.io/ai">
+  <meta property="og:locale" content="bn_BD">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ইসলামিক সহায়ক">
+  <meta property="og:title" content="ইসলামিক চ্যাট বট">
+  <meta property="og:description" content="ইসলামিক চ্যাট বট।">
+  <meta property="og:image" content="./src/img/ai_notext_logo.png">
+  
+  <title>ইসলামিক চ্যাট বট</title>
+  
+  <link rel="shortcut icon" href="./src/img/ai_notext_logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    const html = document.querySelector('html');
+    const isLightOrAuto = localStorage.getItem('hs_theme') === 'light' || (localStorage.getItem('hs_theme') === 'auto' && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const isDarkOrAuto = localStorage.getItem('hs_theme') === 'dark' || (localStorage.getItem('hs_theme') === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (isLightOrAuto && html.classList.contains('dark')) html.classList.remove('dark');
+    else if (isDarkOrAuto && html.classList.contains('light')) html.classList.remove('light');
+    else if (isDarkOrAuto && !html.classList.contains('dark')) html.classList.add('dark');
+    else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+    
+    [x-cloak] {
+      display: none !important;
+    }
+    
+    pre {
+      width: 100%;
+      background: oklch(0.9 0.1 150) !important;
+      color: #000 !important;
+      overflow-x: auto;
+      padding: 12px;
+      border-radius: 8px;
+    }
+    
+    .whitespace-pre-wrap {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body class="dark:bg-neutral-900">
+  <div x-data="alemai()" x-cloak>
+    <div x-show="sidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="transform -translate-x-full" x-transition:enter-end="transform translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="transform translate-x-0" x-transition:leave-end="transform -translate-x-full" class="fixed top-0 start-0 bottom-0 z-60 w-80 lg:w-64 h-full bg-white border-e border-gray-200 md:block md:translate-x-0 md:end-auto md:bottom-0 dark:bg-neutral-900 dark:border-neutral-700 z-50" role="dialog" tabindex="-1" aria-label="সাইডবার">
+      <nav class="size-full flex flex-col">
+        <div class="flex items-center justify-between pt-4 px-4">
+          <a class="flex-none focus:outline-hidden focus:opacity-80" href="/" aria-label="ইসলামিক সহায়ক">
+            <img src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-8 rounded-full" />
+            
+          </a>
+          <a @click="clearConversation()" class="shrink-0 flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-neutral-300 dark:focus:bg-neutral-900 dark:focus:text-neutral-300">
+            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            নতুন চ্যাট
+          </a>
+        </div>
+        
+        <div class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+          <div class="my-4 px-4">
+            <template x-for="(message, index) in conversationHistory" :key="index">
+              <button x-show="message.role === 'user'" @click="sendMessage(message.parts[0].text)" class="w-full truncate mb-2 px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600">
+                <span x-text="message.parts[0].text"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+        
+        <div class="mt-auto">
+          <div class="p-4 border-t border-gray-200 dark:border-neutral-700">
+            <a class="flex justify-between items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-300 dark:focus:text-neutral-300" href="#">
+              সাইন ইন
+              <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" x2="3" y1="12" y2="12" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    
+    <div class="relative h-screen w-full lg:ps-64">
+      <div class="py-10 lg:py-14">
+        <div class="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
+          <img src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-48 rounded-full mx-auto mb-4" />
+          
+          <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
+            স্বাগতম ইসলামিক সহায়কে
+          </h1>
+          <p class="mt-3 text-gray-600 dark:text-neutral-400">
+            আপনার ইসলামিক জ্ঞানের সঙ্গী
+          </p>
+        </div>
+        
+        <div x-show="!conversationHistory" class="p-4 mt-20">
+          <template x-for="question in islamicQuestions">
+            <div>
+              <h1 class="text-center my-4  text-lg" x-text="question.category"></h1>
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <template x-for="q in question.questions">
+                  <button @click="sendMessage(q)" class="truncate px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600" x-text="q">
+                  </button>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+        
+        
+        <ul class="mt-16 space-y-5" x-ref="chatContainer">
+          <template x-for="(message, index) in conversationHistory" :key="index">
+            <li class="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+              <img x-show="message.role === 'model'" src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+              <img x-show="message.role === 'user'" src="./src/img/ai_user_logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+              
+              <div class="grow max-w-[90%] md:max-w-2xl w-full space-y-3">
+                <div class="space-y-3 prose prose-p:mt-0">
+                  <p class="text-gray-800 dark:text-white " x-html="marked.parse(message.parts[0].text)"></p>
+                </div>
+                <div x-show="message.role === 'model' && !isTyping" class="inline-flex border border-gray-200 rounded-full p-0.5 dark:border-neutral-700">
+                  <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                      <path d="M21 3v5h-5" />
+                    </svg>
+                    নতুন উত্তর
+                  </button>
+                  <button @click="navigator.clipboard.writeText(message.parts[0].text)" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                      <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                    </svg>
+                  </button>
+                  <button @click="toggleSpeech(message.parts[0].text, index)" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 focus:outline-hidden focus:bg-green-50 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus:bg-green-800">
+                    <svg x-show="!isSpeaking[index]" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                    </svg>
+                    <svg x-show="isSpeaking[index]" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <line x1="22" y1="9" x2="16" y2="15" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </li>
+          </template>
+          <li x-show="isLoading" class="w-full max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+            <img src="./src/img/ai_notext_logo.png" alt="" class="shrink-0 size-10 rounded-full" />
+            
+             <div class="w-full space-y-1.5 animate-pulse">
+              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <br />
+              <p class="w-80 h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <p class="w-52 h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <p class="w-full h-20 bg-gray-200 rounded-md dark:bg-neutral-700"></p>
+              <br />
+              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+              <p class="w-full h-2 bg-gray-200 rounded-full dark:bg-neutral-700"></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="max-w-4xl mx-auto sticky bottom-0 z-10 p-3 sm:py-6">
+        <div class="md:hidden flex justify-end mb-2 sm:mb-3">
+          <button @click="sidebar = !sidebar" type="button" class="p-2 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" aria-label="সাইডবার টগল">
+            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" x2="21" y1="6" y2="6" />
+              <line x1="3" x2="21" y1="12" y2="12" />
+              <line x1="3" x2="21" y1="18" y2="18" />
+            </svg>
+            সাইডবার
+          </button>
+        </div>
+        
+        <div class="relative">
+          <textarea x-model="inputText" class="p-3 sm:p-4 pb-12 sm:pb-12 block w-full bg-gray-100 border-gray-200 rounded-lg sm:text-sm focus:border-green-500 focus:ring-green-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 outline-none" placeholder="আমাকে কিছু জিজ্ঞাসা করুন..."></textarea>
+          
+          <div class="absolute bottom-px inset-x-px p-2 rounded-b-lg bg-gray-100 dark:bg-neutral-800">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div class="flex items-center">
+                <button @click="clearConversation()" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                  <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                    <line x1="9" x2="15" y1="15" y2="9" />
+                  </svg>
+                </button>
+                <button @click="toggleVoiceOutput()" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                  <svg x-show="!isVoiceOutputEnabled" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <line x1="22" y1="9" x2="16" y2="15" />
+                  </svg>
+                  <svg x-show="isVoiceOutputEnabled" class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-x-1">
+                <button @click="startVoiceInput()" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-gray-500 hover:bg-white focus:z-10 focus:outline-hidden focus:bg-white dark:text-neutral-500 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                  <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" x2="12" y1="19" y2="22" />
+                  </svg>
+                </button>
+                <button @click="sendMessage(inputText)" type="button" class="inline-flex shrink-0 justify-center items-center size-8 rounded-lg text-white bg-green-600 hover:bg-green-500 focus:z-10 focus:outline-hidden focus:bg-green-500">
+                  <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- কনফার্মেশন মোডাল -->
+    <div x-show="showConfirmationModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div x-show="showConfirmationModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="bg-white rounded-lg shadow-xl w-80 overflow-hidden">
+        <!-- মেসেজ কন্টেন্ট -->
+        <div class="p-5 text-center">
+          <h1 class="text-gray-700 text-xl mb-3 font-bold">চ্যাট মুছুন</h1>
+          <p class="text-gray-700">আপনি কি নিশ্চিত যে আপনি এই কথোপকথন মুছে ফেলতে চান?</p>
+        </div>
+        
+        <!-- বাটন গ্রুপ -->
+        <div class="flex border-t divide-x">
+          <button @click="showConfirmationModal = false" class="flex-1 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
+            বাতিল
+          </button>
+          <button @click="confirmDelete(); showConfirmationModal = false" class="flex-1 py-3 text-red-600 bg-gray-50 transition-colors relative">
+            <span>মুছে ফেলুন</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function alemai() {
+      return {
+        islamicQuestions: [
+        {
+          category: "কুরআন",
+          questions: [
+            "কুরআন মাজিদে মোট কতটি সূরা আছে?",
+            "কুরআনের দীর্ঘতম সূরা কোনটি?",
+            "বিসমিল্লাহির রাহমানির রাহিম কতটি সূরায় নেই?",
+            "কুরআনে কারিমে মোট কতটি আয়াত আছে?",
+            "কোন সূরাকে কুরআনের হার্ট বলা হয়?"
+          ]
+        },
+        {
+          category: "হাদিস",
+          questions: [
+            "হাদিস শাস্ত্র অনুযায়ী ঈমানের শাখা কতটি?",
+            "রাসূল (সা.) এর মোট কতটি হাদিস বর্ণিত হয়েছে?",
+            "সহিহ বুখারি হাদিস গ্রন্থে মোট কতটি হাদিস আছে?",
+            "কিয়ামতের ছোট নিদর্শন有哪些?",
+            "রাসূল (সা.) এর শেষ হাদিস কী ছিল?"
+          ]
+        },
+        {
+          category: "ফিকহ",
+          questions: [
+            "নামাজের ফরজ কয়টি?",
+            "ওযুর ফরজ কয়টি?",
+            "রোজা ভঙ্গের কারণ有哪些?",
+            "হজ্জের ফরজ কয়টি?",
+            "যাকাতের নিসাব কত?"
+          ]
+        },
+        {
+          category: "ইতিহাস",
+          questions: [
+            "ইসলামের প্রথম মুয়াযযিন কে ছিলেন?",
+            "বদর যুদ্ধ কত সালে সংঘটিত হয়?",
+            "মক্কা বিজয়ের বছর কোনটি?",
+            "খুলাফায়ে রাশিদীন কে কে?",
+            "আন্দালুস (স্পেন) কত বছর মুসলিম শাসনাধীন ছিল?"
+          ]
+        },
+        {
+          category: "ঈমান ও আকিদা",
+          questions: [
+            "ঈমানের রুকন কয়টি?",
+            "আল্লাহর ৯৯টি নাম কী কী?",
+            "কিয়ামতের বড় নিদর্শন有哪些?",
+            "মালাইকা (ফেরেশতা) সম্পর্কে ইসলাম কী বলে?",
+            "তাকদীরে বিশ্বাস করা কেন জরুরি?"
+          ]
+        }],
+        API_KEY: "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g", // আপনার Gemini API কী এখানে বসান
+        API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=",
+        inputText: '',
+        errorText: '',
+        isLoading: false,
+        showConfirmationModal: false,
+        isVoiceOutputEnabled: true,
+        recognition: null,
+        isTyping: false,
+        isSpeaking: {}, // কোন মেসেজ পড়ছে তা ট্র্যাক করার জন্য
+        speechInstance: null,
+        sidebar: window.innerWidth < 768 ? false : true,
+        conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
+        
+        async sendMessage(question) {
+          if (!question.trim()) return;
+          this.scrollToBottom();
+          this.conversationHistory.push({ role: "user", parts: [{ text: question }] });
+          this.inputText = '';
+          this.saveConversation();
+          
+          try {
+            const answer = await this.getAnswer(question);
+            this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
+            this.saveConversation();
+            // speakText এখানে কল করা হবে না
+           // await this.$nextTick();
+           // this.typeMessage(answer, this.conversationHistory.length);
+            this.scrollToBottom();
+          } catch (error) {
+            this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+            console.error(error);
+          }
+        },
+        
+        async getAnswer(question) {
+          this.isLoading = true;
+          this.scrollToBottom();
+          const islamicPrompt = `তুমি একটি ইসলামিক চ্যাট বট। তোমাকে কুরআন, হাদিস, এবং বিশ্বস্ত ইসলামিক উৎসের ভিত্তিতে সঠিক ও সম্মানজনক উত্তর দিতে হবে। আর কেউ যদি তোমার নাম জানতে চাই তাহলে বলবে আমি একটা ইসলামিক চ্যাট বট। আর উত্তরটা যদি ইসলামিক হয়ে থাকে তাহলে সব শেষে এই কথাটি যুক্ত করে দিবে '*দ্রষ্টব্য: উত্তরটি কুরআন ও হাদিসের আলোকে দেওয়ার চেষ্টা করা হয়েছে।*'। ব্যবহার কারীর প্রশ্ন: ${question}`;
+          const response = await fetch(this.API_URL + this.API_KEY, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                ...this.conversationHistory,
+                { role: "user", parts: [{ text: islamicPrompt }] }
+              ],
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error.message);
+          this.isLoading = false;
+          this.scrollToBottom();
+          let answer = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+          return answer;
+        },
+        
+        typeMessage(message, index) {
+          let i = 0;
+          const typingSpeed = 30;
+          const messageElement = this.$refs.chatContainer.children[index].querySelector('.text-gray-800');
+          
+          if (!messageElement) {
+            console.error("Message element not found!");
+            return;
+          }
+          
+          // Clear the existing text before typing
+          messageElement.innerHTML = '';
+          this.isTyping = true;
+          const type = () => {
+            if (i < message.length) {
+              messageElement.innerHTML += message.charAt(i);
+              i++;
+              setTimeout(type, typingSpeed);
+              this.scrollToBottom();
+            } else {
+              messageElement.innerHTML = marked.parse(message);
+              this.isTyping = false;
+            }
+          };
+          
+          type();
+          
+        },
+        
+        saveConversation() {
+          localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
+        },
+        
+        openConfirmationModal() {
+          this.showConfirmationModal = true;
+        },
+        
+        confirmDelete() {
+          this.conversationHistory = [];
+          localStorage.removeItem('conversationHistory');
+          this.showConfirmationModal = false;
+        },
+        
+        cancelDelete() {
+          this.showConfirmationModal = false;
+        },
+        
+        clearConversation() {
+          this.openConfirmationModal();
+        },
+        
+        scrollToBottom() {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+          });
+        },
+        
+        startVoiceInput() {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          this.recognition = new SpeechRecognition();
+          this.recognition.lang = 'bn-BD';
+          this.recognition.onresult = (event) => {
+            this.inputText = event.results[0][0].transcript;
+            this.sendMessage(this.inputText);
+          };
+          this.recognition.start();
+        },
+        
+        toggleVoiceOutput() {
+          this.isVoiceOutputEnabled = !this.isVoiceOutputEnabled;
+        },
+        
+        toggleSpeech(text, index) {
+          if (this.isSpeaking[index]) {
+            // পড়া বন্ধ করা
+            speechSynthesis.cancel();
+            this.isSpeaking[index] = false;
+          } else {
+            // পড়া শুরু করা
+            this.speechInstance = new SpeechSynthesisUtterance(text);
+            this.speechInstance.lang = 'bn-BD';
+            this.speechInstance.volume = 1.0;
+            this.speechInstance.rate = 1.0;
+            this.speechInstance.pitch = 1.0;
+            this.speechInstance.onend = () => {
+              this.isSpeaking[index] = false;
+            };
+            speechSynthesis.speak(this.speechInstance);
+            this.isSpeaking[index] = true;
+          }
+        },
+        
+        init() {
+          window.addEventListener('resize', () => {
+            this.sidebar = window.innerWidth < 768 ? this.sidebar : true;
+          });
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
