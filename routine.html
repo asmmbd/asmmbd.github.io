@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ক্লাস রুটিন - আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</title>
+  <title>ক্লাস রুটিন - আল-হেরা ইসলামিক একাডেমি</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,9 +48,9 @@
       <!-- শ্রেণী ফিল্টার ট্যাব -->
       <div class="flex flex-wrap justify-center gap-2 mb-8">
         <button class="tab-button active px-4 py-2 rounded-lg" data-tab="all">সকল শ্রেণী</button>
-        <button class="tab-button px-4 py-2 rounded-lg" data-tab="primary">প্রাথমিক স্তর</button>
-        <button class="tab-button px-4 py-2 rounded-lg" data-tab="secondary">মাধ্যমিক স্তর</button>
-        <button class="tab-button px-4 py-2 rounded-lg" data-tab="alim">আলিম বিভাগ</button>
+        <button class="tab-button px-4 py-2 rounded-lg" data-tab="nurani">নূরানী বিভাগ</button>
+        <button class="tab-button px-4 py-2 rounded-lg" data-tab="kitab">কিতাব বিভাগ</button>
+        <button class="tab-button px-4 py-2 rounded-lg" data-tab="school">স্কুল বিভাগ</button>
         <button class="tab-button px-4 py-2 rounded-lg" data-tab="hifz">হিফজ বিভাগ</button>
       </div>
       
@@ -67,17 +67,17 @@
       <!-- রুটিন কার্ড গ্রিড -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="routine-container">
         <!-- রুটিন কার্ড 1 -->
-        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="primary">
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="nurani">
           <div class="p-6">
             <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl font-bold text-green-800">প্রাথমিক স্তর (১ম-৫ম শ্রেণী)</h3>
+              <h3 class="text-xl font-bold text-green-800">নূরানী নার্সারী</h3>
               <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">প্রাথমিক</span>
             </div>
             
             <div class="mb-4">
               <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
               <ul class="text-gray-600 text-sm space-y-1">
-                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৮:৩০ - দুপুর ১২:৩০</li>
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
                 <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
               </ul>
             </div>
@@ -93,26 +93,195 @@
             
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">আপডেট: ১৫ জুন ২০২৪</span>
-              <a href="downloads/primary-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+              <a href="downloads/nurani-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
                 <i class="fas fa-download mr-2"></i>
                 ডাউনলোড
               </a>
             </div>
           </div>
         </div>
-        
-        <!-- রুটিন কার্ড 2 -->
-        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="secondary">
+        <!-- রুটিন কার্ড 1 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="nurani">
           <div class="p-6">
             <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl font-bold text-green-800">মাধ্যমিক স্তর (৬ষ্ঠ-১০ম শ্রেণী)</h3>
-              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">মাধ্যমিক</span>
+              <h3 class="text-xl font-bold text-green-800"> প্রথম শ্রেণী</h3>
+              <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">নূরানী</span>
             </div>
             
             <div class="mb-4">
               <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
               <ul class="text-gray-600 text-sm space-y-1">
-                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৮:৩০ - দুপুর ১:৩০</li>
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন মাজিদ ও তাজবিদ</li>
+                <li>ইসলামিক স্টাডিজ</li>
+                <li>বাংলা, ইংরেজি, গণিত</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১৫ জুন ২০২৪</span>
+              <a href="downloads/nurani-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- রুটিন কার্ড 1 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="nurani">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">দ্বিতীয় শ্রেণী</h3>
+              <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">নূরানী</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন মাজিদ ও তাজবিদ</li>
+                <li>ইসলামিক স্টাডিজ</li>
+                <li>বাংলা, ইংরেজি, গণিত</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১৫ জুন ২০২৪</span>
+              <a href="downloads/nurani-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- রুটিন কার্ড 1 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="nurani">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">তৃতীয় শ্রেণী</h3>
+              <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">নূরানী</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন মাজিদ ও তাজবিদ</li>
+                <li>ইসলামিক স্টাডিজ</li>
+                <li>বাংলা, ইংরেজি, গণিত</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১৫ জুন ২০২৪</span>
+              <a href="downloads/nurani-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- রুটিন কার্ড 1 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="nurani">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">চতুর্থ শ্রেণী</h3>
+              <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">নূরানী</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন মাজিদ ও তাজবিদ</li>
+                <li>ইসলামিক স্টাডিজ</li>
+                <li>বাংলা, ইংরেজি, গণিত</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১৫ জুন ২০২৪</span>
+              <a href="downloads/nurani-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- রুটিন কার্ড 1 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="kitab">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">পঞ্চম শ্রেণী</h3>
+              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">কিতাব বিভাগ</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন মাজিদ ও তাজবিদ</li>
+                <li>ইসলামিক স্টাডিজ</li>
+                <li>বাংলা, ইংরেজি, গণিত</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১৫ জুন ২০২৪</span>
+              <a href="downloads/nurani-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- রুটিন কার্ড 2 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="kitab">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">মিজান</h3>
+              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">কিতাব বিভাগ</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
                 <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
               </ul>
             </div>
@@ -129,7 +298,77 @@
             
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">আপডেট: ১০ জুন ২০২৪</span>
-              <a href="downloads/secondary-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+              <a href="downloads/kitab-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+                <!-- রুটিন কার্ড 2 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="kitab">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">নাহবেমির</h3>
+              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">কিতাব বিভাগ</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন ও হাদিস</li>
+                <li>আরবি ভাষা</li>
+                <li>বিজ্ঞান, গণিত, ইংরেজি</li>
+                <li>ইসলামিক ইতিহাস</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১০ জুন ২০২৪</span>
+              <a href="downloads/kitab-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+                <i class="fas fa-download mr-2"></i>
+                ডাউনলোড
+              </a>
+            </div>
+          </div>
+        </div>
+                <!-- রুটিন কার্ড 2 -->
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="kitab">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-bold text-green-800">কুদুরী</h3>
+              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">কিতাব বিভাগ</span>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
+                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বৃহস্পতি</li>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
+              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
+                <li>কুরআন ও হাদিস</li>
+                <li>আরবি ভাষা</li>
+                <li>বিজ্ঞান, গণিত, ইংরেজি</li>
+                <li>ইসলামিক ইতিহাস</li>
+              </ul>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">আপডেট: ১০ জুন ২০২৪</span>
+              <a href="downloads/kitab-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
                 <i class="fas fa-download mr-2"></i>
                 ডাউনলোড
               </a>
@@ -137,79 +376,8 @@
           </div>
         </div>
         
-        <!-- রুটিন কার্ড 3 -->
-        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="alim">
-          <div class="p-6">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl font-bold text-green-800">আলিম প্রথম বর্ষ</h3>
-              <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">আলিম</span>
-            </div>
-            
-            <div class="mb-4">
-              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
-              <ul class="text-gray-600 text-sm space-y-1">
-                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৮:০০ - দুপুর ২:০০</li>
-                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বুধ</li>
-                <li><i class="fas fa-star text-green-500 mr-2"></i> বৃহস্পতি: বিশেষ ক্লাস</li>
-              </ul>
-            </div>
-            
-            <div class="mb-4">
-              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
-              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
-                <li>তাফসীরুল কুরআন</li>
-                <li>হাদিস শরীফ</li>
-                <li>ফিকহ ও উসুলুল ফিকহ</li>
-                <li>আরবি সাহিত্য</li>
-              </ul>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">আপডেট: ৫ জুন ২০২৪</span>
-              <a href="downloads/alim-first-year-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
-                <i class="fas fa-download mr-2"></i>
-                ডাউনলোড
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- রুটিন কার্ড 4 -->
-        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="alim">
-          <div class="p-6">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl font-bold text-green-800">আলিম দ্বিতীয় বর্ষ</h3>
-              <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">আলিম</span>
-            </div>
-            
-            <div class="mb-4">
-              <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
-              <ul class="text-gray-600 text-sm space-y-1">
-                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৮:০০ - দুপুর ২:০০</li>
-                <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বুধ</li>
-                <li><i class="fas fa-star text-green-500 mr-2"></i> বৃহস্পতি: বিশেষ ক্লাস</li>
-              </ul>
-            </div>
-            
-            <div class="mb-4">
-              <h4 class="font-semibold text-gray-700 mb-2">মূল বিষয়সমূহ:</h4>
-              <ul class="text-gray-600 text-sm list-disc list-inside space-y-1">
-                <li>উচ্চতর হাদিস</li>
-                <li>ফিকহের জটিল মাসায়েল</li>
-                <li>তাজবিদ ও কিরাত</li>
-                <li>ইসলামী দর্শন</li>
-              </ul>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">আপডেট: ৫ জুন ২০২৪</span>
-              <a href="downloads/alim-second-year-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
-                <i class="fas fa-download mr-2"></i>
-                ডাউনলোড
-              </a>
-            </div>
-          </div>
-        </div>
+
+
         
         <!-- রুটিন কার্ড 5 -->
         <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="hifz">
@@ -249,19 +417,19 @@
         </div>
         
         <!-- রুটিন কার্ড 6 -->
-        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="secondary">
+        <div class="routine-card bg-white border border-green-200 rounded-lg overflow-hidden shadow-md transition duration-300" data-category="school">
           <div class="p-6">
             <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl font-bold text-green-800">এসএসসি প্রস্তুতি ক্লাস</h3>
-              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">মাধ্যমিক</span>
+              <h3 class="text-xl font-bold text-green-800">তাখসিসি</h3>
+              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">স্কুল বিভাগ</span>
             </div>
             
             <div class="mb-4">
               <h4 class="font-semibold text-gray-700 mb-2">সময়সূচী:</h4>
               <ul class="text-gray-600 text-sm space-y-1">
-                <li><i class="fas fa-clock text-green-500 mr-2"></i> বিকাল ৩:০০ - সন্ধ্যা ৬:০০</li>
+                <li><i class="fas fa-clock text-green-500 mr-2"></i> সকাল ৯:০০ - দুপুর ১:০০</li>
                 <li><i class="fas fa-calendar-alt text-green-500 mr-2"></i> শনি-বুধ</li>
-                <li><i class="fas fa-flask text-green-500 mr-2"></i> শুক্রবার: বিশেষ প্র্যাকটিক্যাল</li>
+                <li><i class="fas fa-flask text-green-500 mr-2"></i> বৃহস্পতিবার: বিশেষ প্র্যাকটিক্যাল</li>
               </ul>
             </div>
             
@@ -277,7 +445,7 @@
             
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">আপডেট: ৩ জুন ২০২৪</span>
-              <a href="downloads/ssc-preparation-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
+              <a href="downloads/school-routine.pdf" download class="download-btn bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition flex items-center">
                 <i class="fas fa-download mr-2"></i>
                 ডাউনলোড
               </a>
