@@ -219,10 +219,17 @@
       </div>
     </div>
   </div>
-   <nav x-show="!currentVideo || isMinimized"  class="print:hidden fixed bottom-0 left-0 right-0 bg-white z-50 md:hidden rounded-t-lg shadow-md">
+
+ <nav x-data="{
+     isOffline: !navigator.onLine,
+     init(){
+       window.addEventListener('online', () => this.isOffline = false);
+       window.addEventListener('offline', () => this.isOffline = true);
+     }
+    }" x-show="!currentVideo || isMinimized" class="print:hidden fixed bottom-0 left-0 right-0 bg-white z-50 md:hidden rounded-t-lg shadow-md">
     <div class="flex h-16">
       <!-- হোম -->
-      <a href="/" class="nav-item active flex flex-col items-center justify-center flex-1 relative">
+      <a href="/community" class="nav-item active flex flex-col items-center justify-center flex-1 relative">
         <div class="nav-icon mb-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
             <path d="M9 22L9.00192 17.9976C9.00236 17.067 9.00258 16.6017 9.15462 16.2347C9.35774 15.7443 9.74746 15.3547 10.2379 15.1519C10.6051 15 11.0704 15 12.001 15V15C12.9319 15 13.3974 15 13.7647 15.152C14.2553 15.355 14.645 15.7447 14.848 16.2353C15 16.6026 15 17.0681 15 17.999V22" stroke="currentColor" stroke-width="1.5" />
@@ -233,7 +240,7 @@
       </a>
       
       <!-- ক্লাস রুটিন -->
-      <a href="/" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+      <a href="/videos" class="nav-item flex flex-col items-center justify-center flex-1 relative">
         <div class="nav-icon mb-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
             <path d="M18.9737 15.0215C18.9795 14.9928 19.0205 14.9928 19.0263 15.0215C19.3302 16.5081 20.4919 17.6698 21.9785 17.9737C22.0072 17.9795 22.0072 18.0205 21.9785 18.0263C20.4919 18.3302 19.3302 19.4919 19.0263 20.9785C19.0205 21.0072 18.9795 21.0072 18.9737 20.9785C18.6698 19.4919 17.5081 18.3302 16.0215 18.0263C15.9928 18.0205 15.9928 17.9795 16.0215 17.9737C17.5081 17.6698 18.6698 16.5081 18.9737 15.0215Z" stroke="#000000" stroke-width="1.5"></path>
@@ -245,7 +252,7 @@
       </a>
       
       <!-- অনলাইন ক্লাস (গুরুত্বপূর্ণ আইটেম) -->
-      <a href="videos" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+      <a href="/community" class="nav-item flex flex-col items-center justify-center flex-1 relative">
         <div class="nav-icon mb-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
             <path d="M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z" stroke="#000000" stroke-width="1.5"></path>
@@ -258,7 +265,7 @@
       </a>
       
       <!-- ফলাফল -->
-      <a href="/" class="nav-item flex flex-col items-center justify-center flex-1 relative">
+      <a href="/ai" class="nav-item flex flex-col items-center justify-center flex-1 relative">
         <div class="nav-icon mb-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
             <path d="M10 7L9.48415 8.39405C8.80774 10.222 8.46953 11.136 7.80278 11.8028C7.13603 12.4695 6.22204 12.8077 4.39405 13.4842L3 14L4.39405 14.5158C6.22204 15.1923 7.13603 15.5305 7.80278 16.1972C8.46953 16.864 8.80774 17.778 9.48415 19.6059L10 21L10.5158 19.6059C11.1923 17.778 11.5305 16.864 12.1972 16.1972C12.864 15.5305 13.778 15.1923 15.6059 14.5158L17 14L15.6059 13.4842C13.778 12.8077 12.864 12.4695 12.1972 11.8028C11.5305 11.136 11.1923 10.222 10.5158 8.39405L10 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
@@ -280,10 +287,10 @@
         <span class="text-xs mt-1">প্রোফাইল</span>
       </a>
     </div>
-    <div class="offline-alert w-full bg-red-600 text-white p-3 text-center hidden">
+    <div x-show="isOffline" class=" w-full bg-red-600 text-white p-3 text-center">
       আপনি অফলাইনে আছেন। কিছু ফিচার সীমিত থাকতে পারে।
     </div>
-   </nav>
+  </nav>
   
   <script>
     function videoApp() {
