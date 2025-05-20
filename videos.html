@@ -41,7 +41,7 @@
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <img src="./images/logo.jpg" alt="লোগো" class="h-10 rounded-full">
-        <h1 class="text-lg font-bold">আল-হেরা ভিডিও লাইব্রেরি</h1>
+        <h1 class="text-lg font-bold">ভিডিও লাইব্রেরি</h1>
       </div>
       <div class="flex items-center space-x-4">
         <div class="relative hidden md:block">
@@ -59,6 +59,7 @@
   <div x-show="currentVideo" x-transition class="video-player-container" :class="isMinimized ? 'w-48 h-32 rounded-lg fixed bottom-20 right-2 z-50 overflow-hidden' : 'w-full fixed top-0 left-0 z-50'">
     <div class="shadow-lg">
       <div x-show="!isMinimized" class="flex justify-between items-center bg-gray-800 text-white px-3 py-2">
+        <h1 class="font-bold">ভিডিও লাইব্রেরী</h1>
         <div class="flex space-x-2">
           <button @click="toggleMinimize()" class="text-white hover:text-gray-300">
             <i :class="isMinimized ? 'fas fa-expand' : 'fas fa-compress'"></i>
