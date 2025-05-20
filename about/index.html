@@ -1,346 +1,278 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" x-data="{ activeTestimonial: 0, totalTestimonials: 3, autoPlay: true }" x-init="if(autoPlay) { setInterval(() => { activeTestimonial = (activeTestimonial + 1) % totalTestimonials }, 5000) }">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>আমাদের সম্পর্কে - আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</title>
+  <meta name="theme-color" content="#065f46">
+  <meta name="description" content="আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা সম্পর্কে জানুন - আমাদের ইতিহাস, মিশন, ভিশন এবং শিক্ষা কার্যক্রম সম্পর্কে বিস্তারিত।">
+  <meta name="keywords" content="আয়েশা সিদ্দিকা, মহিলা মাদরাসা, কওমি মাদরাসা, ইসলামিক শিক্ষা, বাংলাদেশ মাদরাসা">
+  <link rel="manifest" href="./manifest.json">
+  
+  <!-- iOS Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="./images/logo.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/logo.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/logo.jpg">
+  
+  <title>আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা - আমাদের সম্পর্কে</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Hind Siliguri', sans-serif;
-      background-color: #f8fafc;
     }
-    .arabic-text {
-      font-family: 'Amiri', serif;
-      font-size: 1.8rem;
-      line-height: 1.8;
-      direction: rtl;
-    }
-    .islamic-pattern {
-      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23065f46' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-    }
-    .timeline-item:not(:last-child):after {
-      content: '';
-      position: absolute;
-      left: 7px;
-      top: 24px;
-      height: calc(100% - 24px);
-      width: 2px;
-      background-color: #065f46;
-      opacity: 0.3;
-    }
-    .floating {
-      animation: floating 3s ease-in-out infinite;
-    }
-    @keyframes floating {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0px); }
+    
+    .transition-all {
+      transition: all 0.3s ease-in-out;
     }
   </style>
 </head>
-<body class="islamic-pattern">
-  <!-- হেডার সেকশন -->
-  <header class="bg-gradient-to-r from-green-700 to-green-800 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="flex items-center mb-4 md:mb-0">
-          <img src="/images/logo.png" alt="লোগো" class="h-16 w-16 mr-4">
-          <div>
-            <h1 class="text-2xl font-bold">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
-            <p class="text-green-200">ইসলামিক ও আধুনিক শিক্ষার সমন্বয়</p>
-          </div>
-        </div>
-        <nav class="flex space-x-1 md:space-x-4">
-          <a href="/" class="px-3 py-2 rounded hover:bg-green-700">হোম</a>
-          <a href="/about" class="px-3 py-2 rounded bg-green-900">আমাদের সম্পর্কে</a>
-          <a href="/academics" class="px-3 py-2 rounded hover:bg-green-700">একাডেমিক</a>
-          <a href="/admission" class="px-3 py-2 rounded hover:bg-green-700">ভর্তি</a>
-          <a href="/contact" class="px-3 py-2 rounded hover:bg-green-700">যোগাযোগ</a>
-        </nav>
-      </div>
-    </div>
-  </header>
 
-  <!-- হিরো সেকশন -->
-  <section class="relative bg-green-600 text-white py-20 overflow-hidden">
-    <div class="absolute inset-0 opacity-20">
-      <div class="absolute inset-0 bg-center bg-no-repeat" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTQ5NiAxMDZIMTZ2LTM4YzAtOC44NDMgNy4xNTctMTYgMTYtMTZoNDQ4YzguODQzIDAgMTYgNy4xNTcgMTYgMTZ2Mzh6bS00OCAzNHYxNmMwIDguODQzLTcuMTU3IDE2LTE2IDE2aC00MGMtOC44NDMgMC0xNi03LjE1Ny0xNi0xNnYtMTZINDh2MTZjMCA4Ljg0My03LjE1NyAxNi0xNiAxNkgxNmMtOC44NDMgMC0xNi03LjE1Ny0xNi0xNnYtMTZIMHYyNTZjMCA4Ljg0MyA3LjE1NyAxNiAxNiAxNmg0ODBjOC44NDMgMCAxNi03LjE1NyAxNi0xNlYxNDBINDQ4ek0zNjggNDhjMC04Ljg0My03LjE1Ny0xNi0xNi0xNmgtNjRjLTguODQzIDAtMTYgNy4xNTctMTYgMTZ2MzJoOTZ2LTMyeiIvPjwvc3ZnPg==');"></div>
+<body class="bg-gray-50">
+  <!-- Header Section -->
+  <include src="/src/components/header"></include>
+  
+  <!-- Hero Section -->
+  <section class="relative h-96 bg-green-700 flex items-center justify-center text-white">
+    <div class="text-center px-4">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">আমাদের সম্পর্কে</h1>
+      <p class="text-xl mb-6">ইসলামিক শিক্ষা ও আধুনিক জ্ঞানের সমন্বয়ে একটি আদর্শ প্রতিষ্ঠান</p>
+      <a href="#contact" class="bg-yellow-500 hover:bg-yellow-600 text-green-900 font-bold py-2 px-6 rounded-lg">যোগাযোগ করুন</a>
     </div>
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="max-w-3xl mx-auto text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">আমাদের সম্পর্কে</h1>
-        <p class="text-xl md:text-2xl text-green-100">একটি ঐতিহ্যবাহী ইসলামিক শিক্ষা প্রতিষ্ঠানের গৌরবময় ইতিহাস</p>
-        <div class="mt-8">
-          <a href="#history" class="inline-block bg-white text-green-700 font-bold py-3 px-8 rounded-lg mr-4 hover:bg-gray-100 transition">ইতিহাস</a>
-          <a href="#mission" class="inline-block border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition">আমাদের মিশন</a>
+  </section>
+  
+  <!-- Introduction Section -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-green-800 mb-2">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h2>
+        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+      <div class="flex flex-col md:flex-row md:items-center">
+        <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+          <p class="text-lg text-gray-700 mb-6">
+            আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা ২০২২ সালে প্রতিষ্ঠিত একটি উদীয়মান কওমি মাদ্রাসা, যা বাংলাদেশের মেহেরপুরে অবস্থিত। আমরা ইসলামিক শিক্ষার পাশাপাশি আধুনিক শিক্ষার সমন্বয়ে শিক্ষার্থীদের জন্য একটি ভারসাম্যপূর্ণ শিক্ষা ব্যবস্থা প্রদান করি। আমাদের লক্ষ্য হলো নৈতিকতা, জ্ঞান এবং আদর্শে পরিপূর্ণ নারী নাগরিক গড়ে তোলা।
+          </p>
+          <a href="#history" class="bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg inline-block">আরও জানুন</a>
+        </div>
+        <div class="md:w-1/2">
+          <img src="/images/madrasa-campus.jpg" alt="মাদ্রাসা ক্যাম্পাসের ছবি" class="w-full h-64 object-cover rounded-lg shadow-md">
         </div>
       </div>
     </div>
   </section>
-
-  <!-- ব্রেডক্রাম্ব -->
-  <div class="bg-gray-100 py-3 border-b">
+  
+  <!-- History Section -->
+  <section class="py-12 bg-gray-50" id="history">
     <div class="container mx-auto px-4">
-      <nav class="flex" aria-label="Breadcrumb">
-        <ol class="flex items-center space-x-2 text-sm">
-          <li>
-            <a href="/" class="text-green-600 hover:text-green-800">হোম</a>
-          </li>
-          <li>
-            <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-            </svg>
-          </li>
-          <li class="text-gray-500" aria-current="page">
-            আমাদের সম্পর্কে
-          </li>
-        </ol>
-      </nav>
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-green-800 mb-2">আমাদের ইতিহাস</h2>
+        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+      <div class="space-y-6 max-w-3xl mx-auto">
+        <p class="text-lg text-gray-700">
+          আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা ২০২২ সালে মেহেরপুরে প্রতিষ্ঠিত হয়, মাওলানা মুহাম্মদ আব্দুল্লাহর নেতৃত্বে। এই প্রতিষ্ঠানটি মহিলাদের জন্য উচ্চমানের ইসলামিক শিক্ষা প্রদানের লক্ষ্যে যাত্রা শুরু করে। প্রতিষ্ঠার পর থেকে আমরা শতাধিক শিক্ষার্থীকে শিক্ষা দিয়েছি এবং বিভিন্ন ক্ষেত্রে সাফল্য অর্জন করেছি।
+        </p>
+        <p class="text-lg text-gray-700">
+          আমাদের প্রতিষ্ঠান কেবল শিক্ষা প্রদানের মধ্যে সীমাবদ্ধ নয়, বরং সমাজে নৈতিক ও আধ্যাত্মিক মূল্যবোধ ছড়িয়ে দেওয়ার জন্য কাজ করে। আমরা আধুনিক প্রযুক্তির সাথে ইসলামিক শিক্ষার সমন্বয়ে একটি আদর্শ শিক্ষা ব্যবস্থা গড়ে তুলেছি।
+        </p>
+      </div>
     </div>
+  </section>
+  
+  <!-- Mission and Vision Section -->
+  <section class="py-12 bg-green-800 text-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold mb-2">আমাদের মিশন ও ভিশন</h2>
+        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-green-700 p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-bold mb-4">মিশন</h3>
+          <p class="text-gray-200">
+            ইসলামিক শিক্ষার মাধ্যমে নারীদের ক্ষমতায়ন এবং তাদের জ্ঞান, নৈতিকতা ও দক্ষতা দিয়ে সমাজে অবদান রাখতে সক্ষম করা।
+          </p>
+        </div>
+        <div class="bg-green-700 p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-bold mb-4">ভিশন</h3>
+          <p class="text-gray-200">
+            ইসলামিক ও আধুনিক শিক্ষার সমন্বয়ে বিশ্বমানের একটি শিক্ষা প্রতিষ্ঠান হয়ে ওঠা, যা নারীদের জন্য জ্ঞান ও নৈতিকতার কেন্দ্র হবে।
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Leadership Section -->
+  <section class="py-12 bg-white" id="principal">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-green-800 mb-2">আমাদের নেতৃত্ব</h2>
+        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Principal -->
+        <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
+          <img src="/images/principal.jpg" alt="মাওলানা মুহাম্মদ আব্দুল্লাহ" class="w-full h-48 object-cover">
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-green-800 mb-2">মাওলানা মুহাম্মদ আব্দুল্লাহ</h3>
+            <p class="text-gray-600 mb-4">প্রিন্সিপাল/মুহতামিম</p>
+            <p class="text-gray-700">"শিক্ষা ও চরিত্র গঠনের সমন্বয়ই আমাদের লক্ষ্য।"</p>
+          </div>
+        </div>
+        <!-- Other Faculty (Example) -->
+        <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
+          <img src="/images/faculty1.jpg" alt="মুফতি সাইফুল ইসলাম" class="w-full h-48 object-cover">
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-green-800 mb-2">মুফতি সাইফুল ইসলাম</h3>
+            <p class="text-gray-600 mb-4">প্রধান মুফতি, হাদিস বিভাগ</p>
+            <p class="text-gray-700">হাদিস ও ফিকহ বিষয়ে বিশেষজ্ঞ।</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
+          <img src="/images/faculty2.jpg" alt="ড. আয়েশা সিদ্দিকা" class="w-full h-48 object-cover">
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-green-800 mb-2">ড. আয়েশা সিদ্দিকা</h3>
+            <p class="text-gray-600 mb-4">প্রধান, মহিলা বিভাগ</p>
+            <p class="text-gray-700">তাফসীর ও আকিদায় বিশেষজ্ঞ।</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <a href="/teachers.html" class="bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg inline-block">সমস্ত শিক্ষক দেখুন</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Achievements Section -->
+  <section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-green-800 mb-2">আমাদের অর্জন</h2>
+        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-4xl font-bold text-green-700 mb-2">১২০০+</div>
+          <div class="text-gray-600">শিক্ষার্থী ভর্তি</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-4xl font-bold text-green-700 mb-2">৯৫%</div>
+          <div class="text-gray-600">সাফল্যের হার</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-4xl font-bold text-green-700 mb-2">১০+</div>
+          <div class="text-gray-600">জাতীয় পুরস্কার</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Testimonials Section -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-green-800 mb-2">শিক্ষার্থী ও অভিভাবকদের মতামত</h2>
+        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
+      </div>
+      <div class="relative overflow-hidden">
+        <div class="flex transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${activeTestimonial * 100}%)`">
+          <!-- Testimonial 1 -->
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="flex items-center mb-6">
+                <img src="/images/testimonial1.jpg" alt="মোহাম্মদ রফিক" class="w-16 h-16 rounded-full object-cover border-4 border-green-100 mr-6">
+                <div>
+                  <h3 class="text-xl font-bold text-green-800">মোহাম্মদ রফিক</h3>
+                  <p class="text-gray-600">প্রাক্তন শিক্ষার্থী, কামিল (হাদিস)</p>
+                </div>
+              </div>
+              <div class="text-yellow-400 mb-4">★★★★★</div>
+              <p class="text-gray-700 italic leading-relaxed">
+                "এই মাদ্রাসা আমাকে শুধু জ্ঞানই দেয়নি, বরং একজন ভালো মানুষ হতে শিখিয়েছে। শিক্ষকদের আন্তরিকতা অতুলনীয়।"
+              </p>
+            </div>
+          </div>
+          <!-- Testimonial 2 -->
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="flex items-center mb-6">
+                <img src="/images/testimonial2.jpg" alt="আয়েশা সিদ্দিকা" class="w-16 h-16 rounded-full object-cover border-4 border-green-100 mr-6">
+                <div>
+                  <h3 class="text-xl font-bold text-green-800">আয়েশা সিদ্দিকা</h3>
+                  <p class="text-gray-600">অভিভাবক, দাখিল শিক্ষার্থী</p>
+                </div>
+              </div>
+              <div class="text-yellow-400 mb-4">★★★★★</div>
+              <p class="text-gray-700 italic leading-relaxed">
+                "আমার মেয়ের নৈতিক ও শিক্ষাগত উন্নতি দেখে আমি অভিভূত। এই প্রতিষ্ঠানটি সত্যিই ব্যতিক্রমী।"
+              </p>
+            </div>
+          </div>
+          <!-- Testimonial 3 -->
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="flex items-center mb-6">
+                <img src="/images/testimonial3.jpg" alt="আব্দুল্লাহ আল মামুন" class="w-16 h-16 rounded-full object-cover border-4 border-green-100 mr-6">
+                <div>
+                  <h3 class="text-xl font-bold text-green-800">আব্দুল্লাহ আল মামুন</h3>
+                  <p class="text-gray-600">হিফজ বিভাগের শিক্ষার্থী</p>
+                </div>
+              </div>
+              <div class="text-yellow-400 mb-4">★★★★★</div>
+              <p class="text-gray-700 italic leading-relaxed">
+                "হিফজ বিভাগে পড়ার সুযোগ পেয়ে আমি ধন্য। শিক্ষকদের ধৈর্য্য ও আন্তরিকতা অসাধারণ।"
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonial Controls -->
+      <div class="flex justify-center space-x-4 mt-8">
+        <template x-for="i in totalTestimonials">
+          <button @click="activeTestimonial = i - 1" :class="activeTestimonial === i - 1 ? 'bg-green-700 w-8' : 'bg-gray-300 w-4'" class="h-2 rounded-full transition-all duration-300" :aria-label="'টেস্টিমোনিয়াল ' + i + ' দেখান'"></button>
+        </template>
+      </div>
+      <div class="flex justify-center space-x-6 mt-6">
+        <button @click="activeTestimonial = activeTestimonial === 0 ? totalTestimonials - 1 : activeTestimonial - 1" class="text-green-700 hover:text-green-800 transition-colors" aria-label="পূর্ববর্তী টেস্টিমোনিয়াল">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button @click="activeTestimonial = (activeTestimonial + 1) % totalTestimonials" class="text-green-700 hover:text-green-800 transition-colors" aria-label="পরবর্তী টেস্টিমোনিয়াল">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Call to Action Section -->
+  <section class="py-12 bg-green-700 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-2xl font-bold mb-4">আমাদের সাথে যোগ দিন</h2>
+      <p class="mb-6 max-w-2xl mx-auto">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসায় ভর্তি হয়ে ইসলামিক ও আধুনিক শিক্ষার সমন্বয়ে নিজেকে গড়ে তুলুন।</p>
+      <a href="/admission.html" class="bg-yellow-500 hover:bg-yellow-600 text-green-900 font-bold py-2 px-6 rounded-lg inline-block">ভর্তির জন্য আবেদন করুন</a>
+    </div>
+  </section>
+  
+  <!-- Footer Section -->
+  <include src="/src/components/footer"></include>
+  <include src="/src/components/bottom-nav"></include>
+  
+  <!-- PWA Install Button -->
+  <div class="install-btn fixed bottom-20 right-4 bg-green-600 text-white p-3 rounded-full shadow-lg hidden">
+    <i class="fas fa-download"></i>
   </div>
-
-  <!-- প্রতিষ্ঠানের পরিচিতি -->
-  <section class="py-16 bg-white" id="overview">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col lg:flex-row items-center">
-        <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pr-12">
-          <h2 class="text-3xl font-bold text-green-800 mb-6">প্রতিষ্ঠানের পরিচিতি</h2>
-          <div class="prose max-w-none text-gray-700">
-            <p>
-              আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা বাংলাদেশের একটি শীর্ষস্থানীয় কওমি মাদ্রাসা। ১৯৮৫ সালে প্রতিষ্ঠিত এই শিক্ষা প্রতিষ্ঠানটি ইসলামিক শিক্ষা ও আধুনিক শিক্ষার সমন্বয়ে একটি ভারসাম্যপূর্ণ শিক্ষাব্যবস্থা প্রদান করে আসছে। ঢাকার মোহাম্মদপুরে অবস্থিত আমাদের এই প্রতিষ্ঠানটি নারী শিক্ষার ক্ষেত্রে একটি উজ্জ্বল নক্ষত্র হিসেবে বিবেচিত।
-            </p>
-            <p class="mt-4">
-              আমাদের লক্ষ্য হল আদর্শবান, নৈতিকতাসম্পন্ন ও জ্ঞানী নাগরিক গড়ে তোলা যারা দেশ ও জাতির সেবায় নিজেদের নিয়োজিত করবে। প্রতিষ্ঠানটি বাংলাদেশ মাদ্রাসা শিক্ষা বোর্ড ও বাংলাদেশ সরকারের শিক্ষা মন্ত্রণালয়ের অধীনে অনুমোদিত।
-            </p>
-          </div>
-          <div class="mt-8 grid grid-cols-2 gap-4">
-            <div class="bg-green-50 p-4 rounded-lg">
-              <div class="text-3xl font-bold text-green-700">৩৫+</div>
-              <div class="text-gray-600">বছরের অভিজ্ঞতা</div>
-            </div>
-            <div class="bg-green-50 p-4 rounded-lg">
-              <div class="text-3xl font-bold text-green-700">১২০০+</div>
-              <div class="text-gray-600">শিক্ষার্থী</div>
-            </div>
-            <div class="bg-green-50 p-4 rounded-lg">
-              <div class="text-3xl font-bold text-green-700">৪৫+</div>
-              <div class="text-gray-600">শিক্ষক</div>
-            </div>
-            <div class="bg-green-50 p-4 rounded-lg">
-              <div class="text-3xl font-bold text-green-700">৯৫%</div>
-              <div class="text-gray-600">সাফল্যের হার</div>
-            </div>
-          </div>
-        </div>
-        <div class="lg:w-1/2">
-          <div class="relative rounded-xl overflow-hidden shadow-lg">
-            <img src="/images/madrasa-building.jpg" alt="মাদ্রাসা ভবন" class="w-full h-auto">
-            <div class="absolute inset-0 bg-gradient-to-t from-green-900 to-transparent opacity-70"></div>
-            <div class="absolute bottom-0 left-0 p-6 text-white">
-              <h3 class="text-xl font-bold">আমাদের মূল ক্যাম্পাস</h3>
-              <p>মোহাম্মদপুর, ঢাকা</p>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-4 mt-4">
-            <div class="rounded-xl overflow-hidden shadow-md">
-              <img src="/images/classroom.jpg" alt="ক্লাসরুম" class="w-full h-48 object-cover">
-            </div>
-            <div class="rounded-xl overflow-hidden shadow-md">
-              <img src="/images/library.jpg" alt="লাইব্রেরি" class="w-full h-48 object-cover">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- প্রতিষ্ঠার ইতিহাস -->
-  <section class="py-16 bg-gray-50" id="history">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-green-800 mb-2">প্রতিষ্ঠার ইতিহাস</h2>
-        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
-      </div>
-      
-      <div class="max-w-4xl mx-auto">
-        <div class="relative">
-          <!-- টাইমলাইন -->
-          <div class="space-y-8">
-            <!-- টাইমলাইন আইটেম 1 -->
-            <div class="timeline-item relative pl-8">
-              <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-green-600 border-4 border-green-300 z-10"></div>
-              <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <h3 class="text-xl font-bold text-green-800">প্রতিষ্ঠার সূচনা</h3>
-                  <span class="text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">১৯৮৫</span>
-                </div>
-                <p class="mt-3 text-gray-700">
-                  ১৯৮৫ সালে মাওলানা আব্দুল হক সাহেবের নেতৃত্বে একটি ছোট্ট মক্তব হিসেবে আমাদের যাত্রা শুরু। মাত্র ১৫ জন ছাত্রী নিয়ে শুরু করা এই প্রতিষ্ঠানটি আজ বাংলাদেশের শীর্ষস্থানীয় মহিলা মাদ্রাসায় পরিণত হয়েছে।
-                </p>
-              </div>
-            </div>
-            
-            <!-- টাইমলাইন আইটেম 2 -->
-            <div class="timeline-item relative pl-8">
-              <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-green-600 border-4 border-green-300 z-10"></div>
-              <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <h3 class="text-xl font-bold text-green-800">স্বীকৃতি লাভ</h3>
-                  <span class="text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">১৯৯২</span>
-                </div>
-                <p class="mt-3 text-gray-700">
-                  ১৯৯২ সালে বাংলাদেশ মাদ্রাসা শিক্ষা বোর্ডের অধীনে দাখিল স্তরে স্বীকৃতি লাভ। এই বছরেই আমরা আমাদের প্রথম নিজস্ব ভবন নির্মাণ সম্পন্ন করি।
-                </p>
-              </div>
-            </div>
-            
-            <!-- টাইমলাইন আইটেম 3 -->
-            <div class="timeline-item relative pl-8">
-              <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-green-600 border-4 border-green-300 z-10"></div>
-              <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <h3 class="text-xl font-bold text-green-800">আলিম বিভাগ চালু</h3>
-                  <span class="text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">২০০১</span>
-                </div>
-                <p class="mt-3 text-gray-700">
-                  ২০০১ সালে আলিম স্তরে শিক্ষা কার্যক্রম শুরু এবং একই বছর হিফজুল কুরআন বিভাগ চালু করা হয়। এই বছর আমাদের প্রথম ছাত্রী জেলা পর্যায়ে প্রথম স্থান অধিকার করে।
-                </p>
-              </div>
-            </div>
-            
-            <!-- টাইমলাইন আইটেম 4 -->
-            <div class="timeline-item relative pl-8">
-              <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-green-600 border-4 border-green-300 z-10"></div>
-              <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <h3 class="text-xl font-bold text-green-800">নতুন ক্যাম্পাস উদ্বোধন</h3>
-                  <span class="text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">২০১৫</span>
-                </div>
-                <p class="mt-3 text-gray-700">
-                  ৩০ বছর পূর্তি উপলক্ষে বর্তমান ৫ তলা ভবন ও নতুন ক্যাম্পাস উদ্বোধন। এই বছর আমরা আধুনিক কম্পিউটার ল্যাব ও ডিজিটাল লাইব্রেরি চালু করি।
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- আমাদের মিশন ও ভিশন -->
-  <section class="py-16 bg-white" id="mission">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-green-800 mb-2">আমাদের মিশন ও ভিশন</h2>
-        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
-      </div>
-      
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <!-- মিশন -->
-        <div class="bg-green-50 rounded-xl p-8 border-l-4 border-green-600">
-          <div class="flex items-center mb-4">
-            <div class="bg-green-100 p-3 rounded-full mr-4">
-              <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-green-800">আমাদের মিশন</h3>
-          </div>
-          <p class="text-gray-700">
-            ইসলামিক মূল্যবোধ ও আধুনিক শিক্ষার সমন্বয়ে এমন এক প্রজন্ম গড়ে তোলা যারা ধর্মীয় ও নৈতিক দিক থেকে সুপ্রতিষ্ঠিত হবে এবং আধুনিক বিশ্বের চ্যালেঞ্জ মোকাবেলায় সক্ষম হবে। আমরা চাই আমাদের শিক্ষার্থীরা কুরআন-সুন্নাহ ভিত্তিক জীবন ব্যবস্থা প্রতিষ্ঠায় অগ্রণী ভূমিকা রাখবে।
-          </p>
-        </div>
-        
-        <!-- ভিশন -->
-        <div class="bg-yellow-50 rounded-xl p-8 border-l-4 border-yellow-500">
-          <div class="flex items-center mb-4">
-            <div class="bg-yellow-100 p-3 rounded-full mr-4">
-              <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-yellow-800">আমাদের ভিশন</h3>
-          </div>
-          <p class="text-gray-700">
-            বাংলাদেশের শীর্ষস্থানীয় ইসলামিক শিক্ষা প্রতিষ্ঠান হিসেবে প্রতিষ্ঠিত হওয়া যেখানে শিক্ষার্থীরা ধর্মীয় ও আধুনিক শিক্ষার সমন্বিত জ্ঞান অর্জন করতে পারবে। আমরা ভবিষ্যতে একটি পূর্ণাঙ্গ ইসলামিক বিশ্ববিদ্যালয় প্রতিষ্ঠার স্বপ্ন দেখি যেখানে সব স্তরের শিক্ষা কার্যক্রম পরিচালিত হবে।
-          </p>
-        </div>
-      </div>
-      
-      <!-- মূল্যবোধ -->
-      <div class="mt-12 max-w-4xl mx-auto">
-        <h3 class="text-2xl font-bold text-center text-green-800 mb-6">আমাদের মূল্যবোধ</h3>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-white p-6 rounded-lg shadow-sm text-center border-t-4 border-green-600 hover:shadow-md transition">
-            <div class="text-green-600 mb-3">
-              <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 19.477 5.754 19 7.5 19s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 19.477 18.247 19 16.5 19c-1.746 0-3.332.477-4.5 1.253"></path>
-              </svg>
-            </div>
-            <h4 class="font-bold text-gray-800">কুরআন-সুন্নাহ ভিত্তিক শিক্ষা</h4>
-            <p class="text-sm text-gray-600 mt-2">প্রামাণিক ইসলামিক জ্ঞানের প্রচার ও প্রসার</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm text-center border-t-4 border-blue-600 hover:shadow-md transition">
-            <div class="text-blue-600 mb-3">
-              <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-              </svg>
-            </div>
-            <h4 class="font-bold text-gray-800">সৃজনশীলতা ও উদ্ভাবন</h4>
-            <p class="text-sm text-gray-600 mt-2">আধুনিক জ্ঞান-বিজ্ঞানের সাথে পরিচিতি</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm text-center border-t-4 border-purple-600 hover:shadow-md transition">
-            <div class="text-purple-600 mb-3">
-              <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-              </svg>
-            </div>
-            <h4 class="font-bold text-gray-800">সামাজিক দায়বদ্ধতা</h4>
-            <p class="text-sm text-gray-600 mt-2">সমাজ সেবায় নিবেদিত প্রাণ</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm text-center border-t-4 border-red-600 hover:shadow-md transition">
-            <div class="text-red-600 mb-3">
-              <svg class="h-10 w-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-              </svg>
-            </div>
-            <h4 class="font-bold text-gray-800">সততা ও নৈতিকতা</h4>
-            <p class="text-sm text-gray-600 mt-2">সর্বক্ষেত্রে সত্যবাদিতা ও আমানতদারিতা</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- আমাদের অর্জন -->
-  <section class="py-16 bg-green-800 text-white">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-2">আমাদের অর্জন</h2>
-        <div class="w-20 h-1 bg-yellow-500 mx-auto"></div>
-      </div>
-      
-      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div class="bg-green-700 p-6 rounded-xl text-center hover:bg-green-600 transition">
-          <div class="text-5xl font-bold mb-3">২৫+</div>
-          <h3 class="text-xl font-semibold mb-2">আন্তর্জাতিক পুরস্কার</h3>
-          <p class="text-green-100">ইসলামিক জ্ঞান চর্চা ও গবেষণায় আন্তর্জাতিক স্বীকৃতি</p>
-        </div>
-        <div class="bg-green-700 p-6 rounded-xl text-center hover:bg-green-600 transition">
-          <div class="text-5xl font-bold mb-3">১০০%</div>
-          <h3 class="text-xl font-semibold mb-2">পাসের হার</h3>
-          <p class="text-green-100">গত ৫ বছর ধরে দাখিল ও আলিম পরীক্ষায় ১০০% পাস</p>
-        </div>
-        <div class="bg-green-700 p-6 rounded-xl text-center hover:bg-green-600 transition">
-          <div class="text-5xl font-bold mb-3">৫০+</div>
-          <h3 class="text-xl font-semibold mb-2">প্রকাশনা</h3>
-          <p class="text-green-100">ইসলামিক গবেষণা ও সাহিত্য বিষয়ক প্রকাশনা</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  
+  <script src="/src/includes.js"></script>
 </body>
+
 </html>
