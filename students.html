@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+
+    .page {
+      width: 29.7cm;
+      height: 21cm;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div x-data="data()">
+    <h1 class="mt-2 text-center text-4xl font-bold">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+    <h1 class="text-center text-xl font-semibold">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর</h1>
+    <h1 class="text-center text-lg font-normal mb-2">শিক্ষার্থীদের তালিকা</h1>
+    <table class="w-full text-sm text-left border border-gray-400">
+      <tbody class="text-center">
+        <tr class="border-b border-gray-400">
+          <td class="px-2 py-1 border-r border-gray-400">
+            ক্রমিক নং
+          </td>
+          <td class="px-2 py-1 border-r border-gray-400">
+            আইডি নং
+          </td>
+          <td class="px-2 py-1 border-r border-gray-400">
+            নাম
+          </td>
+          <td class="px-2 py-1 border-r border-gray-400">
+            পিতার নাম
+          </td>
+          <td class="px-2 py-1 border-r border-gray-400">
+            শ্রেণি 
+          </td>
+          <td class="px-2 py-1 border-r border-gray-400">
+            গ্রাম
+          </td>
+          <td class="px-2 py-1 border-r border-gray-400">মোবাইল নং</td>
+          <td class="px-2 py-1 border-r border-gray-400">মাসিক বেতন</td>
+            <td class="px-2 py-1 border-r border-gray-400">পরিবহন ফি</td>
+          <td class="px-2 py-1 border-r border-gray-400">টিউটোরিয়াল</td>
+            <td class="px-2 py-1 border-r border-gray-400">আবাসিক চার্জ</td>
+            <td class="px-2 py-1 border-r border-gray-400">বোর্ডিং ফি</td>
+            <td class="px-2 py-1 border-r border-gray-400">সর্বমোট</td>
+          <td class="px-2 py-1 border-r border-gray-400">ছাড়</td>
+        </tr>
+        <template x-for="(student,index) in students.filter(student => student.active)">
+          <tr class="border-b border-gray-400" :class="student.active ? '' : 'bg-gray-200'">
+            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(index + 1)"></td>
+            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.studentId)"></td>
+            <td class="px-2 py-1 border-r border-gray-400" x-text="student?.stname">
+            </td>
+            <td class="px-2 py-1 border-r border-gray-400" x-text="student?.faName">
+            </td>
+            <td class="px-2 py-1 border-r border-gray-400" x-text="student?.class">
+            শ্রেণি 
+          </td>
+            <td class="px-2 py-1 border-r border-gray-400" x-text="student?.preVillage">
+            
+            </td>
+            <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.faPhone)"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+            <td class="px-2 py-1 border-r border-gray-400"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  <script>
+    const { Client, Databases, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+
+    function data() {
+      return {
+        students: [],
+        searchStudent() {
+          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(120)]);
+          promise.then((ress) => {
+            this.students = ress.documents;
+            console.log(ress)
+          }, function(error) {
+            console.log(error);
+          });
+        },
+        getBangla(x) {
+          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+          var retStr = String(x);
+          for (let n in numbers) {
+            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+          }
+          return retStr;
+        },
+        init() {
+          this.searchStudent()
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
