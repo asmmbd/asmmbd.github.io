@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাদ্রাসা রশিদ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+    
+    .paper {
+      width: 14.8cm;
+      height: 21cm;
+    }
+    
+    .dropdown-menu {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body class="w-full bg-green-50 print:bg-white p-4 print:p-2">
+  <div x-data="invoiceApp()">
+    <div x-show="paymentBox" class="fixed inset-0 flex items-center justify-center flex-col bg-gray-200 bg-opacity-50 print:bg-white print:bg-opacity-100 print:hidden">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:max-w-3xl max-h-[90vh] overflow-y-auto">
+        <h1 class="text-2xl font-bold mb-4 print:hidden" x-text="currentEditingPayment ? 'পেমেন্ট এডিট করুন' : 'মাদ্রাসা ফি কালেকশন ইনভয়েস'"></h1>
+        
+        <div class="flex items-end gap-4 justify-between mb-6">
+          <!-- সার্চেবল ছাত্র/ছাত্রী সিলেকশন -->
+          <div class="relative print:hidden flex-1">
+            <h2 class="text-xl font-semibold mb-2">ছাত্র/ছাত্রী সিলেক্ট করুন</h2>
+            <input x-model="search" @focus="isDropdownOpen = true" @blur="setTimeout(() => isDropdownOpen = false, 200)" type="text" placeholder="নাম বা আইডি দিয়ে সার্চ করুন" class="p-2 border rounded bg-transparent w-full">
+            <div x-show="isDropdownOpen" class="absolute bg-white border rounded mt-1 w-full dropdown-menu z-10">
+              <template x-for="student in filteredStudents()" :key="student.studentId">
+                <div @click="selectStudent(student)" class="p-2 hover:bg-gray-100 cursor-pointer" x-text="`${student.name} (ID: ${student.studentId})`"></div>
+              </template>
+              <div x-show="filteredStudents().length === 0" class="p-2 text-gray-500">কোনো ফলাফল পাওয়া যায়নি</div>
+            </div>
+          </div>
+          
+          <!-- তারিখ সিলেকশন -->
+          <div class="print:hidden">
+            <h2 class="text-xl font-semibold mb-2">তারিখ সিলেক্ট করুন</h2>
+            <input x-model="invoiceDate" @change="generateInvoiceNumber()" type="date" class="p-2 border rounded bg-transparent">
+          </div>
+          
+          <div>
+            <button @click="submitForm()" class="bg-green-500 text-white p-2 rounded print:hidden">
+              <span x-text="currentEditingPayment ? 'আপডেট করুন' : 'জমা করুন'"></span>
+            </button>
+            <button @click="paymentBox = false; clearForm();" class="bg-red-500 text-white p-2 rounded print:hidden">বন্ধ করুন</button>
+          </div>
+        </div>
+        
+        <!-- ফি যোগ করার ফর্ম -->
+        <div class="mb-6 print:hidden">
+          <h2 class="text-xl font-semibold mb-2">ফি যোগ করুন</h2>
+          <template x-for="(fee, index) in fees">
+            <div class="gap-4 mb-2" :class="{'flex items-center': fees.length > 1, 'grid grid-cols-3': fees.length < 2}">
+              <select x-model="fee.name" @change="updateFeeAmount(index)" class="p-2 border rounded bg-transparent">
+                <option value="">ফি সিলেক্ট করুন</option>
+                <template x-for="(amount, name) in predefinedFees" :key="name">
+                  <option :value="name" :selected="fee.name === name" x-text="name"></option>
+                </template>
+              </select>
+              <input x-model="fee.month" type="month" placeholder="মাস" class="p-2 border rounded bg-transparent">
+              <input x-model="fee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded text-right">
+              <button @click="removeFee(index)" class="text-red-500" x-show="fees.length > 1">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </template>
+          <button @click="addFee" class="text-blue-500 flex gap-2 print:hidden">
+            <i class="fas fa-plus"></i> যোগ করুন
+          </button>
+        </div>
+        
+        <!-- একাধিক মাসের ফি -->
+        <div class="mb-6 print:hidden" x-show="fees.some(f => f.name === 'মাসিক বেতন')">
+          <h2 class="text-xl font-semibold mb-2">একাধিক মাস যোগ করুন</h2>
+          <div class="flex gap-4">
+            <input x-model="startMonth" type="month" class="p-2 border rounded bg-transparent">
+            <input x-model="endMonth" type="month" class="p-2 border rounded bg-transparent">
+            <button @click="addMultipleMonths" class="text-blue-500 flex gap-2">যোগ করুন</button>
+          </div>
+        </div>
+        
+        <!-- ফি সারাংশ -->
+        <div class="mb-6 flex flex-col items-end gap-2.5">
+          <div class="flex gap-3 items-center">
+            <h2 class="text-md">পূর্বের বকেয়া</h2>
+            <input x-model="previousDue" type="number" class="w-24 h-8" readonly>
+          </div>
+          
+          <div class="flex gap-3">
+            <h2 class="text-md">নতুন ফি</h2>
+            <p class="text-md" x-text="`৳ ${totalFees}`"></p>
+          </div>
+          
+          <div class="flex gap-3">
+            <h2 class="text-md">সর্বমোট টাকা</h2>
+            <p class="text-md" x-text="`৳ ${totalWithPreviousDue}`"></p>
+          </div>
+          
+          <div class="flex gap-3 items-center">
+            <h2 class="text-md">ছাড়</h2>
+            <input x-model="discount" type="number" class="w-12 h-8">
+          </div>
+          
+          <div class="flex gap-3">
+            <h2 class="text-md">মোট টাকা</h2>
+            <p class="text-md" x-text="`৳ ${(totalWithPreviousDue - discount).toFixed(2)}`"></p>
+          </div>
+          
+          <div class="flex gap-3 items-center">
+            <h2 class="text-md">জমা</h2>
+            <input x-model="deposit" type="number" class="w-12 h-8">
+          </div>
+          
+          <div class="flex gap-3 border-t border-gray-200 mt-2 pt-2">
+            <h2 class="text-lg font-semibold">বকেয়া</h2>
+            <p class="text-lg font-bold text-emerald-600" x-text="`৳ ${due}`"></p>
+          </div>
+        </div>
+        
+        <!-- পেমেন্ট হিস্ট্রি -->
+        <div class="mb-6 print:hidden" x-show="selectedStudentId">
+          <h2 class="text-xl font-semibold mb-2">পেমেন্ট হিস্ট্রি</h2>
+          <table class="w-full">
+            <thead>
+              <tr class="bg-emerald-100">
+                <th class="px-4 py-2 text-left">রশিদ নং</th>
+                <th class="px-4 py-2 text-left">তারিখ</th>
+                <th class="px-4 py-2 text-right">মোট</th>
+                <th class="px-4 py-2 text-right">জমা</th>
+                <th class="px-4 py-2 text-right">বকেয়া</th>
+                <th class="px-4 py-2 text-right">অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="payment in getStudentHistory()">
+                <tr class="border-b hover:bg-emerald-50">
+                  <td class="px-4 py-2" x-text="payment.invoiceNumber"></td>
+                  <td class="px-4 py-2" x-text="formatInvoiceDate(payment.date)"></td>
+                  <td class="px-4 py-2 text-right" x-text="`৳ ${getBangla(payment.totalWithPreviousDue)}`"></td>
+                  <td class="px-4 py-2 text-right" x-text="`৳ ${getBangla(payment.deposit)}`"></td>
+                  <td class="px-4 py-2 text-right" x-text="`৳ ${getBangla(payment.due)}`"></td>
+                  <td class="px-4 py-2 text-right">
+                    <button @click="viewReceipt(payment)" class="text-blue-500 hover:text-blue-700 mr-2">
+                      <i class="fas fa-eye"></i> দেখুন
+                    </button>
+                    <button @click="editPayment(payment)" class="text-green-500 hover:text-green-700 mr-2">
+                      <i class="fas fa-edit"></i> এডিট
+                    </button>
+                    <button @click="confirmDelete(payment)" class="text-red-500 hover:text-red-700">
+                      <i class="fas fa-trash"></i> ডিলেট
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- মূল পেমেন্ট হিস্ট্রি -->
+    <div class="w-full print:hidden">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xl font-semibold">পেমেন্ট হিস্ট্রি</h2>
+        <button class="bg-green-500 text-white p-2 rounded print:hidden" @click="paymentBox = true">ফি কালেকশন করুন</button>
+      </div>
+      <table class="w-full">
+        <thead>
+          <tr class="bg-emerald-100">
+            <th class="px-4 py-2 text-left">রশিদ নং</th>
+            <th class="px-4 py-2 text-left">তারিখ</th>
+            <th class="px-4 py-2 text-right">মোট</th>
+            <th class="px-4 py-2 text-right">জমা</th>
+            <th class="px-4 py-2 text-right">বকেয়া</th>
+            <th class="px-4 py-2 text-right">অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="payment in paymentHistory">
+            <tr class="border-b hover:bg-emerald-50">
+              <td class="px-4 py-2" x-text="payment.invoiceNumber"></td>
+              <td class="px-4 py-2" x-text="formatInvoiceDate(payment.date)"></td>
+              <td class="px-4 py-2 text-right" x-text="`৳ ${getBangla(payment.totalWithPreviousDue)}`"></td>
+              <td class="px-4 py-2 text-right" x-text="`৳ ${getBangla(payment.deposit)}`"></td>
+              <td class="px-4 py-2 text-right" x-text="`৳ ${getBangla(payment.due)}`"></td>
+              <td class="px-4 py-2 text-right">
+                <button @click="viewReceipt(payment)" class="text-blue-500 hover:text-blue-700 mr-2">
+                  <i class="fas fa-eye"></i> দেখুন
+                </button>
+                <button @click="editPayment(payment)" class="text-green-500 hover:text-green-700 mr-2">
+                  <i class="fas fa-edit"></i> এডিট
+                </button>
+                <button @click="confirmDelete(payment)" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-trash"></i> ডিলেট
+                </button>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- রশিদ প্রিন্ট ভিউ -->
+    <div x-show="isPrinting" class="fixed inset-0 flex items-center justify-center flex-col bg-gray-200 bg-opacity-50 print:bg-white print:bg-opacity-100 overflow-y-auto">
+      <div class="paper mx-auto bg-white rounded-lg shadow-lg p-4 print:p-2 print:shadow-none relative">
+        <div class="fle justify-between items-start mb-4">
+          <img src="./images/logo.jpg" alt="" class="w-3/4 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-5">
+
+          <div class="w-full flex items-center">
+            <img src="./images/logo.jpg" alt="" class="w-20">
+            <div class="flex-1 text-center">
+            <p class="text-gray-600">বিসমিল্লাহির রাহমানির রাহিম</p>
+            <h1 class="text-3xl font-bold text-emerald-800">আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+            
+            <p class="text-gray-600">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর। মোবাঃ ০১৫১৬৫৩২২৯৬</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between hidde my-3">
+            <p class="text-gray-600" x-text="currentReceipt ? currentReceipt.invoiceNumber : invoiceNumber"></p>
+            <p class="rounded-full p-1 px-2 bg-emerald-100 text-gray-700">শিক্ষার্থী কপি</p>
+            <p class="text-gray-600" x-text="`তারিখ: ${formatInvoiceDate(currentReceipt ? currentReceipt.date : invoiceDate)}`"></p>
+          </div>
+        </div>
+        
+        <div class="w-full mb-4">
+          <table class="w-full">
+            <tr class="border hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600 border-r">নাম</td>
+              <td class="px-4 py-2 text-gray-600 border-r" x-text="currentReceipt ? students.find(s => s.studentId === currentReceipt.studentId)?.name : (selectedStudent ? selectedStudent.name : '')"></td>
+              <td class="px-4 py-2 text-gray-600 border-r">আইডি নং</td>
+              <td class="px-4 py-2 text-gray-600" x-text="currentReceipt ? currentReceipt.studentId : (selectedStudent ? selectedStudent.studentId : '')"></td>
+            </tr>
+            <tr class="border hover:bg-emerald-50">
+              <td class="px-4 py-2 text-gray-600 border-r">শ্রেণী</td>
+              <td class="px-4 py-2 text-gray-600 border-r" x-text="currentReceipt ? students.find(s => s.studentId === currentReceipt.studentId)?.class : (selectedStudent ? selectedStudent.class : '')"></td>
+              <td class="px-4 py-2 text-gray-600 border-r">বিভাগ</td>
+              <td class="px-4 py-2 text-gray-600" x-text="currentReceipt ? students.find(s => s.studentId === currentReceipt.studentId)?.group : (selectedStudent ? selectedStudent.group : '')"></td>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="overflow-x-auto mb-3">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-emerald-100">
+                <th class="px-4 py-2 text-left text-gray-700">নং</th>
+                <th class="px-4 py-2 text-left text-gray-700">বিবরণ</th>
+                <th class="px-4 py-2 text-right text-gray-700">মোট</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- পূর্বের বকেয়া সারি -->
+              <tr class="border-b hover:bg-emerald-50" x-show="(currentReceipt ? currentReceipt.previousDue : previousDue) > 0">
+                <td class="px-4 py-2 text-gray-600" x-text="getBangla(1)"></td>
+                <td class="px-4 py-2 text-gray-600">পূর্বের বকেয়া</td>
+                <td class="px-4 py-2 text-right text-gray-600" x-text="getBangla(currentReceipt ? currentReceipt.previousDue : previousDue) + ' ৳'"></td>
+              </tr>
+              
+              <!-- ফি আইটেমগুলি -->
+              <template x-for="(fee, index) in (currentReceipt ? currentReceipt.fees : fees)">
+                <tr class="border-b hover:bg-emerald-50">
+                  <td class="px-4 py-2 text-gray-600" x-text="getBangla((currentReceipt ? currentReceipt.previousDue : previousDue) > 0 ? index + 2 : index + 1)"></td>
+                  <td class="px-4 py-2 text-gray-600" x-text="`${fee.name} ${fee.month ? `( ${monthFormat(fee.month)} )` : ''}`"></td>
+                  <td class="px-4 py-2 text-right text-gray-600" x-text="getBangla(fee.amount) + ' ৳'"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="flex justify-end mb-3">
+          <div class="w-1/2">
+            <div class="flex justify-between py-0.5">
+              <span class="text-gray-600">মোট:</span>
+              <span class="text-gray-800" x-text="`৳ ${getBangla(currentReceipt ? currentReceipt.totalWithPreviousDue : totalWithPreviousDue)}`"></span>
+            </div>
+            <div class="flex justify-between py-0.5">
+              <span class="text-gray-600">ছাড়:</span>
+              <span class="text-gray-800" x-text="`৳ ${getBangla(currentReceipt ? currentReceipt.discount : discount)}`"></span>
+            </div>
+            <div class="flex justify-between py-0.5 border-t border-gray-200 mt-2">
+              <span class="text-lg font-semibold text-gray-700">সর্বমোট:</span>
+              <span class="text-lg font-bold text-emerald-600" x-text="`৳ ${getBangla(currentReceipt ? (currentReceipt.totalWithPreviousDue - currentReceipt.discount) : (totalWithPreviousDue - discount))}`"></span>
+            </div>
+            <div class="flex justify-between py-0.5">
+              <span class="text-gray-600">জমা:</span>
+              <span class="text-gray-800" x-text="`৳ ${getBangla(currentReceipt ? currentReceipt.deposit : deposit)}`"></span>
+            </div>
+            <div class="flex justify-between py-0.5 border-t border-gray-200 mt-2">
+              <span class="text-lg font-semibold text-gray-700">বকেয়া:</span>
+              <span class="text-lg font-bold text-emerald-600" x-text="`৳ ${getBangla(currentReceipt ? currentReceipt.due : due)}`"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between hidde mt-20">
+          <p class="text-gray-600">প্রদানকারীর সাক্ষর</p>
+          <p class="text-gray-600">আদায়কারীর সাক্ষর</p>
+        </div>
+      </div>
+      
+      <!-- প্রিন্ট ও ডাউনলোড বাটন -->
+      <div class="w-[14.8cm] mx-auto mt-5 flex justify-end gap-4 items-center print:hidden">
+        <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-emerald-200 transition-colors" @click="isPrinting = false">বন্ধ করুন</button>
+        <button @click="downloadPDF()" class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition-colors">
+          <i class="fas fa-download mr-2"></i>পিডিএফ ডাউনলোড
+        </button>
+        <button @click="window.print()" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors">
+          <i class="fas fa-print mr-2"></i>রশিদ প্রিন্ট
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function invoiceApp() {
+      return {
+        students: [
+          // শিশু শ্রেণী
+          { studentId: '20240001', name: 'সুমাইয়া আক্তার আসমা', faName: 'মোহাঃ আনোয়ার হোসেন', maName: 'নূরজাহান আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240002', name: 'আব্দুল্লাহ আল মামুন', faName: 'মোহাঃ আলী', maName: 'ফাতেমা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240003', name: 'রহিম উদ্দিন', faName: 'আব্দুল করিম', maName: 'রহিমা খাতুন', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240004', name: 'ফাতেমা বেগম', faName: 'মোহাঃ হোসেন', maName: 'জাহানারা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240005', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240006', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240007', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240008', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240009', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240010', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240011', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          { studentId: '20240012', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'শিশু', group: 'কিতাব বিভাগ' },
+          
+          // প্রথম শ্রেণী
+          { studentId: '20240013', name: 'আসমা আক্তার', faName: 'মোহাঃ রহিম', maName: 'রেহানা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240014', name: 'মোহাম্মদ রফিক', faName: 'মোহাঃ করিম', maName: 'ফাতেমা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240015', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240016', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240017', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240018', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240019', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240020', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240021', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240022', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240023', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240024', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'প্রথম', group: 'কিতাব বিভাগ' },
+          
+          // দ্বিতীয় শ্রেণী
+          { studentId: '20240025', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240026', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240027', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240028', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240029', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240030', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240031', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240032', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240033', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240034', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240035', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240036', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'দ্বিতীয়', group: 'কিতাব বিভাগ' },
+          
+          // তৃতীয় শ্রেণী
+          { studentId: '20240037', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240038', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240039', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240040', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240041', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240042', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240043', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240044', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240045', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240046', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240047', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          { studentId: '20240048', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'তৃতীয়', group: 'কিতাব বিভাগ' },
+          
+          // চতুর্থ শ্রেণী
+          { studentId: '20240049', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240050', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240051', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240052', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240053', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240054', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240055', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240056', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240057', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240058', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240059', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240060', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'চতুর্থ', group: 'কিতাব বিভাগ' },
+          // পঞ্চম শ্রেণী
+          { studentId: '20240061', name: 'সুমাইয়া আক্তার আসমা', faName: 'মোহাঃ আনোয়ার হোসেন', maName: 'নূরজাহান আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240062', name: 'আব্দুল্লাহ আল মামুন', faName: 'মোহাঃ আলী', maName: 'ফাতেমা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240063', name: 'রহিম উদ্দিন', faName: 'আব্দুল করিম', maName: 'রহিমা খাতুন', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240064', name: 'ফাতেমা বেগম', faName: 'মোহাঃ হোসেন', maName: 'জাহানারা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240065', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240066', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240067', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240068', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240069', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240070', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240071', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240072', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'পঞ্চম', group: 'কিতাব বিভাগ' },
+          
+          // ষষ্ঠ শ্রেণী
+          { studentId: '20240073', name: 'আসমা আক্তার', faName: 'মোহাঃ রহিম', maName: 'রেহানা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240074', name: 'মোহাম্মদ রফিক', faName: 'মোহাঃ করিম', maName: 'ফাতেমা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240075', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240076', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240077', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240078', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240079', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240080', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240081', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বে���ম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240082', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240083', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          { studentId: '20240084', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'ষষ্ঠ', group: 'কিতাব বিভাগ' },
+          
+          // সপ্তম শ্রেণী
+          { studentId: '20240085', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240086', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240087', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240088', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240089', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240090', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240091', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240092', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240093', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240094', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240095', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240096', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'সপ্তম', group: 'কিতাব বিভাগ' },
+          
+          // অষ্টম শ্রেণী
+          { studentId: '20240097', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240098', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240099', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240100', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240101', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240102', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240103', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240104', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240105', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240106', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240107', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240108', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'অষ্টম', group: 'কিতাব বিভাগ' },
+          
+          // নবম শ্রেণী
+          { studentId: '20240109', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240110', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240111', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240112', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240113', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240114', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240115', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240116', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240117', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240118', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240119', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240120', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'নবম', group: 'কিতাব বিভাগ' },
+          
+          // দশম শ্রেণী
+          { studentId: '20240121', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240122', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240123', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240124', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240125', name: 'নাজমুল হক', faName: 'মোহাঃ নাজিম', maName: 'নাজমা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240126', name: 'রুবাইয়াৎ ইসলাম', faName: 'মোহাঃ ইসলাম', maName: 'রুবিনা আক্তার', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240127', name: 'সাদিয়া ইসলাম', faName: 'মোহাঃ রফিক', maName: 'সাবিনা আক্তার', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240128', name: 'আব্দুল্লাহ আল নোমান', faName: 'মোহাঃ নোমান', maName: 'আয়েশা আক্তার', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240129', name: 'আয়েশা সিদ্দিকা', faName: 'মোহাঃ সিদ্দিক', maName: 'আফসানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240130', name: 'মোহাম্মদ আলী', faName: 'মোহাঃ করিম', maName: 'সালমা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240131', name: 'সাবিনা ইয়াসমিন', faName: 'মোহাঃ ইউসুফ', maName: 'রেহানা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' },
+          { studentId: '20240132', name: 'ইমরান হোসেন', faName: 'মোহাঃ হাসান', maName: 'আয়েশা বেগম', class: 'দশম', group: 'কিতাব বিভাগ' }
+        ],
+        
+        // ভেরিয়েবলগুলি
+        selectedStudentId: '',
+        paymentBox: false,
+        selectedStudent: null,
+        invoiceDate: new Date().toISOString().split('T')[0],
+        invoiceNumber: '',
+        deposit: 0,
+        discount: 0,
+        previousDue: 0,
+        isPrinting: false,
+        startMonth: '',
+        endMonth: '',
+        paymentHistory: JSON.parse(localStorage.getItem('paymentHistory')) || [],
+        predefinedFees: {
+          "মাসিক বেতন": 1000,
+          "পরিবহন ফি": 500,
+          "বোর্ডিং ফি": 2000,
+          "পরীক্ষা ফি": 300,
+          "লাইব্রেরি ফি": 200
+        },
+        fees: [{ name: '', amount: 0, month: '' }],
+        currentReceipt: null,
+        currentEditingPayment: null,
+        search: '',
+        isDropdownOpen: false,
+        
+        // Computed Properties
+        get totalFees() {
+          return this.fees.reduce((total, fee) => total + parseFloat(fee.amount || 0), 0).toFixed(2);
+        },
+        
+        get totalWithPreviousDue() {
+          return (parseFloat(this.totalFees) + parseFloat(this.previousDue || 0)).toFixed(2);
+        },
+        
+        get due() {
+          return (parseFloat(this.totalWithPreviousDue) - parseFloat(this.deposit || 0) - parseFloat(this.discount || 0)).toFixed(2);
+        },
+        
+        // মেথডগুলি
+        init() {
+          this.generateInvoiceNumber();
+          console.log(this.paymentHistory)
+        },
+        
+        addFee() {
+          this.fees.push({ name: '', amount: 0, month: '' });
+        },
+        
+        removeFee(index) {
+          this.fees.splice(index, 1);
+        },
+        
+        updateFeeAmount(index) {
+          const selectedFee = this.fees[index].name;
+          this.fees[index].amount = this.predefinedFees[selectedFee] || 0;
+        },
+        
+        addMultipleMonths() {
+          const start = new Date(this.startMonth);
+          const end = new Date(this.endMonth);
+          const monthlyFee = this.predefinedFees["মাসিক বেতন"];
+          let current = new Date(start);
+          
+          while (current <= end) {
+            this.fees.push({
+              name: "মাসিক বেতন",
+              amount: monthlyFee,
+              month: current.toISOString().slice(0, 7),
+            });
+            current.setMonth(current.getMonth() + 1);
+          }
+          this.startMonth = '';
+          this.endMonth = '';
+        },
+        
+        updateStudentInfo() {
+          this.selectedStudent = this.students.find(s => s.studentId === this.selectedStudentId) || null;
+          // ছাত্র নির্বাচিত হলে পূর্বের বকেয়া লোড করুন
+          if (this.selectedStudentId) {
+            const history = this.getStudentHistory();
+            if (history.length > 0) {
+              const lastPayment = history[history.length - 1];
+              this.previousDue = parseFloat(lastPayment.due) || 0;
+            } else {
+              this.previousDue = 0;
+            }
+          }
+        },
+        
+        filteredStudents() {
+          const search = this.search.toLowerCase();
+          return this.students.filter(student =>
+            student.name.toLowerCase().includes(search) ||
+            student.studentId.toLowerCase().includes(search)
+          );
+        },
+        
+        selectStudent(student) {
+          this.selectedStudentId = student.studentId;
+          this.updateStudentInfo();
+          this.isDropdownOpen = false;
+          this.search = `${student.name} (ID: ${student.studentId})`;
+        },
+        
+        generateInvoiceNumber() {
+          const date = new Date(this.invoiceDate);
+          const year = date.getFullYear();
+          const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+          this.invoiceNumber = `#রশিদ-${year}-${randomNum}`;
+        },
+        
+        formatInvoiceDate(date) {
+          const d = new Date(date);
+          return new Intl.DateTimeFormat('bn-BD', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }).format(d);
+        },
+        
+        monthFormat(month) {
+          const date = new Date(month);
+          return new Intl.DateTimeFormat('bn-BD', {
+            year: 'numeric',
+            month: 'long'
+          }).format(date);
+        },
+        
+        getBangla(x) {
+          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+          var retStr = String(x);
+          for (let n in numbers) {
+            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+          }
+          return retStr;
+        },
+        
+        printInvoice() {
+          this.isPrinting = true;
+          this.currentReceipt = null;
+        },
+        
+        downloadPDF() {
+          this.isPrinting = true;
+          const element = document.querySelector('.paper');
+          const opt = {
+            margin: 0,
+            filename: `${this.currentReceipt ? this.currentReceipt.invoiceNumber : this.invoiceNumber}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'cm', format: [14.8, 21], orientation: 'portrait' }
+          };
+          html2pdf().set(opt).from(element).save().then(() => {
+            this.isPrinting = false;
+          });
+        },
+        
+        savePayment() {
+          const payment = {
+            studentId: this.selectedStudentId,
+            invoiceNumber: this.invoiceNumber,
+            date: this.invoiceDate,
+            fees: JSON.parse(JSON.stringify(this.fees)),
+            previousDue: parseFloat(this.previousDue) || 0,
+            totalFees: parseFloat(this.totalFees) || 0,
+            totalWithPreviousDue: parseFloat(this.totalWithPreviousDue) || 0,
+            discount: parseFloat(this.discount) || 0,
+            deposit: parseFloat(this.deposit) || 0,
+            due: parseFloat(this.due) || 0,
+            total: (parseFloat(this.totalWithPreviousDue) - parseFloat(this.discount || 0)).toFixed(2)
+          };
+          
+          this.paymentHistory.push(payment);
+          localStorage.setItem('paymentHistory', JSON.stringify(this.paymentHistory));
+        },
+        
+        getStudentHistory() {
+          return this.paymentHistory
+            .filter(p => p.studentId === this.selectedStudentId)
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+        },
+        
+        editPayment(payment) {
+          try {
+            // ছাত্র খুঁজে বের করুন
+            const student = this.students.find(s => s.studentId === payment.studentId);
+            
+            if (!student) {
+              alert('ছাত্র/ছাত্রী পাওয়া যায়নি!');
+              return;
+            }
+            
+            // ফর্ম ডাটা সেট করুন
+            this.selectedStudentId = payment.studentId;
+            this.selectedStudent = student;
+            this.invoiceNumber = payment.invoiceNumber;
+            this.invoiceDate = payment.date;
+            
+            // ফি অ্যারে ডিপ কপি করুন
+            this.fees = payment.fees.map(fee => ({
+              name: fee.name || '',
+              amount: parseFloat(fee.amount) || 0,
+              month: fee.month || ''
+            }));
+            
+            // সংখ্যাগত মানগুলি সেট করুন
+            this.deposit = parseFloat(payment.deposit) || 0;
+            this.discount = parseFloat(payment.discount) || 0;
+            this.previousDue = parseFloat(payment.previousDue) || 0;
+            
+            // বর্তমান এডিট করা পেমেন্ট সংরক্ষণ করুন
+            this.currentEditingPayment = payment;
+            
+            this.paymentBox = true;
+            this.search = `${student.name} (ID: ${student.studentId})`;
+          } catch (error) {
+            console.error('Edit payment error:', error);
+            alert('পেমেন্ট এডিট করতে সমস্যা হয়েছে!');
+          }
+        },
+        
+        submitForm() {
+          try {
+            if (!this.selectedStudentId || !this.fees.length || !this.fees[0].name) {
+              alert('অনুগ্রহ করে ছাত্র/ছাত্রী এবং ফি সিলেক্ট করুন!');
+              return;
+            }
+            
+            // নতুন পেমেন্ট অবজেক্ট তৈরি করুন
+            const newPayment = {
+              studentId: this.selectedStudentId,
+              invoiceNumber: this.invoiceNumber,
+              date: this.invoiceDate,
+              fees: this.fees.map(fee => ({
+                name: fee.name,
+                amount: parseFloat(fee.amount) || 0,
+                month: fee.month || ''
+              })),
+              previousDue: parseFloat(this.previousDue) || 0,
+              totalFees: parseFloat(this.totalFees) || 0,
+              totalWithPreviousDue: parseFloat(this.totalWithPreviousDue) || 0,
+              discount: parseFloat(this.discount) || 0,
+              deposit: parseFloat(this.deposit) || 0,
+              due: parseFloat(this.due) || 0,
+              total: (parseFloat(this.totalWithPreviousDue) - parseFloat(this.discount || 0)).toFixed(2)
+            };
+            
+            // যদি এডিট মোডে থাকি
+            if (this.currentEditingPayment) {
+              // পুরানো পেমেন্ট খুঁজে বের করুন এবং আপডেট করুন
+              const index = this.paymentHistory.findIndex(
+                p => p.invoiceNumber === this.currentEditingPayment.invoiceNumber
+              );
+              
+              if (index !== -1) {
+                this.paymentHistory[index] = newPayment;
+              } else {
+                this.paymentHistory.push(newPayment);
+              }
+            } else {
+              // নতুন পেমেন্ট যোগ করুন
+              this.paymentHistory.push(newPayment);
+            }
+            
+            // লোকাল স্টোরেজে সেভ করুন
+            localStorage.setItem('paymentHistory', JSON.stringify(this.paymentHistory));
+            
+            // ফর্ম ক্লিয়ার করুন
+            this.clearForm();
+            this.paymentBox = false;
+            
+            alert('পেমেন্ট সফলভাবে সংরক্ষিত হয়েছে!');
+          } catch (error) {
+            console.error('Submit form error:', error);
+            alert('পেমেন্ট জমা দিতে সমস্যা হয়েছে!');
+          }
+        },
+        
+        clearForm() {
+          this.selectedStudentId = '';
+          this.selectedStudent = null;
+          this.invoiceDate = new Date().toISOString().split('T')[0];
+          this.generateInvoiceNumber();
+          this.deposit = 0;
+          this.discount = 0;
+          this.previousDue = 0;
+          this.fees = [{ name: '', amount: 0, month: '' }];
+          this.startMonth = '';
+          this.endMonth = '';
+          this.search = '';
+          this.isDropdownOpen = false;
+          this.currentEditingPayment = null;
+        },
+        
+        viewReceipt(payment) {
+          this.currentReceipt = payment;
+          this.isPrinting = true;
+        },
+        
+        
+        confirmDelete(payment) {
+          if (confirm('আপনি কি নিশ্চিত এই পেমেন্ট ডিলেট করতে চান?')) {
+            this.deletePayment(payment);
+          }
+        },
+        
+        deletePayment(payment) {
+          this.paymentHistory = this.paymentHistory.filter(p =>
+            p.invoiceNumber !== payment.invoiceNumber
+          );
+          localStorage.setItem('paymentHistory', JSON.stringify(this.paymentHistory));
+          alert('পেমেন্ট সফলভাবে ডিলেট করা হয়েছে');
+          
+          // যদি বর্তমানে এডিট করা পেমেন্ট ডিলেট করা হয়
+          if (this.currentEditingPayment && this.currentEditingPayment.invoiceNumber === payment.invoiceNumber) {
+            this.clearForm();
+          }
+        }
+      };
+    }
+  </script>
+</body>
+
+</html>
