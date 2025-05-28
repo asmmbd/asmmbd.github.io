@@ -386,6 +386,8 @@
             const examMatch = !this.filters.exam || result.examName === this.filters.exam;
             return classMatch && examMatch;
           });
+
+          console.log(this.filteredResults)
         },
         
         printResults() {
