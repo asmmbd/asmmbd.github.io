@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাদ্রাসা পরীক্ষার প্রশ্ন প্রণয়ন সিস্টেম</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] {
+      display: none !important;
+    }
+    
+    .arabic {
+      direction: rtl;
+      font-family: 'Traditional Arabic', Arial, sans-serif;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50" x-data="app()" x-init="init()" x-cloak>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center text-green-800 mb-8">মাদ্রাসা পরীক্ষার প্রশ্ন প্রণয়ন সিস্টেম</h1>
+    
+    <!-- ক্লাস ও বিষয় নির্বাচন -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 class="text-xl font-semibold mb-4 text-gray-800">পরীক্ষার তথ্য</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">ক্লাস নির্বাচন করুন</label>
+          <select x-model="selectedClass" class="w-full p-2 border border-gray-300 rounded-md" @change="loadSubjects()">
+            <option value="">ক্লাস নির্বাচন করুন</option>
+            <template x-for="cls in classes" :key="cls">
+              <option x-text="cls" :value="cls"></option>
+            </template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">বিষয় নির্বাচন করুন</label>
+          <select x-model="selectedSubject" class="w-full p-2 border border-gray-300 rounded-md" @change="loadQuestions()">
+            <option value="">বিষয় নির্বাচন করুন</option>
+            <template x-for="subject in subjects" :key="subject">
+              <option x-text="subject" :value="subject"></option>
+            </template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">পরীক্ষার নাম</label>
+          <input type="text" x-model="examName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="মধ্যবর্তী/বার্ষিক পরীক্ষা">
+        </div>
+      </div>
+    </div>
+    
+    <!-- প্রশ্ন ব্যাংক ও নির্বাচিত প্রশ্ন -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- প্রশ্ন ব্যাংক -->
+      <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">প্রশ্ন ব্যাংক</h2>
+        <div class="mb-4 flex justify-between items-center">
+          <div class="flex space-x-2">
+            <select x-model="filterType" class="p-2 border border-gray-300 rounded-md">
+              <option value="all">সকল প্রশ্ন</option>
+              <option value="mcq">এমসিকিউ</option>
+              <option value="written">লিখিত</option>
+            </select>
+            <input type="text" x-model="searchQuery" placeholder="প্রশ্ন খুঁজুন..." class="p-2 border border-gray-300 rounded-md">
+          </div>
+          <button @click="showAddQuestionModal = true" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+            নতুন প্রশ্ন যোগ করুন
+          </button>
+        </div>
+        
+        <div class="space-y-4">
+          <template x-for="(question, index) in filteredQuestions" :key="question.id">
+            <div class="border border-gray-200 rounded-md p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="font-medium" x-text="question.text"></span>
+                  <div class="text-sm text-gray-500 mt-1">
+                    <span x-text="question.type === 'mcq' ? 'এমসিকিউ' : 'লিখিত'"></span> |
+                    <span x-text="'মান: ' + question.marks"></span>
+                  </div>
+                </div>
+                <button @click="addToSelected(question)" class="text-green-600 hover:text-green-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </template>
+          <template x-if="filteredQuestions.length === 0">
+            <div class="text-center py-8 text-gray-500">
+              কোন প্রশ্ন পাওয়া যায়নি। নতুন প্রশ্ন যোগ করুন।
+            </div>
+          </template>
+        </div>
+      </div>
+      
+      <!-- নির্বাচিত প্রশ্ন -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">নির্বাচিত প্রশ্ন</h2>
+        <div class="mb-4 flex justify-between items-center">
+          <span class="text-sm font-medium" x-text="'মোট প্রশ্ন: ' + selectedQuestions.length"></span>
+          <span class="text-sm font-medium" x-text="'মোট মান: ' + totalMarks"></span>
+        </div>
+        
+        <div class="space-y-3">
+          <template x-for="(question, index) in selectedQuestions" :key="question.id">
+            <div class="border border-gray-200 rounded-md p-3 flex justify-between items-center">
+              <div>
+                <span class="text-sm" x-text="(index + 1) + '. ' + question.text"></span>
+                <div class="text-xs text-gray-500 mt-1">
+                  <span x-text="question.type === 'mcq' ? 'এমসিকিউ' : 'লিখিত'"></span> |
+                  <span x-text="'মান: ' + question.marks"></span>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button @click="moveQuestionUp(index)" class="text-gray-500 hover:text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <button @click="moveQuestionDown(index)" class="text-gray-500 hover:text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <button @click="removeFromSelected(index)" class="text-red-500 hover:text-red-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </template>
+          <template x-if="selectedQuestions.length === 0">
+            <div class="text-center py-8 text-gray-500">
+              কোন প্রশ্ন নির্বাচন করা হয়নি।
+            </div>
+          </template>
+        </div>
+        
+        <div class="mt-6 flex gap-3 items-center">
+          <button @click="generateQuestionPaper" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+            প্রশ্নপত্র তৈরি করুন
+          </button>
+          <button @click="saveQuestionSet" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
+            প্রশ্ন সেট সংরক্ষণ করুন
+          </button>
+          <button @click="showSavedSetsModal = true" class="w-full bg-gray-600 text-white py-2 rounded-md hover:bg-gray-700">
+            সংরক্ষিত প্রশ্ন সেট
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- নতুন প্রশ্ন যোগ করার মোডাল -->
+  <div x-show="showAddQuestionModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl" @click.away="showAddQuestionModal = false">
+      <div class="p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">নতুন প্রশ্ন যোগ করুন</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">প্রশ্নের ধরন</label>
+            <select x-model="newQuestion.type" class="w-full p-2 border border-gray-300 rounded-md">
+              <option value="written">লিখিত</option>
+              <option value="mcq">এমসিকিউ</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">প্রশ্ন</label>
+            <textarea x-model="newQuestion.text" rows="3" class="w-full p-2 border border-gray-300 rounded-md" placeholder="প্রশ্ন লিখুন..."></textarea>
+          </div>
+          
+          <div x-show="newQuestion.type === 'mcq'">
+            <label class="block text-sm font-medium text-gray-700 mb-1">এমসিকিউ অপশন</label>
+            <div class="space-y-2">
+              <template x-for="(option, index) in newQuestion.options" :key="index">
+                <div class="flex items-center">
+                  <input x-model="newQuestion.options[index]" type="text" class="flex-1 p-2 border border-gray-300 rounded-md" :placeholder="'অপশন ' + (index + 1)">
+                  <button @click="removeMcqOption(index)" class="ml-2 text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </template>
+              <button @click="addMcqOption" class="text-sm text-blue-600 hover:text-blue-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                </svg>
+                অপশন যোগ করুন
+              </button>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">মান</label>
+            <input x-model="newQuestion.marks" type="number" class="w-full p-2 border border-gray-300 rounded-md" placeholder="প্রশ্নের মান">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">অধ্যায়</label>
+            <input x-model="newQuestion.chapter" type="text" class="w-full p-2 border border-gray-300 rounded-md" placeholder="অধ্যায়ের নাম">
+          </div>
+        </div>
+        
+        <div class="mt-6 flex justify-end space-x-3">
+          <button @click="showAddQuestionModal = false" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+            বাতিল করুন
+          </button>
+          <button @click="saveNewQuestion" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+            সংরক্ষণ করুন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- সংরক্ষিত প্রশ্ন সেট মোডাল -->
+  <div x-show="showSavedSetsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl" @click.away="showSavedSetsModal = false">
+      <div class="p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">সংরক্ষিত প্রশ্ন সেট</h3>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">নাম</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ক্লাস</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">বিষয়</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">প্রশ্ন সংখ্যা</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">মোট মান</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ক্রিয়া</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <template x-for="(set, index) in savedQuestionSets" :key="index">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" x-text="set.name"></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="set.class"></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="set.subject"></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="set.questions.length"></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="set.totalMarks"></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <button @click="loadQuestionSet(set)" class="text-blue-600 hover:text-blue-800 mr-3">লোড করুন</button>
+                    <button @click="deleteQuestionSet(index)" class="text-red-600 hover:text-red-800">মুছুন</button>
+                  </td>
+                </tr>
+              </template>
+              <template x-if="savedQuestionSets.length === 0">
+                <tr>
+                  <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">কোন সংরক্ষিত প্রশ্ন সেট নেই</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="mt-6 flex justify-end">
+          <button @click="showSavedSetsModal = false" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
+            বন্ধ করুন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- প্রশ্নপত্র প্রিভিউ মোডাল -->
+  <div x-show="showPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl my-8" @click.away="showPreviewModal = false">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-medium text-gray-900">প্রশ্নপত্র প্রিভিউ</h3>
+          <div class="flex space-x-3">
+            <button @click="printQuestionPaper" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+              প্রিন্ট করুন
+            </button>
+            <button @click="showPreviewModal = false" class="px-3 py-1 bg-gray-600 text-white rounded-md hover:bg-gray-700 text-sm">
+              বন্ধ করুন
+            </button>
+          </div>
+        </div>
+        
+        <div id="questionPaperContent" class="space-y-6">
+          <div class="text-center">
+            <h2 class="text-xl font-bold" x-text="examName || 'পরীক্ষার নাম'"></h2>
+            <p class="mt-1" x-text="selectedClass ? selectedClass + ' শ্রেণী' : 'শ্রেণী'"></p>
+            <p x-text="selectedSubject ? 'বিষয়: ' + selectedSubject : 'বিষয়'"></p>
+            <p class="mt-2">সময়: ২ ঘন্টা ৩০ মিনিট | পূর্ণমান: <span x-text="totalMarks"></span></p>
+          </div>
+          
+          <div class="border-t border-gray-200 pt-4">
+            <h3 class="text-lg font-semibold mb-3">এমসিকিউ অংশ</h3>
+            <div class="space-y-4" x-show="mcqQuestions.length > 0">
+              <template x-for="(question, index) in mcqQuestions" :key="question.id">
+                <div>
+                  <p class="font-medium" x-text="(index + 1) + '. ' + question.text"></p>
+                  <div class="mt-2 ml-4 space-y-1" x-show="question.options && question.options.length > 0">
+                    <template x-for="(option, optIndex) in question.options" :key="optIndex">
+                      <p x-text="String.fromCharCode(97 + optIndex) + ') ' + option"></p>
+                    </template>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-1" x-text="'মান: ' + question.marks"></p>
+                </div>
+              </template>
+            </div>
+            <p x-show="mcqQuestions.length === 0" class="text-gray-500">কোন এমসিকিউ প্রশ্ন নেই</p>
+          </div>
+          
+          <div class="border-t border-gray-200 pt-4">
+            <h3 class="text-lg font-semibold mb-3">লিখিত অংশ</h3>
+            <div class="space-y-4" x-show="writtenQuestions.length > 0">
+              <template x-for="(question, index) in writtenQuestions" :key="question.id">
+                <div>
+                  <p class="font-medium" x-text="(index + 1) + '. ' + question.text"></p>
+                  <p class="text-sm text-gray-600 mt-1" x-text="'মান: ' + question.marks"></p>
+                </div>
+              </template>
+            </div>
+            <p x-show="writtenQuestions.length === 0" class="text-gray-500">কোন লিখিত প্রশ্ন নেই</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('app', () => ({
+        // ডেটা প্রোপার্টিজ
+        classes: ['৬ষ্ঠ শ্রেণী', '৭ম শ্রেণী', '৮ম শ্রেণী', '৯ম শ্রেণী', '১০ম শ্রেণী'],
+        subjects: [],
+        questions: [],
+        selectedQuestions: [],
+        savedQuestionSets: [],
+        
+        selectedClass: '',
+        selectedSubject: '',
+        examName: '',
+        filterType: 'all',
+        searchQuery: '',
+        
+        showAddQuestionModal: false,
+        showSavedSetsModal: false,
+        showPreviewModal: false,
+        
+        newQuestion: {
+          id: null,
+          text: '',
+          type: 'written',
+          marks: 1,
+          chapter: '',
+          options: ['', '', '', '']
+        },
+        
+        // কম্পিউটেড প্রোপার্টিজ
+        get filteredQuestions() {
+          let filtered = this.questions;
+          
+          // ফিল্টার টাইপ অনুযায়ী
+          if (this.filterType !== 'all') {
+            filtered = filtered.filter(q => q.type === this.filterType);
+          }
+          
+          // সার্চ কুয়েরি অনুযায়ী
+          if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            filtered = filtered.filter(q =>
+              q.text.toLowerCase().includes(query) ||
+              (q.chapter && q.chapter.toLowerCase().includes(query))
+            );
+          }
+          
+          return filtered;
+        },
+        
+        get totalMarks() {
+          return this.selectedQuestions.reduce((sum, q) => sum + parseInt(q.marks), 0);
+        },
+        
+        get mcqQuestions() {
+          return this.selectedQuestions.filter(q => q.type === 'mcq');
+        },
+        
+        get writtenQuestions() {
+          return this.selectedQuestions.filter(q => q.type === 'written');
+        },
+        
+        // মেথডস
+        init() {
+          this.loadSavedQuestionSets();
+          
+          // ডেমো ডেটা - বাস্তবে localStorage থেকে লোড হবে
+          if (localStorage.getItem('madrasa_questions') === null) {
+            this.questions = [
+            {
+              id: 1,
+              text: 'কুরআন মজীদ কোন ভাষায় নাযিল হয়েছে?',
+              type: 'mcq',
+              marks: 1,
+              chapter: 'কুরআন পরিচিতি',
+              options: ['আরবি', 'ফারসি', 'উর্দু', 'বাংলা']
+            },
+            {
+              id: 2,
+              text: 'সূরা ফাতিহাকে কেন উম্মুল কুরআন বলা হয়?',
+              type: 'written',
+              marks: 5,
+              chapter: 'সূরা ফাতিহা'
+            },
+            {
+              id: 3,
+              text: 'নিম্নলিখিত কোনটি ইসলামের পঞ্চস্তম্ভের অন্তর্ভুক্ত নয়?',
+              type: 'mcq',
+              marks: 1,
+              chapter: 'ঈমান ও ইসলাম',
+              options: ['সালাত', 'সিয়াম', 'যাকাত', 'জিহাদ']
+            },
+            {
+              id: 4,
+              text: 'রাসূল (সা.)-এর জীবনী থেকে আমরা কী শিক্ষা পাই?',
+              type: 'written',
+              marks: 10,
+              chapter: 'সীরাত'
+            }];
+            this.saveQuestions();
+          } else {
+            this.questions = JSON.parse(localStorage.getItem('madrasa_questions'));
+          }
+        },
+        
+        loadSubjects() {
+          // বাস্তবে ক্লাস অনুযায়ী বিষয় লোড করতে হবে
+          if (this.selectedClass) {
+            this.subjects = ['কুরআন মজীদ', 'হাদীস', 'আকাইদ ও ফিকহ', 'আরবি ব্যাকরণ', 'ইসলামের ইতিহাস'];
+          } else {
+            this.subjects = [];
+          }
+          this.selectedSubject = '';
+        },
+        
+        loadQuestions() {
+          // বাস্তবে ক্লাস ও বিষয় অনুযায়ী প্রশ্ন ফিল্টার করতে হবে
+          // এখানে আমরা শুধু ডেমো দেখাচ্ছি
+        },
+        
+        addToSelected(question) {
+          if (!this.selectedQuestions.some(q => q.id === question.id)) {
+            this.selectedQuestions.push({ ...question });
+          }
+        },
+        
+        removeFromSelected(index) {
+          this.selectedQuestions.splice(index, 1);
+        },
+        
+        moveQuestionUp(index) {
+          if (index > 0) {
+            const temp = this.selectedQuestions[index];
+            this.selectedQuestions[index] = this.selectedQuestions[index - 1];
+            this.selectedQuestions[index - 1] = temp;
+          }
+        },
+        
+        moveQuestionDown(index) {
+          if (index < this.selectedQuestions.length - 1) {
+            const temp = this.selectedQuestions[index];
+            this.selectedQuestions[index] = this.selectedQuestions[index + 1];
+            this.selectedQuestions[index + 1] = temp;
+          }
+        },
+        
+        addMcqOption() {
+          this.newQuestion.options.push('');
+        },
+        
+        removeMcqOption(index) {
+          if (this.newQuestion.options.length > 1) {
+            this.newQuestion.options.splice(index, 1);
+          }
+        },
+        
+        saveNewQuestion() {
+          if (!this.newQuestion.text || !this.newQuestion.marks) {
+            alert('প্রশ্ন এবং মান অবশ্যই填写が必要です');
+            return;
+          }
+          
+          // নতুন ID জেনারেট করুন
+          const newId = this.questions.length > 0 ?
+            Math.max(...this.questions.map(q => q.id)) + 1 :
+            1;
+          
+          const questionToSave = {
+            id: newId,
+            text: this.newQuestion.text,
+            type: this.newQuestion.type,
+            marks: parseInt(this.newQuestion.marks),
+            chapter: this.newQuestion.chapter
+          };
+          
+          if (this.newQuestion.type === 'mcq') {
+            questionToSave.options = this.newQuestion.options.filter(opt => opt.trim() !== '');
+          }
+          
+          this.questions.push(questionToSave);
+          this.saveQuestions();
+          
+          // রিসেট ফর্ম
+          this.newQuestion = {
+            id: null,
+            text: '',
+            type: 'written',
+            marks: 1,
+            chapter: '',
+            options: ['', '', '', '']
+          };
+          
+          this.showAddQuestionModal = false;
+        },
+        
+        saveQuestions() {
+          localStorage.setItem('madrasa_questions', JSON.stringify(this.questions));
+        },
+        
+        generateQuestionPaper() {
+          if (this.selectedQuestions.length === 0) {
+            alert('কোন প্রশ্ন নির্বাচন করা হয়নি।');
+            return;
+          }
+          
+          this.showPreviewModal = true;
+        },
+        
+        printQuestionPaper() {
+          const printContent = document.getElementById('questionPaperContent').innerHTML;
+          const originalContent = document.body.innerHTML;
+          
+          document.body.innerHTML = printContent;
+          window.print();
+          document.body.innerHTML = originalContent;
+          
+          // Alpine.js কম্পোনেন্ট রি-ইনিশিয়ালাইজ করুন
+          Alpine.initTree(document.body);
+        },
+        
+        saveQuestionSet() {
+          if (this.selectedQuestions.length === 0) {
+            alert('কোন প্রশ্ন নির্বাচন করা হয়নি।');
+            return;
+          }
+          
+          if (!this.selectedClass || !this.selectedSubject) {
+            alert('ক্লাস এবং বিষয় নির্বাচন করুন।');
+            return;
+          }
+          
+          const setName = prompt('প্রশ্ন সেটের নাম দিন:', this.examName || `${this.selectedClass} ${this.selectedSubject} প্রশ্নপত্র`);
+          
+          if (setName) {
+            const newSet = {
+              id: Date.now(),
+              name: setName,
+              class: this.selectedClass,
+              subject: this.selectedSubject,
+              questions: [...this.selectedQuestions],
+              totalMarks: this.totalMarks,
+              createdAt: new Date().toISOString()
+            };
+            
+            this.savedQuestionSets.push(newSet);
+            this.saveQuestionSetsToLocalStorage();
+          }
+        },
+        
+        loadQuestionSet(set) {
+          this.selectedClass = set.class;
+          this.selectedSubject = set.subject;
+          this.selectedQuestions = [...set.questions];
+          this.showSavedSetsModal = false;
+        },
+        
+        deleteQuestionSet(index) {
+          if (confirm('আপনি কি এই প্রশ্ন সেট ডিলিট করতে চান?')) {
+            this.savedQuestionSets.splice(index, 1);
+            this.saveQuestionSetsToLocalStorage();
+          }
+        },
+        
+        loadSavedQuestionSets() {
+          const savedSets = localStorage.getItem('madrasa_question_sets');
+          this.savedQuestionSets = savedSets ? JSON.parse(savedSets) : [];
+        },
+        
+        saveQuestionSetsToLocalStorage() {
+          localStorage.setItem('madrasa_question_sets', JSON.stringify(this.savedQuestionSets));
+        }
+      }));
+    });
+  </script>
+</body>
+
+</html>
