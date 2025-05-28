@@ -89,7 +89,7 @@
     <div class="admit">
       <template x-for="(result,id) in filteredResults" :key="id">
         <div class="page relative">
-          <img class="page-im hidden" src="./images/result-page.png" alt="">
+          <img class="page-img" src="./images/result-page.png" alt="">
           <div class="w-full absolute top-20 left-0 text-center">
             <h1 class="text-center font-bold text-5xl" x-text="result.studentId.startsWith('ASMM-') ? 'আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা' : 'জামিয়াতুল উলুম আল ইসলামিয়া'"> আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
             <h1 class="text-center font-bold text-2xl my-2"> মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর। স্থাপিতঃ ২০২২ খ্রি.</h1>
