@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ছাত্রদের রেজাল্ট ম্যানেজমেন্ট</title>
+  <script defer src="/src/alpine.js"></script>
+  <script src="/src/tailwindcss.js"></script>
+  <link href="https://fonts.maateen.me/noto-serif-bengali/font.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      font-family: 'Noto Serif Bengali', serif;
+    }
+    
+    .page {
+      width: 21cm;
+      height: 29.9cm;
+    }
+    
+    .page .page-img {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .flex {
+      width: 100%;
+      display: flex;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      
+      .no-print {
+        display: none !important;
+      }
+      
+      .print-full-width {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+  <div class="p-6 print:p-0">
+    <h1 class="no-print text-4xl font-bold text-center mb-8 text-gray-800">মাদ্রাসার রেজাল্ট ম্যানেজমেন্ট সিস্টেম</h1>
+    
+    <div x-data="app()" class="space-y-6">
+      <!-- Header with school info and controls -->
+      <div class="no-print bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-6 flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="bg-indigo-100 p-3 rounded-full">
+              <i class="fas fa-school text-indigo-600 text-2xl"></i>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">আয়েশা সিদ্দিকা (রা.) মহিলা মাদ্রাসা</h2>
+              <p class="text-gray-600">রেজাল্ট ম্যানেজমেন্ট প্যানেল</p>
+            </div>
+          </div>
+          <button @click="generateReport()" class="w-40 flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md">
+            <i class="fas fa-file-alt"></i>
+            <span>সংরক্ষণ করুন</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Class and Exam Selection Card -->
+      <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+            <i class="fas fa-users-class text-indigo-500"></i>
+            <span>শ্রেণি নির্বাচন</span>
+          </h3>
+          <select x-model="selectedClass" @change="loadStudents()" class="w-full border-2 border-gray-200 rounded-lg p-3 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+            <template x-for="cls in Object.keys(classSubjects)">
+              <option :value="cls" x-text="cls"></option>
+            </template>
+          </select>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
+            <i class="fas fa-clipboard-list text-indigo-500"></i>
+            <span>পরীক্ষা নির্বাচন</span>
+          </h3>
+          <select x-model="selectedExam" class="w-full border-2 border-gray-200 rounded-lg p-3 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+            <option value="প্রথম সাময়িক পরীক্ষা ২০২৫">প্রথম সাময়িক পরীক্ষা ২০২৫</option>
+            <option value="বার্ষিক পরীক্ষা ২০২৫">বার্ষিক পরীক্ষা ২০২৫</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Results Table -->
+      <div class="no-print bg-white p-6 rounded-xl shadow-md overflow-x-auto">
+        <div class="mb-4 flex justify-between items-center">
+          <h3 class="text-xl font-semibold text-gray-800">
+            <i class="fas fa-graduation-cap text-indigo-500 mr-2"></i>
+            ছাত্রদের রেজাল্ট শিট
+          </h3>
+          <div class="text-sm text-gray-500">
+            <span x-text="selectedClass + ' শ্রেণি'"></span> |
+            <span x-text="selectedExam"></span>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-center border-collapse">
+            <thead>
+              <tr class="bg-indigo-600 text-white">
+                <th scope="col" class="p-3 border-b">ক্রমিক</th>
+                <th scope="col" class="p-3 border-b w-60 text-left">নাম</th>
+                <th scope="col" class="p-3 border-b">স্টুডেন্ট আইডি</th>
+                <template x-for="(subject,id) in classSubjects[selectedClass]" :key="id">
+                  <th scope="col" class="p-3 border-b" x-text="subject"></th>
+                </template>
+                <th scope="col" class="p-3 border-b">মোট</th>
+                <th scope="col" class="p-3 border-b">গড়</th>
+                <th scope="col" class="p-3 border-b">স্ট্যাটাস</th>
+                <th scope="col" class="p-3 border-b">পজিশন</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="(student, index) in sortedResults" :key="student.studentId">
+                <tr class="hover:bg-gray-50 transition" :class="{'bg-gray-50': index % 2 === 0}">
+                  <td class="p-3 border-b text-center" x-text="index + 1"></td>
+                  <td class="p-3 border-b text-left" x-text="student.name"></td>
+                  <td class="p-3 border-b text-center" x-text="student.studentId"></td>
+                  <template x-for="(result, subjIndex) in student.results" :key="result.name">
+                    <td class="p-3 border-b">
+                      <div class="flex items-center justify-center gap-2">
+                        <input type="number" x-model.number="student.results[subjIndex].test" @change="updateStudent(student)" class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" min="0" max="20" placeholder="২০">
+                        <span class="text-gray-400">+</span>
+                        <input type="number" x-model.number="student.results[subjIndex].mark" @change="updateStudent(student)" class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" min="0" max="80" placeholder="৮০">
+                      </div>
+                    </td>
+                  </template>
+                  <td class="p-3 border-b text-center font-semibold" x-text="calculateTotal(student.results)"></td>
+                  <td class="p-3 border-b text-center font-semibold" x-text="calculateAverage(student.results)"></td>
+                  <td class="p-3 border-b text-center">
+                    <span x-text="calculateStatus(calculateAverage(student.results))" :class="{
+                            'text-green-600': calculateStatus(calculateAverage(student.results)) === 'মুমতায',
+                            'text-blue-600': calculateStatus(calculateAverage(student.results)) === 'জায়্যিদ জিদ্দান',
+                            'text-indigo-600': calculateStatus(calculateAverage(student.results)) === 'জায়্যিদ',
+                            'text-yellow-600': calculateStatus(calculateAverage(student.results)) === 'মাকবুল',
+                            'text-red-600': calculateStatus(calculateAverage(student.results)) === 'রাসিব'
+                          }"></span>
+                  </td>
+                  <td class="p-3 border-b text-center font-semibold" x-text="calculatePosition(student)"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Empty state -->
+        <div x-show="sortedResults.length === 0" class="py-12 text-center">
+          <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-4"></i>
+          <h4 class="text-xl text-gray-500 font-medium">কোনো ছাত্র পাওয়া যায়নি</h4>
+          <p class="text-gray-400">দয়া করে শ্রেণি নির্বাচন করুন এবং রেজাল্ট এন্ট্রি করুন</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+  
+  <script>
+    const { Client, Databases, Query, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('652c1374db243c864a6c');
+    const databases = new Databases(client);
+    
+    function app() {
+      return {
+        selectedClass: 'পঞ্চম',
+        selectedExam: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
+        students: [],
+        classSubjects: {
+          'প্লে': ['বাংলা', 'কায়দা ও মাখরাজ', 'হাদিস,মাসআলা ও দোয়া', 'দ্বীন শিক্ষা', 'গণিত', 'ইংরেজি', 'আমলী'],
+          'নার্সারি': ['বাংলা', 'কায়দা ও মাখরাজ', 'হাদিস,মাসআলা ও দোয়া', 'আরবী বর্ণ শিক্ষা', 'গণিত', 'ইংরেজি', 'আমলী'],
+          'প্রথম': ['বাংলা', 'কায়দা ও তাজবীদ', 'সাধারণ জ্ঞান', 'হাদিস,মাসআলা ও দোয়া', 'আরবি শিক্ষা', 'গণিত', 'ইংরেজি ও ওয়ার্ড বুক', 'আমলী'],
+          'দ্বিতীয়': ['বাংলা', 'কায়দা ও তাজবীদ', 'ইংরেজি ও ওয়ার্ড বুক', 'হাদিস,মাসআলা ও দোয়া', 'আরবি শিক্ষা', 'গণিত', 'সাধারণ জ্ঞান', 'আমলী'],
+          'তৃতীয়': ['বাংলা', 'আমপারা ও তাজবীদ', 'ইংরেজি ও ওয়ার্ড বুক', 'হাদিস,মাসআলা ও দোয়া', 'আরবী শিক্ষা', 'গণিত', 'সাধারণ জ্ঞান', 'আমলী'],
+          'চতুর্থ': ['বাংলা', 'আমপারা ও তাজবীদ', 'ইংরেজি', 'হাদিস,মাসআলা ও দোয়া', 'সমাজ ও বিজ্ঞান', 'আরবী শিক্ষা', 'গণিত', 'কুরআন শিক্ষা', 'আমলী'],
+          'পঞ্চম': ['বাংলা ও ব্যাকরণ', 'কুরআন ও তাজবীদ', 'ইংরেজি ১ম ও ইংরেজি ২য়', 'ইতিহাস ও ভূগোল', 'তালিমুল ইসলাম ও ইসলামী তাহজিব', 'গণিত', 'এসো আরবি শিখি', 'আমলী'],
+          'হিফজখানা': ['মাসআলা', 'কুরআন', 'তাজবীদ', 'মাসনুন দোয়া ও হাদিস', 'আমলী'],
+          'ষষ্ঠ': ['বাংলা', 'ইংরেজি', 'গণিত', 'মিজানুস সরফ', 'এসো আরবী শিখি', 'তারিখুল ইসলাম', 'বাকারাতুল আদব', 'বেহেশতি জেওর', 'আমলী', 'কোরআন'],
+          'সপ্তম': ['বাংলা', 'নহুমির', ' আল ফিকহুল মুয়াসসার', 'সিরাত', 'ইলমুস সরফ', 'রওজাতুল আদব', 'শরহে মিয়াতে আমল', 'কোরআন', 'আমলী'],
+        },
+        results: [],
+        resultRecords: {},
+        
+        // Initialize: Load saved results from localStorage
+        init() {
+          let promise = databases.listDocuments(
+            '652c16162f939c821f75',
+            '652c16266c0f7c2fccd8',
+            [Query.limit(200)]
+          );
+          promise.then(ress => {
+            this.students = ress.documents.filter(s => s.active)
+            
+            const savedRecords = localStorage.getItem('resultRecords');
+            if (savedRecords) {
+              this.resultRecords = JSON.parse(savedRecords);
+            }
+            this.loadStudents();
+          })
+        },
+        
+        // Load students for the selected class
+        loadStudents() {
+          this.results = this.students
+            .filter(student => student.class === this.selectedClass && student.studentId.startsWith('ASMM-'))
+            .map(student => ({
+              examName: this.selectedExam,
+              name: student.stname,
+              faName: student.faName,
+              maName: student.maName,
+              class: student.class,
+              group: student.group,
+              studentId: student.studentId,
+              results: this.classSubjects[this.selectedClass].map(subject => ({
+                name: subject,
+                test: 0, // Class Test (max 20)
+                mark: 0, // Exam Mark (max 80)
+                total: 0
+              })),
+              total: 0,
+              avg: 0,
+              status: '',
+              position: 0,
+              comment: 'সুন্দর ফলাফলের জন্য অভিনন্দন। আগামীতে আরো ভালো ফলাফলের জন্য দোয়া ও প্রত্যাশা করছি।'
+            }));
+        },
+        
+        // Update student data and save
+        updateStudent(student) {
+          student.results = student.results.map(result => ({
+            ...result,
+            total: (result.test || 0) + (result.mark || 0)
+          }));
+          student.total = this.calculateTotal(student.results);
+          student.avg = this.calculateAverage(student.results);
+          student.status = this.calculateStatus(student.avg);
+          student.position = this.calculatePosition(student);
+          student.comment = this.generateComment(student)
+          this.results = [...this.sortedResults];
+        },
+        
+        // Sorted results by total marks for position
+        get sortedResults() {
+          return this.results.slice().sort((a, b) => this.calculateTotal(b.results) - this.calculateTotal(a.results));
+        },
+        
+        // Calculate total marks
+        calculateTotal(results) {
+          return results.reduce((sum, result) => sum + result.total, 0);
+        },
+        
+        // Calculate average
+        calculateAverage(results) {
+          const total = this.calculateTotal(results);
+          return Math.round(total / results.length);
+        },
+        
+        // Calculate status based on average
+        calculateStatus(avg) {
+          if (avg >= 80) return 'মুমতায';
+          if (avg >= 65) return 'জায়্যিদ জিদ্দান';
+          if (avg >= 50) return 'জায়্যিদ';
+          if (avg >= 40) return 'মাকবুল';
+          return 'রাসিব';
+        },
+        
+        // Calculate position based on total marks
+        calculatePosition(student) {
+          const sorted = this.sortedResults;
+          return sorted.findIndex(s => s.studentId === student.studentId) + 1;
+        },
+        
+        // Generate report
+        generateReport() {
+          if (this.results.length === 0) {
+            alert('কোনো ছাত্রের তথ্য নেই। দয়া করে প্রথমে রেজাল্ট এন্ট্রি করুন।');
+            return;
+          }
+          //console.log(this.results)
+          this.addReasult(this.results)
+        },
+        async addReasult(results) {
+          try {
+            const allResults = results.map(result => ({
+              ...result,
+              results: JSON.stringify(result.results)
+            }));
+            
+            // Use Promise.all for multiple async operations
+            await Promise.all(allResults.map(async (result) => {
+              try {
+                await databases.createDocument(
+                  '652c16162f939c821f75',
+                  '65d42b3c83e7217b2aac',
+                  ID.unique(),
+                  result
+                );
+              } catch (error) {
+                console.error('Error adding result:', error);
+                throw error; // Re-throw to be caught by outer catch
+              }
+            }));
+            
+            alert('Result created successfully!');
+          } catch (error) {
+            console.error('Error in addReasult:', error);
+            alert('Error creating results: ' + error.message);
+          }
+        },
+        generateComment(student) {
+          const avg = this.calculateAverage(student.results);
+          const total = this.calculateTotal(student.results);
+          const status = this.calculateStatus(avg);
+          const position = this.calculatePosition(student);
+          
+          // কমেন্ট টেমপ্লেট
+          const comments = {
+            'মুমতায': [
+              'অভিনন্দন! আপনার অসাধারণ ফলাফল। এভাবেই সামনে এগিয়ে যান।',
+              'আপনার মেধা ও পরিশ্রমের জন্য অভিনন্দন। আল্লাহ আপনাকে আরো সাফল্য দান করুন।',
+              'আপনি শ্রেণির সেরা ছাত্রদের একজন। এই সাফল্য ধরে রাখুন।'
+            ],
+            'জায়্যিদ জিদ্দান': [
+              'ভালো ফলাফলের জন্য অভিনন্দন। আরো ভালো করার চেষ্টা করুন।',
+              'আপনার ফলাফল সন্তোষজনক। সামান্য বেশি চেষ্টা করলে সেরা হতে পারবেন।',
+              'আপনার পরিশ্রম সফল হয়েছে। আরো উন্নতির জন্য চেষ্টা করুন।'
+            ],
+            'জায়্যিদ': [
+              'আপনার ফলাফল ভালো। আরো ভালো করার চেষ্টা করুন।',
+              'আপনার সক্ষমতা আছে, আরো বেশি মনোযোগ দিলে ভালো ফলাফল করতে পারবেন।',
+              'সন্তোষজনক ফলাফল। সামনে আরো ভালো করবেন বলে আশা করি।'
+            ],
+            'মাকবুল': [
+              'আপনার ফলাফল উন্নতির প্রয়োজন। আরো বেশি পড়াশুনা করুন।',
+              'আপনি আরো ভালো করতে পারবেন। বেশি মনোযোগ দিন।',
+              'পরীক্ষায় আরো ভালো করার চেষ্টা করুন। শিক্ষকদের সহায়তা নিন।'
+            ],
+            'রাসিব': [
+              'আপনার ফলাফল সন্তোষজনক নয়। আরো বেশি পড়াশুনা করুন।',
+              'আপনাকে আরো পরিশ্রম করতে হবে। শিক্ষকদের সহায়তা নিন।',
+              'ফলাফল উন্নতির জন্য বিশেষ মনোযোগ প্রয়োজন।'
+            ]
+          };
+          
+          // পজিশন ভিত্তিক অতিরিক্ত কমেন্ট
+          let positionComment = '';
+          if (position === 1) {
+            positionComment = 'আপনি শ্রেণিতে প্রথম হয়েছেন! আল্লাহ আপনার মেধা আরো বৃদ্ধি করুন।';
+          } else if (position <= 3) {
+            positionComment = 'আপনি শ্রেণিতে শীর্ষস্থানীয় ছাত্রদের একজন।';
+          } else if (position <= 10) {
+            positionComment = 'আপনি শ্রেণিতে প্রথম দশে আছেন। আরো ভালো করার চেষ্টা করুন।';
+          }
+          
+          // র্যান্ডম কমেন্ট সিলেক্ট করা
+          const statusComments = comments[status] || comments['মাকবুল'];
+          const randomComment = statusComments[Math.floor(Math.random() * statusComments.length)];
+          
+          // ফাইনাল কমেন্ট তৈরি
+          let finalComment = randomComment;
+          if (positionComment) {
+            finalComment += ' ' + positionComment;
+          }
+          
+          // বিশেষ ক্ষেত্রে অতিরিক্ত পরামর্শ
+          if (avg < 50) {
+            finalComment += ' দয়া করে আপনার দুর্বল বিষয়গুলো চিহ্নিত করে সেগুলোতে বেশি সময় দিন।';
+          }
+          
+          return finalComment;
+        },
+        getGrade(score) {
+          let grade
+          if (score >= 80) {
+            grade = "মুমতায";
+          } else if (score >= 65) {
+            grade = "জায়্যিদ জিদ্দান";
+          } else if (score >= 50) {
+            grade = "জায়্যিদ";
+          } else if (score >= 40) {
+            grade = "মাকবুল";
+          } else {
+            grade = "রাসিব";
+          }
+          return grade
+        },
+        
+        getBangla(x) {
+          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+          var retStr = String(x);
+          for (let n in numbers) {
+            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+          }
+          return retStr;
+        },
+        
+        // Print report
+        printReport() {
+          window.print();
+        }
+      };
+    }
+  </script>
+</body>
+
+</html>
