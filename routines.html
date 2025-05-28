@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ক্লাস রুটিন</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.maateen.me/noto-serif-bengali/font.css" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Noto Serif Bengali', serif;
+    }
+    
+    table,
+    tr,
+    th,
+    td {
+      border: 1px solid #898A94;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <div class="p-4">
+    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">ক্লাস রুটিন</h1>
+    
+    <div x-data="classRoutineManager()">
+      
+      <!-- Routine Table -->
+      <div class="w-full overflow-x-auto">
+        <div class="w-full flex items-center justify-between mb-4 print:hidden">
+          <h2 class="text-xl font-bold">মাদ্রাসার সকল শ্রেণীর ক্লাস রুটিন - ২০২৫</h2>
+          <div class="flex items-center gap-4">
+          <button @click="addMode = true" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">রুটিন তৈরি করুন</button>
+          <button @click="print()" class="bg-emerald-500 text-white px-4 py-2 rounded hover:bg-emerald-500">রুটিন প্রিন্ট করুন</button>
+          </div>
+        </div>
+        <table class="w-full bg-white rounded-lg shadow-md">
+          <thead>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="p-2" rowspan="2">ক্লাস</th>
+              <th class="p-2">১ম পিরিয়ড</th>
+              <th class="p-2">২য় পিরিয়ড</th>
+              <th class="p-2">৩য় পিরিয়ড</th>
+              <th class="p-2">৪র্থ পিরিয়ড</th>
+              <th class="p-2">৫ম পিরিয়ড</th>
+              <th class="p-2">৬ষ্ঠ পিরিয়ড</th>
+              <th class="p-2">৭ম পিরিয়ড</th>
+              <th class="p-2">৮ম পিরিয়ড</th>
+              <th class="p-2 print:hidden" rowspan="2">ক্রিয়া</th>
+            </tr>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="p-2">০৯.০০ - ০৯.৩০</th>
+              <th class="p-2">০৯.৩১ - ১০.০০</th>
+              <th class="p-2">১০.০১ - ১০.৩০</th>
+              <th class="p-2">১০.৩১ - ১১.০০</th>
+              <th class="p-2">১১.০১ - ১১.৩০</th>
+              <th class="p-2">১১.৩১ - ১২.০০</th>
+              <th class="p-2">১২.০১ - ১২.৩০</th>
+              <th class="p-2">১২.৩১ - ০১.০০</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="routine in routines" :key="routine.id">
+              <tr class="border-b">
+                <td class="p-2" x-text="routine.className"></td>
+                <td class="p-2" x-text="routine.periods[0].subject + (routine.periods[0].teacher ? ' (' + routine.periods[0].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[1].subject + (routine.periods[1].teacher ? ' (' + routine.periods[1].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[2].subject + (routine.periods[2].teacher ? ' (' + routine.periods[2].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[3].subject + (routine.periods[3].teacher ? ' (' + routine.periods[3].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[4].subject + (routine.periods[4].teacher ? ' (' + routine.periods[4].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[5].subject + (routine.periods[5].teacher ? ' (' + routine.periods[5].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[6].subject + (routine.periods[6].teacher ? ' (' + routine.periods[6].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="p-2" x-text="routine.periods[7].subject + (routine.periods[7].teacher ? ' (' + routine.periods[7].teacher + ')' : 'ক্লাস নেই')"></td>
+                <td class="border-0 p-2 flex space-x-2 print:hidden">
+                  <button @click="editRoutine(routine)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">আপডেট</button>
+                  <button @click="deleteRoutine(routine.id)" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">ডিলিট</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Add Class Routine Form -->
+      <div x-show="addMode" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center" x-transition>
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl overflow-y-auto max-h-[80vh]">
+          <h2 class="text-xl font-bold mb-4">নতুন ক্লাস রুটিন তৈরি করুন</h2>
+          <div class="grid gap-4">
+            <label class="block">
+              <span class="text-gray-700">ক্লাসের নাম:</span>
+              <input type="text" x-model="newClass.className" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="যেমন: পঞ্চম">
+            </label>
+            <template x-for="(period, index) in newClass.periods" :key="index">
+              <div class="grid md:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="text-gray-700" x-text="'পিরিয়ড ' + (index + 1) + ' - বিষয়:'"></span>
+                  <input type="text" x-model="newClass.periods[index].subject" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" :placeholder="'পিরিয়ড ' + (index + 1) + ' এর বিষয়'">
+                </label>
+                <label class="block">
+                  <span class="text-gray-700" x-text="'পিরিয়ড ' + (index + 1) + ' - শিক্ষক:'"></span>
+                  <input type="text" x-model="newClass.periods[index].teacher" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" :placeholder="'পিরিয়ড ' + (index + 1) + ' এর শিক্ষক'">
+                </label>
+              </div>
+            </template>
+            <div class="mt-6 flex space-x-2">
+              <button @click="addClassRoutine" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">রুটিন তৈরি করুন</button>
+              <button @click="addMode = false" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">বাতিল</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Edit Routine Modal -->
+      <div x-show="editMode" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center" x-transition>
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl overflow-y-auto max-h-[80vh]">
+          <h2 class="text-xl font-bold mb-4 sticky top-0 bg-white z-10">রুটিন আপডেট করুন</h2>
+          <div class="grid gap-4">
+            <label class="block">
+              <span class="text-gray-700">ক্লাসের নাম:</span>
+              <input type="text" x-model="editRoutineData.className" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="যেমন: পঞ্চম">
+            </label>
+            <template x-for="(period, index) in editRoutineData.periods" :key="index">
+              <div class="grid md:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="text-gray-700" x-text="'পিরিয়ড ' + (index + 1) + ' - বিষয়:'"></span>
+                  <input type="text" x-model="editRoutineData.periods[index].subject" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" :placeholder="'পিরিয়ড ' + (index + 1) + ' এর বিষয়'">
+                </label>
+                <label class="block">
+                  <span class="text-gray-700" x-text="'পিরিয়ড ' + (index + 1) + ' - শিক্ষক:'"></span>
+                  <input type="text" x-model="editRoutineData.periods[index].teacher" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" :placeholder="'পিরিয়ড ' + (index + 1) + ' এর শিক্ষক'">
+                </label>
+              </div>
+            </template>
+            <div class="mt-6 flex space-x-2">
+              <button @click="updateRoutine" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">সংরক্ষণ</button>
+              <button @click="editMode = false" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">বাতিল</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('classRoutineManager', () => ({
+        routines: []
+          /* [
+                 {
+                   "id": "1",
+                   "className": "শিশু শ্রেণী",
+                   "periods": [
+                     { "subject": "আরবি বর্ণমালা", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "ইসলামিক গান", "teacher": "আয়েশা বেগম" },
+                     { "subject": "প্রাথমিক দুআ", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "ছোটদের কুরআন", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা বর্ণমালা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "চিত্রাঙ্কন", "teacher": "সুমাইয়া আক্তার" }
+                   ]
+                 },
+                 {
+                   "id": "2",
+                   "className": "১ম শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "3",
+                   "className": "২য় শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "4",
+                   "className": "৩য় শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "5",
+                   "className": "৪র্থ শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "6",
+                   "className": "৫ম শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "7",
+                   "className": "৬ষ্ঠ শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "8",
+                   "className": "৭ম শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "9",
+                   "className": "৮ম শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 },
+                 {
+                   "id": "10",
+                   "className": "৯ম-১০ম শ্রেণী",
+                   "periods": [
+                     { "subject": "কুরআন তিলাওয়াত", "teacher": "মুহাম্মদ আলী" },
+                     { "subject": "আরবি ব্যাকরণ", "teacher": "ফাতিমা খাতুন" },
+                     { "subject": "ইসলামিক ইতিহাস", "teacher": "আয়েশা বেগম" },
+                     { "subject": "বাংলা", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "ইংরেজি", "teacher": "রহিমা খাতুন" },
+                     { "subject": "গণিত", "teacher": "রহিমা খাতুন" },
+                     { "subject": "বিজ্ঞান", "teacher": "সুমাইয়া আক্তার" },
+                     { "subject": "নৈতিক শিক্ষা", "teacher": "আয়েশা বেগম" }
+                   ]
+                 }]*/
+          ,
+        editMode: false,
+        addMode: false,
+        newClass: {
+          id: '',
+          className: '',
+          periods: [
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' }
+          ]
+        },
+        editRoutineData: {
+          id: '',
+          className: '',
+          periods: [
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' },
+            { subject: '', teacher: '' }
+          ]
+        },
+        async loadRoutines() {
+          const ress = await fetch('https://67d680f1286fdac89bc2170c.mockapi.io/api/routines');
+          this.routines = await ress.json();
+        },
+        init() {
+          this.loadRoutines()
+          /*const savedRoutines = localStorage.getItem('routines');
+          if (savedRoutines) {
+            this.routines = JSON.parse(savedRoutines);
+          }*/
+        },
+        
+        addClassRoutine() {
+          if (!this.newClass.className.trim()) {
+            alert('ক্লাসের নাম দিন!');
+            return;
+          }
+          const newRoutine = {
+            id: Date.now().toString(),
+            className: this.newClass.className,
+            periods: this.newClass.periods.map(period => ({ ...period }))
+          };
+          this.routines.push(newRoutine);
+          this.saveToLocalStorage();
+          this.resetNewClass();
+        },
+        
+        editRoutine(routine) {
+          this.editRoutineData = {
+            id: routine.id,
+            className: routine.className,
+            periods: routine.periods.map(period => ({ subject: period.subject, teacher: period.teacher }))
+          };
+          this.editMode = true;
+        },
+        
+        async updateRoutine() {
+          const ress = await fetch(`https://67d680f1286fdac89bc2170c.mockapi.io/api/routines/${this.editRoutineData.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.editRoutineData)
+          })
+          
+          if(ress){
+            console.log(ress)
+          }
+          const index = this.routines.findIndex(r => r.id === this.editRoutineData.id);
+          if (index !== -1) {
+            this.routines[index] = {
+              id: this.editRoutineData.id,
+              className: this.editRoutineData.className,
+              periods: this.editRoutineData.periods.map(period => ({ ...period }))
+            };
+            this.saveToLocalStorage();
+          }
+          console.log(this.editRoutineData)
+          this.editMode = false;
+        },
+        
+        deleteRoutine(id) {
+          this.routines = this.routines.filter(r => r.id !== id);
+          this.saveToLocalStorage();
+        },
+        
+        resetNewClass() {
+          this.newClass = {
+            id: '',
+            className: '',
+            periods: [
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' },
+              { subject: '', teacher: '' }
+            ]
+          };
+        },
+        
+        saveToLocalStorage() {
+          localStorage.setItem('routines', JSON.stringify(this.routines));
+        }
+      }));
+    });
+  </script>
+</body>
+
+</html>
