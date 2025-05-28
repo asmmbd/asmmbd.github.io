@@ -309,10 +309,11 @@
                 className: '',
                 examName: '',
                 studentId: '',
+                branch: 'ASMM-'
                 async searchResult() {
                     console.log(this.examName, this.className, this.studentId)
                     try {
-                        const response = await databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.equal("studentId", this.studentId), Query.equal("class", this.className), Query.equal("examName", this.examName)]);
+                        const response = await databases.listDocuments('652c16162f939c821f75', '65d42b3c83e7217b2aac', [Query.equal("studentId", this.branch+this.studentId), Query.equal("class", this.className), Query.equal("examName", this.examName)]);
                         console.log(response.documents)
                         this.result = response.documents[0];
                     } catch (error) {
