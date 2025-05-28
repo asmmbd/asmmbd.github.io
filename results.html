@@ -237,6 +237,10 @@
                                 <p class="text-gray-600">গড় নম্বর</p>
                                 <p class="text-2xl font-bold text-green-800" x-text="getBangla(result.avg)">5.00</p>
                             </div>
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <p class="text-gray-600">শ্রেণীতে অবস্থান</p>
+                                <p class="text-2xl font-bold text-green-800" x-text="getBangla(result.position)">5.00</p>
+                            </div>
                         </div>
                         
                         <!-- একশন বাটন -->
@@ -300,8 +304,10 @@
         
         function data() {
             return {
-                examNames: ['প্রথম সাময়িক পরীক্ষা ২০২৪', 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৪'],
+                examNames: ['প্রথম সাময়িক পরীক্ষা ২০২৪', 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৪', 'বার্ষিক পরীক্ষা ২০২৪','প্রথম সাময়িক পরীক্ষা ২০২৫'],
                 classes: [
+                    'প্লে',
+                    'নার্সারি',
                     'শিশু',
                     'প্রথম',
                     'দ্বিতীয়',
