@@ -1,409 +1,984 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>ছাত্র ব্যবস্থাপনা | মাদরাসা এডমিন</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-        * {
-      font-family: SolaimanLipi;
+    * {
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    
+    .sidebar {
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar-toggle {
+      display: none;
+    }
+    
+    .form-section {
+      background-color: #f8fafc;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .tooltip {
+      position: relative;
+    }
+    
+    .tooltip:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        z-index: 50;
+      }
+      
+      .sidebar-toggle {
+        display: block;
+      }
     }
   </style>
 </head>
 
-<body>
-  <div class="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-xl bg-clip-border" x-data="data()">
-    <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none bg-clip-border">
-      <div class="flex items-center justify-between gap-8 mb-8">
-        <div>
-          <h5 class="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-            স্টুডেন্ট লিস্ট
-          </h5>
-          <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-            সকল শিক্ষার্থীর বিস্তারিত তথ্য
-          </p>
+<body class="bg-gray-100">
+  <div x-data="studentManagement()" class="flex h-screen">
+    <!-- সাইডবার -->
+    <!-- <include src="/src/components/sidebar"></include> -->
+    
+    <!-- মূল কন্টেন্ট -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- হেডার -->
+      <!-- <include src="/src/components/header"></include> -->
+      
+      <!-- মূল কন্টেন্ট -->
+      <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <div x-show="isLoading" class="fixed inset-0 bg-blackFranky white flex items-center justify-center">
+          <i class="fas fa-spinner fa-spin text-4xl text-gray-500"></i>
+          <p class="mt-2 text-gray-500">ডাটা লোড হচ্ছে...</p>
         </div>
-        <div class="flex flex-col gap-2 shrink-0 sm:flex-row">
-          <button class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-            সব দেখুন
-          </button>
-          <button class="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" stroke-width="2" class="w-4 h-4">
-              <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z">
-              </path>
-            </svg>
-            নতুন যোগ করুন
-          </button>
-        </div>
-      </div>
-      <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-        <div class="block w-full overflow-hidden md:w-max">
-          <nav>
-            <ul role="tablist" class="relative flex flex-row p-1 rounded-lg bg-blue-gray-50 bg-opacity-60">
-              <li role="tab" class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900" data-value="all">
-                <div class="z-20 text-inherit" @click="isShow = 'all'">
-                  &nbsp;&nbsp;View All&nbsp;&nbsp;
-                </div>
-                <div x-show="isShow === 'all'" class="absolute inset-0 z-10 h-full bg-white rounded-md shadow"></div>
-              </li>
-              <li role="tab" class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900" data-value="monitored">
-                <div class="z-20 text-inherit" @click="isShow = 'active'">
-                  &nbsp;&nbsp;Active&nbsp;&nbsp;
-                </div>
-                <div x-show="isShow === 'active'" class="absolute inset-0 z-10 h-full bg-white rounded-md shadow"></div>
-              </li>
-              <li role="tab" class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900" data-value="unmonitored">
-                <div class="z-20 text-inherit" @click="isShow = 'inactive'">
-                  &nbsp;&nbsp;Inactive&nbsp;&nbsp;
-                </div>
-                <div x-show="isShow === 'inactive'" class="absolute inset-0 z-10 h-full bg-white rounded-md shadow"></div>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div class="w-full md:w-72">
-          <div class="relative h-10 w-full min-w-[200px]">
-            <div class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
-              </svg>
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-800">ছাত্র তালিকা</h1>
+            <div class="text-sm text-gray-500 mt-1">
+              মোট <span x-text="filteredStudents.length" class="font-medium"></span> জন ছাত্র
             </div>
-            <input class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 !pr-9 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" placeholder=" " x-model="searchQuery" />
-            <label class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-              Search
-            </label>
+          </div>
+          <div class="flex space-x-3 mt-3 md:mt-0">
+            <button @click="showAddModal = true; selectedStudent = null; resetNewStudent()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center">
+              <i class="fas fa-plus mr-2"></i> নতুন ছাত্র
+            </button>
+            <button @click="exportToExcel()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center">
+              <i class="fas fa-file-excel mr-2"></i> এক্সেল
+            </button>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="p-6 px-3 overflow-scroll rounded-lg">
-      <table class="w-full mt-4 text-left border table-auto min-w-max rounded-lg">
-        <thead>
-          <tr>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              শিক্ষার্থীর নাম
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              আইডি নং 
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              বাবার নাম
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              ক্লাস
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              বিভাগ
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              গ্রাম
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              নাম্বার
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-              অবস্থা
-            </th>
-            <th class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50 text-center">
-              কার্যকলাপ
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-for="student in filteredStudents">
-            <tr x-show="isShow === 'all' || (isShow === 'active' && student.active) || (isShow === 'inactive' && !student.active)">
-              <td class="p-4 border-b border-blue-gray-50">
-                <div class="flex items-center gap-3">
-                  <div class="relative inline-flex">
-                    <img src="https://raw.githubusercontent.com/askmbd/askmbd.github.io/main/src/img/teacher.jpg" alt="avatar" class="inline-block relative object-cover object-center rounded-full w-10 h-10" /><span class="absolute min-w-[12px] min-h-[12px] rounded-full py-1 px-1 text-xs font-medium content-[''] leading-none grid place-items-center bottom-[14%] right-[14%] translate-x-2/4 translate-y-2/4 text-white border-2 border-white" :class="student?.active ? 'bg-green-500' : 'bg-red-500'"></span>
-                  </div>
-                  <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.stname">
-                    John Michael
-                  </p>
-                </div>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.studentId">
-                  Manager
-                </p>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.faName">
-                  Manager
-                </p>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.class">
-                  Manager
-                </p>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.category">
-                  Manager
-                </p>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.parVillage">
-                  Manager
-                </p>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900" x-text="student?.faPhone">
-                  Manager
-                </p>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <div class="w-max">
-                  <div class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap bg-green-500/20" :class="student?.active ? 'text-green-900 bg-green-500/20' : 'text-red-900 bg-red-500/20'">
-                    <span class="" x-text="student?.active ? 'active' : 'inactive'">online</span>
-                  </div>
-                </div>
-              </td>
-              <td class="p-4 border-b border-blue-gray-50">
-                <div class="inline-flex items-center">
-                  <div class="relative inline-block w-8 h-4 rounded-full cursor-pointer">
-                    <input :id="student?.studentId" type="checkbox" class="absolute w-8 h-4 transition-colors duration-300 rounded-full appearance-none cursor-pointer peer bg-gray-100 checked:bg-gray-900 peer-checked:border-gray-900 peer-checked:before:bg-gray-900" :checked="student?.active" @change="()=> updateStudent(student?.studentId, student?.active)" />
-                    <label :for="student?.studentId" class="before:content[''] absolute top-2/4 -left-1 h-5 w-5 -translate-y-2/4 cursor-pointer rounded-full border border-blue-gray-100 bg-white shadow-md transition-all duration-300 before:absolute before:top-2/4 before:left-2/4 before:block before:h-10 before:w-10 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity hover:before:opacity-10 peer-checked:translate-x-full peer-checked:border-gray-900 peer-checked:before:bg-gray-900">
-                      <div class="inline-block p-5 rounded-full top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4" data-ripple-dark="true"></div>
-                    </label>
-                  </div>
-                </div>
-                <button class="bg-black h-8 px-2 text-white rounded-md mx-4" @click="selectedStudent = student">বিস্তারিত</button>
-                <button class="bg-black h-8 px-2 text-white rounded-md mx-4" @click="selectedStudentFee = student">ফি জমা</button>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-
-    <div x-show="selectedStudent" class="fixed inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        
+        <!-- সার্চ ও ফিল্টার -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="relative">
+              <input type="text" x-model.debounce.500="searchTerm" placeholder="নাম বা রোল নম্বর দিয়ে খুঁজুন..." class="w-full p-2 pl-10 border rounded focus:ring-2 focus:ring-green-500">
+              <i class="fas fa-search text-gray-400 absolute left-3 top-3"></i>
+            </div>
+            <select x-model="selectedClass" class="p-2 border rounded focus:ring-2 focus:ring-green-500">
+              <option value="">সকল ক্লাস</option>
+              <option>পঞ্চম</option>
+              <option>ষষ্ঠ</option>
+              <option>সপ্তম</option>
+              <option>অষ্টম</option>
+              <option>নবম</option>
+              <option>দশম</option>
+            </select>
+            <select x-model="selectedGroup" class="p-2 border rounded focus:ring-2 focus:ring-green-500">
+              <option value="">সকল বিভাগ</option>
+              <option>কিতাব বিভাগ</option>
+              <option>হিফজ বিভাগ</option>
+              <option>আলিম বিভাগ</option>
+            </select>
+            <select x-model="selectedStatus" class="p-2 border rounded focus:ring-2 focus:ring-green-500">
+              <option value="">সকল স্ট্যাটাস</option>
+              <option value="active">এক্টিভ</option>
+              <option value="inactive">ইন্যাকটিভ</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- ভিউ অপশন -->
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold text-gray-900">শিক্ষার্থী বিস্তারিত তথ্য</h3>
-          <button @click="selectedStudent = null" class="text-gray-600 hover:text-gray-900">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="space-y-4">
-          <div class="flex justify-center">
-            <img src="https://raw.githubusercontent.com/askmbd/askmbd.github.io/main/src/img/teacher.jpg" alt="Student" class="w-32 h-32 rounded-full object-cover">
+          <div class="flex space-x-2">
+            <button @click="viewMode = 'table'" :class="{'bg-green-100 text-green-800': viewMode === 'table'}" class="p-2 rounded">
+              <i class="fas fa-table"></i>
+            </button>
+            <button @click="viewMode = 'card'" :class="{'bg-green-100 text-green-800': viewMode === 'card'}" class="p-2 rounded">
+              <i class="fas fa-th-large"></i>
+            </button>
           </div>
-          <div class="space-y-2">
-            <p class="text-gray-700"><span class="font-medium">নাম:</span> <span x-text="selectedStudent?.stname"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">রোল নং:</span> <span x-text="selectedStudent?.studentId"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">শ্রেণি:</span> <span x-text="selectedStudent?.class"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">পিতার নাম:</span> <span x-text="selectedStudent?.faName"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">মাতার নাম:</span> <span x-text="selectedStudent?.maName"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">জন্ম তারিখ:</span> <span x-text="selectedStudent?.birthDate"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">মোবাইল:</span> <span x-text="selectedStudent?.faPhone"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">ঠিকানা:</span> <span x-text="selectedStudent?.parVillage"></span> </p>
-            <p class="text-gray-700"><span class="font-medium">ভর্তির তারিখ:</span> <span x-text="selectedStudent?.$createdAt"></span> </p>
+          <div class="text-sm text-gray-500">
+            <span x-text="filteredStudents.length"></span> টি ফলাফল
           </div>
         </div>
-        <div class="mt-4">
-          <button @click="selectedStudent = null" class="w-full px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">বন্ধ করুন</button>
+        
+        <!-- কার্ড ভিউ -->
+        <template x-if="viewMode === 'card'">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="student in paginatedStudents" :key="student.studentId">
+              <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow">
+                <div class="p-4 border-b">
+                  <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-lg" x-text="student.stname"></h3>
+                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded" x-text="student.class"></span>
+                  </div>
+                  <p class="text-gray-600 text-sm" x-text="'রোল: ' + student.studentId"></p>
+                </div>
+                <div class="p-4">
+                  <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                    <div>
+                      <p class="text-gray-500">পিতার নাম</p>
+                      <p x-text="student.faName"></p>
+                    </div>
+                    <div>
+                      <p class="text-gray-500">যোগাযোগ</p>
+                      <p x-text="student.faPhone"></p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between border-t pt-3">
+                    <button @click="viewStudentDetails(student)" class="text-green-600 hover:text-green-800" data-tooltip="বিস্তারিত">
+                      <i class="fas fa-eye"></i> বিস্তারিত
+                    </button>
+                    <div class="flex space-x-2">
+                      <button @click="editStudent(student)" class="text-blue-600 hover:text-blue-800" data-tooltip="এডিট">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button @click="deleteStudent(student)" class="text-red-600 hover:text-red-800" data-tooltip="ডিলিট">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template x-if="filteredStudents.length === 0">
+              <div class="col-span-full text-center py-10 text-gray-500">
+                <i class="fas fa-user-slash text-4xl mb-3"></i>
+                <p>কোন ছাত্র পাওয়া যায়নি</p>
+              </div>
+            </template>
+          </div>
+        </template>
+        
+        <!-- টেবিল ভিউ -->
+        <template x-if="viewMode === 'table'">
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="min-w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortBy('index')">ত্রম</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortBy('studentId')">রোল</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortBy('stname')">নাম</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortBy('class')">ক্লাস</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">পিতার নাম</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">যোগাযোগ</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">শাখা</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <template x-for="(student, index) in paginatedStudents" :key="student.studentId">
+                    <tr class="hover:bg-gray-50" :class="{'bg-red-50' : !student.active}">
+                      <td class="px-6 py-4 whitespace-nowrap" x-text="(currentPage - 1) * itemsPerPage + index + 1"></td>
+                      <td class="px-6 py-4 whitespace-nowrap" x-text="student.studentId"></td>
+                      <td class="px-6 py-4 whitespace-nowrap font-medium" x-text="student.stname"></td>
+                      <td class="px-6 py-4 whitespace-nowrap" x-text="student.class"></td>
+                      <td class="px-6 py-4 whitespace-nowrap" x-text="student.faName"></td>
+                      <td class="px-6 py-4 whitespace-nowrap" x-text="student.faPhone"></td>
+                      <td class="px-6 py-4 whitespace-nowrap" x-text="student.institute"></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right">
+                        <div class="flex justify-end space-x-2">
+                          <button @click="viewStudentDetails(student)" class="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50 tooltip" data-tooltip="বিস্তারিত">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button @click="editStudent(student)" class="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 tooltip" data-tooltip="এডিট">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <label :for="student.studentId" class="relative inline-block w-11 h-6 cursor-pointer">
+                            <input @change="setActive(student)" type="checkbox" :id="student.studentId" class="peer sr-only" :checked="student.active">
+                            <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600"></span>
+                            <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                          </label>
+                          <button @click="deleteStudent(student)" class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 tooltip" data-tooltip="ডিলিট">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                  <template x-if="paginatedStudents.length === 0">
+                    <tr>
+                      <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                        <i class="fas fa-user-slash text-2xl mb-2"></i>
+                        <p>কোন ছাত্র পাওয়া যায়নি</p>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+        
+        
+        <!-- পেজিনেশন -->
+        <div class="flex justify-between items-center mt-6" x-show="filteredStudents.length > 0">
+          <div class="text-sm text-gray-500">
+            দেখানো হচ্ছে <span x-text="Math.min((currentPage-1)*itemsPerPage + 1, filteredStudents.length)"></span> থেকে
+            <span x-text="Math.min(currentPage*itemsPerPage, filteredStudents.length)"></span> এর মধ্যে
+            <span x-text="filteredStudents.length"></span> টি ফলাফল
+          </div>
+          <div class="flex space-x-1">
+            <button @click="currentPage--" :disabled="currentPage === 1" class="px-3 py-1 rounded border" :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <template x-for="page in totalPages" :key="page">
+              <button @click="currentPage = page" class="px-3 py-1 rounded border" :class="{'bg-green-600 text-white': currentPage === page}">
+                <span x-text="page"></span>
+              </button>
+            </template>
+            <button @click="currentPage++" :disabled="currentPage === totalPages" class="px-3 py-1 rounded border" :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages}">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
-      </div>
+        <div x-show="filteredStudents.length === 0" class="text-center py-10 text-gray-500">
+          <i class="fas fa-user-slash text-4xl mb-3"></i>
+          <p>কোন ছাত্র পাওয়া যায়নি</p>
+        </div>
+      </main>
     </div>
-
-    <div class="fixed inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center p-4 z-50" x-show="selectedStudentFee">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 class="text-2xl font-bold mb-4 print:hidden">মাদ্রাসা ফি কালেকশন ইনভয়েস</h1>
-
-        <!-- ফি যোগ করার ফর্ম -->
-        <div class="mb-6 print:hidden">
-          <h2 class="text-xl font-semibold mb-2">ফি যোগ করুন</h2>
-          <template x-for="(fee,index) in fees">
-            <div class="gap-4 mb-2" :class="{
-            'w-full flex items-center' : fees.length > 1,
-            'grid grid-cols-3' : fees.length < 2,
-          }">
-              <!-- ফির নাম সিলেক্ট করুন -->
-              <select x-model="fee.name" class="p-2 border rounded ">
-                <option value="">ফি সিলেক্ট করুন</option>
-                <template x-for="item in predefinedFees" :key="item">
-                  <option x-text="item" :value="item"></option>
-                </template>
-              </select>
-              <input x-model="fee.month" type="month" placeholder="বছর (যেমন: ২০২৫)" class="p-2 border rounded">
-              <input x-model="fee.amount" type="number" placeholder="পরিমাণ" class="p-2 border rounded text-right">
-              <button @click="removeFee(index)" class="text-red-500" x-show="fees.length > 1">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none">
-                  <path d="M19.5 5.5L18.8803 15.5251C18.7219 18.0864 18.6428 19.3671 18.0008 20.2879C17.6833 20.7431 17.2747 21.1273 16.8007 21.416C15.8421 22 14.559 22 11.9927 22C9.42312 22 8.1383 22 7.17905 21.4149C6.7048 21.1257 6.296 20.7408 5.97868 20.2848C5.33688 19.3626 5.25945 18.0801 5.10461 15.5152L4.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                  <path d="M3 5.5H21M16.0557 5.5L15.3731 4.09173C14.9196 3.15626 14.6928 2.68852 14.3017 2.39681C14.215 2.3321 14.1231 2.27454 14.027 2.2247C13.5939 2 13.0741 2 12.0345 2C10.9688 2 10.436 2 9.99568 2.23412C9.8981 2.28601 9.80498 2.3459 9.71729 2.41317C9.32164 2.7167 9.10063 3.20155 8.65861 4.17126L8.05292 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                  <path d="M9.5 16.5L9.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                  <path d="M14.5 16.5L14.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                </svg>
+    
+    <!-- ছাত্র যোগ/এডিট মোডাল -->
+    <div x-show="showAddModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div @click.away="showAddModal = false" class="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold" x-text="selectedStudent ? 'ছাত্র তথ্য আপডেট করুন' : 'নতুন ছাত্র যোগ করুন'"></h2>
+            <button @click="showAddModal = false" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form @submit.prevent="saveStudent" class="space-y-6">
+            <!-- ব্যক্তিগত তথ্য -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">ব্যক্তিগত তথ্য</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">শিক্ষার্থীর নাম (বাংলা) <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.stname" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">শিক্ষার্থীর নাম (ইংরেজি)</label>
+                  <input type="text" x-model="newStudent.stiname" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">শিক্ষার্থী আইডি <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.studentId" class="w-full px-3 py-2 border border-gray-300 rounded-md" required :readonly="selectedStudent">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">শ্রেণী <span class="text-red-500">*</span></label>
+                  <select x-model="newStudent.class" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                    <option value="">নির্বাচন করুন</option>
+                    <option value="পঞ্চম">পঞ্চম</option>
+                    <option value="ষষ্ঠ">ষষ্ঠ</option>
+                    <option value="সপ্তম">সপ্তম</option>
+                    <option value="অষ্টম">অষ্টম</option>
+                    <option value="নবম">নবম</option>
+                    <option value="দশম">দশম</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">বিভাগ</label>
+                  <select x-model="newStudent.group" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option value="">নির্বাচন করুন</option>
+                    <option value="কিতাব বিভাগ">কিতাব বিভাগ</option>
+                    <option value="হিফজ বিভাগ">হিফজ বিভাগ</option>
+                    <option value="আলিম বিভাগ">আলিম বিভাগ</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ধরন <span class="text-red-500">*</span></label>
+                  <select x-model="newStudent.category" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                    <option value="">নির্বাচন করুন</option>
+                    <option value="আনাবাসিক">আনাবাসিক</option>
+                    <option value="আবাসিক">আবাসিক</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জন্ম তারিখ</label>
+                  <input type="date" x-model="newStudent.birthDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">বয়স</label>
+                  <input type="number" x-model="newStudent.age" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জন্ম নিবন্ধন নম্বর</label>
+                  <input type="text" x-model="newStudent.stbirthId" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">রক্তের গ্রুপ</label>
+                  <select x-model="newStudent.bloodGroup" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option value="">নির্বাচন করুন</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- পিতার তথ্য -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">পিতার তথ্য</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">পিতার নাম (বাংলা) <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.faName" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">পিতার নাম (ইংরেজি)</label>
+                  <input type="text" x-model="newStudent.faNameIng" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জাতীয় পরিচয়পত্র নম্বর</label>
+                  <input type="text" x-model="newStudent.faIdNum" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">পেশা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.faProfession" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">মোবাইল নম্বর <span class="text-red-500">*</span></label>
+                  <input type="tel" x-model="newStudent.faPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md" pattern="[0-9]{11}" required>
+                </div>
+              </div>
+            </div>
+            
+            <!-- মাতার তথ্য -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">মাতার তথ্য</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">মাতার নাম (বাংলা) <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.maName" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">মাতার নাম (ইংরেজি)</label>
+                  <input type="text" x-model="newStudent.maNameIng" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জাতীয় পরিচয়পত্র নম্বর</label>
+                  <input type="text" x-model="newStudent.maIdNum" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">পেশা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.maProfession" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">মোবাইল নম্বর</label>
+                  <input type="tel" x-model="newStudent.maPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md" pattern="[0-9]{11}">
+                </div>
+              </div>
+            </div>
+            
+            <!-- বর্তমান ঠিকানা -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">বর্তমান ঠিকানা</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">গ্রাম/মহল্লা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.preVillage" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ওয়ার্ড নং</label>
+                  <input type="text" x-model="newStudent.preWord" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ডাকঘর <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.prePost" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ইউনিয়ন <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.preUni" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">উপজেলা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.preUpojela" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জেলা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.preJela" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+              </div>
+            </div>
+            
+            <!-- স্থায়ী ঠিকানা -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">স্থায়ী ঠিকানা</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">গ্রাম/মহল্লা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.parVillage" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ওয়ার্ড নং</label>
+                  <input type="text" x-model="newStudent.parWord" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ডাকঘর <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.parPost" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ইউনিয়ন <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.parUni" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">উপজেলা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.parUpojela" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জেলা <span class="text-red-500">*</span></label>
+                  <input type="text" x-model="newStudent.parJela" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+              </div>
+            </div>
+            
+            <!-- জরুরী যোগাযোগের তথ্য -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">জরুরী যোগাযোগের তথ্য</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">অভিভাবকের নাম</label>
+                  <input type="text" x-model="newStudent.ovivabok" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">মোবাইল নম্বর</label>
+                  <input type="tel" x-model="newStudent.ovivabokNum" class="w-full px-3 py-2 border border-gray-300 rounded-md" pattern="[0-9]{11}">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">পেশা</label>
+                  <select x-model="newStudent.ovivabokProf" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    <option value="নির্বাচন করুন">নির্বাচন করুন</option>
+                    <option value="ব্যবসায়ী">ব্যবসায়ী</option>
+                    <option value="চাকুরীজীবী">চাকুরীজীবী</option>
+                    <option value="কৃষক">কৃষক</option>
+                    <option value="শিক্ষক">শিক্ষক</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">সম্পর্ক</label>
+                  <input type="text" x-model="newStudent.oviRelation" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ঠিকানা</label>
+                  <input type="text" x-model="newStudent.oviAdress" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+              </div>
+            </div>
+            
+            <!-- পূর্বের শিক্ষা প্রতিষ্ঠানের তথ্য -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">পূর্বের শিক্ষা প্রতিষ্ঠানের তথ্য</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">প্রতিষ্ঠানের নাম</label>
+                  <input type="text" x-model="newStudent.preInsName" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">গ্রাম/মহল্লা</label>
+                  <input type="text" x-model="newStudent.preInsVillage" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ডাকঘর</label>
+                  <input type="text" x-model="newStudent.preInsPost" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ইউনিয়ন</label>
+                  <input type="text" x-model="newStudent.preInsUni" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">উপজেলা</label>
+                  <input type="text" x-model="newStudent.preInsUpojela" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">জেলা</label>
+                  <input type="text" x-model="newStudent.preInsJela" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+              </div>
+            </div>
+            
+            <!-- ফি সংক্রান্ত তথ্য -->
+            <div class="form-section">
+              <h2 class="text-lg font-semibold mb-4">ফি সংক্রান্ত তথ্য</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">মাসিক বেতন <span class="text-red-500">*</span></label>
+                  <input type="number" x-model="newStudent.monthlyFee" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ভর্তি ফি <span class="text-red-500">*</span></label>
+                  <input type="number" x-model="newStudent.admissionFee" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">পরিবহন ফি</label>
+                  <input type="number" x-model="newStudent.transportFee" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">বোর্ডিং ফি</label>
+                  <input type="number" x-model="newStudent.boardingFee" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">আইডি কার্ড ফি</label>
+                  <input type="number" x-model="newStudent.idCardFee" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">ডাইরি ফি</label>
+                  <input type="number" x-model="newStudent.diaryFee" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 pt-4">
+              <button @click="showAddModal = false" type="button" class="px-4 py-2 border rounded hover:bg-gray-100">
+                বাতিল
+              </button>
+              <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                সংরক্ষণ করুন
               </button>
             </div>
-          </template>
-          <button @click="addFee" class="text-blue-500 flex gap-2 print:hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none">
-              <path d="M12 8V16M16 12L8 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z" stroke="currentColor" stroke-width="1.5" />
-            </svg>
-            যোগ করুন
-          </button>
+          </form>
         </div>
-
-
-        <!-- মোট ফি -->
-        <div class="mb-6 flex flex-col items-end gap-2.5">
-          <div class="flex gap-3">
-            <h2 class="text-md">মোট ফি</h2>
-            <p class="text-md" x-text="`৳ ${totalFees}`"></p>
+      </div>
+    </div>
+    
+    <!-- ছাত্র বিস্তারিত মোডাল -->
+    <div x-show="showDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div @click.away="showDetailModal = false" class="bg-white rounded-lg w-full max-w-2xl">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <h2 class="text-xl font-bold" x-text="selectedStudent?.stname"></h2>
+            <button @click="showDetailModal = false" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times"></i>
+            </button>
           </div>
-          <div class="flex gap-3 items-center">
-            <h2 class="text-md">ছাড়</h2>
-            <input class="w-12 h-8" type="number" x-model="discount" />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 class="font-medium text-gray-500 mb-2">ব্যক্তিগত তথ্য</h3>
+              <div class="space-y-2">
+                <p><span class="font-medium">শিক্ষার্থী আইডি:</span> <span x-text="selectedStudent?.studentId"></span></p>
+                <p><span class="font-medium">নাম (ইংরেজি):</span> <span x-text="selectedStudent?.stiname || 'N/A'"></span></p>
+                <p><span class="font-medium">শ্রেণী:</span> <span x-text="selectedStudent?.class"></span></p>
+                <p><span class="font-medium">বিভাগ:</span> <span x-text="selectedStudent?.group || 'N/A'"></span></p>
+                <p><span class="font-medium">ধরন:</span> <span x-text="selectedStudent?.category || 'N/A'"></span></p>
+                <p><span class="font-medium">জন্ম তারিখ:</span> <span x-text="selectedStudent?.birthDate || 'N/A'"></span></p>
+                <p><span class="font-medium">বয়স:</span> <span x-text="selectedStudent?.age || 'N/A'"></span></p>
+                <p><span class="font-medium">রক্তের গ্রুপ:</span> <span x-text="selectedStudent?.bloodGroup || 'N/A'"></span></p>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-500 mb-2">পরিবারের তথ্য</h3>
+              <div class="space-y-2">
+                <p><span class="font-medium">পিতার নাম:</span> <span x-text="selectedStudent?.faName"></span></p>
+                <p><span class="font-medium">পিতার পেশা:</span> <span x-text="selectedStudent?.faProfession || 'N/A'"></span></p>
+                <p><span class="font-medium">পিতার মোবাইল:</span> <span x-text="selectedStudent?.faPhone"></span></p>
+                <p><span class="font-medium">মাতার নাম:</span> <span x-text="selectedStudent?.maName || 'N/A'"></span></p>
+                <p><span class="font-medium">মাতার পেশা:</span> <span x-text="selectedStudent?.maProfession || 'N/A'"></span></p>
+                <p><span class="font-medium">মাতার মোবাইল:</span> <span x-text="selectedStudent?.maPhone || 'N/A'"></span></p>
+              </div>
+            </div>
           </div>
-          <div class="flex gap-3">
-            <h2 class="text-md">মোট টাকা</h2>
-            <p class="text-md" x-text="`৳ ${total}`"></p>
+          <div class="mt-6">
+            <h3 class="font-medium text-gray-500 mb-2">বর্তমান ঠিকানা</h3>
+            <p x-text="`${selectedStudent?.preVillage}, ${selectedStudent?.prePost}, ${selectedStudent?.preUni}, ${selectedStudent?.preUpojela}, ${selectedStudent?.preJela}` || 'N/A'"></p>
           </div>
-          <div class="flex gap-3 items-center">
-            <h2 class="text-md">জমা</h2>
-            <input class="w-12 h-8" type="number" x-model="deposit" />
+          <div class="mt-6">
+            <h3 class="font-medium text-gray-500 mb-2">স্থায়ী ঠিকানা</h3>
+            <p x-text="`${selectedStudent?.parVillage}, ${selectedStudent?.parPost}, ${selectedStudent?.parUni}, ${selectedStudent?.parUpojela}, ${selectedStudent?.parJela}` || 'N/A'"></p>
           </div>
-          <div class="flex gap-3">
-            <h2 class="text-md">বকেয়া</h2>
-            <p class="text-md" x-text="`৳ ${due}`"></p>
+          <div class="mt-6 pt-6 border-t">
+            <h3 class="font-medium text-gray-500 mb-2">অ্যাক্টিভিটি</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-sm font-medium">উপস্থিতি</p>
+                <p class="text-lg font-bold">৮৫%</p>
+              </div>
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-sm font-medium">ফি স্ট্যাটাস</p>
+                <p class="text-lg font-bold text-red-600">বকেয়া (১,২০০ টাকা)</p>
+              </div>
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-sm font-medium">সর্বশেষ পরীক্ষা</p>
+                <p class="text-lg font-bold">৮০%</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end space-x-3 mt-6">
+            <button @click="showDetailModal = false; editStudent(selectedStudent)" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              <i class="fas fa-edit mr-2"></i>এডিট করুন
+            </button>
           </div>
         </div>
-
-        <!-- প্রিন্ট বাটন -->
-        <button @click="printInvoice" class="bg-green-500 text-white p-2 rounded print:hidden">জমা দিন</button>
-        <button @click="selectedStudentFee = null" class="bg-green-500 text-white p-2 rounded print:hidden">বাতিল করুন</button>
       </div>
     </div>
   </div>
-
-
+  
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
-  <script src="https://static.staticsave.com/toaster/toast.js"></script>
+  <!-- Include SheetJS for Excel export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
   <script>
-    const { Client, Databases, Query, ID } = Appwrite;
-    const toast = new Toast();
+    const { Client, Databases, ID, Query } = Appwrite;
     const client = new Client();
     client
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject('652c1374db243c864a6c');
     const databases = new Databases(client);
-
-    function data() {
+    
+    function studentManagement() {
       return {
-        isShow: 'all',
-        searchQuery: '',
-        students: [],
+        isLoading: false,
+        sidebarOpen: window.innerWidth >= 768,
+        viewMode: 'table',
+        searchTerm: '',
+        selectedClass: '',
+        selectedGroup: '',
+        selectedStatus: '', // New property for active/inactive filter
+        currentPage: 1,
+        itemsPerPage: 10,
+        showAddModal: false,
+        showDetailModal: false,
         selectedStudent: null,
-        selectedStudentFee: null,
-        searchStudent() {
-          const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(120)]);
-          promise.then((ress) => {
-            this.students = ress.documents;
-            console.log(this.students)
-          }, function(error) {
-            console.log(error);
-          });
+        sortKey: 'studentId',
+        sortOrder: 'asc',
+        students: [],
+        newStudent: {
+          stname: '',
+          stiname: '',
+          studentId: '',
+          class: '',
+          group: '',
+          category: '',
+          birthDate: '',
+          age: '',
+          stbirthId: '',
+          bloodGroup: '',
+          faName: '',
+          faNameIng: '',
+          faIdNum: '',
+          faProfession: '',
+          faPhone: '',
+          maName: '',
+          maNameIng: '',
+          maIdNum: '',
+          maProfession: '',
+          maPhone: '',
+          preVillage: '',
+          preWord: '',
+          prePost: '',
+          preUni: '',
+          preUpojela: '',
+          preJela: '',
+          parVillage: '',
+          parWord: '',
+          parPost: '',
+          parUni: '',
+          parUpojela: '',
+          parJela: '',
+          ovivabok: '',
+          ovivabokNum: '',
+          ovivabokProf: '',
+          oviRelation: '',
+          oviAdress: '',
+          preInsName: '',
+          preInsVillage: '',
+          preInsPost: '',
+          preInsUni: '',
+          preInsUpojela: '',
+          preInsJela: '',
+          monthlyFee: '',
+          admissionFee: '',
+          transportFee: '',
+          boardingFee: '',
+          idCardFee: '',
+          diaryFee: '',
+          active: true,
+          institute: 'asmm'
+        },
+        resetNewStudent() {
+          this.newStudent = {
+            stname: '',
+            stiname: '',
+            studentId: '',
+            class: '',
+            group: '',
+            category: '',
+            birthDate: '',
+            age: '',
+            stbirthId: '',
+            bloodGroup: '',
+            faName: '',
+            faNameIng: '',
+            faIdNum: '',
+            faProfession: '',
+            faPhone: '',
+            maName: '',
+            maNameIng: '',
+            maIdNum: '',
+            maProfession: '',
+            maPhone: '',
+            preVillage: '',
+            preWord: '',
+            prePost: '',
+            preUni: '',
+            preUpojela: '',
+            preJela: '',
+            parVillage: '',
+            parWord: '',
+            parPost: '',
+            parUni: '',
+            parUpojela: '',
+            parJela: '',
+            ovivabok: '',
+            ovivabokNum: '',
+            ovivabokProf: '',
+            oviRelation: '',
+            oviAdress: '',
+            preInsName: '',
+            preInsVillage: '',
+            preInsPost: '',
+            preInsUni: '',
+            preInsUpojela: '',
+            preInsJela: '',
+            monthlyFee: '',
+            admissionFee: '',
+            transportFee: '',
+            boardingFee: '',
+            idCardFee: '',
+            diaryFee: '',
+            active: true,
+            institute: 'asmm'
+          };
+        },
+        editStudent(student) {
+          this.selectedStudent = { ...student };
+          this.newStudent = { ...student };
+          this.showDetailModal = false;
+          this.showAddModal = true;
+        },
+        viewStudentDetails(student) {
+          this.selectedStudent = { ...student };
+          this.showDetailModal = true;
+        },
+        async deleteStudent(student) {
+          if (confirm(`আপনি কি "${student.stname}" কে ডিলিট করতে চান?`)) {
+            try {
+              this.isLoading = true;
+              await databases.deleteDocument(
+                '652c16162f939c821f75',
+                '652c16266c0f7c2fccd8',
+                student.$id
+              );
+              this.students = this.students.filter(s => s.$id !== student.$id);
+              this.currentPage = 1; // Reset to first page after deletion
+              alert('ছাত্র সফলভাবে ডিলিট করা হয়েছে');
+            } catch (error) {
+              console.error('Error deleting student:', error);
+              alert('ডিলিট করতে সমস্যা হয়েছে');
+            } finally {
+              this.isLoading = false;
+            }
+          }
+        },
+        async saveStudent() {
+          try {
+            this.isLoading = true;
+            const data = { ...this.newStudent };
+            if (this.selectedStudent) {
+              await databases.updateDocument(
+                '652c16162f939c821f75',
+                '652c16266c0f7c2fccd8',
+                this.selectedStudent.$id,
+                data
+              );
+              this.students = this.students.map(s =>
+                s.$id === this.selectedStudent.$id ? { ...s, ...data } : s
+              );
+            } else {
+              const response = await databases.createDocument(
+                '652c16162f939c821f75',
+                '652c16266c0f7c2fccd8',
+                ID.unique(),
+                data
+              );
+              this.students.push(response);
+            }
+            this.showAddModal = false;
+            this.currentPage = 1; // Reset to first page after saving
+            alert('ছাত্র তথ্য সফলভাবে সংরক্ষণ করা হয়েছে');
+          } catch (error) {
+            console.error('Error saving student:', error);
+            alert('তথ্য সংরক্ষণে সমস্যা হয়েছে');
+          } finally {
+            this.isLoading = false;
+          }
+        },
+        exportToExcel() {
+          const worksheet = XLSX.utils.json_to_sheet(this.filteredStudents.map(student => ({
+            'শিক্ষার্থীর নাম': student.stname,
+            'শিক্ষার্থী আইডি': student.studentId,
+            'শ্রেণী': student.class,
+            'বিভাগ': student.group,
+            'পিতার নাম': student.faName,
+            'যোগাযোগ': student.faPhone,
+            'মাতার নাম': student.maName,
+            'জন্ম তারিখ': student.birthDate,
+            'বয়স': student.age,
+            'রক্তের গ্রুপ': student.bloodGroup
+          })));
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, 'Students');
+          XLSX.writeFile(workbook, 'students.xlsx');
+        },
+        sortBy(key) {
+          if (this.sortKey === key) {
+            this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            this.sortKey = key;
+            this.sortOrder = 'asc';
+          }
+          this.currentPage = 1; // Reset to first page on sort
         },
         get filteredStudents() {
-          return this.students.filter(student => {
-            return (this.isShow === 'all' || (this.isShow === 'active' && student.active) || (this.isShow === 'inactive' && !student.active)) &&
-              (student.stname.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                student.studentId.toString().includes(this.searchQuery) ||
-                student.faName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                student.class.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                student.category.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                student.parVillage.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                student.faPhone.toLowerCase().includes(this.searchQuery.toLowerCase()));
-          });
+          return this.students
+            .filter(student => {
+              const matchesSearch =
+                (student.stname && student.stname.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+                (student.studentId && student.studentId.includes(this.searchTerm));
+              const matchesClass = !this.selectedClass || student.class === this.selectedClass;
+              const matchesGroup = !this.selectedGroup || student.group === this.selectedGroup;
+              const matchesStatus = !this.selectedStatus ||
+                (this.selectedStatus === 'active' && student.active) ||
+                (this.selectedStatus === 'inactive' && !student.active);
+              return matchesSearch && matchesClass && matchesGroup && matchesStatus;
+            })
+            .sort((a, b) => {
+              const aValue = a[this.sortKey] || '';
+              const bValue = b[this.sortKey] || '';
+              if (this.sortOrder === 'asc') {
+                return aValue > bValue ? 1 : -1;
+              } else {
+                return aValue < bValue ? 1 : -1;
+              }
+            });
         },
-
-        updateStudent(id, isActive) {
-          const promise = databases.updateDocument('652c16162f939c821f75', '652c16266c0f7c2fccd8', id, { active: !isActive });
-          promise.then((ress) => {
-            toast.success('student update successfully!');
-            this.fetchAllStudents(); // Reload all students and apply filters
-          }, function(error) {
-            console.log(error);
-          });
+        get totalPages() {
+          return Math.ceil(this.filteredStudents.length / this.itemsPerPage) || 1; // Ensure at least 1 page
         },
-
-        getBangla(x) {
-          let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
-          var retStr = String(x);
-          for (let n in numbers) {
-            retStr = retStr.replace(new RegExp(n, 'g'), numbers[n]);
+        get paginatedStudents() {
+          const start = (this.currentPage - 1) * this.itemsPerPage;
+          const end = start + this.itemsPerPage;
+          return this.filteredStudents.slice(start, end);
+        },
+        async setActive(student) {
+          try {
+            this.isLoading = true;
+            await databases.updateDocument(
+              '652c16162f939c821f75',
+              '652c16266c0f7c2fccd8',
+              student.$id, { 
+                active: !student.active,
+                institute: 'asmm'
+              }
+            );
+            this.students = this.students.map(s =>
+              s.$id === student.$id ? { ...s, active: !s.active } : s
+            );
+            this.currentPage = 1; // Reset to first page after status change
+          } catch (error) {
+            console.error('Error updating active status:', error);
+            alert('স্ট্যাটাস আপডেটে সমস্যা হয়েছে');
+          } finally {
+            this.isLoading = false;
           }
-          return retStr;
         },
-        deposit: 0,
-        discount: 0,
-        get due() {
-          return this.totalFees - this.deposit - this.discount;
+        async getAllStudents() {
+          try {
+            this.isLoading = true;
+            let allStudents = [];
+            let offset = 0;
+            const limit = 100;
+            while (true) {
+              const response = await databases.listDocuments(
+                '652c16162f939c821f75',
+                '652c16266c0f7c2fccd8',
+                [Query.limit(limit), Query.offset(offset)]
+              );
+              allStudents = allStudents.concat(response.documents);
+              if (response.documents.length < limit) break;
+              offset += limit;
+            }
+            this.students = allStudents;
+          } catch (error) {
+            console.error('Error fetching students:', error);
+            alert('ছাত্র তালিকা লোডে সমস্যা হয়েছে');
+          } finally {
+            this.isLoading = false;
+          }
         },
-        get total() {
-          return this.totalFees - this.discount;
+        watch: {
+          searchTerm() {
+            this.currentPage = 1; // Reset to first page on search change
+          },
+          selectedClass() {
+            this.currentPage = 1; // Reset to first page on class filter change
+          },
+          selectedGroup() {
+            this.currentPage = 1; // Reset to first page on group filter change
+          },
+          selectedStatus() {
+            this.currentPage = 1; // Reset to first page on status filter change
+          }
         },
-        fees: [{
-          name: '',
-          amount: 0,
-          month: '',
-        }],
-        predefinedFees: ["মাসিক বেতন", "পরিবহন ফি", "বোর্ডিং ফি", "পরীক্ষা ফি", "লাইব্রেরি ফি"],
-        addFee() {
-          this.fees.push({
-            name: '',
-            amount: 0,
-            month: '',
-
-          });
-        },
-        removeFee(index) {
-          this.fees.splice(index, 1);
-        },
-        get totalFees() {
-          return this.fees.reduce((total, fee) => total + parseFloat(fee.amount), 0).toFixed(2);
-        },
-        monthFormat(month) {
-          const date = new Date(month);
-          const formattedDate = new Intl.DateTimeFormat('bn-BD', {
-            year: 'numeric',
-            month: 'long'
-          }).format(date);
-          return formattedDate;
-        },
-        printInvoice() {
-          //window.print()
-          /*const monthlyFeesMonths = this.fees
-            .filter(fee => fee.name === "মাসিক বেতন")
-            .map(fee => this.monthFormat(fee.month));*/
-
-          console.log({
-            studentId: this.selectedStudentFee.studentId,
-            name: this.selectedStudentFee.stname,
-            className: this.selectedStudentFee.class,
-            group: this.selectedStudentFee.group,
-            fees: this.fees,
-            total: this.total,
-            totalFees: this.totalFees,
-            discount: this.discount,
-            due: this.due,
-            deposit: this.deposit
-          });
-          this.selectedStudentFee = null;
-        },
-
         init() {
-          this.searchStudent();
+          this.getAllStudents();
         }
-      }
+      };
     }
   </script>
 </body>
