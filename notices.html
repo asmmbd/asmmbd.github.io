@@ -50,21 +50,31 @@
   </section>
   
   <!-- নোটিশ সেকশন -->
-  <section class="py-12 bg-white">
+  <section class="py-12 bg-white" x-data="noticeApp">
     <div class="container mx-auto px-4">
       <!-- ফিল্টার বাটন -->
       <div class="flex flex-wrap justify-center gap-2 mb-8">
-        <button class="filter-btn px-4 py-2 rounded-full bg-green-600 text-white" data-filter="all">সব নোটিশ</button>
-        <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300" data-filter="important">জরুরি</button>
-        <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300" data-filter="academic">একাডেমিক</button>
-        <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300" data-filter="routine">রুটিন</button>
-        <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300" data-filter="general">সাধারণ</button>
+        <button @click="activeFilter = 'all'" :class="{'bg-green-600 text-white': activeFilter === 'all', 'bg-gray-200 hover:bg-gray-300': activeFilter !== 'all'}" class="filter-btn px-4 py-2 rounded-full transition-colors">
+          সব নোটিশ
+        </button>
+        <button @click="activeFilter = 'high'" :class="{'bg-green-600 text-white': activeFilter === 'high', 'bg-gray-200 hover:bg-gray-300': activeFilter !== 'high'}" class="filter-btn px-4 py-2 rounded-full transition-colors">
+          জরুরি
+        </button>
+        <button @click="activeFilter = 'academic'" :class="{'bg-green-600 text-white': activeFilter === 'academic', 'bg-gray-200 hover:bg-gray-300': activeFilter !== 'academic'}" class="filter-btn px-4 py-2 rounded-full transition-colors">
+          একাডেমিক
+        </button>
+        <button @click="activeFilter = 'routine'" :class="{'bg-green-600 text-white': activeFilter === 'routine', 'bg-gray-200 hover:bg-gray-300': activeFilter !== 'routine'}" class="filter-btn px-4 py-2 rounded-full transition-colors">
+          রুটিন
+        </button>
+        <button @click="activeFilter = 'general'" :class="{'bg-green-600 text-white': activeFilter === 'general', 'bg-gray-200 hover:bg-gray-300': activeFilter !== 'general'}" class="filter-btn px-4 py-2 rounded-full transition-colors">
+          সাধারণ
+        </button>
       </div>
       
       <!-- সার্চ বক্স -->
       <div class="max-w-md mx-auto mb-12">
         <div class="relative">
-          <input type="text" id="notice-search" placeholder="নোটিশ খুঁজুন..." class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+          <input x-model="searchQuery" type="text" id="notice-search" placeholder="নোটিশ খুঁজুন..." class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
           <div class="absolute right-3 top-2.5 text-gray-400">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -74,36 +84,35 @@
       </div>
       
       <!-- নোটিশ লিস্ট -->
-      <div class="max-w-4xl mx-auto space-y-6" id="notice-container" x-data="{
-         notices: [],
-         formatBanglaDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('bn-BD', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            });
-         },
-         init(){
-           fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/notices').then(res=> res.json().then(data => {
-             this.notices = data;
-           }).catch(err => console.error('Failed to fetch videos:', err));
-         }}">
-        <template x-for="notice in notices" :key="notice.id">
-          <div class="notice-card bg-white p-6 rounded-lg shadow-md transition duration-300 important" data-category="important">
+      <div class="max-w-4xl mx-auto space-y-6" id="notice-container">
+        <template x-for="notice in paginatedNotices" :key="notice.id">
+          <div class="notice-card bg-white p-6 rounded-lg shadow-md transition duration-300" :class="{
+                 'important': notice.priority === 'high',
+                 'academic': notice.category === 'academic',
+                 'routine': notice.category === 'routine',
+                 'general': notice.category === 'general'
+               }">
             <div class="flex justify-between items-start mb-2">
-              <h3 class="text-xl font-bold text-gray-800" x-text="notice.title">জরুরি: আগামীকাল ছুটি</h3>
-              <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">জরুরি</span>
+              <h3 class="text-xl font-bold text-gray-800" x-text="notice.title"></h3>
+              <span x-show="notice.priority === 'high'" class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">জরুরি</span>
+              <span x-show="notice.category === 'academic'" class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">একাডেমিক</span>
+              <span x-show="notice.category === 'routine'" class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">রুটিন</span>
+              <span x-show="notice.category === 'general'" class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">সাধারণ</span>
             </div>
-            <p class="text-gray-600 mb-4" x-text="notice.content">আগামীকাল ১৫ জুন জাতীয় শোক দিবস উপলক্ষে একাডেমি বন্ধ থাকবে। সকল শিক্ষার্থী ও শিক্ষকবৃন্দকে বিশেষ দোয়া ও মোনাজাতে অংশগ্রহণের জন্য অনুরোধ করা হলো।</p>
+            <p class="text-gray-600 mb-4" x-text="notice.content"></p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <template x-for="tag in notice.tags || []">
+                <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded" x-text="tag"></span>
+              </template>
+            </div>
             <div class="flex justify-between items-center text-sm text-gray-500">
               <div class="flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
-                প্রকাশ:  <span x-text="notice.createdAt ? formatBanglaDate(notice.createdAt) : ''"></span>
+                প্রকাশ: <span x-text="formatBanglaDate(notice.createdAt)"></span>
               </div>
-              <a href="#" class="text-green-600 hover:text-green-800 font-medium flex items-center">
+              <a :href="'#'+notice.id" class="text-green-600 hover:text-green-800 font-medium flex items-center">
                 বিস্তারিত দেখুন
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -112,75 +121,136 @@
             </div>
           </div>
         </template>
-      
-      <!-- পেজিনেশন -->
-      <div class="flex justify-center mt-12">
-        <nav class="inline-flex rounded-md shadow">
-          <a href="#" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-          </a>
-          <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50">1</a>
-          <a href="#" class="px-4 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">2</a>
-          <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50">3</a>
-          <a href="#" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-            </svg>
-          </a>
-        </nav>
+        <!-- Loading message -->
+        <div x-show="filteredNotices.length === 0 && isLoading" class="text-center py-8">
+          <p class="text-gray-500">
+            নোটিশ লোড হচ্ছে....
+          </p>
+        </div>
+        <!-- No results message -->
+        <div x-show="filteredNotices.length === 0 && !isLoading" class="text-center py-8">
+          <p class="text-gray-500">কোনো নোটিশ পাওয়া যায়নি। অনুগ্রহ করে ভিন্ন শব্দ দিয়ে খুঁজুন বা অন্য ফিল্টার চেষ্টা করুন।</p>
+        </div>
+        
+        <!-- পেজিনেশন -->
+        <div class="flex justify-center mt-12" x-show="filteredNotices.length > 0">
+          <nav class="inline-flex rounded-md shadow">
+            <button @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage === 1" :class="{'opacity-50 cursor-not-allowed': currentPage === 1}" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+            <template x-for="page in pagesToShow" :key="page">
+              <button @click="currentPage = page" :class="{'bg-green-100 text-green-800 border-green-300': currentPage === page, 'bg-white text-gray-500': currentPage !== page}" class="px-4 py-2 border-t border-b border-gray-300 hover:bg-gray-50">
+                <span x-text="page"></span>
+              </button>
+            </template>
+            <button @click="currentPage = Math.min(totalPages, currentPage + 1)" :disabled="currentPage === totalPages" :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages}" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </nav>
+        </div>
       </div>
     </div>
   </section>
   
-  <!-- ফুটার সেকশন -->
   <include src="/src/components/footer"></include>
   <include src="/src/components/bottom-nav"></include>
-  
-  
   <script src="/src/includes.js"></script>
-  
   <script>
-    // ফিল্টার ফাংশনালিটি
-    document.querySelectorAll('.filter-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        // সক্রিয় বাটন স্টাইল আপডেট
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.classList.remove('bg-green-600', 'text-white');
-          btn.classList.add('bg-gray-200', 'hover:bg-gray-300');
-        });
-        button.classList.remove('bg-gray-200', 'hover:bg-gray-300');
-        button.classList.add('bg-green-600', 'text-white');
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('noticeApp', () => ({
+        notices: [],
+        searchQuery: '',
+        activeFilter: 'all',
+        currentPage: 1,
+        itemsPerPage: 5,
+        isLoading: false,
+        init() {
+          // If you want to fetch from API later, uncomment this:
+          this.isLoading = true;
+          fetch('https://678ff67e49875e5a1a93fa27.mockapi.io/api/v1/notices')
+            .then(res => res.json())
+            .then(data => {
+              this.notices = data;
+              this.isLoading = false;
+            }).catch(err => {
+              console.error('Failed to fetch notices:', err);
+              // Fallback to local data if API fails
+              this.notices = this.defaultNotices;
+              this.isLoading = false;
+            });
+        },
         
-        const filter = button.getAttribute('data-filter');
-        const notices = document.querySelectorAll('.notice-card');
-        
-        notices.forEach(notice => {
-          if (filter === 'all' || notice.getAttribute('data-category') === filter) {
-            notice.style.display = 'block';
-          } else {
-            notice.style.display = 'none';
+        formatBanglaDate(dateStr) {
+          try {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('bn-BD', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            });
+          } catch (e) {
+            return dateStr; // Return original if parsing fails
           }
-        });
-      });
-    });
-    
-    // সার্চ ফাংশনালিটি
-    document.getElementById('notice-search').addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase();
-      const notices = document.querySelectorAll('.notice-card');
-      
-      notices.forEach(notice => {
-        const title = notice.querySelector('h3').textContent.toLowerCase();
-        const content = notice.querySelector('p').textContent.toLowerCase();
+        },
         
-        if (title.includes(searchTerm) || content.includes(searchTerm)) {
-          notice.style.display = 'block';
-        } else {
-          notice.style.display = 'none';
+        get filteredNotices() {
+          let filtered = this.notices;
+          
+          // Apply search filter
+          if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            filtered = filtered.filter(notice =>
+              (notice.title && notice.title.toLowerCase().includes(query)) ||
+              (notice.content && notice.content.toLowerCase().includes(query)) ||
+              (notice.tags && notice.tags.some(tag => tag.toLowerCase().includes(query)))
+            );
+          }
+          
+          // Apply category filter
+          if (this.activeFilter !== 'all') {
+            if (this.activeFilter === 'high') {
+              filtered = filtered.filter(notice => notice.priority === 'high');
+            } else {
+              filtered = filtered.filter(notice => notice.category === this.activeFilter);
+            }
+          }
+          
+          // Sort by date (newest first)
+          filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          
+          return filtered;
+        },
+        
+        get paginatedNotices() {
+          const start = (this.currentPage - 1) * this.itemsPerPage;
+          return this.filteredNotices.slice(start, start + this.itemsPerPage);
+        },
+        
+        get totalPages() {
+          return Math.ceil(this.filteredNotices.length / this.itemsPerPage);
+        },
+        
+        get pagesToShow() {
+          const pages = [];
+          const maxVisible = 5;
+          let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+          let end = Math.min(this.totalPages, start + maxVisible - 1);
+          
+          if (end - start + 1 < maxVisible) {
+            start = Math.max(1, end - maxVisible + 1);
+          }
+          
+          for (let i = start; i <= end; i++) {
+            pages.push(i);
+          }
+          
+          return pages;
         }
-      });
+      }));
     });
   </script>
 </body>
