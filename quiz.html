@@ -1,0 +1,3966 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>কুইজ ম্যানেজমেন্ট</title>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+  <div class="p-2 print:p-0">
+    <div x-data="quizManager()" class="bg-white p-4 rounded-lg shadow-md print:p-0 print:shadow-none">
+      <!-- প্রধান হেডার এবং বাটন -->
+      <div class="print:hidden flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">প্রশ্ন তালিকা</h1>
+        <button @click="openModal('add')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">নতুন প্রশ্ন যোগ করুন</button>
+      </div>
+      
+      <!-- উন্নত ফিল্টারিং সেকশন -->
+      <div class="print:hidden mb-4">
+        <div x-show="!showQuestions" class="w-full flex items-center justify-between gap-4">
+          <select x-model="filterSubject" @change="filterQuestions" class="p-2 border rounded w-full sm:w-auto">
+            <option value="">সব বিষয়</option>
+            <option value="আরবি">আরবি ভাষা ও সাহিত্য</option>
+            <option value="হাদিস">হাদিস</option>
+            <option value="ফিকহ">ফিকহ</option>
+            <option value="ইসলামিক ইতিহাস">ইসলামিক ইতিহাস</option>
+            <option value="কুরআন">কুরআন</option>
+            <option value="কুরবানী">কুরবানী</option>
+            <option value="হজ্জ">হজ্জ</option>
+          </select>
+          <input type="text" x-model="searchQuery" @input="filterQuestions" placeholder="প্রশ্ন খুঁজুন..." class="flex-1 p-2 border rounded w-full sm:w-auto">
+          <button @click="generateQuiz" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">কুইজ তৈরি করুন</button>
+        </div>
+        <div x-show="showQuestions" class="flex items-center justify-center gap-4">
+          <button @click="showQuestions = !showQuestions" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">এডিট করুন</button>
+          <button @click="print()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">ডাউনলোড</button>
+          <button @click="showSetting = !showSetting" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">সেটিংস</button>
+        </div>
+      </div>
+      
+      <!-- প্রশ্ন তালিকা -->
+      <div x-show="!showQuestions" class="print:hidden flex flex-col">
+        <div class="-m-1.5 overflow-x-auto">
+          <div class="p-1.5 min-w-full inline-block align-middle">
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="py-3 ps-4">
+                      <div class="flex items-center h-5">
+                        <input id="hs-table-checkbox-all" type="checkbox" @change="toggleAll" x-model="selectAll" class="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500">
+                      </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">প্রশ্ন</th>
+                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase border">বিষয়</th>
+                    <th colspan="4" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase border">অপশনসমূহ</th>
+                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase border">উত্তর</th>
+                    <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action</th>
+                  </tr>
+                </thead>
+                
+                <!-- প্রশ্ন তালিকার টেবিলের tbody অংশ -->
+                <tbody class="divide-y divide-gray-200">
+                  <template x-for="(question, index) in filteredQuestions" :key="index">
+                    <tr>
+                      <td class="py-3 ps-4">
+                        <div class="flex items-center h-5">
+                          <input type="checkbox" :value="question.id" x-bind:checked="selectedQuestions.includes(question.id)" @change="toggleQuestion(question.id, $event.target.checked)" class="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500">
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800" x-text="question.text"></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 border" x-text="question.subject"></td>
+                      <template x-for="option in question.options">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 border" x-text="option"></td>
+                      </template>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center border" x-text="question.correct"></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium border">
+                        <button @click="openModal('edit', index)" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mr-2">এডিট</button>
+                        <button @click="deleteQuestion(index)" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">ডিলিট</button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- জেনারেটেড কুইজ -->
+      <div x-show="showQuestions && generatedQuiz.length > 0" class="w-[21cm] mx-auto mt-6 print:mt-0" :contenteditable="isEditingMode">
+        <h2 class="text-4xl text-center font-semibold">আয়েশা সিদ্দিকা মহিলা মাদরাসা</h2>
+        <h2 x-show="showAddress" class="text-xl text-center font-semibold">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর।</h2>
+        <h2 x-show="showSubject" class="text-xl text-center font-semibold">কুইজ প্রতিযোগিতা- এপ্রিল ২০২৫</h2>
+        <div class="flex items-center justify-between">
+          <p>
+            <span>পূর্ণমান: </span>
+            <span x-text="numberConverter(generatedQuiz.length)"></span>
+          </p>
+          <p>
+            <span>সময়: </span>
+            <span x-text="convertMinutes(generatedQuiz.length < 60 ? generatedQuiz.length : generatedQuiz.length / 2)"></span>
+          </p>
+        </div>
+        <div :class="`p-4 bg-gray-50 rounded shadow grid grid-cols-${columns} gap-2 print:shadow-none`">
+          <template x-for="(question, index) in generatedQuiz" :key="index">
+            <div>
+              <h1 x-text="`${formatNumber(index + 1)}। ${question.text}`"></h1>
+              <ul class="pl-8 grid" :class="columns < 2 ? 'grid-cols-4' : 'grid-cols-2'">
+                <li x-text="`(ক)  ${question.options[0]}`"></li>
+                <li x-text="`(খ)  ${question.options[1]}`"></li>
+                <li x-text="`(গ)  ${question.options[2]}`"></li>
+                <li x-text="`(ঘ)  ${question.options[3]}`"></li>
+              </ul>
+              <p x-show="showAnswer" class="pl-8">
+                <strong>
+                  সঠিক উত্তর:
+                </strong>
+                <span x-text="question.correct"></span>
+              </p>
+            </div>
+          </template>
+        </div>
+      </div>
+      
+      <!-- জেনারেটেড কুইজ -->
+      <div x-show="showMr && generatedQuiz.length > 0" class="w-[21cm] mx-auto mt-6 print:mt-0">
+        <h2 class="text-4xl text-center font-semibold">আয়েশা সিদ্দিকা মহিলা মাদরাসা</h2>
+        <h2 class="text-xl text-center font-semibold">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর।</h2>
+        <h2 class="text-xl text-center font-semibold">কুইজ প্রতিযোগিতা- এপ্রিল ২০২৫</h2>
+        <div class="flex items-center justify-between">
+          <p>
+            <span>পূর্ণমান: </span>
+            <span x-text="numberConverter(generatedQuiz.length * 2)"></span>
+          </p>
+          <p>
+            <span>সময়: </span>
+            <span x-text="convertMinutes(generatedQuiz.length)"></span>
+          </p>
+        </div>
+        <div class="p-4 bg-gray-50 rounded shadow grid grid-cols-4 gap-4 print:shadow-none">
+          <template x-for="(question, index) in generatedQuiz" :key="index">
+            <div class="flex items-center gap-2 mb-2">
+              <span x-text="`${formatNumber(index + 1)} । `"></span>
+              <div class="size-6 rounded-full border grid place-items-center">ক</div>
+              <div class="size-6 rounded-full border grid place-items-center">খ</div>
+              <div class="size-6 rounded-full border grid place-items-center">গ</div>
+              <div class="size-6 rounded-full border grid place-items-center">ঘ</div>
+            </div>
+          </template>
+        </div>
+      </div>
+      
+      <!-- মোডাল -->
+      <div x-show="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+          <h2 class="text-xl font-semibold mb-4" x-text="modalMode === 'add' ? 'নতুন প্রশ্ন যোগ করুন' : 'প্রশ্ন আপডেট করুন'"></h2>
+          <form @submit.prevent="modalMode === 'add' ? addQuestion() : updateQuestion()">
+            <div class="mb-4">
+              <label class="block text-gray-700">বিষয়:</label>
+              <select x-model="currentQuestion.subject" class="w-full p-2 border rounded bg-transparent" required>
+                <option value="আরবি">আরবি</option>
+                <option value="হাদিস">হাদিস</option>
+                <option value="ফিকহ">ফিকহ</option>
+                <option value="ইসলামিক ইতিহাস">ইসলামিক ইতিহাস</option>
+                <option value="কুরআন">কুরআন</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700">প্রশ্ন:</label>
+              <input type="text" x-model="currentQuestion.text" class="w-full p-2 border rounded" required>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
+              <div class="mb-4">
+                <label class="block text-gray-700">অপশন ১:</label>
+                <input type="text" x-model="currentQuestion.options[0]" class="w-full p-2 border rounded" required>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700">অপশন ২:</label>
+                <input type="text" x-model="currentQuestion.options[1]" class="w-full p-2 border rounded" required>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700">অপশন ৩:</label>
+                <input type="text" x-model="currentQuestion.options[2]" class="w-full p-2 border rounded" required>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700">অপশন ৪:</label>
+                <input type="text" x-model="currentQuestion.options[3]" class="w-full p-2 border rounded" required>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700">সঠিক উত্তর:</label>
+              <select x-model="currentQuestion.correct" class="w-full p-2 border rounded bg-transparent" required>
+                <option x-bind:value="currentQuestion.options[0]" x-text="currentQuestion.options[0]"></option>
+                <option x-bind:value="currentQuestion.options[1]" x-text="currentQuestion.options[1]"></option>
+                <option x-bind:value="currentQuestion.options[2]" x-text="currentQuestion.options[2]"></option>
+                <option x-bind:value="currentQuestion.options[3]" x-text="currentQuestion.options[3]"></option>
+              </select>
+            </div>
+            <div class="flex justify-end">
+              <button type="button" @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">বাতিল</button>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">সংরক্ষণ করুন</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- সেটিংস মোডাল -->
+      <div x-show="showSetting" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+          <div class="flex items-center justify-between mb-4 pe-4">
+            <h2 class="text-xl font-semibold">সেটিংস</h2>
+            <button class="text-xl" @click="showSetting = false">
+              ×
+            </button>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-x-3">
+              <label for="hs-tooltip-example" class="text-sm text-gray-500">
+                উত্তর দেখান
+              </label>
+              <label class="relative inline-block w-11 h-6 cursor-pointer">
+                <input @change="showAnswer = !showAnswer" type="checkbox" class="peer sr-only">
+                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-green-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <label for="hs-tooltip-example" class="text-sm text-gray-500">
+                উত্তরপত্র সংযুক্ত করুন
+              </label>
+              <label class="hs-tooltip-toggle relative inline-block w-11 h-6 cursor-pointer">
+                <input @change="showMr = !showMr" type="checkbox" class="peer sr-only">
+                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-green-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <label class="text-sm text-gray-500">
+                সেটকোড
+              </label>
+              <label class="hs-tooltip-toggle relative inline-block w-11 h-6 cursor-pointer">
+                <input type="checkbox" class="peer sr-only">
+                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-green-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <label class="text-sm text-gray-500">
+                বিষয়
+              </label>
+              <label class="relative inline-block w-11 h-6 cursor-pointer">
+                <input type="checkbox" :checked="showSubject" @change="showSubject = !showSubject" class="peer sr-only">
+                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-green-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <label class="text-sm text-gray-500">
+                এডিটিং মুড
+              </label>
+              <label class=" relative inline-block w-11 h-6 cursor-pointer">
+                <input :checked="isEditingMode" @change="isEditingMode = !isEditingMode" type="checkbox" class="peer sr-only">
+                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-green-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <label class="text-sm text-gray-500">
+                ঠিকানা
+              </label>
+              <label class=" relative inline-block w-11 h-6 cursor-pointer">
+                <input type="checkbox" :checked="showAddress" @change="showAddress = !showAddress" class="peer sr-only">
+                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-green-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <span class="text-sm text-gray-500">কলাম</span>
+              <select x-model="columns" class="p-2 border rounded-xl w-full sm:w-auto bg-transparent">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Toast -->
+      <div x-show="selectedQuestions.length && !showQuestions" class="fixed bottom-5 right-5 hs-removing:translate-x-5 hs-removing:opacity-0 max-w-sm transition duration-300 bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-neutral-800 dark:border-neutral-700">
+        <div class="flex p-4">
+          <p class="text-sm text-gray-700 dark:text-neutral-400">
+            <span x-text="numberConverter(selectedQuestions.length)"></span>
+            টি প্রশ্ন সিলেক্ট করা হয়েছে!
+          </p>
+          
+          <div class="ms-3 flex items-center space-x-3">
+            <button @click="generateQuiz" type="button" class="text-blue-600 decoration-2 hover:underline font-medium text-sm focus:outline-hidden focus:underline dark:text-blue-500">
+              কুইজ তৈরি করুন
+            </button>
+            <button @click="toggleAll" type="button" class="inline-flex shrink-0 justify-center items-center size-5 rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:outline-hidden focus:opacity-100 dark:text-white" aria-label="Close">
+              <span class="sr-only">Close</span>
+              <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- End Toast -->
+    </div>
+  </div>
+  <script>
+    function quizManager() {
+      return {
+        questions: [],
+        columns: 2,
+        filterSubject: '',
+        searchQuery: '',
+        filteredQuestions: [],
+        selectedQuestions: [],
+        generatedQuiz: [],
+        isModalOpen: false,
+        showAnswer: false,
+        showMr: false,
+        showQuestions: false,
+        showSetting: false,
+        showSubject: true,
+        showAddress: true,
+        isEditingMode: false,
+        modalMode: 'add',
+        currentQuestion: {
+          id: null,
+          subject: '',
+          text: '',
+          options: ['', '', '', ''],
+          correct: ''
+        },
+        editIndex: null,
+        selectAll: false,
+        
+        init() {
+          if (!this.questions.length) {
+            this.loadSampleQuestions();
+          }
+          this.filterQuestions();
+        },
+        loadSampleQuestions() {
+          this.questions = [
+            {
+              "id": 1,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম খলিফা কে ছিলেন?",
+              "options": ["আবু বকর", "উমর ইবনুল খাত্তাব", "উসমান ইবন আফফান", "আলী ইবন আবি তালিব"],
+              "correct": "আবু বকর"
+            },
+            {
+              "id": 2,
+              "subject": "কুরআন",
+              "text": "কুরআন মজিদে মোট কতটি সূরা রয়েছে?",
+              "options": ["১০০", "১১০", "১১৪", "১২০"],
+              "correct": "১১৪"
+            },
+            {
+              "id": 3,
+              "subject": "হাদিস",
+              "text": "হাদিস সংকলনের সবচেয়ে বিখ্যাত গ্রন্থ কোনটি?",
+              "options": ["সহীহ বুখারী", "সহীহ মুসলিম", "সুনান আবু দাউদ", "জামে তিরমিজী"],
+              "correct": "সহীহ বুখারী"
+            },
+            {
+              "id": 4,
+              "subject": "ফিকহ",
+              "text": "ইসলামে সালাতের পূর্বে ওজু করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 5,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "মক্কা থেকে মদিনায় হিজরত করার ঘটনাকে কী বলা হয়?",
+              "options": ["হিজরত", "গাজওয়া", "জিহাদ", "শাহাদাত"],
+              "correct": "হিজরত"
+            },
+            {
+              "id": 6,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি সবচেয়ে দীর্ঘ?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 7,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম আমল কোনটি?",
+              "options": ["নামাজ", "রোজা", "হজ্জ", "যাকাত"],
+              "correct": "নামাজ"
+            },
+            {
+              "id": 8,
+              "subject": "ফিকহ",
+              "text": "রমজান মাসে রোজা রাখা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 9,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম নারী শহীদ কে ছিলেন?",
+              "options": ["খাদিজা", "ফাতিমা", "সুমাইয়া", "আয়েশা"],
+              "correct": "সুমাইয়া"
+            },
+            {
+              "id": 10,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি সবচেয়ে ছোট?",
+              "options": ["সূরা কাওসার", "সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস"],
+              "correct": "সূরা কাওসার"
+            },
+            {
+              "id": 11,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম জিহাদ কোনটি?",
+              "options": ["যুদ্ধে অংশগ্রহণ", "আত্মসংযম", "জ্ঞান অর্জন", "দান-সদকা"],
+              "correct": "আত্মসংযম"
+            },
+            {
+              "id": 12,
+              "subject": "ফিকহ",
+              "text": "যাকাত প্রদান করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 13,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মসজিদ কোনটি?",
+              "options": ["মসজিদে নববী", "মসজিদে কুবা", "মসজিদে আকসা", "মসজিদে হারাম"],
+              "correct": "মসজিদে কুবা"
+            },
+            {
+              "id": 14,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল হুওয়াল্লাহু আহাদ' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস", "সূরা কাওসার"],
+              "correct": "সূরা ইখলাস"
+            },
+            {
+              "id": 15,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম দান কোনটি?",
+              "options": ["গোপনে দান", "প্রকাশ্যে দান", "ধনীদের দান", "দরিদ্রদের দান"],
+              "correct": "গোপনে দান"
+            },
+            {
+              "id": 16,
+              "subject": "ফিকহ",
+              "text": "হজ্জ পালন করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 17,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুয়াযযিন কে ছিলেন?",
+              "options": ["বিলাল ইবন রাবাহ", "আবু বকর", "উমর ইবনুল খাত্তাব", "আলী ইবন আবি তালিব"],
+              "correct": "বিলাল ইবন রাবাহ"
+            },
+            {
+              "id": 18,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'বিসমিল্লাহির রাহমানির রাহীম' দিয়ে শুরু হয় না?",
+              "options": ["সূরা তাওবা", "সূরা ফাতিহা", "সূরা বাকারা", "সূরা ইখলাস"],
+              "correct": "সূরা তাওবা"
+            },
+            {
+              "id": 19,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম পানীয় কোনটি?",
+              "options": ["পানি", "দুধ", "মধু", "খেজুরের শরবত"],
+              "correct": "পানি"
+            },
+            {
+              "id": 20,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিবলা কোন দিকে?",
+              "options": ["পূর্ব", "পশ্চিম", "উত্তর", "কাবা শরিফের দিকে"],
+              "correct": "কাবা শরিফের দিকে"
+            },
+            {
+              "id": 21,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম যুদ্��� কোনটি?",
+              "options": ["বদরের যুদ্ধ", "উহুদের যুদ্ধ", "খন্দকের যুদ্ধ", "হুনাইনের যুদ্ধ"],
+              "correct": "বদরের যুদ্ধ"
+            },
+            {
+              "id": 22,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আয়াতুল কুরসি' রয়েছে?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 23,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম খাবার কোনটি?",
+              "options": ["খেজুর", "মধু", "দুধ", "গমের রুটি"],
+              "correct": "খেজুর"
+            },
+            {
+              "id": 24,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ফরজ?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 25,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 26,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদুলিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 27,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম কাজ কোনটি?",
+              "options": ["নামাজ", "রোজা", "হজ্জ", "যাকাত"],
+              "correct": "নামাজ"
+            },
+            {
+              "id": 28,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত সুন্নাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 29,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম দাস কে ছিলেন?",
+              "options": ["বিলাল ইবন রাবাহ", "জায়েদ ইবন হারিসা", "আবু বকর", "উমর ইবনুল খাত্তাব"],
+              "correct": "বিলাল ইবন রাবাহ"
+            },
+            {
+              "id": 30,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আতাইনা কাল কাওসার' দিয়ে শুরু হয়?",
+              "options": ["সূরা কাওসার", "সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস"],
+              "correct": "সূরা কাওসার"
+            },
+            {
+              "id": 31,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম সময় কোনটি?",
+              "options": ["ফজরের সময়", "দুপুরের সময়", "সন্ধ্যার সময়", "রাতের সময়"],
+              "correct": "ফজরের সময়"
+            },
+            {
+              "id": 32,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত নফল?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 33,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম নারী কে ছিলেন?",
+              "options": ["খাদিজা", "ফাতিমা", "আয়েশা", "সুমাইয়া"],
+              "correct": "খাদিজা"
+            },
+            {
+              "id": 34,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিল ফালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফালাক", "সূরা নাস", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা ফালাক"
+            },
+            {
+              "id": 35,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম মাস কোনটি?",
+              "options": ["রমজান", "মুহাররম", "রজব", "শাওয়াল"],
+              "correct": "রমজান"
+            },
+            {
+              "id": 36,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ওয়াজিব?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 37,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম পুরুষ কে ছিলেন?",
+              "options": ["আবু বকর", "উমর ইবনুল খাত্তাব", "উসমান ইবন আফফান", "আলী ইবন আবি তালিব"],
+              "correct": "আবু বকর"
+            },
+            {
+              "id": 38,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিন নাস' দিয়ে শুরু হয়?",
+              "options": ["সূরা নাস", "সূরা ফালাক", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা নাস"
+            },
+            {
+              "id": 39,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম রাত কোনটি?",
+              "options": ["লাইলাতুল কদর", "শবে বরাত", "শবে মেরাজ", "শবে কদর"],
+              "correct": "লাইলাতুল কদর"
+            },
+            {
+              "id": 40,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত জামাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 41,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 42,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'বিসমিল্লাহির রাহমানির রাহীম' দিয়ে শুরু হয় না?",
+              "options": ["সূরা তাওবা", "সূরা ফাতিহা", "সূরা বাকারা", "সূরা ইখলাস"],
+              "correct": "সূরা তাওবা"
+            },
+            {
+              "id": 43,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম পানীয় কোনটি?",
+              "options": ["পানি", "দুধ", "মধু", "খেজুরের শরবত"],
+              "correct": "পানি"
+            },
+            {
+              "id": 44,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিবলা কোন দিকে?",
+              "options": ["পূর্ব", "পশ্চিম", "উত্তর", "কাবা শরিফের দিকে"],
+              "correct": "কাবা শরিফের দিকে"
+            },
+            {
+              "id": 45,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম যুদ্ধ কোনটি?",
+              "options": ["বদরের যুদ্ধ", "উহুদের যুদ্ধ", "খন্দকের যুদ্ধ", "হুনাইনের যুদ্ধ"],
+              "correct": "বদরের যুদ্ধ"
+            },
+            {
+              "id": 46,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আয়াতুল কুরসি' রয়েছে?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 47,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম খাবার কোনটি?",
+              "options": ["খেজুর", "মধু", "দুধ", "গমের রুটি"],
+              "correct": "খেজুর"
+            },
+            {
+              "id": 48,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ফরজ?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 49,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 50,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদুলিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 51,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম কাজ কোনটি?",
+              "options": ["নামাজ", "রোজা", "হজ্জ", "যাকাত"],
+              "correct": "নামাজ"
+            },
+            {
+              "id": 52,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত সুন্নাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 53,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম দাস কে ছিলেন?",
+              "options": ["বিলাল ইবন রাবাহ", "জায়েদ ইবন হারিসা", "আবু বকর", "উমর ইবনুল খাত্তাব"],
+              "correct": "বিলাল ইবন রাবাহ"
+            },
+            {
+              "id": 54,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আতাইনা কাল কাওসার' দিয়ে শুরু হয়?",
+              "options": ["সূরা কাওসার", "সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস"],
+              "correct": "সূরা কাওসার"
+            },
+            {
+              "id": 55,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম সময় কোনটি?",
+              "options": ["ফজরের সময়", "দুপুরের সময়", "সন্ধ্যার সময়", "রাতের সময়"],
+              "correct": "ফজরের সময়"
+            },
+            {
+              "id": 56,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত নফল?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 57,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম নারী কে ছিলেন?",
+              "options": ["খাদিজা", "ফাতিমা", "আয়েশা", "সুমাইয়া"],
+              "correct": "খাদিজা"
+            },
+            {
+              "id": 58,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিল ফালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফালাক", "সূরা নাস", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা ফালাক"
+            },
+            {
+              "id": 59,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম মাস কোনটি?",
+              "options": ["রমজান", "মুহাররম", "রজব", "শাওয়াল"],
+              "correct": "রমজান"
+            },
+            {
+              "id": 60,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ওয়াজিব?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 61,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম পুরুষ কে ছিলেন?",
+              "options": ["আবু বকর", "উমর ইবনুল খাত্তাব", "উসমান ইবন আফফান", "আলী ইবন আবি তালিব"],
+              "correct": "আবু বকর"
+            },
+            {
+              "id": 62,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিন নাস' দিয়ে শুরু হয়?",
+              "options": ["সূরা নাস", "সূরা ফালাক", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা নাস"
+            },
+            {
+              "id": 63,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম রাত কোনটি?",
+              "options": ["লাইলাতুল কদর", "শবে বরাত", "শবে মেরাজ", "শবে কদর"],
+              "correct": "লাইলাতুল কদর"
+            },
+            {
+              "id": 64,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত জামাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 65,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 66,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'বিসমিল্লাহির রাহমানির রাহীম' দিয়ে শুরু হয় না?",
+              "options": ["সূরা তাওবা", "সূরা ফাতিহা", "সূরা বাকারা", "সূরা ইখলাস"],
+              "correct": "সূরা তাওবা"
+            },
+            {
+              "id": 67,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম পানীয় কোনটি?",
+              "options": ["পানি", "দুধ", "মধু", "খেজুরের শরবত"],
+              "correct": "পানি"
+            },
+            {
+              "id": 68,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিবলা কোন দিকে?",
+              "options": ["পূর্ব", "পশ্চিম", "উত্তর", "কাবা শরিফের দিকে"],
+              "correct": "কাবা শরিফের দিকে"
+            },
+            {
+              "id": 69,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম যুদ্ধ কোনটি?",
+              "options": ["বদরের যুদ্ধ", "উহুদের যুদ্ধ", "খন্দকের যুদ্ধ", "হুনাইনের যুদ্ধ"],
+              "correct": "বদরের যুদ্ধ"
+            },
+            {
+              "id": 70,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আয়াতুল কুরসি' রয়েছে?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 71,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম খাবার কোনটি?",
+              "options": ["খেজুর", "মধু", "দুধ", "গমের রুটি"],
+              "correct": "খেজুর"
+            },
+            {
+              "id": 72,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ফরজ?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 73,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 74,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদুলিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 75,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম কাজ কোনটি?",
+              "options": ["নামাজ", "রোজা", "হজ্জ", "যাকাত"],
+              "correct": "নামাজ"
+            },
+            {
+              "id": 76,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত সুন্নাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 77,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম দাস কে ছিলেন?",
+              "options": ["বিলাল ইবন রাবাহ", "জায়েদ ইবন হারিসা", "আবু বকর", "উমর ইবনুল খাত্তাব"],
+              "correct": "বিলাল ইবন রাবাহ"
+            },
+            {
+              "id": 78,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আতাইনা কাল কাওসার' দিয়ে শুরু হয়?",
+              "options": ["সূরা কাওসার", "সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস"],
+              "correct": "সূরা কাওসার"
+            },
+            {
+              "id": 79,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম সময় কোনটি?",
+              "options": ["ফজরের সময়", "দুপুরের সময়", "সন্ধ্যার সময়", "রাতের সময়"],
+              "correct": "ফজরের সময়"
+            },
+            {
+              "id": 80,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত নফল?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 81,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম নারী কে ছিলেন?",
+              "options": ["খাদিজা", "ফাতিমা", "আয়েশা", "সুমাইয়া"],
+              "correct": "খাদিজা"
+            },
+            {
+              "id": 82,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিল ফালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফালাক", "সূরা নাস", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা ফালাক"
+            },
+            {
+              "id": 83,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম মাস কোনটি?",
+              "options": ["রমজান", "মুহাররম", "রজব", "শাওয়াল"],
+              "correct": "রমজান"
+            },
+            {
+              "id": 84,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ওয়াজিব?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            {
+              "id": 85,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম পুরুষ কে ছিলেন?",
+              "options": ["আবু বকর", "উমর ইবনুল খাত্তাব", "উসমান ইবন আফফান", "আলী ইবন আবি তালিব"],
+              "correct": "আবু বকর"
+            },
+            {
+              "id": 86,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিন নাস' দিয়ে শুরু হয়?",
+              "options": ["সূরা নাস", "সূরা ফালাক", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা নাস"
+            },
+            {
+              "id": 87,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম রাত কোনটি?",
+              "options": ["লাইলাতুল কদর", "শবে বরাত", "শবে মেরাজ", "শবে কদর"],
+              "correct": "লাইলাতুল কদর"
+            },
+            {
+              "id": 88,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত জামাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 89,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 90,
+              "subject": "কুরআন",
+              "text": "কুরআনে�� কোন সূরাটি 'বিসমিল্লাহির রাহমানির রাহীম' দিয়ে শুরু হয় না?",
+              "options": ["সূরা তাওবা", "সূরা ফাতিহা", "সূরা বাকারা", "সূরা ইখলাস"],
+              "correct": "সূরা তাওবা"
+            },
+            {
+              "id": 91,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম পানীয় কোনটি?",
+              "options": ["পানি", "দুধ", "মধু", "খেজুরের শরবত"],
+              "correct": "পানি"
+            },
+            {
+              "id": 92,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিবলা কোন দিকে?",
+              "options": ["পূর্ব", "পশ্চিম", "উত্তর", "কাবা শরিফের দিকে"],
+              "correct": "কাবা শরিফের দিকে"
+            },
+            {
+              "id": 93,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম যুদ্ধ কোনটি?",
+              "options": ["বদরের যুদ্ধ", "উহুদের যুদ্ধ", "খন্দকের যুদ্ধ", "হুনাইনের যুদ্ধ"],
+              "correct": "বদরের যুদ্ধ"
+            },
+            {
+              "id": 94,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আয়াতুল কুরসি' রয়েছে?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 95,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম খাবার কোনটি?",
+              "options": ["খেজুর", "মধু", "দুধ", "গমের রুটি"],
+              "correct": "খেজুর"
+            },
+            {
+              "id": 96,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত ফরজ?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৪"
+            },
+            {
+              "id": 97,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মুসলিম শিশু কে ছিলেন?",
+              "options": ["আলী ইবন আবি তালিব", "জায়েদ ইবন হারিসা", "আবদুল্লাহ ইবন উমর", "হাসান ইবন আলী"],
+              "correct": "আলী ইবন আবি তালিব"
+            },
+            {
+              "id": 98,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদুলিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 99,
+              "subject": "হাদিস",
+              "text": "হাদিস অনুযায়ী, সর্বোত্তম কাজ কোনটি?",
+              "options": ["নামাজ", "রোজা", "হজ্জ", "যাকাত"],
+              "correct": "নামাজ"
+            },
+            {
+              "id": 100,
+              "subject": "ফিকহ",
+              "text": "নামাজে কত রাকাত সুন্নাত?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "২"
+            },
+            
+            {
+              "id": 101,
+              "subject": "ফিকহ",
+              "text": "ইসলামে নিয়ত করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 102,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাশাহহুদ পড়া কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "সুন্নাত"
+            },
+            {
+              "id": 103,
+              "subject": "ফিকহ",
+              "text": "ইসলামে কিসাস কী?",
+              "options": ["ক্ষমা", "প্রতিশোধ", "দান", "শাস্তি"],
+              "correct": "প্রতিশোধ"
+            },
+            {
+              "id": 104,
+              "subject": "ফিকহ",
+              "text": "যাকাত প্রদানের নিসাব কত?",
+              "options": ["৭.৫ তোলা সোনা", "৫২.৫ তোলা রূপা", "৮৫ গ্রাম সোনা", "৫২.৫ তোলা সোনা"],
+              "correct": "৫২.৫ তোলা রূপা"
+            },
+            {
+              "id": 105,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদায় যাওয়ার আগে কী পড়া হয়?",
+              "options": ["তাকবির", "তাসবিহ", "তাহমিদ", "তাশাহহুদ"],
+              "correct": "তাকবির"
+            },
+            {
+              "id": 106,
+              "subject": "ফিকহ",
+              "text": "রোজা ভঙ্গ করার কারণ নয় কোনটি?",
+              "options": ["খাদ্য গ্রহণ", "পানি পান", "ঔষধ সেবন", "চিন্তা করা"],
+              "correct": "চিন্তা করা"
+            },
+            {
+              "id": 107,
+              "subject": "ফিকহ",
+              "text": "ইসলামে দিয়াত কী?",
+              "options": ["ক্ষতিপূরণ", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "ক্ষতিপূরণ"
+            },
+            {
+              "id": 108,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিরাত পড়া কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 109,
+              "subject": "ফিকহ",
+              "text": "ইসলামে হালাল খাবারের শর্ত কী?",
+              "options": ["জবাই করা", "পাক করা", "ভালোভাবে রান্না করা", "মসলা দেওয়া"],
+              "correct": "জবাই করা"
+            },
+            {
+              "id": 110,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিয়াম করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 111,
+              "subject": "ফিকহ",
+              "text": "ইসলামে মুহরিম কে?",
+              "options": ["বিয়ের যোগ্য নয় এমন আত্মীয়", "বিয়ের যোগ্য আত্মীয়", "বন্ধু", "পড়শি"],
+              "correct": "বিয়ের যোগ্য নয় এমন আত্মীয়"
+            },
+            {
+              "id": 112,
+              "subject": "ফিকহ",
+              "text": "নামাজে রুকু করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 113,
+              "subject": "ফিকহ",
+              "text": "ইসলামে নিকাহ কী?",
+              "options": ["বিয়ে", "তালাক", "দান", "শাস্তি"],
+              "correct": "বিয়ে"
+            },
+            {
+              "id": 114,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদা করা কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 115,
+              "subject": "ফিকহ",
+              "text": "ইসলামে তালাক কী?",
+              "options": ["বিয়েবিচ্ছেদ", "বিয়ে", "দান", "শাস্তি"],
+              "correct": "বিয়েবিচ্ছেদ"
+            },
+            {
+              "id": 116,
+              "subject": "ফিকহ",
+              "text": "নামাজে সালাম ফেরানো কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 117,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ইদ্দত কী?",
+              "options": ["প্রতীক্ষার সময়", "বিয়ের সময়", "তালাকের সময়", "দানের সময়"],
+              "correct": "প্রতীক্ষার সময়"
+            },
+            {
+              "id": 118,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাসবিহ পড়া কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "সুন্নাত"
+            },
+            {
+              "id": 119,
+              "subject": "ফিকহ",
+              "text": "ইসলামে খুলা কী?",
+              "options": ["বিয়েবিচ্ছেদ", "বিয়ে", "দান", "শাস্তি"],
+              "correct": "বিয়েবিচ্ছেদ"
+            },
+            {
+              "id": 120,
+              "subject": "ফিকহ",
+              "text": "নামাজে দুআ পড়া কি?",
+              "options": ["ফরজ", "সুন্নাত", "মুস্তাহাব", "নফল"],
+              "correct": "সুন্নাত"
+            },
+            {
+              "id": 121,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ফরজ কী?",
+              "options": ["অবশ্যকরণীয়", "ঐচ্ছিক", "প্রস্তাবিত", "নিষিদ্ধ"],
+              "correct": "অবশ্যকরণীয়"
+            },
+            {
+              "id": 122,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিরাত না পড়লে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 123,
+              "subject": "ফিকহ",
+              "text": "ইসলামে সুন্নাত কী?",
+              "options": ["নবীজির আদর্শ", "ফরজ", "নফল", "মুস্তাহাব"],
+              "correct": "নবীজির আদর্শ"
+            },
+            {
+              "id": 124,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিয়াম না করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 125,
+              "subject": "ফিকহ",
+              "text": "ইসলামে মুস্তাহাব কী?",
+              "options": ["প্রস্তাবিত", "ফরজ", "নফল", "নিষিদ্ধ"],
+              "correct": "প্রস্তাবিত"
+            },
+            {
+              "id": 126,
+              "subject": "ফিকহ",
+              "text": "নামাজে রুকু না করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 127,
+              "subject": "ফিকহ",
+              "text": "ইসলামে নফল কী?",
+              "options": ["ঐচ্ছিক", "ফরজ", "সুন্নাত", "মুস্তাহাব"],
+              "correct": "ঐচ্ছিক"
+            },
+            {
+              "id": 128,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদা না করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 129,
+              "subject": "ফিকহ",
+              "text": "ইসলামে মাকরুহ কী?",
+              "options": ["অপছন্দনীয়", "ফরজ", "সুন্নাত", "নফল"],
+              "correct": "অপছন্দনীয়"
+            },
+            {
+              "id": 130,
+              "subject": "ফিকহ",
+              "text": "নামাজে সালাম না ফেরালে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 131,
+              "subject": "ফিকহ",
+              "text": "ইসলামে হারাম কী?",
+              "options": ["নিষিদ্ধ", "ফরজ", "সুন্নাত", "নফল"],
+              "correct": "নিষিদ্ধ"
+            },
+            {
+              "id": 132,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাশাহহুদ না পড়লে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 133,
+              "subject": "ফিকহ",
+              "text": "ইসলামে মুবাহ কী?",
+              "options": ["অনুমোদিত", "ফরজ", "সুন্নাত", "নফল"],
+              "correct": "অনুমোদিত"
+            },
+            {
+              "id": 134,
+              "subject": "ফিকহ",
+              "text": "নামাজে দুআ না পড়লে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 135,
+              "subject": "ফিকহ",
+              "text": "ইসলামে শিরক কী?",
+              "options": ["আল্লাহর সাথে অংশীদারিত্ব", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর সাথে অংশীদারিত্ব"
+            },
+            {
+              "id": 136,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাসবিহ না পড়লে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 137,
+              "subject": "ফিকহ",
+              "text": "ইসলামে কুফর কী?",
+              "options": ["অবিশ্বাস", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "অবিশ্বাস"
+            },
+            {
+              "id": 138,
+              "subject": "ফিকহ",
+              "text": "নামাজে নিয়ত না করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 139,
+              "subject": "ফিকহ",
+              "text": "ইসলামে নিফাক কী?",
+              "options": ["মুনাফিকি", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "মুনাফিকি"
+            },
+            {
+              "id": 140,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিরাত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 141,
+              "subject": "ফিকহ",
+              "text": "ইসলামে রিয়া কী?",
+              "options": ["দেখানোর জন্য ইবাদত", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "দেখানোর জন্য ইবাদত"
+            },
+            {
+              "id": 142,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিয়াম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 143,
+              "subject": "ফিকহ",
+              "text": "ইসলামে গিবত কী?",
+              "options": ["পরনিন্দা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "পরনিন্দা"
+            },
+            {
+              "id": 144,
+              "subject": "ফিকহ",
+              "text": "নামাজে রুকু ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 145,
+              "subject": "ফিকহ",
+              "text": "ইসলামে হাসাদ কী?",
+              "options": ["হিংসা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "হিংসা"
+            },
+            {
+              "id": 146,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদা ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 147,
+              "subject": "ফিকহ",
+              "text": "ইসলামে কিজব কী?",
+              "options": ["মিথ্যা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "মিথ্যা"
+            },
+            {
+              "id": 148,
+              "subject": "ফিকহ",
+              "text": "নামাজে সালাম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 149,
+              "subject": "ফিকহ",
+              "text": "ইসলামে গাজব কী?",
+              "options": ["ক্রোধ", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "ক্রোধ"
+            },
+            {
+              "id": 150,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাশাহহুদ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 151,
+              "subject": "ফিকহ",
+              "text": "ইসলামে হক্কুল ইবাদ কী?",
+              "options": ["মানুষের অধিকার", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "মানুষের অধিকার"
+            },
+            {
+              "id": 152,
+              "subject": "ফিকহ",
+              "text": "নামাজে দুআ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 153,
+              "subject": "ফিকহ",
+              "text": "ইসলামে হক্কুল্লাহ কী?",
+              "options": ["আল্লাহর অধিকার", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর অধিকার"
+            },
+            {
+              "id": 154,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাসবিহ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 155,
+              "subject": "ফিকহ",
+              "text": "ইসলামে আমানত কী?",
+              "options": ["বিশ্বস্ততা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "বিশ্বস্ততা"
+            },
+            {
+              "id": 156,
+              "subject": "ফিকহ",
+              "text": "নামাজে নিয়ত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 157,
+              "subject": "ফিকহ",
+              "text": "ইসলামে আদল কী?",
+              "options": ["ন্যায়বিচার", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "ন্যায়বিচার"
+            },
+            {
+              "id": 158,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিরাত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 159,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ইহসান কী?",
+              "options": ["সদাচরণ", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "সদাচরণ"
+            },
+            {
+              "id": 160,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিয়াম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 161,
+              "subject": "ফিকহ",
+              "text": "ইসলামে তাওয়াক্কুল কী?",
+              "options": ["আল্লাহর উপর ভরসা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর উপর ভরসা"
+            },
+            {
+              "id": 162,
+              "subject": "ফিকহ",
+              "text": "নামাজে রুকু ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 163,
+              "subject": "ফিকহ",
+              "text": "ইসলামে তাওবা কী?",
+              "options": ["তওবা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "তওবা"
+            },
+            {
+              "id": 164,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদা ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 165,
+              "subject": "ফিকহ",
+              "text": "ইসলামে শুকর কী?",
+              "options": ["কৃতজ্ঞতা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "কৃতজ্ঞতা"
+            },
+            {
+              "id": 166,
+              "subject": "ফিকহ",
+              "text": "নামাজে সালাম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 167,
+              "subject": "ফিকহ",
+              "text": "ইসলামে সাবর কী?",
+              "options": ["ধৈর্য", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "ধৈর্য"
+            },
+            {
+              "id": 168,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাশাহহুদ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 169,
+              "subject": "ফিকহ",
+              "text": "ইসলামে তাওহিদ কী?",
+              "options": ["একত্ববাদ", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "একত্ববাদ"
+            },
+            {
+              "id": 170,
+              "subject": "ফিকহ",
+              "text": "নামাজে দুআ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 171,
+              "subject": "ফিকহ",
+              "text": "ইসলামে রিসালাত কী?",
+              "options": ["নবুয়ত", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "নবুয়ত"
+            },
+            {
+              "id": 172,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাসবিহ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 173,
+              "subject": "ফিকহ",
+              "text": "ইসলামে আখিরাত কী?",
+              "options": ["পরকাল", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "পরকাল"
+            },
+            {
+              "id": 174,
+              "subject": "ফিকহ",
+              "text": "নামাজে নিয়ত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 175,
+              "subject": "ফিকহ",
+              "text": "ইসলামে কিয়ামত কী?",
+              "options": ["পুনরুত্থান", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "পুনরুত্থান"
+            },
+            {
+              "id": 176,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিরাত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 177,
+              "subject": "ফিকহ",
+              "text": "ইসলামে জান্নাত কী?",
+              "options": ["স্বর্গ", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "স্বর্গ"
+            },
+            {
+              "id": 178,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিয়াম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 179,
+              "subject": "ফিকহ",
+              "text": "ইসলামে জাহান্নাম কী?",
+              "options": ["নরক", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "নরক"
+            },
+            {
+              "id": 180,
+              "subject": "ফিকহ",
+              "text": "নামাজে রুকু ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 181,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ফেরেশতা কী?",
+              "options": ["আল্লাহর দূত", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর দূত"
+            },
+            {
+              "id": 182,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদা ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 183,
+              "subject": "ফিকহ",
+              "text": "ইসলামে নবী কী?",
+              "options": ["আল্লাহর প্রেরিত ব্যক্তি", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর প্রেরিত ব্যক্তি"
+            },
+            {
+              "id": 184,
+              "subject": "ফিকহ",
+              "text": "নামাজে সালাম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 185,
+              "subject": "ফিকহ",
+              "text": "ইসলামে রাসুল কী?",
+              "options": ["আল্লাহর প্রেরিত ব্যক্তি", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর প্রেরিত ব্যক্তি"
+            },
+            {
+              "id": 186,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাশাহহুদ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 187,
+              "subject": "ফিকহ",
+              "text": "ইসলামে কিতাব কী?",
+              "options": ["আল্লাহর কিতাব", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আল্লাহর কিতাব"
+            },
+            {
+              "id": 188,
+              "subject": "ফিকহ",
+              "text": "নামাজে দুআ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 189,
+              "subject": "ফিকহ",
+              "text": "ইসলামে কদর কী?",
+              "options": ["ভাগ্য", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "ভাগ্য"
+            },
+            {
+              "id": 190,
+              "subject": "ফিকহ",
+              "text": "নামাজে তাসবিহ ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 191,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ইমান কী?",
+              "options": ["বিশ্বাস", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "বিশ্বাস"
+            },
+            {
+              "id": 192,
+              "subject": "ফিকহ",
+              "text": "নামাজে নিয়ত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ ভঙ্গ"
+            },
+            {
+              "id": 193,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ইসলাম কী?",
+              "options": ["আত্মসমর্পণ", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আত্মসমর্পণ"
+            },
+            {
+              "id": 194,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিরাত ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 195,
+              "subject": "ফিকহ",
+              "text": "ইসলামে ইবাদত কী?",
+              "options": ["আরাধনা", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "আরাধনা"
+            },
+            {
+              "id": 196,
+              "subject": "ফিকহ",
+              "text": "নামাজে কিয়াম ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 197,
+              "subject": "ফিকহ",
+              "text": "ইসলামে জিহাদ কী?",
+              "options": ["সংগ্রাম", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "সংগ্রাম"
+            },
+            {
+              "id": 198,
+              "subject": "ফিকহ",
+              "text": "নামাজে রুকু ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            {
+              "id": 199,
+              "subject": "ফিকহ",
+              "text": "ইসলামে হিজরত কী?",
+              "options": ["স্থানান্তর", "দান", "শাস্তি", "প্রতিশোধ"],
+              "correct": "স্থানান্তর"
+            },
+            {
+              "id": 200,
+              "subject": "ফিকহ",
+              "text": "নামাজে সিজদা ভুল করলে কী হয়?",
+              "options": ["নামাজ ভঙ্গ", "নামাজ শুদ্ধ", "নামাজ মাকরুহ", "নামাজ নফল"],
+              "correct": "নামাজ মাকরুহ"
+            },
+            
+            {
+              "id": 201,
+              "subject": "কুরআন",
+              "text": "কুরআনের প্রথম সূরার নাম কী?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা ইখলাস", "সূরা নাস"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 202,
+              "subject": "কুরআন",
+              "text": "কুরআনের সর্বশেষ সূরার নাম কী?",
+              "options": ["সূরা নাস", "সূরা ফালাক", "সূরা কাওসার", "সূরা ইখলাস"],
+              "correct": "সূরা নাস"
+            },
+            {
+              "id": 203,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আয়াতুল কুরসি' রয়েছে?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 204,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল হুওয়াল্লাহু আহাদ' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস", "সূরা কাওসার"],
+              "correct": "সূরা ইখলাস"
+            },
+            {
+              "id": 205,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'বিসমিল্লাহির রাহমানির রাহীম' দিয়ে শুরু হয় না?",
+              "options": ["সূরা তাওবা", "সূরা ফাতিহা", "সূরা বাকারা", "সূরা ইখলাস"],
+              "correct": "সূরা তাওবা"
+            },
+            {
+              "id": 206,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদুলিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 207,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আতাইনা কাল কাওসার' দিয়ে শুরু হয়?",
+              "options": ["সূরা কাওসার", "সূরা ইখলাস", "সূরা ফালাক", "সূরা নাস"],
+              "correct": "সূরা কাওসার"
+            },
+            {
+              "id": 208,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিল ফালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফালাক", "সূরা নাস", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা ফালাক"
+            },
+            {
+              "id": 209,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কুল আউযু বিরাব্বিন নাস' দিয়ে শুরু হয়?",
+              "options": ["সূরা নাস", "সূরা ফালাক", "সূরা ইখলাস", "সূরা কাওসার"],
+              "correct": "সূরা নাস"
+            },
+            {
+              "id": 210,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'তাবারাকাল্লাযী' দিয়ে শুরু হয়?",
+              "options": ["সূরা মুলক", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা মুলক"
+            },
+            {
+              "id": 211,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'হা-মীম' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফুসসিলাত", "সূরা শুরা", "সূরা যুখরুফ", "সূরা দুখান"],
+              "correct": "সূরা ফুসসিলাত"
+            },
+            {
+              "id": 212,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলিফ-লাম-মীম' দিয়ে শুরু হয়?",
+              "options": ["সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা", "সূরা আল-মায়িদা"],
+              "correct": "সূরা বাকারা"
+            },
+            {
+              "id": 213,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইয়া-আইয়ুহান নাবিয়্যু' দিয়ে শুরু হয়?",
+              "options": ["সূরা আহযাব", "সূরা মুমতাহিনা", "সূরা তালাক", "সূরা তাহরীম"],
+              "correct": "সূরা আহযাব"
+            },
+            {
+              "id": 214,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইকরা' দিয়ে শুরু হয়?",
+              "options": ["সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ"],
+              "correct": "সূরা আলাক"
+            },
+            {
+              "id": 215,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'সাব্বিহিসমা রাব্বিকাল আ'লা' দিয়ে শুরু হয়?",
+              "options": ["সূরা আল-আ'লা", "সূরা গাশি��়াহ", "সূরা ফজর", "সূরা শামস"],
+              "correct": "সূরা আল-আ'লা"
+            },
+            {
+              "id": 216,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল ফজর' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফজর", "সূরা বালাদ", "সূরা শামস", "সূরা লাইল"],
+              "correct": "সূরা ফজর"
+            },
+            {
+              "id": 217,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল লাইল' দিয়ে শুরু হয়?",
+              "options": ["সূরা লাইল", "সূরা ফজর", "সূরা দুহা", "সূরা শামস"],
+              "correct": "সূরা লাইল"
+            },
+            {
+              "id": 218,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াদ দুহা' দিয়ে শুরু হয়?",
+              "options": ["সূরা দুহা", "সূরা শারহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা দুহা"
+            },
+            {
+              "id": 219,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলাম নাশরাহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা শারহ", "সূরা দুহা", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা শারহ"
+            },
+            {
+              "id": 220,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াত তীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা তীন", "সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ"],
+              "correct": "সূরা তীন"
+            },
+            {
+              "id": 221,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইকরা বিসমি রাব্বিকাল্লাযী খালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ"],
+              "correct": "সূরা আলাক"
+            },
+            {
+              "id": 222,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আনযালনাহু ফী লাইলাতিল কদর' দিয়ে শুরু হয়?",
+              "options": ["সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা কদর"
+            },
+            {
+              "id": 223,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'লাম ইয়াকুনিল্লাযীনা কাফারু' দিয়ে শুরু হয়?",
+              "options": ["সূরা বাইয়্যিনাহ", "সূরা কদর", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা বাইয়্যিনাহ"
+            },
+            {
+              "id": 224,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা জুল জিলাল' দিয়ে শুরু হয়?",
+              "options": ["সূরা জিলাল", "সূরা ইনশিরাহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা জিলাল"
+            },
+            {
+              "id": 225,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল আদিয়াত' দিয়ে শুরু হয়?",
+              "options": ["সূরা আদিয়াত", "সূরা কাওসার", "সূরা মাউন", "সূরা কাফিরুন"],
+              "correct": "সূরা আদিয়াত"
+            },
+            {
+              "id": 226,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদু লিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 227,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না ফাতাহনা লাকা ফাতহান মুবীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতহ", "সূরা নাসর", "সূরা কাওসার", "সূরা ইখলাস"],
+              "correct": "সূরা ফাতহ"
+            },
+            {
+              "id": 228,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কদ আফলাহাল মু'মিনূন' দিয়ে শুরু হয়?",
+              "options": ["সূরা মু'মিনূন", "সূরা নূর", "সূরা ফুরকান", "সূরা শু'আরা"],
+              "correct": "সূরা মু'মিনূন"
+            },
+            {
+              "id": 229,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'তাবারাকাল্লাযী বিয়াদিহিল মুলক' দিয়ে শুরু হয়?",
+              "options": ["সূরা মুলক", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা মুলক"
+            },
+            {
+              "id": 230,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা ওয়াকা'আতিল ওয়াকি'আহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা ওয়াকি'আহ", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা ওয়াকি'আহ"
+            },
+            {
+              "id": 231,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা শামসু কুওয়িরাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা তাকভীর", "সূরা ইনফিতার", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা তাকভীর"
+            },
+            {
+              "id": 232,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন শাক্কাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনশিকাক", "সূরা তাকভীর", "সূরা ইনফিতার", "সূরা বুরুজ"],
+              "correct": "সূরা ইনশিকাক"
+            },
+            {
+              "id": 233,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন ফাতারাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনফিতার", "সূরা তাকভীর", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা ইনফিতার"
+            },
+            {
+              "id": 234,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল ফাজর' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফজর", "সূরা বালাদ", "সূরা শামস", "সূরা লাইল"],
+              "correct": "সূরা ফজর"
+            },
+            {
+              "id": 235,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল লাইল' দিয়ে শুরু হয়?",
+              "options": ["সূরা লাইল", "সূরা ফজর", "সূরা দুহা", "সূরা শামস"],
+              "correct": "সূরা লাইল"
+            },
+            {
+              "id": 236,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াদ দুহা' দিয়ে শুরু হয়?",
+              "options": ["সূরা দুহা", "সূরা শারহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা দুহা"
+            },
+            {
+              "id": 237,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলাম নাশরাহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা শারহ", "সূরা দুহা", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা শারহ"
+            },
+            {
+              "id": 238,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াত তীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা তীন", "সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ"],
+              "correct": "সূরা তীন"
+            },
+            {
+              "id": 239,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইকরা বিসমি রাব্বিকাল্লাযী খালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ"],
+              "correct": "সূরা আলাক"
+            },
+            {
+              "id": 240,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আনযালনাহু ফী লাইলাতিল কদর' দিয়ে শুরু হয়?",
+              "options": ["সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা কদর"
+            },
+            {
+              "id": 241,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'লাম ইয়াকুনিল্লাযীনা কাফারু' দিয়ে শুরু হয়?",
+              "options": ["সূরা বাইয়্যিনাহ", "সূরা কদর", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা বাইয়্যিনাহ"
+            },
+            {
+              "id": 242,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা জুল জিলাল' দিয়ে শুরু হয়?",
+              "options": ["সূরা জিলাল", "সূরা ইনশিরাহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা জিলাল"
+            },
+            {
+              "id": 243,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল আদিয়াত' দিয়ে শুরু হয়?",
+              "options": ["সূরা আদিয়াত", "সূরা কাওসার", "সূরা মাউন", "সূরা কাফিরুন"],
+              "correct": "সূরা আদিয়াত"
+            },
+            {
+              "id": 244,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদু লিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 245,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না ফাতাহনা লাকা ফাতহান মুবীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতহ", "সূরা নাসর", "সূরা কাওসার", "সূরা ইখলাস"],
+              "correct": "সূরা ফাতহ"
+            },
+            {
+              "id": 246,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কদ আফলাহাল মু'মিনূন' দিয়ে শুরু হয়?",
+              "options": ["সূরা মু'মিনূন", "সূরা নূর", "সূরা ফুরকান", "সূরা শু'আরা"],
+              "correct": "সূরা মু'মিনূন"
+            },
+            {
+              "id": 247,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'তাবারাকাল্লাযী বিয়াদিহিল মুলক' দিয়ে শুরু হয়?",
+              "options": ["সূরা মুলক", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা মুলক"
+            },
+            {
+              "id": 248,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা ওয়াকা'আতিল ওয়াকি'আহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা ওয়াকি'আহ", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা ওয়াকি'আহ"
+            },
+            {
+              "id": 249,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা শামসু কুওয়িরাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা তাকভীর", "সূরা ইনফিতার", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা তাকভীর"
+            },
+            {
+              "id": 250,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন শাক্কাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনশিকাক", "সূরা তাকভীর", "সূরা ইনফিতার", "সূরা বুরুজ"],
+              "correct": "সূরা ইনশিকাক"
+            },
+            {
+              "id": 251,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন ফাতারাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনফিতার", "সূরা তাকভীর", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা ইনফিতার"
+            },
+            {
+              "id": 252,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল ফাজর' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফজর", "সূরা বালাদ", "সূরা শামস", "সূরা লাইল"],
+              "correct": "সূরা ফজর"
+            },
+            {
+              "id": 253,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল লাইল' দিয়ে শুরু হয়?",
+              "options": ["সূরা লাইল", "সূরা ফজর", "সূরা দুহা", "সূরা শামস"],
+              "correct": "সূরা লাইল"
+            },
+            {
+              "id": 254,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াদ দুহা' দিয়ে শুরু হয়?",
+              "options": ["সূরা দুহা", "সূরা শারহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা দুহা"
+            },
+            {
+              "id": 255,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলাম নাশরাহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা শারহ", "সূরা দুহা", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা শারহ"
+            },
+            {
+              "id": 256,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াত তীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা তীন", "সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ"],
+              "correct": "সূরা তীন"
+            },
+            {
+              "id": 257,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইকরা বিসমি রাব্বিকাল্লাযী খালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ"],
+              "correct": "সূরা আলাক"
+            },
+            {
+              "id": 258,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আনযালনাহু ফী লাইলাতিল কদর' দিয়ে শুরু হয়?",
+              "options": ["সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা কদর"
+            },
+            {
+              "id": 259,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'লাম ইয়াকুনিল্লাযীনা কাফারু' দিয়ে শুরু হয়?",
+              "options": ["সূরা বাইয়্যিনাহ", "সূরা কদর", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা বাইয়্যিনাহ"
+            },
+            {
+              "id": 260,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা জুল জিলাল' দিয়ে শুরু হয়?",
+              "options": ["সূরা জিলাল", "সূরা ইনশিরাহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা জিলাল"
+            },
+            {
+              "id": 261,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল আদিয়াত' দিয়ে শুরু হয়?",
+              "options": ["সূরা আদিয়াত", "সূরা কাওসার", "সূরা মাউন", "সূরা কাফিরুন"],
+              "correct": "সূরা আদিয়াত"
+            },
+            {
+              "id": 262,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদু লিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 263,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না ফাতাহনা লাকা ফাতহান মুবীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতহ", "সূরা নাসর", "সূরা কাওসার", "সূরা ইখলাস"],
+              "correct": "সূরা ফাতহ"
+            },
+            {
+              "id": 264,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কদ আফলাহাল মু'মিনূন' দিয়ে শুরু হয়?",
+              "options": ["সূরা মু'মিনূন", "সূরা নূর", "সূরা ফুরকান", "সূরা শু'আরা"],
+              "correct": "সূরা মু'মিনূন"
+            },
+            {
+              "id": 265,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'তাবারাকাল্লাযী বিয়াদিহিল মুলক' দিয়ে শুরু হয়?",
+              "options": ["সূরা মুলক", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা মুলক"
+            },
+            {
+              "id": 266,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা ওয়াকা'আতিল ওয়াকি'আহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা ওয়াকি'আহ", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা ওয়াকি'আহ"
+            },
+            {
+              "id": 267,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা শামসু কুওয়িরাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা তাকভীর", "সূরা ইনফিতার", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা তাকভীর"
+            },
+            {
+              "id": 268,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন শাক্কাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনশিকাক", "সূরা তাকভীর", "সূরা ইনফিতার", "সূরা বুরুজ"],
+              "correct": "সূরা ইনশিকাক"
+            },
+            {
+              "id": 269,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন ফাতারাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনফিতার", "সূরা তাকভীর", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা ইনফিতার"
+            },
+            {
+              "id": 270,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল ফাজর' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফজর", "সূরা বালাদ", "সূরা শামস", "সূরা লাইল"],
+              "correct": "সূরা ফজর"
+            },
+            {
+              "id": 271,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল লাইল' দিয়ে শুরু হয়?",
+              "options": ["সূরা লাইল", "সূরা ফজর", "সূরা দুহা", "সূরা শামস"],
+              "correct": "সূরা লাইল"
+            },
+            {
+              "id": 272,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াদ দুহা' দিয়ে শুরু হয়?",
+              "options": ["সূরা দুহা", "সূরা শারহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা দুহা"
+            },
+            {
+              "id": 273,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলাম নাশরাহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা শারহ", "সূরা দুহা", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা শারহ"
+            },
+            {
+              "id": 274,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াত তীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা তীন", "সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ"],
+              "correct": "সূরা তীন"
+            },
+            {
+              "id": 275,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইকরা বিসমি রাব্বিকাল্লাযী খালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ"],
+              "correct": "সূরা আলাক"
+            },
+            {
+              "id": 276,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আনযালনাহু ফী লাইলাতিল কদর' দিয়ে শুরু হয়?",
+              "options": ["সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা কদর"
+            },
+            {
+              "id": 277,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'লাম ইয়াকুনিল্লাযীনা কাফারু' দিয়ে শুরু হয়?",
+              "options": ["সূরা বাইয়্যিনাহ", "সূরা কদর", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা বাইয়্যিনাহ"
+            },
+            {
+              "id": 278,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা জুল জিলাল' দিয়ে শুরু হয়?",
+              "options": ["সূরা জিলাল", "সূরা ইনশিরাহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা জিলাল"
+            },
+            {
+              "id": 279,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল আদিয়াত' দিয়ে শুরু হয়?",
+              "options": ["সূরা আদিয়াত", "সূরা কাওসার", "সূরা মাউন", "সূরা কাফিরুন"],
+              "correct": "সূরা আদিয়াত"
+            },
+            {
+              "id": 280,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদু লিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 281,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না ফাতাহনা লাকা ফাতহান মুবীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতহ", "সূরা নাসর", "সূরা কাওসার", "সূরা ইখলাস"],
+              "correct": "সূরা ফাতহ"
+            },
+            {
+              "id": 282,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কদ আফলাহাল মু'মিনূন' দিয়ে শুরু হয়?",
+              "options": ["সূরা মু'মিনূন", "সূরা নূর", "সূরা ফুরকান", "সূরা শু'আরা"],
+              "correct": "সূরা মু'মিনূন"
+            },
+            {
+              "id": 283,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'তাবারাকাল্লাযী বিয়াদিহিল মুলক' দিয়ে শুরু হয়?",
+              "options": ["সূরা মুলক", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা মুলক"
+            },
+            {
+              "id": 284,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা ওয়াকা'আতিল ওয়াকি'আহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা ওয়াকি'আহ", "সূরা কাহফ", "সূরা ইয়াসিন", "সূরা দুখান"],
+              "correct": "সূরা ওয়াকি'আহ"
+            },
+            {
+              "id": 285,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা শামসু কুওয়িরাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা তাকভীর", "সূরা ইনফিতার", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা তাকভীর"
+            },
+            {
+              "id": 286,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন শাক্কাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনশিকাক", "সূরা তাকভীর", "সূরা ইনফিতার", "সূরা বুরুজ"],
+              "correct": "সূরা ইনশিকাক"
+            },
+            {
+              "id": 287,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযাস সামাউন ফাতারাত' দিয়ে শুরু হয়?",
+              "options": ["সূরা ইনফিতার", "সূরা তাকভীর", "সূরা ইনশিকাক", "সূরা বুরুজ"],
+              "correct": "সূরা ইনফিতার"
+            },
+            {
+              "id": 288,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল ফাজর' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফজর", "সূরা বালাদ", "সূরা শামস", "সূরা লাইল"],
+              "correct": "সূরা ফজর"
+            },
+            {
+              "id": 289,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল লাইল' দিয়ে শুরু হয়?",
+              "options": ["সূরা লাইল", "সূরা ফজর", "সূরা দুহা", "সূরা শামস"],
+              "correct": "সূরা লাইল"
+            },
+            {
+              "id": 290,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াদ দুহা' দিয়ে শুরু হয়?",
+              "options": ["সূরা দুহা", "সূরা শারহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা দুহা"
+            },
+            {
+              "id": 291,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলাম নাশরাহ' দিয়ে শুরু হয়?",
+              "options": ["সূরা শারহ", "সূরা দুহা", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা শারহ"
+            },
+            {
+              "id": 292,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াত তীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা তীন", "সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ"],
+              "correct": "সূরা তীন"
+            },
+            {
+              "id": 293,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইকরা বিসমি রাব্বিকাল্লাযী খালাক' দিয়ে শুরু হয়?",
+              "options": ["সূরা আলাক", "সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ"],
+              "correct": "সূরা আলাক"
+            },
+            {
+              "id": 294,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না আনযালনাহু ফী লাইলাতিল কদর' দিয়ে শুরু হয়?",
+              "options": ["সূরা কদর", "সূরা বাইয়্যিনাহ", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা কদর"
+            },
+            {
+              "id": 295,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'লাম ইয়াকুনিল্লাযীনা কাফারু' দিয়ে শুরু হয়?",
+              "options": ["সূরা বাইয়্যিনাহ", "সূরা কদর", "সূরা জুমআহ", "সূরা মুযযাম্মিল"],
+              "correct": "সূরা বাইয়্যিনাহ"
+            },
+            {
+              "id": 296,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইযা জুল জিলাল' দিয়ে শুরু হয়?",
+              "options": ["সূরা জিলাল", "সূরা ইনশিরাহ", "সূরা তীন", "সূরা আলাক"],
+              "correct": "সূরা জিলাল"
+            },
+            {
+              "id": 297,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ওয়াল আদিয়াত' দিয়ে শুরু হয়?",
+              "options": ["সূরা আদিয়াত", "সূরা কাওসার", "সূরা মাউন", "সূরা কাফিরুন"],
+              "correct": "সূরা আদিয়াত"
+            },
+            {
+              "id": 298,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'আলহামদু লিল্লাহি রাব্বিল আলামীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতিহা", "সূরা বাকারা", "সূরা আল-ইমরান", "সূরা আন-নিসা"],
+              "correct": "সূরা ফাতিহা"
+            },
+            {
+              "id": 299,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'ইন্না ফাতাহনা লাকা ফাতহান মুবীন' দিয়ে শুরু হয়?",
+              "options": ["সূরা ফাতহ", "সূরা নাসর", "সূরা কাওসার", "সূরা ইখলাস"],
+              "correct": "সূরা ফাতহ"
+            },
+            {
+              "id": 300,
+              "subject": "কুরআন",
+              "text": "কুরআনের কোন সূরাটি 'কদ আফলাহাল মু'মিনূন' দিয়ে শুরু হয়?",
+              "options": ["সূরা মু'মিনূন", "সূরা নূর", "সূরা ফুরকান", "সূরা শু'আরা"],
+              "correct": "সূরা মু'মিনূন"
+            },
+            
+            {
+              "id": 301,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম খলিফা কে ছিলেন?",
+              "options": ["আবু বকর", "উমর ইবনুল খাত্তাব", "উসমান ইবন আফফান", "আলী ইবন আবি তালিব"],
+              "correct": "আবু বকর"
+            },
+            {
+              "id": 302,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর বয়স কমপক্ষে কত হতে হবে?",
+              "options": ["৬ মাস", "১ বছর", "২ বছর", "৫ বছর"],
+              "correct": "২ বছর"
+            },
+            {
+              "id": 303,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইব্রাহীম (আ.)-এর পুত্র ইসমাঈল (আ.)-এর বয়স কত ছিল যখন তাকে কুরবানী দেওয়ার স্বপ্ন দেখা হয়েছিল?",
+              "options": ["৫ বছর", "১০ বছর", "১৩ বছর", "প্রাপ্তবয়স্ক"],
+              "correct": "১৩ বছর"
+            },
+            {
+              "id": 304,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর চোখ অন্ধ হলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 305,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "হজরত হাজেরা (আ.) কোন পানি খুঁজে পেয়েছিলেন?",
+              "options": ["নীল নদ", "যমযম", "টাইগ্রিস", "ইউফ্রেটিস"],
+              "correct": "যমযম"
+            },
+            {
+              "id": 306,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর গোশত কয় ভাগে বণ্টন করা হয়?",
+              "options": ["১ ভাগ", "২ ভাগ", "৩ ভাগ", "৪ ভাগ"],
+              "correct": "৩ ভাগ"
+            },
+            {
+              "id": 307,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম নারী শহীদ কে ছিলেন?",
+              "options": ["খাদিজা (রা.)", "সুমাইয়া (রা.)", "আয়েশা (রা.)", "ফাতিমা (রা.)"],
+              "correct": "সুমাইয়া (রা.)"
+            },
+            {
+              "id": 308,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর গোশত বিক্রি করা কী?",
+              "options": ["জায়েয", "হারাম", "মাকরুহ", "মুস্তাহাব"],
+              "correct": "হারাম"
+            },
+            {
+              "id": 309,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "কাবা শরীফ প্রথম কে নির্মাণ করেন?",
+              "options": ["নবী আদম (আ.)", "নবী ইব্রাহীম (আ.) ও ইসমাঈল (আ.)", "নবী মুহাম্মদ (সা.)", "নবী নূহ (আ.)"],
+              "correct": "নবী ইব্রাহীম (আ.) ও ইসমাঈল (আ.)"
+            },
+            {
+              "id": 310,
+              "subject": "কুরবানী",
+              "text": "নবী ইব্রাহীম (আ.)-এর পরিবর্তে কী কুরবানী দেওয়া হয়েছিল?",
+              "options": ["একটি ভেড়া", "একটি উট", "একটি গরু", "একটি ঘোড়া"],
+              "correct": "একটি ভেড়া"
+            },
+            {
+              "id": 311,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "বদরের যুদ্ধে মুসলিম বাহিনীর সংখ্যা কত ছিল?",
+              "options": ["৩১৩", "১০০০", "২০০০", "৩০০০"],
+              "correct": "৩১৩"
+            },
+            {
+              "id": 312,
+              "subject": "ফিকহ",
+              "text": "কুরবানী ওয়াজিব হওয়ার শর্ত কী?",
+              "options": ["প্রত্যেক মুসলিমের উপর", "নিসাব পরিমাণ সম্পদ থাকলে", "শুধু পুরুষের উপর", "শুধু মহিলাদের উপর"],
+              "correct": "নিসাব পরিমাণ সম্পদ থাকলে"
+            },
+            {
+              "id": 313,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী মুহাম্মদ (সা.)-এর প্রথম ওহি কোথায় নাযিল হয়?",
+              "options": ["মসজিদে নববীতে", "হেরা গুহায়", "কাবা শরীফে", "মসজিদে কুবায়"],
+              "correct": "হেরা গুহায়"
+            },
+            {
+              "id": 314,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর দিনে কয়টি তাকবির বলা হয়?",
+              "options": ["১টি", "৩টি", "৫টি", "৯টি"],
+              "correct": "৩টি"
+            },
+            {
+              "id": 315,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "ইসলামের প্রথম মসজিদের নাম কী?",
+              "options": ["মসজিদে নববী", "মসজিদে কুবা", "মসজিদে আকসা", "মসজিদে হারাম"],
+              "correct": "মসজিদে কুবা"
+            },
+            {
+              "id": 316,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর চামড়া কী করা যায়?",
+              "options": ["বিক্রি করে টাকা নেওয়া", "দান করা", "নিজে ব্যবহার করা", "দান করা বা নিজে ব্যবহার করা"],
+              "correct": "দান করা বা নিজে ব্যবহার করা"
+            },
+            {
+              "id": 317,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইউনুস (আ.) কত দিন মাছের পেটে ছিলেন?",
+              "options": ["৩ দিন", "৭ দিন", "৪০ দিন", "১০০ দিন"],
+              "correct": "৩ দিন"
+            },
+            {
+              "id": 318,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর রক্ত প্রবাহিত না হলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "পুনরায় জবাই করতে হবে"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 319,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "কোন নবীকে 'খলিলুল্লাহ' বলা হয়?",
+              "options": ["নবী মুসা (আ.)", "নবী ইব্রাহীম (আ.)", "নবী ঈসা (আ.)", "নবী দাউদ (আ.)"],
+              "correct": "নবী ইব্রাহীম (আ.)"
+            },
+            {
+              "id": 320,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর চামড়া দেওয়া যায় না কোনটিতে?",
+              "options": ["মসজিদ নির্মাণ", "মাদ্রাসা", "নিজের জুতা বানানো", "মাদ্রাসার শিক্ষককে বেতন দেওয়া"],
+              "correct": "মাদ্রাসার শিক্ষককে বেতন দেওয়া"
+            },
+            {
+              "id": 321,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী সুলাইমান (আ.)-এর পেশা কী ছিল?",
+              "options": ["কৃষক", "বণিক", "রাজা", "শিক্ষক"],
+              "correct": "রাজা"
+            },
+            {
+              "id": 322,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর কান কাটা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 323,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "কোন নবীকে আল্লাহ সরাসরি কথা বলেছেন?",
+              "options": ["নবী মুসা (আ.)", "নবী ইব্রাহীম (আ.)", "নবী ঈসা (আ.)", "নবী দাউদ (আ.)"],
+              "correct": "নবী মুসা (আ.)"
+            },
+            {
+              "id": 324,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর দাঁত ভাঙা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 325,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী নূহ (আ.)-এর নৌকা কত দিন পানিতে ভাসে?",
+              "options": ["৭ দিন", "৪০ দিন", "১০০ দিন", "১ বছর"],
+              "correct": "৪০ দিন"
+            },
+            {
+              "id": 326,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর লেজ কাটা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 327,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইউসুফ (আ.)-কে কত দিরহামে বিক্রি করা হয়েছিল?",
+              "options": ["২০ দিরহাম", "৩০ দিরহাম", "৪০ দিরহাম", "৫০ দিরহাম"],
+              "correct": "২০ দিরহাম"
+            },
+            {
+              "id": 328,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর পা ভাঙা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 329,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী আইয়ুব (আ.) কত বছর অসুস্থ ছিলেন?",
+              "options": ["৭ বছর", "১৮ বছর", "৩০ বছর", "৪০ বছর"],
+              "correct": "১৮ বছর"
+            },
+            {
+              "id": 330,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর শিং ভাঙা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 331,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী দাউদ (আ.)-এর পেশা কী ছিল?",
+              "options": ["কৃষক", "লোহার কর্মকার", "বণিক", "শিক্ষক"],
+              "correct": "লোহার কর্মকার"
+            },
+            {
+              "id": 332,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর ওজন কম হলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কোনো সমস্যা নেই"
+            },
+            {
+              "id": 333,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইলিয়াস (আ.)-কে কোন সম্প্রদায়ের কাছে পাঠানো হয়েছিল?",
+              "options": ["ইহুদি", "নাসারা", "বাদল উপাসক", "মূর্তি পূজারী"],
+              "correct": "বাদল উপাসক"
+            },
+            {
+              "id": 334,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর বাচ্চা প্রসব করলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কোনো সমস্যা নেই"
+            },
+            {
+              "id": 335,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী লুত (আ.)-কে কোন শহরের লোকেদের কাছে পাঠানো হয়েছিল?",
+              "options": ["সদূম", "নীনবী", "বাবিল", "মাদায়েন"],
+              "correct": "সদূম"
+            },
+            {
+              "id": 336,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর দুধ পান করালে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কোনো সমস্যা নেই"
+            },
+            {
+              "id": 337,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী হুদ (আ.)-কে কোন সম্প্রদায়ের কাছে পাঠানো হয়েছিল?",
+              "options": ["আদ", "সামুদ", "ফেরাউনের লোক", "কুরাইশ"],
+              "correct": "আদ"
+            },
+            {
+              "id": 338,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর চামড়া ছাড়ালে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কোনো সমস্যা নেই"
+            },
+            {
+              "id": 339,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী সালেহ (আ.)-কে কোন সম্প্রদায়ের কাছে পাঠানো হয়েছিল?",
+              "options": ["আদ", "সামুদ", "ফেরাউনের লোক", "কুরাইশ"],
+              "correct": "সামুদ"
+            },
+            {
+              "id": 340,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর চোখের পানি পড়লে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কোনো সমস্যা নেই"
+            },
+            {
+              "id": 341,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইদ্রিস (আ.)-এর পেশা কী ছিল?",
+              "options": ["দর্জি", "কৃষক", "বণিক", "শিক্ষক"],
+              "correct": "দর্জি"
+            },
+            {
+              "id": 342,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর নাক দিয়ে রক্ত পড়লে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কোনো সমস্যা নেই"
+            },
+            {
+              "id": 343,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী যাকারিয়া (আ.)-এর পেশা কী ছিল?",
+              "options": ["কাঠমিস্ত্রি", "কৃষক", "বণিক", "শিক্ষক"],
+              "correct": "কাঠমিস্ত্রি"
+            },
+            {
+              "id": 344,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর জিহ্বা কাটা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 345,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইয়াহইয়া (আ.)-এর পেশা কী ছিল?",
+              "options": ["শিক্ষক", "ইমাম", "প্রচারক", "কৃষক"],
+              "correct": "প্রচারক"
+            },
+            {
+              "id": 346,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর পেট ফুলে গেলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 347,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী শুয়াইব (আ.)-এর পেশা কী ছিল?",
+              "options": ["গরু চরান", "বণিক", "কৃষক", "শিক্ষক"],
+              "correct": "গরু চরান"
+            },
+            {
+              "id": 348,
+              "subject": "ফিকহ",
+              "text": "কুরবানীর পশুর পিঠে ঘা থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 349,
+              "subject": "ইসলামিক ইতিহাস",
+              "text": "নবী ইসহাক (আ.)-এর পুত্রের নাম কী?",
+              "options": ["ইসমাঈল", "ইয়াকুব", "ইউসুফ", "দাউদ"],
+              "correct": "ইয়াকুব"
+            },
+            {
+              "id": 350,
+              "subject": "কুরবানী",
+              "text": "কুরবানীর পশুর শরীরে কৃমি থাকলে কী হবে?",
+              "options": ["কুরবানী শুদ্ধ হবে", "কুরবানী শুদ্ধ হবে না", "ফিদয়া দিতে হবে", "কোনো সমস্যা নেই"],
+              "correct": "কুরবানী শুদ্ধ হবে না"
+            },
+            {
+              "id": 351,
+              "subject": "হজ্জ",
+              "text": "হজ্জ ইসলামের কততম স্তম্ভ?",
+              "options": ["১ম", "২য়", "৩য়", "৫ম"],
+              "correct": "৫ম"
+            },
+            {
+              "id": 352,
+              "subject": "হজ্জ",
+              "text": "হজ্জ ফরজ হয় কোন সালে?",
+              "options": ["৫ হিজরি", "৬ হিজরি", "৯ হিজরি", "১০ হিজরি"],
+              "correct": "৯ হিজরি"
+            },
+            {
+              "id": 353,
+              "subject": "হজ্জ",
+              "text": "হজ্জের প্রধান রুকন কয়টি?",
+              "options": ["৩", "৪", "৫", "৬"],
+              "correct": "৪"
+            },
+            {
+              "id": 354,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তালবিয়া' পাঠ করা হয় কখন?",
+              "options": ["ইহরাম বাঁধার সময়", "আরাফাতের দিন", "জামারায় কঙ্কর নিক্ষেপের সময়", "তাওয়াফের সময়"],
+              "correct": "ইহরাম বাঁধার সময়"
+            },
+            {
+              "id": 355,
+              "subject": "হজ্জ",
+              "text": "হজ্জের মাস কোনটি?",
+              "options": ["রমজান", "শাওয়াল", "জিলহজ", "মহররম"],
+              "correct": "জিলহজ"
+            },
+            {
+              "id": 356,
+              "subject": "হজ্জ",
+              "text": "মীকাত থেকে ইহরাম বাঁধা কী?",
+              "options": ["ওয়াজিব", "ফরজ", "সুন্নাত", "মুস্তাহাব"],
+              "correct": "ফরজ"
+            },
+            {
+              "id": 357,
+              "subject": "হজ্জ",
+              "text": "হজ্জের প্রথম দিন কী করা হয়?",
+              "options": ["আরাফাত যাওয়া", "মিনায় থাকা", "তাওয়াফ করা", "সাফা-মারওয়া সাঈ করা"],
+              "correct": "মিনায় থাকা"
+            },
+            {
+              "id": 358,
+              "subject": "হজ্জ",
+              "text": "আরাফাতের দিন কখন শুরু হয়?",
+              "options": ["৮ জিলহজ সন্ধ্যা", "৯ জিলহজ ফজর", "৯ জিলহজ যোহর", "১০ জিলহজ ফজর"],
+              "correct": "৯ জিলহজ ফজর"
+            },
+            {
+              "id": 359,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সবচেয়ে গুরুত্বপূর্ণ দিন কোনটি?",
+              "options": ["৮ জিলহজ", "৯ জিলহজ", "১০ জিলহজ", "১২ জিলহজ"],
+              "correct": "৯ জিলহজ"
+            },
+            {
+              "id": 360,
+              "subject": "হজ্জ",
+              "text": "আরাফাতের ময়দানে নামাজ পড়া হয় কীভাবে?",
+              "options": ["জোহর-আসর একত্রে", "মাগরিব-এশা একত্রে", "ফজর একা", "সব নামাজ আলাদা"],
+              "correct": "জোহর-আসর একত্রে"
+            },
+            {
+              "id": 361,
+              "subject": "হজ্জ",
+              "text": "মুজদালিফায় কী সংগ্রহ করা হয়?",
+              "options": ["পানি", "পাথর", "খেজুর", "মাটি"],
+              "correct": "পাথর"
+            },
+            {
+              "id": 362,
+              "subject": "হজ্জ",
+              "text": "জামারায় কঙ্কর নিক্ষেপ করা হয় কতটি?",
+              "options": ["৭", "২১", "৪৯", "৭০"],
+              "correct": "৪৯"
+            },
+            {
+              "id": 363,
+              "subject": "হজ্জ",
+              "text": "কুরবানীর দিন কত তারিখ?",
+              "options": ["৮ জিলহজ", "৯ জিলহজ", "১০ জিলহজ", "১২ জিলহজ"],
+              "correct": "১০ জিলহজ"
+            },
+            {
+              "id": 364,
+              "subject": "হজ্জ",
+              "text": "তাওয়াফে জিয়ারত করা হয় কখন?",
+              "options": ["৮ জিলহজ", "৯ জিলহজ", "১০ জিলহজ", "১২ জিলহজ"],
+              "correct": "১০ জিলহজ"
+            },
+            {
+              "id": 365,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'সাঈ' করা হয় কোথায়?",
+              "options": ["সাফা-মারওয়া", "আরাফাত", "মুজদালিফা", "মিনা"],
+              "correct": "সাফা-মারওয়া"
+            },
+            {
+              "id": 366,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় কাবা শরীফ দেখা মাত্র কী বলা হয়?",
+              "options": ["তাকবির", "তাহলিল", "তালবিয়া", "দরুদ"],
+              "correct": "তাকবির"
+            },
+            {
+              "id": 367,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় ইহরামের কাপড় কয়টি?",
+              "options": ["১", "২", "৩", "৪"],
+              "correct": "২"
+            },
+            {
+              "id": 368,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় নারীদের ইহরামের রং কী?",
+              "options": ["সাদা", "কালো", "যেকোনো রং", "হলুদ"],
+              "correct": "যেকোনো রং"
+            },
+            {
+              "id": 369,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় নিষিদ্ধ কাজ কোনটি?",
+              "options": ["গাছ কাটা", "নখ কাটা", "সুগন্ধি ব্যবহার", "উপরের সবগুলো"],
+              "correct": "উপরের সবগুলো"
+            },
+            {
+              "id": 370,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তাওয়াফ' কী?",
+              "options": ["কাবা ঘিরে ঘোরা", "দৌড়ানো", "প্রার্থনা করা", "পাথর নিক্ষেপ"],
+              "correct": "কাবা ঘিরে ঘোরা"
+            },
+            {
+              "id": 371,
+              "subject": "হজ্জ",
+              "text": "তাওয়াফ কত প্রকার?",
+              "options": ["২", "৩", "৪", "৫"],
+              "correct": "৩"
+            },
+            {
+              "id": 372,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'হাজারে আসওয়াদ' কী?",
+              "options": ["কালো পাথর", "স্বর্ণ দরজা", "নবীর সমাধি", "জমজম কূপ"],
+              "correct": "কালো পাথর"
+            },
+            {
+              "id": 373,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মুলতাজাম' কোথায়?",
+              "options": ["কাবার দরজা", "হাজারে আসওয়াদ ও দরজার মধ্যবর্তী স্থান", "মাকামে ইব্রাহিম", "জমজম কূপ"],
+              "correct": "হাজারে আসওয়াদ ও দরজার মধ্যবর্তী স্থান"
+            },
+            {
+              "id": 374,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মাকামে ইব্রাহিম' কী?",
+              "options": ["ইব্রাহীম (আ.)-এর দাঁড়ানোর স্থান", "কাবা নির্মাণের স্থান", "জমজম কূপ", "আরাফাতের পাহাড়"],
+              "correct": "ইব্রাহীম (আ.)-এর দাঁড়ানোর স্থান"
+            },
+            {
+              "id": 375,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'জমজম' কী?",
+              "options": ["পবিত্র পানি", "পাহাড়", "মসজিদ", "কাবার অংশ"],
+              "correct": "পবিত্র পানি"
+            },
+            {
+              "id": 376,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'সাঈ' কতবার করা হয়?",
+              "options": ["৩", "৫", "৭", "৯"],
+              "correct": "৭"
+            },
+            {
+              "id": 377,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'হালক' কী?",
+              "options": ["মাথা মুন্ডন", "কঙ্কর নিক্ষেপ", "তাওয়াফ", "ইহরাম খোলা"],
+              "correct": "মাথা মুন্ডন"
+            },
+            {
+              "id": 378,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় নারীদের জন্য 'হালক' কী?",
+              "options": ["মাথা মুন্ডন", "চুলের অগ্রভাগ কাটা", "ইহরাম খোলা", "কঙ্কর নিক্ষেপ"],
+              "correct": "চুলের অগ্রভাগ কাটা"
+            },
+            {
+              "id": 379,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তাওয়াফে বিদা' কী?",
+              "options": ["বিদায় তাওয়াফ", "স্বাগত তাওয়াফ", "নফল তাওয়াফ", "কোনোটিই নয়"],
+              "correct": "বিদায় তাওয়াফ"
+            },
+            {
+              "id": 380,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'কিসওয়া' কী?",
+              "options": ["কাবাের ঢাকনা", "হাজারে আসওয়াদ", "জমজম কূপ", "মাকামে ইব্রাহিম"],
+              "correct": "কাবাের ঢাকনা"
+            },
+            {
+              "id": 381,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'হাতিম' কী?",
+              "options": ["কাবার অংশবিশেষ", "আরাফাতের স্থান", "মিনার পাহাড়", "মসজিদে নববীর অংশ"],
+              "correct": "কাবার অংশবিশেষ"
+            },
+            {
+              "id": 382,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মাতাফ' কী?",
+              "options": ["তাওয়াফের স্থান", "সাঈর স্থান", "কঙ্কর নিক্ষেপের স্থান", "ইহরামের স্থান"],
+              "correct": "তাওয়াফের স্থান"
+            },
+            {
+              "id": 383,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মুস্তাজাব' সময় কোনটি?",
+              "options": ["ফজরের পর", "যোহরের পর", "আসরের পর", "মাগরিবের পর"],
+              "correct": "ফজরের পর"
+            },
+            {
+              "id": 384,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তাহাল্লুল' কী?",
+              "options": ["ইহরাম থেকে বের হওয়া", "তাওয়াফ শুরু করা", "কঙ্কর নিক্ষেপ", "সাঈ করা"],
+              "correct": "ইহরাম থেকে বের হওয়া"
+            },
+            {
+              "id": 385,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'কিরান' হজ্জ কী?",
+              "options": ["হজ্জ ও উমরা একসাথে", "শুধু হজ্জ", "শুধু উমরা", "কোনোটিই নয়"],
+              "correct": "হজ্জ ও উমরা একসাথে"
+            },
+            {
+              "id": 386,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তামাত্তু' হজ্জ কী?",
+              "options": ["হজ্জ ও উমরা আলাদা", "শুধু হজ্জ", "শুধু উমরা", "কোনোটিই নয়"],
+              "correct": "হজ্জ ও উমরা আলাদা"
+            },
+            {
+              "id": 387,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'ইফরাদ' হজ্জ কী?",
+              "options": ["শুধু হজ্জ", "হজ্জ ও উমরা একসাথে", "শুধু উমরা", "কোনোটিই নয়"],
+              "correct": "শুধু হজ্জ"
+            },
+            {
+              "id": 388,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মীনা' থেকে 'আরাফাত' কত কিমি?",
+              "options": ["৫", "১০", "১৫", "২০"],
+              "correct": "১৫"
+            },
+            {
+              "id": 389,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'আরাফাত' থেকে 'মুজদালিফা' কত কিমি?",
+              "options": ["৫", "১০", "১৫", "২০"],
+              "correct": "১০"
+            },
+            {
+              "id": 390,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মুজদালিফা' থেকে 'মীনা' কত কিমি?",
+              "options": ["৫", "১০", "১৫", "২০"],
+              "correct": "৫"
+            },
+            {
+              "id": 391,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'জাবালে রহমত' কোথায়?",
+              "options": ["আরাফাত", "মিনা", "মুজদালিফা", "মক্কা"],
+              "correct": "আরাফাত"
+            },
+            {
+              "id": 392,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'মাশআরুল হারাম' কোথায়?",
+              "options": ["মুজদালিফা", "মিনা", "আরাফাত", "মক্কা"],
+              "correct": "মুজদালিফা"
+            },
+            {
+              "id": 393,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'জামারাত' কী?",
+              "options": ["কঙ্কর নিক্ষেপের স্থান", "তাওয়াফের স্থান", "সাঈর স্থান", "ইহরামের স্থান"],
+              "correct": "কঙ্কর নিক্ষেপের স্থান"
+            },
+            {
+              "id": 394,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'জামারায়ে উকবা' কী?",
+              "options": ["বড় শয়তান", "মাঝারি শয়তান", "ছোট শয়তান", "কোনোটিই নয়"],
+              "correct": "বড় শয়তান"
+            },
+            {
+              "id": 395,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'জামারায়ে উলা' কী?",
+              "options": ["ছোট শয়তান", "মাঝারি শয়তান", "বড় শয়তান", "কোনোটিই নয়"],
+              "correct": "ছোট শয়তান"
+            },
+            {
+              "id": 396,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'জামারায়ে ওয়াস্তা' কী?",
+              "options": ["মাঝারি শয়তান", "ছোট শয়তান", "বড় শয়তান", "কোনোটিই নয়"],
+              "correct": "মাঝারি শয়তান"
+            },
+            {
+              "id": 397,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তাওয়াফে কুদুম' কী?",
+              "options": ["স্বাগত তাওয়াফ", "বিদায় তাওয়াফ", "নফল তাওয়াফ", "ফরজ তাওয়াফ"],
+              "correct": "স্বাগত তাওয়াফ"
+            },
+            {
+              "id": 398,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'সাঈ' কোথা থেকে শুরু করতে হয়?",
+              "options": ["সাফা", "মারওয়া", "হাজারে আসওয়াদ", "মাকামে ইব্রাহিম"],
+              "correct": "সাফা"
+            },
+            {
+              "id": 399,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'হাজারে আসওয়াদ' চুম্বন করা কী?",
+              "options": ["ফরজ", "ওয়াজিব", "সুন্নাত", "মুস্তাহাব"],
+              "correct": "সুন্নাত"
+            },
+            {
+              "id": 400,
+              "subject": "হজ্জ",
+              "text": "হজ্জের সময় 'তাওয়াফে ইফাদা' কী?",
+              "options": ["ফরজ তাওয়াফ", "নফল তাওয়াফ", "বিদায় তাওয়াফ", "স্বাগত তাওয়াফ"],
+              "correct": "ফরজ তাওয়াফ"
+            },
+            {
+              "id": 401,
+              "subject": "হাদিস",
+              "text": "হাদিস শাস্ত্রে 'সহিহ' শব্দের অর্থ কী?",
+              "options": ["দুর্বল", "বিশুদ্ধ", "উদ্ভট", "মুনকার"],
+              "correct": "বিশুদ্ধ"
+            },
+            {
+              "id": 402,
+              "subject": "হাদিস",
+              "text": "কোন গ্রন্থকে 'সহিহাইন' বলা হয়?",
+              "options": ["সহিহ বুখারি ও সহিহ মুসলিম", "সুনান আবু দাউদ ও তিরমিজি", "মুসনাদ আহমদ ও ইবনে মাজাহ", "মুয়াত্তা মালিক ও দারিমি"],
+              "correct": "সহিহ বুখারি ও সহিহ মুসলিম"
+            },
+            {
+              "id": 403,
+              "subject": "হাদিস",
+              "text": "সহিহ বুখারি সংকলন করেছেন কে?",
+              "options": ["ইমাম মুসলিম", "ইমাম বুখারি", "ইমাম তিরমিজি", "ইমাম আবু দাউদ"],
+              "correct": "ইমাম বুখারি"
+            },
+            {
+              "id": 404,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুতাওয়াতির' অর্থ কী?",
+              "options": ["একক বর্ণনা", "অনেক বর্ণনাকারী দ্বারা প্রমাণিত", "দুর্বল সনদ", "উপকারী"],
+              "correct": "অনেক বর্ণনাকারী দ্বারা প্রমাণিত"
+            },
+            {
+              "id": 405,
+              "subject": "হাদিস",
+              "text": "কুতুবু সিত্তাহ কয়টি গ্রন্থ?",
+              "options": ["৪", "৬", "৮", "১০"],
+              "correct": "৬"
+            },
+            {
+              "id": 406,
+              "subject": "হাদис",
+              "text": "নবী (সা.)-এর বাণী, কাজ বা সম্মতিকে কী বলে?",
+              "options": ["ফিকহ", "সিরাত", "হাদিস", "তাফসীর"],
+              "correct": "হাদিস"
+            },
+            {
+              "id": 407,
+              "subject": "হাদিস",
+              "text": "ইমাম মুসলিম রহ. কোথায় জন্মগ্রহণ করেন?",
+              "options": ["বুখারা", "নিশাপুর", "বাগদাদ", "কুফা"],
+              "correct": "নিশাপুর"
+            },
+            {
+              "id": 408,
+              "subject": "হাদিস",
+              "text": "হাদিসের সনদ কী?",
+              "options": ["বর্ণনাকারীদের ধারাবাহিকতা", "হাদিসের মূল পাঠ্য", "হাদিসের ব্যাখ্যা", "হাদিসের বিষয়বস্তু"],
+              "correct": "বর্ণনাকারীদের ধারাবাহিকতা"
+            },
+            {
+              "id": 409,
+              "subject": "হাদিস",
+              "text": "কোনটি সহিহ হাদিসের শর্ত নয়?",
+              "options": ["বর্ণনাকারী নির্ভরযোগ্য", "ধারাবাহিক সনদ", "শক্তিশালী স্মৃতিশক্তি", "অনেক বর্ণনাকারী"],
+              "correct": "অনেক বর্ণনাকারী"
+            },
+            {
+              "id": 410,
+              "subject": "হাদিস",
+              "text": "ইমাম তিরমিজি রচিত গ্রন্থের নাম কী?",
+              "options": ["সুনান আবু দাউদ", "সুনান তিরমিজি", "সুনান নাসাঈ", "সুনান ইবনে মাজাহ"],
+              "correct": "সুনান তিরমিজি"
+            },
+            {
+              "id": 411,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুরসাল' কী?",
+              "options": ["বর্ণনাকারী বাদ পড়েছে", "দুর্বল সনদ", "বিশুদ্ধ হাদিস", "মিথ্যা হাদিস"],
+              "correct": "বর্ণনাকারী বাদ পড়েছে"
+            },
+            {
+              "id": 412,
+              "subject": "হাদিস",
+              "text": "কোনটি হাদিসের গ্রন্থ নয়?",
+              "options": ["সহিহ বুখারি", "সহিহ মুসলিম", "মুসনাদ আহমদ", "ফাতহুল বারি"],
+              "correct": "ফাতহুল বারি"
+            },
+            {
+              "id": 413,
+              "subject": "হাদিস",
+              "text": "ইমাম বুখারি কত বছর বয়সে হাদিস সংকলন শুরু করেন?",
+              "options": ["১০", "১৬", "২৫", "৩০"],
+              "correct": "১৬"
+            },
+            {
+              "id": 414,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুনকার' কী?",
+              "options": ["বিশুদ্ধ হাদিস", "দুর্বল হাদিস", "মিথ্যা হাদিস", "সর্বজনস্বীকৃত হাদিস"],
+              "correct": "দুর্বল হাদিস"
+            },
+            {
+              "id": 415,
+              "subject": "হাদিস",
+              "text": "কোন ইমামকে 'আমিরুল মুমিনিন ফিল হাদিস' বলা হয়?",
+              "options": ["ইমাম মুসলিম", "ইমাম বুখারি", "ইমাম আহমদ", "ইমাম মালিক"],
+              "correct": "ইমাম বুখারি"
+            },
+            {
+              "id": 416,
+              "subject": "হাদিস",
+              "text": "ইমাম আবু দাউদ কোথায় জন্মগ্রহণ করেন?",
+              "options": ["বাসরা", "কুফা", "মক্কা", "মদিনা"],
+              "correct": "বাসরা"
+            },
+            {
+              "id": 417,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মাওযু' কী?",
+              "options": ["বিশুদ্ধ", "দুর্বল", "মিথ্যা", "সন্দেহজনক"],
+              "correct": "মিথ্যা"
+            },
+            {
+              "id": 418,
+              "subject": "হাদিস",
+              "text": "সুনান নাসাঈ রচনা করেছেন কে?",
+              "options": ["ইমাম নাসাঈ", "ইমাম তিরমিজি", "ইমাম আবু দাউদ", "ইমাম ইবনে মাজাহ"],
+              "correct": "ইমাম নাসাঈ"
+            },
+            {
+              "id": 419,
+              "subject": "হাদিস",
+              "text": "কোনটি সিহাহ সিত্তার গ্রন্থ নয়?",
+              "options": ["সুনান ইবনে মাজাহ", "মুয়াত্তা মালিক", "সুনান আবু দাউদ", "সুনান নাসাঈ"],
+              "correct": "মুয়াত্তা মালিক"
+            },
+            {
+              "id": 420,
+              "subject": "হাদিস",
+              "text": "ইমাম মালিক রচিত হাদিস গ্রন্থের নাম কী?",
+              "options": ["সহিহ মুসলিম", "মুয়াত্তা মালিক", "সুনান দারিমি", "মুসনাদ আহমদ"],
+              "correct": "মুয়াত্তা মালিক"
+            },
+            {
+              "id": 421,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'হাসান' কী?",
+              "options": ["বিশুদ্ধ", "দুর্বল", "মধ্যম মানের", "মিথ্যা"],
+              "correct": "মধ্যম মানের"
+            },
+            {
+              "id": 422,
+              "subject": "হাদিস",
+              "text": "ইমাম ইবনে মাজাহ কোথায় জন্মগ্রহণ করেন?",
+              "options": ["কাজভিন", "বাগদাদ", "দামেস্ক", "কুফা"],
+              "correct": "কাজভিন"
+            },
+            {
+              "id": 423,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'গরিব' কী?",
+              "options": ["একক বর্ণনা", "অনেক বর্ণনাকারী", "বিশুদ্ধ", "মিথ্যা"],
+              "correct": "একক বর্ণনা"
+            },
+            {
+              "id": 424,
+              "subject": "হাদিস",
+              "text": "সহিহ মুসলিমে কতটি হাদিস আছে?",
+              "options": ["২,০০০", "৪,০০০", "৭,৫৬৩", "১২,০০০"],
+              "correct": "৭,৫৬৩"
+            },
+            {
+              "id": 425,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুতাফাকুন আলাইহি' কী?",
+              "options": ["বুখারি ও মুসলিম সম্মত হাদিস", "দুর্বল হাদিস", "মিথ্যা হাদিস", "একক বর্ণনা"],
+              "correct": "বুখারি ও মুসলিম সম্মত হাদিস"
+            },
+            {
+              "id": 426,
+              "subject": "হাদিস",
+              "text": "ইমাম আহমদ ইবনে হাম্বল রচিত গ্রন্থের নাম কী?",
+              "options": ["মুসনাদ আহমদ", "সুনান আবু দাউদ", "সুনান দারিমি", "মুয়াত্তা মালিক"],
+              "correct": "মুসনাদ আহমদ"
+            },
+            {
+              "id": 427,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'শাজ' কী?",
+              "options": ["বিশুদ্ধ", "দুর্বল", "বিরল", "মিথ্যা"],
+              "correct": "বিরল"
+            },
+            {
+              "id": 428,
+              "subject": "হাদিস",
+              "text": "সুনান আবু দাউদে কতটি হাদিস আছে?",
+              "options": ["২,৮০০", "৪,৮০০", "৫,২৭৪", "৭,৫৬৩"],
+              "correct": "৫,২৭৪"
+            },
+            {
+              "id": 429,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুদাল্লিস' কী?",
+              "options": ["সনদ গোপনকারী", "মিথ্যাবাদী", "বিশুদ্ধ বর্ণনাকারী", "দুর্বল স্মৃতিশক্তি"],
+              "correct": "সনদ গোপনকারী"
+            },
+            {
+              "id": 430,
+              "subject": "হাদিস",
+              "text": "ইমাম দারিমি কোথায় জন্মগ্রহণ করেন?",
+              "options": ["সমরকন্দ", "বুখারা", "নিশাপুর", "কুফা"],
+              "correct": "সমরকন্দ"
+            },
+            {
+              "id": 431,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মাতরুক' কী?",
+              "options": ["পরিত্যক্ত", "বিশুদ্ধ", "দুর্বল", "মিথ্যা"],
+              "correct": "পরিত্যক্ত"
+            },
+            {
+              "id": 432,
+              "subject": "হাদিস",
+              "text": "সুনান তিরমিজি কত খণ্ডে সম্পূর্ণ?",
+              "options": ["২", "৪", "৬", "৮"],
+              "correct": "৪"
+            },
+            {
+              "id": 433,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুআল্লাক' কী?",
+              "options": ["সনদ বিহীন", "বিশুদ্ধ", "দুর্বল", "মিথ্যা"],
+              "correct": "সনদ বিহীন"
+            },
+            {
+              "id": 434,
+              "subject": "হাদিস",
+              "text": "ইমাম নাসাঈ কোথায় জন্মগ্রহণ করেন?",
+              "options": ["নাসা", "বাগদাদ", "কুফা", "মক্কা"],
+              "correct": "নাসা"
+            },
+            {
+              "id": 435,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুনকার' ও 'মাতরুক'-এর মধ্যে পার্থক্য কী?",
+              "options": ["মুনকার দুর্বল, মাতরুক পরিত্যক্ত", "মুনকার মিথ্যা, মাতরুক বিশুদ্ধ", "উভয়ই এক", "কোনোটিই নয়"],
+              "correct": "মুনকার দুর্বল, মাতরুক পরিত্যক্ত"
+            },
+            {
+              "id": 436,
+              "subject": "হাদিস",
+              "text": "সুনান ইবনে মাজাহ কত খণ্ডে সম্পূর্ণ?",
+              "options": ["২", "৪", "৬", "৮"],
+              "correct": "৪"
+            },
+            {
+              "id": 437,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুযতারিব' কী?",
+              "options": ["বিশৃঙ্খল", "বিশুদ্ধ", "দুর্বল", "মিথ্যা"],
+              "correct": "বিশৃঙ্খল"
+            },
+            {
+              "id": 438,
+              "subject": "হাদিস",
+              "text": "ইমাম তিরমিজি কোথায় জন্মগ্রহণ করেন?",
+              "options": ["তিরমিজ", "বুখারা", "নিশাপুর", "কুফা"],
+              "correct": "তিরমিজ"
+            },
+            {
+              "id": 439,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুক্বল' ও 'মুদ্বরাজ'-এর মধ্যে পার্থক্য কী?",
+              "options": ["মুক্বল বিশুদ্ধ, মুদ্বরাজ দুর্বল", "মুক্বল মিথ্যা, মুদ্বরাজ বিশুদ্ধ", "উভয়ই এক", "কোনোটিই নয়"],
+              "correct": "মুক্বল বিশুদ্ধ, মুদ্বরাজ দুর্বল"
+            },
+            {
+              "id": 440,
+              "subject": "হাদিস",
+              "text": "মুসনাদ আহমদে কতটি হাদিস আছে?",
+              "options": ["২০,০০০", "৩০,০০০", "৪০,০০০", "৫০,০০০"],
+              "correct": "৩০,০০০"
+            },
+            {
+              "id": 441,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুদাল্লিস' ও 'মুরসাল'-এর মধ্যে পার্থক্য কী?",
+              "options": ["মুদাল্লিস সনদ গোপন করে, মুরসাল বর্ণনাকারী বাদ দেয়", "উভয়ই এক", "মুদাল্লিস মিথ্যা, মুরসাল বিশুদ্ধ", "কোনোটিই নয়"],
+              "correct": "মুদাল্লিস সনদ গোপন করে, মুরসাল বর্ণনাকারী বাদ দেয়"
+            },
+            {
+              "id": 442,
+              "subject": "হাদিস",
+              "text": "ইমাম ইবনে মাজাহ কত বছর বয়সে হাদিস সংকলন শুরু করেন?",
+              "options": ["১৫", "২০", "২৫", "৩০"],
+              "correct": "২০"
+            },
+            {
+              "id": 443,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুনকার' ও 'শাজ'-এর মধ্যে পার্থক্য কী?",
+              "options": ["মুনকার দুর্বল, শাজ বিরল", "উভয়ই এক", "মুনকার মিথ্যা, শাজ বিশুদ্ধ", "কোনোটিই নয়"],
+              "correct": "মুনকার দুর্বল, শাজ বিরল"
+            },
+            {
+              "id": 444,
+              "subject": "হাদিস",
+              "text": "সুনান দারিমি রচনা করেছেন কে?",
+              "options": ["ইমাম দারিমি", "ইমাম আবু দাউদ", "ইমাম তিরমিজি", "ইমাম নাসাঈ"],
+              "correct": "ইমাম দারিমি"
+            },
+            {
+              "id": 445,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুতাওয়াতির' ও 'আহাদ'-এর মধ্যে পার্থক্য কী?",
+              "options": ["মুতাওয়াতির বহু বর্ণনাকারী, আহাদ একক", "উভয়ই এক", "মুতাওয়াতির মিথ্যা, আহাদ বিশুদ্ধ", "কোনোটিই নয়"],
+              "correct": "মুতাওয়াতির বহু বর্ণনাকারী, আহাদ একক"
+            },
+            {
+              "id": 446,
+              "subject": "হাদিস",
+              "text": "ইমাম নাসাঈ কত বছর বয়সে হাদিস সংকলন শুরু করেন?",
+              "options": ["১৫", "২০", "২৫", "৩০"],
+              "correct": "২০"
+            },
+            {
+              "id": 447,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'মুনকার' ও 'মাওযু'-এর মধ্যে পার্থক্য কী?",
+              "options": ["মুনকার দুর্বল, মাওযু মিথ্যা", "উভয়ই এক", "মুনকার বিশুদ্ধ, মাওযু দুর্বল", "কোনোটিই নয়"],
+              "correct": "মুনকার দুর্বল, মাওযু মিথ্যা"
+            },
+            {
+              "id": 448,
+              "subject": "হাদিস",
+              "text": "সুনান সিত্তার গ্রন্থগুলোর মধ্যে সর্বশেষ সংকলিত গ্রন্থ কোনটি?",
+              "options": ["সুনান ইবনে মাজাহ", "সুনান নাসাঈ", "সুনান আবু দাউদ", "সুনান তিরমিজি"],
+              "correct": "সুনান ইবনে মাজাহ"
+            },
+            {
+              "id": 449,
+              "subject": "হাদিস",
+              "text": "হাদিসের পরিভাষায় 'হাসান' ও 'সহিহ'-এর মধ্যে পার্থক্য কী?",
+              "options": ["হাসান মধ্যম মানের, সহিহ বিশুদ্ধ", "উভয়ই এক", "হাসান দুর্বল, সহিহ মিথ্যা", "কোনোটিই নয়"],
+              "correct": "হাসান মধ্যম মানের, সহিহ বিশুদ্ধ"
+            },
+            {
+              "id": 450,
+              "subject": "হাদিস",
+              "text": "ইমাম আবু দাউদ কত বছর বয়সে হাদিস সংকলন শুরু করেন?",
+              "options": ["১৮", "২২", "২৫", "৩০"],
+              "correct": "১৮"
+            },
+            {
+              "id": 451,
+              "subject": "আরবি",
+              "text": "আরবি বর্ণমালায় মোট কতটি হরফ আছে?",
+              "options": ["২৬", "২৮", "৩০", "৩২"],
+              "correct": "২৮"
+            },
+            {
+              "id": 452,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'জামাল' শব্দের অর্থ কী?",
+              "options": ["সিংহ", "উট", "ঘোড়া", "বিড়াল"],
+              "correct": "উট"
+            },
+            {
+              "id": 453,
+              "subject": "আরবি",
+              "text": "কুরআনের কোন সূরাটি সম্পূর্ণরূপে মক্কায় নাযিল হয়েছে?",
+              "options": ["সূরা ফাতিহা", "সূরা ইখলাস", "সূরা ইয়াসিন", "সূরা কাহাফ"],
+              "correct": "সূরা ইখলাস"
+            },
+            {
+              "id": 454,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'কালাম' শব্দের অর্থ কী?",
+              "options": ["লেখা", "কথা", "জ্ঞান", "ধর্ম"],
+              "correct": "কথা"
+            },
+            {
+              "id": 455,
+              "subject": "আরবি",
+              "text": "আরবি বর্ণমালার প্রথম হরফ কোনটি?",
+              "options": ["আলিফ", "বা", "তা", "ছিন"],
+              "correct": "আলিফ"
+            },
+            {
+              "id": 456,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'কিতাব' শব্দের অর্থ কী?",
+              "options": ["জ্ঞান", "লেখা", "বই", "পত্র"],
+              "correct": "বই"
+            },
+            {
+              "id": 457,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'শুকরান' শব্দের অর্থ কী?",
+              "options": ["দয়া", "ধন্যবাদ", "ক্ষমা", "প্রার্থনা"],
+              "correct": "ধন্যবাদ"
+            },
+            {
+              "id": 458,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'সালাম' শব্দের অর্থ কী?",
+              "options": ["আশীর্বাদ", "শান্তি", "প্রেম", "সম্মান"],
+              "correct": "শান্তি"
+            },
+            {
+              "id": 459,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'ওয়াক্ত' শব্দের অর্থ কী?",
+              "options": ["সময়", "স্থান", "উদ্দেশ্য", "জ্ঞান"],
+              "correct": "সময়"
+            },
+            {
+              "id": 460,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'ইলম' শব্দের অর্থ কী?",
+              "options": ["ধর্ম", "জ্ঞান", "প্রার্থনা", "সময়"],
+              "correct": "জ্ঞান"
+            },
+            {
+              "id": 461,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'রহমত' শব্দের অর্থ কী?",
+              "options": ["দয়া", "ক্ষমা", "প্রেম", "শান্তি"],
+              "correct": "দয়া"
+            },
+            {
+              "id": 462,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'নূর' শব্দের অর্থ কী?",
+              "options": ["জ্ঞান", "আলো", "পবিত্রতা", "শান্তি"],
+              "correct": "আলো"
+            },
+            {
+              "id": 463,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'জান্নাত' শব্দের অর্থ কী?",
+              "options": ["স্বর্গ", "নরক", "পৃথিবী", "আকাশ"],
+              "correct": "স্বর্গ"
+            },
+            {
+              "id": 464,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'দোয়া' শব্দের অর্থ কী?",
+              "options": ["প্রার্থনা", "ধন্যবাদ", "দয়া", "জ্ঞান"],
+              "correct": "প্রার্থনা"
+            },
+            {
+              "id": 465,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'হক্ক' শব্দের অর্থ কী?",
+              "options": ["সত্য", "ধর্ম", "ন্যায়", "দয়া"],
+              "correct": "সত্য"
+            },
+            {
+              "id": 466,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'সাবর' শব্দের অর্থ কী?",
+              "options": ["ধৈর্য", "সাহস", "প্রেম", "জ্ঞান"],
+              "correct": "ধৈর্য"
+            },
+            {
+              "id": 467,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'তাওবা' শব্দের অর্থ কী?",
+              "options": ["ক্ষমা", "প্রার্থনা", "তপস্যা", "ফিরে আসা"],
+              "correct": "ফিরে আসা"
+            },
+            {
+              "id": 468,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'ইমান' শব্দের অর্থ কী?",
+              "options": ["জ্ঞান", "ধর্ম", "বিশ্বাস", "প্রার্থনা"],
+              "correct": "বিশ্বাস"
+            },
+            {
+              "id": 469,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'ফিকহ' শব্দের অর্থ কী?",
+              "options": ["জ্ঞান", "ধর্মতত্ত্ব", "আইন", "ব্যাকরণ"],
+              "correct": "আইন"
+            },
+            {
+              "id": 470,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'উম্মাহ' শব্দের অর্থ কী?",
+              "options": ["সম্প্রদায়", "জাতি", "দেশ", "ধর্ম"],
+              "correct": "জাতি"
+            },
+            {
+              "id": 471,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'খায়র' শব্দের অর্থ কী?",
+              "options": ["মঙ্গল", "অমঙ্গল", "সম্পদ", "দরিদ্রতা"],
+              "correct": "মঙ্গল"
+            },
+            {
+              "id": 472,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'শার্ক' শব্দের অর্থ কী?",
+              "options": ["একত্ববাদ", "অংশীদারিত্ব", "ঐক্য", "বিরোধ"],
+              "correct": "অংশীদারিত্ব"
+            },
+            {
+              "id": 473,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'জিহাদ' শব্দের অর্থ কী?",
+              "options": ["যুদ্ধ", "প্রচেষ্টা", "ধর্মযুদ্ধ", "সংগ্রাম"],
+              "correct": "সংগ্রাম"
+            },
+            {
+              "id": 474,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'সাওম' শব্দের অর্থ কী?",
+              "options": ["প্রার্থনা", "রোজা", "দান", "হজ্জ"],
+              "correct": "রোজা"
+            },
+            {
+              "id": 475,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'যাকাত' শব্দের অর্থ কী?",
+              "options": ["দান", "শুদ্ধতা", "বর্ধন", "প্রার্থনা"],
+              "correct": "শুদ্ধতা"
+            },
+            {
+              "id": 476,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'হালাল' শব্দের অর্থ কী?",
+              "options": ["অনুমোদিত", "নিষিদ্ধ", "পবিত্র", "অপবিত্র"],
+              "correct": "অনুমোদিত"
+            },
+            {
+              "id": 477,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'হারাম' শব্দের অর্থ কী?",
+              "options": ["অনুমোদিত", "নিষিদ্ধ", "পবিত্র", "অপবিত্র"],
+              "correct": "নিষিদ্ধ"
+            },
+            {
+              "id": 478,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'মাকরুহ' শব্দের অর্থ কী?",
+              "options": ["অভিপ্রেত", "অপছন্দনীয়", "অনুমোদিত", "নিষিদ্ধ"],
+              "correct": "অপছন্দনীয়"
+            },
+            {
+              "id": 479,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'মুস্তাহাব' শব্দের অর্থ কী?",
+              "options": ["অনুমোদিত", "প্রস্তাবিত", "নিষিদ্ধ", "অপছন্দনীয়"],
+              "correct": "প্রস্তাবিত"
+            },
+            {
+              "id": 480,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'ফরজ' শব্দের অর্থ কী?",
+              "options": ["অনিবার্য", "প্রস্তাবিত", "নিষিদ্ধ", "অপছন্দনীয়"],
+              "correct": "অনিবার্য"
+            },
+            {
+              "id": 481,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'সুন্নত' শব্দের অর্থ কী?",
+              "options": ["অনুসরণীয়", "প্রস্তাবিত", "নিষিদ্ধ", "অপছন্দনীয়"],
+              "correct": "অনুসরণীয়"
+            },
+            {
+              "id": 482,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'নাফিলা' শব্দের অর্থ কী?",
+              "options": ["অতিরিক্ত", "অনিবার্য", "নিষিদ্ধ", "অপছন্দনীয়"],
+              "correct": "অতিরিক্ত"
+            },
+            {
+              "id": 483,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'গুনাহ' শব্দের অর্থ কী?",
+              "options": ["পাপ", "পুণ্য", "ক্ষমা", "প্রার্থনা"],
+              "correct": "পাপ"
+            },
+            {
+              "id": 484,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'সাওয়াব' শব্দের অর্থ কী?",
+              "options": ["পাপ", "পুণ্য", "ক্ষমা", "প্রার্থনা"],
+              "correct": "পুণ্য"
+            },
+            {
+              "id": 485,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'মাগফিরাত' শব্দের অর্থ কী?",
+              "options": ["পাপ", "পুণ্য", "ক্ষমা", "প্রার্থনা"],
+              "correct": "ক্ষমা"
+            },
+            {
+              "id": 486,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'রিয্ক' শব্দের অর্থ কী?",
+              "options": ["জীবিকা", "ধন", "সম্পদ", "সুখ"],
+              "correct": "জীবিকা"
+            },
+            {
+              "id": 487,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'বারাকা' শব্দের অর্থ কী?",
+              "options": ["সম্পদ", "আশীর্বাদ", "সুখ", "শান্তি"],
+              "correct": "আশীর্বাদ"
+            },
+            {
+              "id": 488,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'আখিরাত' শব্দের অর্থ কী?",
+              "options": ["পৃথিবী", "পরকাল", "স্বর্গ", "নরক"],
+              "correct": "পরকাল"
+            },
+            {
+              "id": 489,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'দুনিয়া' শব্দের অর্থ কী?",
+              "options": ["পৃথিবী", "পরকাল", "স্বর্গ", "নরক"],
+              "correct": "পৃথিবী"
+            },
+            {
+              "id": 490,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'আসমান' শব্দের অর্থ কী?",
+              "options": ["পৃথিবী", "আকাশ", "স্বর্গ", "নরক"],
+              "correct": "আকাশ"
+            },
+            {
+              "id": 491,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'জমিন' শব্দের অর্থ কী?",
+              "options": ["পৃথিবী", "আকাশ", "স্বর্গ", "নরক"],
+              "correct": "পৃথিবী"
+            },
+            {
+              "id": 492,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'বাহার' শব্দের অর্থ কী?",
+              "options": ["নদী", "সমুদ্র", "বৃষ্টি", "বাতাস"],
+              "correct": "সমুদ্র"
+            },
+            {
+              "id": 493,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'জান্নাহ' শব্দের অর্থ কী?",
+              "options": ["বাগান", "স্বর্গ", "নরক", "আগুন"],
+              "correct": "বাগান"
+            },
+            {
+              "id": 494,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'নাহার' শব্দের অর্থ কী?",
+              "options": ["নদী", "সমুদ্র", "দিন", "রাত"],
+              "correct": "দিন"
+            },
+            {
+              "id": 495,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'লাইল' শব্দের অর্থ কী?",
+              "options": ["নদী", "সমুদ্র", "দিন", "রাত"],
+              "correct": "রাত"
+            },
+            {
+              "id": 496,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'শামস' শব্দের অর্থ কী?",
+              "options": ["চাঁদ", "সূর্য", "তারকা", "আকাশ"],
+              "correct": "সূর্য"
+            },
+            {
+              "id": 497,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'কামার' শব্দের অর্থ কী?",
+              "options": ["চাঁদ", "সূর্য", "তারকা", "আকাশ"],
+              "correct": "চাঁদ"
+            },
+            {
+              "id": 498,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'নাজম' শব্দের অর্থ কী?",
+              "options": ["চাঁদ", "সূর্য", "তারকা", "আকাশ"],
+              "correct": "তারকা"
+            },
+            {
+              "id": 499,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'সামা' শব্দের অর্থ কী?",
+              "options": ["পৃথিবী", "আকাশ", "স্বর্গ", "নরক"],
+              "correct": "আকাশ"
+            },
+            {
+              "id": 500,
+              "subject": "আরবি",
+              "text": "আরবি ভাষায় 'আরদ' শব্দের অর্থ কী?",
+              "options": ["পৃথিবী", "আকাশ", "স্বর্গ", "নরক"],
+              "correct": "পৃথিবী"
+            }
+          ]
+          localStorage.setItem('questions', JSON.stringify(this.questions));
+        },
+        // নতুন ফাংশন যোগ করা
+        toggleQuestion(id, checked) {
+          if (checked) {
+            if (!this.selectedQuestions.includes(id)) {
+              this.selectedQuestions.push(id);
+            }
+          } else {
+            this.selectedQuestions = this.selectedQuestions.filter(qid => qid !== id);
+          }
+        },
+        
+        filterQuestions() {
+          this.filteredQuestions = this.questions.filter(q => {
+            const matchesSubject = this.filterSubject ? q.subject === this.filterSubject : true;
+            const matchesSearch = this.searchQuery ? q.text.toLowerCase().includes(this.searchQuery.toLowerCase()) : true;
+            return matchesSubject && matchesSearch;
+          });
+          // selectedQuestions এখানে পরিবর্তন করা হবে না
+        },
+        
+        generateQuiz() {
+          this.generatedQuiz = this.selectedQuestions
+            .map(id => this.questions.find(q => q.id === id))
+            .filter(q => q !== undefined);
+          if (this.generatedQuiz.length === 0) {
+            alert('কমপক্ষে একটি প্রশ্ন সিলেক্ট করুন!');
+          } else {
+            this.showQuestions = true;
+          }
+        },
+        
+        deleteQuestion(index) {
+          const deletedQuestionId = this.questions[index].id;
+          this.questions.splice(index, 1);
+          localStorage.setItem('questions', JSON.stringify(this.questions));
+          this.selectedQuestions = this.selectedQuestions.filter(id => id !== deletedQuestionId);
+          this.filterQuestions();
+        },
+        
+        toggleAll() {
+          if (this.selectAll) {
+            this.selectedQuestions = this.filteredQuestions.map(q => q.id);
+          } else {
+            this.selectedQuestions = [];
+          }
+        },
+        
+        openModal(mode, index = null) {
+          this.modalMode = mode;
+          if (mode === 'edit' && index !== null) {
+            this.editIndex = index;
+            this.currentQuestion = { ...this.questions[index] };
+          } else {
+            this.currentQuestion = { id: null, subject: '', text: '', options: ['', '', '', ''], correct: '' };
+          }
+          this.isModalOpen = true;
+        },
+        
+        closeModal() {
+          this.isModalOpen = false;
+          this.editIndex = null;
+        },
+        
+        addQuestion() {
+          this.currentQuestion.id = Date.now();
+          this.questions.push({ ...this.currentQuestion });
+          localStorage.setItem('questions', JSON.stringify(this.questions));
+          this.closeModal();
+          this.filterQuestions();
+        },
+        
+        updateQuestion() {
+          this.questions[this.editIndex] = { ...this.currentQuestion };
+          localStorage.setItem('questions', JSON.stringify(this.questions));
+          this.closeModal();
+          this.filterQuestions();
+        },
+        
+        convertMinutes(totalMinutes) {
+          const hours = Math.floor(totalMinutes / 60);
+          const minutes = totalMinutes % 60;
+          return this.numberConverter(`${hours} ঘণ্টা ${minutes} মিনিট`);
+        },
+        
+        formatNumber(number) {
+          return this.numberConverter(number.toString().padStart(2, '0'));
+        },
+        
+        numberConverter(number) {
+          return number.toString().replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯" [d]);
+        }
+      };
+    }
+  </script>
+</body>
+
+</html>
