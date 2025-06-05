@@ -138,7 +138,8 @@
       <div x-show="showMr && generatedQuiz.length > 0" class="w-[21cm] mx-auto mt-6 print:mt-0">
         <h2 class="text-4xl text-center font-semibold">আয়েশা সিদ্দিকা মহিলা মাদরাসা</h2>
         <h2 class="text-xl text-center font-semibold">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর।</h2>
-        <h2 class="text-xl text-center font-semibold">কুইজ প্রতিযোগিতা- এপ্রিল ২০২৫</h2>
+        <h2 class="text-xl text-center font-semibold">কুইজ প্রতিযোগিতা- জুন ২০২৫</h2>
+        <h2 x-text="level" class="text-xl text-center font-semibold"></h2>
         <div class="flex items-center justify-between">
           <p>
             <span>পূর্ণমান: </span>
@@ -295,6 +296,14 @@
                 <option value="4">4</option>
               </select>
             </div>
+            <div class="flex items-center justify-between gap-x-3">
+              <span class="text-sm text-gray-500">বিভাগ</span>
+              <select x-model="level" class="p-2 border rounded-xl w-full sm:w-auto bg-transparent">
+                <option value="ক বিভাগ (শিশু - ২য় শ্রেণি)">ক বিভাগ</option>
+                <option value="খ বিভাগ (৩য় - ৪র্থ শ্রেণি)">খ বিভাগ</option>
+                <option value="গ বিভাগ (৫ম - ৮ম শ্রেণি)">গ বিভাগ</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -328,6 +337,7 @@
     function quizManager() {
       return {
         questions: [],
+        level: 'ক বিভাগ (শিশু - ২য় শ্রেণি)',
         columns: 2,
         filterSubject: '',
         searchQuery: '',
