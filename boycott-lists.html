@@ -102,7 +102,7 @@
 
 <body class="bg-gray-50">
   <!-- Main App Container -->
-  <div x-data="app()" x-init="init()" class="max-w-md mx-auto relative">
+  <div x-data="app()" x-init="init()" class="relative">
     <!-- Header Section -->
     <header class="bg-gradient-to-r from-red-600 to-red-500 text-white text-center py-8 px-4 shadow-lg sticky top-0 z-10">
       <div class="max-w-4xl mx-auto">
@@ -167,7 +167,7 @@
         </div>
         
         <!-- Product Grid -->
-        <div x-show="!isLoading && filteredProducts.length > 0" class="grid grid-cols-2 gap-3">
+        <div x-show="!isLoading && filteredProducts.length > 0" class="grid grid-cols-6 gap-3">
           <template x-for="product in filteredProducts" :key="product.id">
             <div class="bg-white rounded-lg shadow overflow-hidden product-card transition transform hover:scale-[1.02]" @click="showProductDetail(product)">
               <div class="relative pt-[100%]">
