@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ethical Choices - Boycott List</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <!-- Marked.js for markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Toast notifications -->
+  <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.css">
+  
+  <style>
+    /* Custom styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      padding-bottom: 80px;
+    }
+    
+    .skeleton {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      background-color: #e5e7eb;
+    }
+    
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+      
+      50% {
+        opacity: 0.5;
+      }
+    }
+    
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .active-tab {
+      color: #e63946;
+      position: relative;
+    }
+    
+    .active-tab::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 3px;
+      background: #e63946;
+      border-radius: 2px;
+    }
+    
+    .scan-button {
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: transform 0.2s ease;
+    }
+    
+    .scan-button:hover {
+      transform: scale(1.1);
+    }
+    
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #e63946;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d00000;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+  <!-- Main App Container -->
+  <div x-data="app()" x-init="init()" class="max-w-md mx-auto relative">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-red-600 to-red-500 text-white text-center py-8 px-4 shadow-lg sticky top-0 z-10">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-2">Ethical Choices</h1>
+        <p class="text-sm opacity-90 mb-4">
+          Stand for what's right. Support ethical alternatives.
+        </p>
+        <div class="relative max-w-md mx-auto">
+          <input type="text" placeholder="Search brands or products..." class="w-full py-2 px-5 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-300 shadow-md" x-model="searchQuery" @keyup.enter="searchProducts">
+          <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-700 text-white p-1.5 rounded-full hover:bg-red-800 transition" @click="searchProducts">
+            <i class="ti ti-search text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="p-4 pb-20">
+      <!-- Stats Bar -->
+      <div class="bg-white rounded-lg shadow p-3 mb-4 grid grid-cols-3 gap-2 text-center">
+        <div>
+          <div class="text-red-500 font-bold" x-text="stats.boycotted"></div>
+          <div class="text-xs text-gray-500">Boycotted</div>
+        </div>
+        <div>
+          <div class="text-green-500 font-bold" x-text="stats.alternatives"></div>
+          <div class="text-xs text-gray-500">Alternatives</div>
+        </div>
+        <div>
+          <div class="text-blue-500 font-bold" x-text="stats.newToday"></div>
+          <div class="text-xs text-gray-500">New Today</div>
+        </div>
+      </div>
+      
+      <!-- Categories Filter -->
+      <div class="mb-4 overflow-x-auto pb-2">
+        <div class="flex space-x-2">
+          <template x-for="category in categories">
+            <button x-text="category" class="px-3 py-1 text-sm rounded-full whitespace-nowrap" :class="{'bg-red-500 text-white': activeCategory === category, 'bg-white text-gray-700 shadow': activeCategory !== category}" @click="activeCategory = category"></button>
+          </template>
+        </div>
+      </div>
+      
+      <!-- Product List -->
+      <div>
+        <!-- Loading State -->
+        <template x-if="isLoading">
+          <div class="grid grid-cols-2 gap-3">
+            <template x-for="i in 6">
+              <div class="bg-white rounded-lg shadow p-3 skeleton h-32"></div>
+            </template>
+          </div>
+        </template>
+        
+        <!-- Empty State -->
+        <div x-show="!isLoading && filteredProducts.length === 0" class="text-center py-12 bg-white rounded-lg shadow">
+          <i class="ti ti-mood-sad text-4xl text-gray-400 mb-3"></i>
+          <p class="text-gray-500">No products found matching "<span x-text="debouncedSearch" class="font-medium"></span>"</p>
+          <button @click="clearSearch" class="mt-3 text-sm text-red-500 hover:underline">
+            Clear search
+          </button>
+        </div>
+        
+        <!-- Product Grid -->
+        <div x-show="!isLoading && filteredProducts.length > 0" class="grid grid-cols-2 gap-3">
+          <template x-for="product in filteredProducts" :key="product.id">
+            <div class="bg-white rounded-lg shadow overflow-hidden product-card transition transform hover:scale-[1.02]" @click="showProductDetail(product)">
+              <div class="relative pt-[100%]">
+                <img :src="product.attributes.imageUrl" :alt="product.attributes.name" class="absolute top-0 left-0 w-full h-full object-contain p-3" loading="lazy" @error="product.attributes.imageUrl = 'https://via.placeholder.com/300?text=No+Image'">
+                <div x-show="product.attributes.priority" class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  High Priority
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-medium text-sm truncate" x-text="product.attributes.name"></h3>
+                <div class="flex justify-between items-center mt-2">
+                  <span class="text-xs px-2 py-1 rounded" :class="{'bg-red-100 text-red-800': product.attributes.boycott, 'bg-green-100 text-green-800': !product.attributes.boycott}" x-text="product.attributes.boycott ? 'Boycott' : 'Alternative'"></span>
+                  <button @click.stop="toggleBookmark(product)" class="text-gray-400 hover:text-red-500">
+                    <i class="ti" :class="{'ti-bookmark-filled text-red-500': isBookmarked(product), 'ti-bookmark': !isBookmarked(product)}"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+        
+        <!-- Load More Button -->
+        <div x-show="!isLoading && filteredProducts.length > 0 && hasMoreProducts" class="mt-6 text-center">
+          <button @click="loadMore" class="bg-white border border-gray-300 rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-50">
+            Load More
+          </button>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 glass-nav border-t border-gray-200 z-10">
+      <div class="flex justify-around items-center p-2 max-w-md mx-auto">
+        <button @click="activeTab = 'home'" class="flex flex-col items-center p-2" :class="{'active-tab': activeTab === 'home'}">
+          <i class="ti ti-home"></i>
+          <span class="text-xs mt-1">Home</span>
+        </button>
+        
+        <button @click="activeTab = 'bookmarks'" class="flex flex-col items-center p-2" :class="{'active-tab': activeTab === 'bookmarks'}">
+          <i class="ti ti-bookmark"></i>
+          <span class="text-xs mt-1">Saved</span>
+        </button>
+        
+        <button @click="scanBarcode" class="scan-button bg-green-500 text-white p-3 rounded-full -mt-6 shadow-lg">
+          <i class="ti ti-scan text-xl"></i>
+        </button>
+        
+        <button @click="activeTab = 'alternatives'" class="flex flex-col items-center p-2" :class="{'active-tab': activeTab === 'alternatives'}">
+          <i class="ti ti-replace"></i>
+          <span class="text-xs mt-1">Alternatives</span>
+        </button>
+        
+        <button @click="activeTab = 'contribute'" class="flex flex-col items-center p-2" :class="{'active-tab': activeTab === 'contribute'}">
+          <i class="ti ti-plus"></i>
+          <span class="text-xs mt-1">Contribute</span>
+        </button>
+      </div>
+    </nav>
+    
+    <!-- Product Detail Modal -->
+    <div x-show="selectedProduct" class="fixed inset-0 z-20 flex items-center justify-center p-4 modal-overlay" @click.self="selectedProduct = null" x-transition>
+      <div class="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
+          <h2 class="font-bold text-lg">Product Details</h2>
+          <button @click="selectedProduct = null" class="text-gray-500 hover:text-red-500">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+        
+        <div class="p-4">
+          <div class="relative pt-[100%] mb-4 bg-gray-100 rounded-lg">
+            <img :src="selectedProduct?.attributes.imageUrl" :alt="selectedProduct?.attributes.name" class="absolute top-0 left-0 w-full h-full object-contain p-6">
+          </div>
+          
+          <div class="flex justify-between items-start mb-4">
+            <h1 class="text-xl font-bold" x-text="selectedProduct?.attributes.name"></h1>
+            <span class="text-xs px-2 py-1 rounded" :class="{'bg-red-100 text-red-800': selectedProduct?.attributes.boycott, 'bg-green-100 text-green-800': !selectedProduct?.attributes.boycott}" x-text="selectedProduct?.attributes.boycott ? 'Boycott' : 'Alternative'"></span>
+          </div>
+          
+          <div class="mb-4">
+            <h3 class="font-medium text-gray-700 mb-2">Reason for boycott:</h3>
+            <div class="prose prose-sm max-w-none" x-html="selectedProduct?.attributes.proof ? marked.parse(selectedProduct?.attributes.proof) : 'No details provided'"></div>
+          </div>
+          
+          <div x-show="selectedProduct?.attributes.alternatives?.length > 0" class="mb-4">
+            <h3 class="font-medium text-gray-700 mb-2">Suggested Alternatives:</h3>
+            <div class="space-y-2">
+              <template x-for="alt in selectedProduct?.attributes.alternatives">
+                <div class="flex items-center bg-gray-50 p-2 rounded">
+                  <i class="ti ti-check text-green-500 mr-2"></i>
+                  <span x-text="alt"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+          
+          <div class="flex space-x-2 mb-4">
+            <button @click="toggleBookmark(selectedProduct)" class="flex-1 border border-gray-300 rounded-lg py-2 flex items-center justify-center space-x-2" :class="{'bg-red-50 border-red-200': isBookmarked(selectedProduct)}">
+              <i class="ti" :class="{'ti-bookmark-filled text-red-500': isBookmarked(selectedProduct), 'ti-bookmark': !isBookmarked(selectedProduct)}"></i>
+              <span x-text="isBookmarked(selectedProduct) ? 'Saved' : 'Save'"></span>
+            </button>
+            <a :href="selectedProduct?.attributes.proofUrl" target="_blank" class="flex-1 bg-blue-500 text-white rounded-lg py-2 flex items-center justify-center space-x-2">
+              <i class="ti ti-external-link"></i>
+              <span>View Proof</span>
+            </a>
+          </div>
+          
+          <div class="text-xs text-gray-500">
+            <p>Last updated: <span x-text="new Date(selectedProduct?.attributes.updatedAt).toLocaleDateString()"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contribute Modal -->
+    <div x-show="activeTab === 'contribute'" class="fixed inset-0 z-20 flex items-center justify-center p-4 modal-overlay bg-black bg-opacity-50" x-transition>
+      <div class="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
+          <h2 class="font-bold text-lg">Contribute to the List</h2>
+          <button @click="activeTab = 'home'" class="text-gray-500 hover:text-red-500">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+        
+        <div class="p-4">
+          <form @submit.prevent="submitContribution">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <div class="flex space-x-2">
+                  <button type="button" @click="contribution.type = 'boycott'" class="flex-1 py-2 border rounded-lg" :class="{'bg-red-50 border-red-200 text-red-600': contribution.type === 'boycott', 'border-gray-300': contribution.type !== 'boycott'}">
+                    Boycott
+                  </button>
+                  <button type="button" @click="contribution.type = 'alternative'" class="flex-1 py-2 border rounded-lg" :class="{'bg-green-50 border-green-200 text-green-600': contribution.type === 'alternative', 'border-gray-300': contribution.type !== 'alternative'}">
+                    Alternative
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <label for="contribute-name" class="block text-sm font-medium text-gray-700 mb-1">Brand/Product Name</label>
+                <input type="text" id="contribute-name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300" x-model="contribution.name" required>
+              </div>
+              
+              <div>
+                <label for="contribute-image" class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <input type="url" id="contribute-image" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300" x-model="contribution.imageUrl" placeholder="https://example.com/image.jpg">
+                <p class="text-xs text-gray-500 mt-1">Leave blank if you don't have an image</p>
+              </div>
+              
+              <div>
+                <label for="contribute-reason" class="block text-sm font-medium text-gray-700 mb-1">
+                  <span x-text="contribution.type === 'boycott' ? 'Reason for Boycott' : 'Why Recommend This Alternative'"></span>
+                </label>
+                <textarea id="contribute-reason" rows="3" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300" x-model="contribution.reason" required></textarea>
+              </div>
+              
+              <div>
+                <label for="contribute-proof" class="block text-sm font-medium text-gray-700 mb-1">Proof URL</label>
+                <input type="url" id="contribute-proof" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300" x-model="contribution.proofUrl" required placeholder="https://example.com/proof">
+              </div>
+              
+              <div x-show="contribution.type === 'boycott'">
+                <label for="contribute-alternatives" class="block text-sm font-medium text-gray-700 mb-1">Suggested Alternatives (comma separated)</label>
+                <input type="text" id="contribute-alternatives" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300" x-model="contribution.alternatives" placeholder="Alternative 1, Alternative 2">
+              </div>
+              
+              <div>
+                <label for="contribute-email" class="block text-sm font-medium text-gray-700 mb-1">Your Email (optional)</label>
+                <input type="email" id="contribute-email" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300" x-model="contribution.email" placeholder="you@example.com">
+                <p class="text-xs text-gray-500 mt-1">Only used if we need to contact you about your submission</p>
+              </div>
+            </div>
+            
+            <div class="mt-6 flex space-x-3">
+              <button type="button" @click="activeTab = 'home'" class="flex-1 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Cancel
+              </button>
+              <button type="submit" class="flex-1 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600" :disabled="isSubmitting">
+                <span x-text="isSubmitting ? 'Submitting...' : 'Submit'"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Barcode Scanner Modal -->
+    <div x-show="showScanner" class="fixed inset-0 z-30 flex flex-col items-center justify-center p-4 modal-overlay" x-transition>
+      <div class="bg-white rounded-lg w-full max-w-md overflow-hidden">
+        <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
+          <h2 class="font-bold text-lg">Scan Barcode</h2>
+          <button @click="showScanner = false" class="text-gray-500 hover:text-red-500">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+        
+        <div class="p-4">
+          <div class="border-2 border-dashed border-gray-300 rounded-lg h-64 flex items-center justify-center mb-4">
+            <div class="text-center">
+              <i class="ti ti-scan text-4xl text-gray-400 mb-2"></i>
+              <p class="text-gray-500">Scanner would appear here</p>
+            </div>
+          </div>
+          
+          <p class="text-sm text-gray-600 mb-4">
+            Point your camera at a product barcode to check if it's on the boycott list.
+          </p>
+          
+          <div class="flex space-x-3">
+            <button @click="showScanner = false" class="flex-1 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              Cancel
+            </button>
+            <button @click="simulateScan" class="flex-1 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+              Simulate Scan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function app() {
+      return {
+        // App state
+        activeTab: 'home',
+        activeCategory: 'All',
+        searchQuery: '',
+        debouncedSearch: '',
+        isLoading: true,
+        selectedProduct: null,
+        showScanner: false,
+        isSubmitting: false,
+        currentPage: 1,
+        itemsPerPage: 10,
+        hasMoreProducts: true,
+        
+        // Data
+        products: [],
+        bookmarks: JSON.parse(localStorage.getItem('boycottBookmarks')) || [],
+        categories: ['All', 'Food', 'Tech', 'Fashion', 'Beverages', 'Personal Care'],
+        
+        // Stats
+        stats: {
+          boycotted: 0,
+          alternatives: 0,
+          newToday: 0
+        },
+        
+        // Contribution form
+        contribution: {
+          type: 'boycott',
+          name: '',
+          imageUrl: '',
+          reason: '',
+          proofUrl: '',
+          alternatives: '',
+          email: ''
+        },
+        
+        // Computed properties
+        get filteredProducts() {
+          let filtered = this.products;
+          
+          // Filter by search query
+          if (this.debouncedSearch) {
+            filtered = filtered.filter(p =>
+              p.attributes.name.toLowerCase().includes(this.debouncedSearch.toLowerCase()) ||
+              (p.attributes.alternatives && p.attributes.alternatives.some(a =>
+                a.toLowerCase().includes(this.debouncedSearch.toLowerCase())
+              ))
+            );
+          }
+          
+          // Filter by category
+          if (this.activeCategory !== 'All') {
+            filtered = filtered.filter(p =>
+              p.attributes.category === this.activeCategory
+            );
+          }
+          
+          // Filter by tab
+          if (this.activeTab === 'bookmarks') {
+            filtered = filtered.filter(p => this.isBookmarked(p));
+          } else if (this.activeTab === 'alternatives') {
+            filtered = filtered.filter(p => !p.attributes.boycott);
+          }
+          
+          // Pagination
+          return filtered.slice(0, this.currentPage * this.itemsPerPage);
+        },
+        
+        // Methods
+        init() {
+          // Load data
+          this.fetchProducts();
+          
+          // Set up search debounce
+          this.$watch('searchQuery', Alpine.debounce(() => {
+            this.debouncedSearch = this.searchQuery;
+            this.currentPage = 1;
+            this.checkHasMoreProducts();
+          }, 300));
+          
+          // Calculate stats
+          this.calculateStats();
+        },
+        
+        fetchProducts() {
+          this.isLoading = true;
+          
+          // In a real app, this would be an API call
+          fetch('https://raw.githubusercontent.com/TechForPalestine/boycott-israeli-consumer-goods-dataset/refs/heads/main/raw/boycott_list_formatted.json')
+            .then(response => response.json())
+            .then(data => {
+              this.products = data.map(item => ({
+                ...item,
+                // Add some mock categories for demo
+                attributes: {
+                  ...item.attributes,
+                  category: this.getRandomCategory()
+                }
+              }));
+              
+              this.isLoading = false;
+              this.checkHasMoreProducts();
+              this.calculateStats();
+            })
+            .catch(error => {
+              console.error('Error loading products:', error);
+              this.isLoading = false;
+              
+              // Show error notification
+              this.notify('Error', 'Failed to load boycott list. Please try again later.', 'error');
+            });
+        },
+        
+        getRandomCategory() {
+          const categories = this.categories.filter(c => c !== 'All');
+          return categories[Math.floor(Math.random() * categories.length)];
+        },
+        
+        calculateStats() {
+          this.stats.boycotted = this.products.filter(p => p.attributes.boycott).length;
+          this.stats.alternatives = this.products.filter(p => !p.attributes.boycott).length;
+          this.stats.newToday = Math.floor(Math.random() * 10); // Mock data
+        },
+        
+        searchProducts() {
+          this.debouncedSearch = this.searchQuery;
+          this.currentPage = 1;
+          this.checkHasMoreProducts();
+        },
+        
+        clearSearch() {
+          this.searchQuery = '';
+          this.debouncedSearch = '';
+          this.currentPage = 1;
+          this.checkHasMoreProducts();
+        },
+        
+        loadMore() {
+          this.currentPage++;
+          this.checkHasMoreProducts();
+        },
+        
+        checkHasMoreProducts() {
+          // This is simplified - in a real app with API pagination you'd check the total count
+          const totalFiltered = this.products.filter(p =>
+            this.debouncedSearch ?
+            p.attributes.name.toLowerCase().includes(this.debouncedSearch.toLowerCase()) : true
+          );
+          
+          this.hasMoreProducts = this.filteredProducts.length < totalFiltered.length;
+        },
+        
+        showProductDetail(product) {
+          this.selectedProduct = product;
+          
+          // Track view (in a real app, you might send this to analytics)
+          console.log('Viewed product:', product.attributes.name);
+        },
+        
+        toggleBookmark(product) {
+          const index = this.bookmarks.findIndex(b => b.id === product.id);
+          
+          if (index === -1) {
+            this.bookmarks.push(product);
+            this.notify('Saved', 'Product added to your bookmarks', 'success');
+          } else {
+            this.bookmarks.splice(index, 1);
+            this.notify('Removed', 'Product removed from your bookmarks', 'info');
+          }
+          
+          // Save to localStorage
+          localStorage.setItem('boycottBookmarks', JSON.stringify(this.bookmarks));
+        },
+        
+        isBookmarked(product) {
+          return this.bookmarks.some(b => b.id === product.id);
+        },
+        
+        scanBarcode() {
+          this.showScanner = true;
+          
+          // In a real app, you would initialize the barcode scanner here
+          // For demo purposes, we'll just show the scanner UI
+        },
+        
+        simulateScan() {
+          this.showScanner = false;
+          
+          // Simulate finding a product
+          const randomProduct = this.products[Math.floor(Math.random() * this.products.length)];
+          this.selectedProduct = randomProduct;
+          
+          this.notify(
+            'Scan Complete',
+            `Scanned: ${randomProduct.attributes.name}`,
+            randomProduct.attributes.boycott ? 'error' : 'success'
+          );
+        },
+        
+        submitContribution() {
+          this.isSubmitting = true;
+          
+          // In a real app, this would submit to a backend API
+          setTimeout(() => {
+            this.isSubmitting = false;
+            this.activeTab = 'home';
+            this.contribution = {
+              type: 'boycott',
+              name: '',
+              imageUrl: '',
+              reason: '',
+              proofUrl: '',
+              alternatives: '',
+              email: ''
+            };
+            
+            this.notify(
+              'Thank You!',
+              'Your contribution has been submitted for review.',
+              'success'
+            );
+          }, 1500);
+        },
+        
+        notify(title, message, type) {
+          new Notify({
+            status: type,
+            title: title,
+            text: message,
+            effect: 'fade',
+            speed: 300,
+            customClass: '',
+            customIcon: '',
+            showIcon: true,
+            showCloseButton: true,
+            autoclose: true,
+            autotimeout: 3000,
+            gap: 20,
+            distance: 20,
+            type: 1,
+            position: 'right top'
+          });
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
