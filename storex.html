@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>দোকানের হিসাব</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        
+        [x-cloak] {
+            display: none !important;
+        }
+        
+        .active-tab {
+            border-top: 2px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        .active-loan-tab {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .modal-overlay {
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans" x-data="storeApp()" x-init="initApp()" x-cloak>
+    <div class="container mx-auto p-4 max-w-md pb-16">
+        <!-- হেডার -->
+        <header class="mb-6 text-center bg-green-600 rounded-md p-4">
+            <h1 class="text-2xl font-bold text-green-100">মেহেরপুর টেক অনলাইন সার্ভিস</h1>
+            <p class="text-white text-sm" x-text="currentDate"></p>
+        </header>
+        
+        <!-- মেইন ট্যাব -->
+        <div class="w-full bg-white fixed bottom-0 left-0 right-0 flex items-center justify-between border-t h-14">
+            <button @click="activeMainTab = 'balances'" :class="{ 'active-tab': activeMainTab === 'balances' }" class="px-4 py-2 font-medium grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{ 'text-blue-600': activeMainTab === 'balances', 'text-gray-500': activeMainTab !== 'balances' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-xs" :class="{ 'text-blue-600': activeMainTab === 'balances', 'text-gray-500': activeMainTab !== 'balances' }">ব্যালেন্স</span>
+            </button>
+            
+            <button @click="activeMainTab = 'transactions'" :class="{ 'active-tab': activeMainTab === 'transactions' }" class="px-4 py-2 font-medium grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{ 'text-blue-600': activeMainTab === 'transactions', 'text-gray-500': activeMainTab !== 'transactions' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                </svg>
+                <span class="text-xs" :class="{ 'text-blue-600': activeMainTab === 'transactions', 'text-gray-500': activeMainTab !== 'transactions' }">লেনদেন</span>
+            </button>
+            
+            <button @click="activeMainTab = 'loans'" :class="{ 'active-tab': activeMainTab === 'loans' }" class="px-4 py-2 font-medium grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{ 'text-blue-600': activeMainTab === 'loans', 'text-gray-500': activeMainTab !== 'loans' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                </svg>
+                <span class="text-xs" :class="{ 'text-blue-600': activeMainTab === 'loans', 'text-gray-500': activeMainTab !== 'loans' }">ধার/প্রাপ্য</span>
+            </button>
+            
+            <button @click="activeMainTab = 'reports'" :class="{ 'active-tab': activeMainTab === 'reports' }" class="px-4 py-2 font-medium grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{ 'text-blue-600': activeMainTab === 'reports', 'text-gray-500': activeMainTab !== 'reports' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span class="text-xs" :class="{ 'text-blue-600': activeMainTab === 'reports', 'text-gray-500': activeMainTab !== 'reports' }">রিপোর্ট</span>
+            </button>
+            
+            <button @click="activeMainTab = 'allrecords'" :class="{ 'active-tab': activeMainTab === 'allrecords' }" class="px-4 py-2 font-medium grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{ 'text-blue-600': activeMainTab === 'allrecords', 'text-gray-500': activeMainTab !== 'allrecords' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-xs" :class="{ 'text-blue-600': activeMainTab === 'allrecords', 'text-gray-500': activeMainTab !== 'allrecords' }">ইতিহাস</span>
+            </button>
+        </div>
+        
+        <!-- ব্যালেন্স ট্যাব -->
+        <div x-show="activeMainTab === 'balances'">
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold">বর্তমান ব্যালেন্স</h2>
+                    <button class="text-lg" @click="showNewBalanceModal = true" aria-label="নতুন ব্যালেন্স যোগ করুন">+</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="(balance, method) in balances" :key="method">
+                        <div class="flex justify-between items-center py-2 border-b">
+                            <span x-text="method" class="capitalize font-medium"></span>
+                            <div class="flex items-center">
+                                <span x-text="formatMoney(balance)" class="font-medium mr-2"></span>
+                                <button @click="editBalance(method)" class="text-blue-500 hover:text-blue-700" aria-label="ব্যালেন্স সম্পাদনা করুন">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="flex justify-between font-bold pt-2">
+                        <span>মোট ব্যালেন্স:</span>
+                        <span x-text="formatMoney(totalBalance)" class="text-blue-600"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div x-show="showNewBalanceModal" class="fixed inset-0 z-20 flex items-center justify-center p-4 bg-gray-800/50 modal-overlay" @click.self="showNewBalanceModal = false" x-transition role="dialog" aria-modal="true" aria-labelledby="new-balance-modal-title">
+                <div class="bg-white rounded-lg w-full max-w-md p-4">
+                    <h2 id="new-balance-modal-title" class="text-lg font-semibold mb-3">নতুন ব্যালেন্স যোগ</h2>
+                    <form @submit.prevent="addNewBalance" class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">পেমেন্ট মাধ্যমের নাম</label>
+                            <input x-model="newBalance.method" type="text" required class="w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">প্রারম্ভিক ব্যালেন্স</label>
+                            <input x-model="newBalance.amount" type="number" min="0" required class="w-full p-2 border rounded-md">
+                        </div>
+                        <button type="submit" class="w-full py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                            যোগ করুন
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- লেনদেন ট্যাব -->
+        <div x-show="activeMainTab === 'transactions'">
+            <div x-show="showNewTransactionsModal" class="fixed inset-0 z-20 flex items-center justify-center p-4 bg-gray-800/50 modal-overlay" @click.self="showNewTransactionsModal = false" x-transition role="dialog" aria-modal="true" aria-labelledby="new-transaction-modal-title">
+                <div class="bg-white rounded-lg w-full max-w-md p-4">
+                    <h2 id="new-transaction-modal-title" class="text-lg font-semibold mb-3">নতুন লেনদেন</h2>
+                    <form @submit.prevent="addTransaction" class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ধরন</label>
+                            <select x-model="newTransaction.type" class="w-full p-2 border rounded-md">
+                                <option value="income">আয়</option>
+                                <option value="expense">ব্যয়</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">পরিমাণ</label>
+                            <input x-model="newTransaction.amount" type="number" min="1" required class="w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">পেমেন্ট মাধ্যম</label>
+                            <select x-model="newTransaction.method" class="w-full p-2 border rounded-md">
+                                <template x-for="(balance, method) in balances" :key="method">
+                                    <option x-text="method" :value="method"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">বিবরণ</label>
+                            <input x-model="newTransaction.description" type="text" class="w-full p-2 border rounded-md">
+                        </div>
+                        <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            সংরক্ষণ করুন
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold mb-3">লেনদেনের ইতিহাস</h2>
+                    <button class="text-lg" @click="showNewTransactionsModal = true" aria-label="নতুন লেনদেন যোগ করুন">+</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-if="transactions.length === 0">
+                        <p class="text-center text-gray-500 py-4">কোনো লেনদেন পাওয়া যায়নি</p>
+                    </template>
+                    <template x-for="(transaction, index) in transactions" :key="index">
+                        <div class="flex justify-between items-start p-3 border rounded-md" :class="{ 'bg-green-50': transaction.type === 'income', 'bg-red-50': transaction.type === 'expense' }">
+                            <div>
+                                <span x-text="transaction.type === 'income' ? 'আয়' : 'ব্যয়'" :class="{ 'text-green-600': transaction.type === 'income', 'text-red-600': transaction.type === 'expense' }" class="font-medium"></span>
+                                <span x-text="' (' + transaction.method + ')'" class="text-sm text-gray-500"></span>
+                                <p x-text="transaction.description || 'কোন বিবরণ নেই'" class="text-sm mt-1"></p>
+                                <span x-text="transaction.date" class="text-xs text-gray-500"></span>
+                            </div>
+                            <div class="text-right">
+                                <span x-text="formatMoney(transaction.amount)" :class="{ 'text-green-600': transaction.type === 'income', 'text-red-600': transaction.type === 'expense' }" class="font-medium"></span>
+                                <button @click="removeTransaction(index)" class="mt-1 text-gray-400 hover:text-red-500 block ml-auto" aria-label="লেনদেন মুছুন">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ধার/প্রাপ্য ট্যাব -->
+        <div x-show="activeMainTab === 'loans'">
+            <div class="flex border-b">
+                <button @click="loanTab = 'borrowed'" :class="{ 'active-loan-tab': loanTab === 'borrowed' }" class="flex-1 py-2 text-center font-medium">
+                    আমার ধার
+                </button>
+                <button @click="loanTab = 'lent'" :class="{ 'active-loan-tab': loanTab === 'lent' }" class="flex-1 py-2 text-center font-medium">
+                    প্রাপ্য টাকা
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold mb-3" x-text="loanTab === 'borrowed' ? 'ধার্যকৃত টাকা সমূহ' : 'প্রাপ্য টাকা সমূহ'"></h2>
+                    <button class="text-lg" @click="showNewLoanModal = true" aria-label="নতুন ধার বা প্রাপ্য যোগ করুন">+</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-if="loans[loanTab].length === 0">
+                        <p class="text-center text-gray-500 py-4">কোনো তথ্য পাওয়া যায়নি</p>
+                    </template>
+                    <template x-for="(loan, index) in loans[loanTab]" :key="index">
+                        <div class="flex justify-between items-center p-3 border rounded-md mb-2">
+                            <div>
+                                <span x-text="loan.person" class="font-medium"></span>
+                                <p x-text="loan.description || 'কোন বিবরণ নেই'" class="text-sm text-gray-600"></p>
+                                <span x-text="loan.date" class="text-xs text-gray-500"></span>
+                            </div>
+                            <div class="flex items-center">
+                                <span x-text="formatMoney(loan.amount)" :class="{ 'text-red-600': loanTab === 'borrowed', 'text-green-600': loanTab === 'lent' }" class="font-medium mr-2"></span>
+                                <button @click="removeLoan(loanTab, index)" class="text-gray-400 hover:text-red-500" aria-label="ধার বা প্রাপ্য মুছুন">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <div x-show="showNewLoanModal" class="fixed inset-0 z-20 flex items-center justify-center p-4 bg-gray-800/50 modal-overlay" @click.self="showNewLoanModal = false" x-transition role="dialog" aria-modal="true" aria-labelledby="new-loan-modal-title">
+                <div class="bg-white rounded-lg w-full max-w-md p-4">
+                    <h2 id="new-loan-modal-title" class="text-lg font-semibold mb-3" x-text="loanTab === 'borrowed' ? 'নতুন ধার যোগ করুন' : 'নতুন প্রাপ্য যোগ করুন'"></h2>
+                    <form @submit.prevent="addLoan" class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">নাম</label>
+                            <input x-model="newLoan.person" type="text" required class="w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">পরিমাণ</label>
+                            <input x-model="newLoan.amount" type="number" min="1" required class="w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">বিবরণ (ঐচ্ছিক)</label>
+                            <input x-model="newLoan.description" type="text" class="w-full p-2 border rounded-md">
+                        </div>
+                        <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            সংরক্ষণ করুন
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- রিপোর্ট ট্যাব -->
+        <div x-show="activeMainTab === 'reports'" class="space-y-4">
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-lg font-semibold mb-3">আজকের সারাংশ</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span>গতকালের ব্যালেন্স:</span>
+                        <span x-text="formatMoney(previousDayBalance)" class="font-medium"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>আজকের আয়:</span>
+                        <span x-text="formatMoney(todayIncome)" class="text-green-600"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>আজকের ব্যয়:</span>
+                        <span x-text="formatMoney(todayExpense)" class="text-red-600"></span>
+                    </div>
+                    <div class="flex justify-between font-bold border-t pt-2">
+                        <span>নিট আয়:</span>
+                        <span x-text="formatMoney(todayIncome - todayExpense)" :class="{ 'text-green-600': (todayIncome - todayExpense) >= 0, 'text-red-600': (todayIncome - todayExpense) < 0 }"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-lg font-semibold mb-3">ধার/প্রাপ্য সারাংশ</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span>মোট ধার:</span>
+                        <span x-text="formatMoney(totalBorrowed)" class="text-red-600"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>মোট প্রাপ্য:</span>
+                        <span x-text="formatMoney(totalLent)" class="text-green-600"></span>
+                    </div>
+                    <div class="flex justify-between font-bold border-t pt-2">
+                        <span>নিট অবস্থা:</span>
+                        <span x-text="formatMoney(totalLent - totalBorrowed)" :class="{ 'text-green-600': (totalLent - totalBorrowed) >= 0, 'text-red-600': (totalLent - totalBorrowed) < 0 }"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-lg font-semibold mb-3">মোট সম্পদ</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span>মোট ব্যালেন্স:</span>
+                        <span x-text="formatMoney(totalBalance)"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>মোট প্রাপ্য:</span>
+                        <span x-text="formatMoney(totalLent)" class="text-green-600"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>মোট ধার:</span>
+                        <span x-text="formatMoney(totalBorrowed)" class="text-red-600"></span>
+                    </div>
+                    <div class="flex justify-between font-bold border-t pt-2">
+                        <span>নিট সম্পদ:</span>
+                        <span x-text="formatMoney(netWorth)" class="text-blue-600"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <button @click="endDay" class="w-full py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium">
+                দিন শেষ করুন
+            </button>
+        </div>
+        
+        <!-- ইতিহাস ট্যাব -->
+        <div x-show="activeMainTab === 'allrecords'">
+            <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                <h2 class="text-lg font-semibold mb-3">তারিখ নির্বাচন করুন</h2>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">তারিখ</label>
+                    <input type="date" x-model="selectedHistoryDate" @change="loadHistoryData" class="w-full p-2 border rounded-md text-sm">
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <button @click="setHistoryDate('today')" class="py-1 px-2 border rounded-md text-xs">আজ</button>
+                    <button @click="setHistoryDate('yesterday')" class="py-1 px-2 border rounded-md text-xs">গতকাল</button>
+                    <button @click="setHistoryDate('7days')" class="py-1 px-2 border rounded-md text-xs">৭ দিন</button>
+                    <button @click="setHistoryDate('30days')" class="py-1 px-2 border rounded-md text-xs">৩০ দিন</button>
+                </div>
+            </div>
+            
+            <div x-show="isLoading" class="text-center py-4">
+                <svg class="animate-spin h-5 w-5 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8 8 8 0 01-8-8z"></path>
+                </svg>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4 mb-4" x-show="historyData.balances && !isLoading">
+                <h2 class="text-lg font-semibold mb-3">ব্যালেন্স</h2>
+                <div class="space-y-2">
+                    <template x-for="(balance, method) in historyData.balances" :key="method">
+                        <div class="flex justify-between py-1 border-b">
+                            <span x-text="method" class="capitalize"></span>
+                            <span x-text="formatMoney(balance)" class="font-medium"></span>
+                        </div>
+                    </template>
+                    <div class="flex justify-between font-bold pt-1">
+                        <span>মোট ব্যালেন্স:</span>
+                        <span x-text="formatMoney(calculateTotalBalance(historyData.balances))"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4 mb-4" x-show="historyData.transactions && historyData.transactions.length > 0 && !isLoading">
+                <h2 class="text-lg font-semibold mb-3">লেনদেন</h2>
+                <div class="space-y-3">
+                    <template x-for="(transaction, index) in historyData.transactions" :key="index">
+                        <div class="border rounded-md p-3" :class="{ 'bg-green-50 border-green-200': transaction.type === 'income', 'bg-red-50 border-red-200': transaction.type === 'expense' }">
+                            <div class="flex justify-between">
+                                <div>
+                                    <span class="font-medium" x-text="transaction.type === 'income' ? 'আয়' : 'ব্যয়'"></span>
+                                    <p class="text-sm text-gray-600" x-text="transaction.description || 'কোন বিবরণ নেই'"></p>
+                                </div>
+                                <div>
+                                    <span class="font-medium" :class="{ 'text-green-600': transaction.type === 'income', 'text-red-600': transaction.type === 'expense' }" x-text="formatMoney(transaction.amount)"></span>
+                                    <span class="block text-xs text-gray-500" x-text="transaction.method"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4" x-show="(historyData.loans.borrowed && historyData.loans.borrowed.length > 0) || (historyData.loans.lent && historyData.loans.lent.length > 0) && !isLoading">
+                <h2 class="text-lg font-semibold mb-3">ধার/প্রাপ্য</h2>
+                <template x-if="historyData.loans.borrowed && historyData.loans.borrowed.length > 0">
+                    <div class="mb-4">
+                        <h3 class="font-medium mb-2">আমার ধার</h3>
+                        <div class="space-y-2">
+                            <template x-for="(loan, index) in historyData.loans.borrowed" :key="index">
+                                <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                    <div>
+                                        <span x-text="loan.person" class="font-medium"></span>
+                                        <p class="text-sm text-gray-600" x-text="loan.description || 'কোন বিবরণ নেই'"></p>
+                                    </div>
+                                    <span x-text="formatMoney(loan.amount)" class="text-red-600 font-medium"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+                <template x-if="historyData.loans.lent && historyData.loans.lent.length > 0">
+                    <div>
+                        <h3 class="font-medium mb-2">প্রাপ্য টাকা</h3>
+                        <div class="space-y-2">
+                            <template x-for="(loan, index) in historyData.loans.lent" :key="index">
+                                <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                    <div>
+                                        <span x-text="loan.person" class="font-medium"></span>
+                                        <p class="text-sm text-gray-600" x-text="loan.description || 'কোন বিবরণ নেই'"></p>
+                                    </div>
+                                    <span x-text="formatMoney(loan.amount)" class="text-green-600 font-medium"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <div class="text-center py-4 text-gray-500" x-show="!historyData || (!historyData.transactions && !historyData.loans.borrowed && !historyData.loans.lent) && !isLoading">
+                এই তারিখে কোনো ডাটা পাওয়া যায়নি
+            </div>
+        </div>
+        
+        <!-- ব্যালেন্স এডিট মোডাল -->
+        <div x-show="showBalanceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" x-transition role="dialog" aria-modal="true" aria-labelledby="edit-balance-modal-title">
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+                <h3 id="edit-balance-modal-title" class="text-lg font-semibold mb-4">ব্যালেন্স আপডেট করুন</h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" x-text="'বর্তমান ' + editingBalanceMethod"></label>
+                    <input type="number" x-model="editingBalanceAmount" min="0" class="w-full p-2 border rounded-md">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button @click="showBalanceModal = false" class="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100">বাতিল</button>
+                    <button @click="updateBalance" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">আপডেট করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('storeApp', () => ({
+                activeMainTab: 'balances',
+                loanTab: 'borrowed',
+                showBalanceModal: false,
+                showNewBalanceModal: false,
+                showNewTransactionsModal: false,
+                showNewLoanModal: false,
+                editingBalanceMethod: '',
+                editingBalanceAmount: 0,
+                isLoading: false,
+                
+                balances: {
+                    cash: 0,
+                    bkash: 0,
+                    nagad: 0
+                },
+                transactions: [],
+                loans: {
+                    borrowed: [],
+                    lent: []
+                },
+                previousDayBalance: 0,
+                
+                newBalance: {
+                    method: '',
+                    amount: 0
+                },
+                newTransaction: {
+                    type: 'income',
+                    amount: 0,
+                    method: 'cash',
+                    description: '',
+                    date: ''
+                },
+                newLoan: {
+                    person: '',
+                    amount: 0,
+                    description: '',
+                    date: ''
+                },
+                
+                selectedHistoryDate: new Date().toISOString().split('T')[0],
+                historyData: {
+                    balances: {},
+                    transactions: [],
+                    loans: { borrowed: [], lent: [] }
+                },
+                
+                get currentDate() {
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    return new Date().toLocaleDateString('bn-BD', options);
+                },
+                
+                get totalBalance() {
+                    return Object.values(this.balances).reduce((sum, amount) => sum + amount, 0);
+                },
+                
+                get todayIncome() {
+                    const today = new Date().toISOString().split('T')[0];
+                    return this.transactions
+                        .filter(t => t.type === 'income' && t.date === today)
+                        .reduce((sum, t) => sum + t.amount, 0);
+                },
+                
+                get todayExpense() {
+                    const today = new Date().toISOString().split('T')[0];
+                    return this.transactions
+                        .filter(t => t.type === 'expense' && t.date === today)
+                        .reduce((sum, t) => sum + t.amount, 0);
+                },
+                
+                get totalBorrowed() {
+                    return this.loans.borrowed.reduce((sum, loan) => sum + loan.amount, 0);
+                },
+                
+                get totalLent() {
+                    return this.loans.lent.reduce((sum, loan) => sum + loan.amount, 0);
+                },
+                
+                get netWorth() {
+                    return this.totalBalance + this.totalLent - this.totalBorrowed;
+                },
+                
+                initApp() {
+                    this.loadData();
+                    this.loadHistoryData();
+                    if (Object.keys(this.balances).length === 0) {
+                        this.balances = { cash: 0, bkash: 0, nagad: 0 };
+                    }
+                    if (Object.keys(this.balances).length > 0) {
+                        this.newTransaction.method = Object.keys(this.balances)[0];
+                    }
+                    window.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') {
+                            this.showNewBalanceModal = false;
+                            this.showNewTransactionsModal = false;
+                            this.showNewLoanModal = false;
+                            this.showBalanceModal = false;
+                        }
+                    });
+                },
+                
+                formatMoney(amount) {
+                    return amount.toLocaleString('bn-BD') + ' ৳';
+                },
+                
+                addNewBalance() {
+                    const method = this.newBalance.method.trim().toLowerCase();
+                    if (!method) {
+                        alert('পেমেন্ট মাধ্যমের নাম প্রয়োজন!');
+                        return;
+                    }
+                    if (!this.balances[method]) {
+                        this.balances[method] = parseInt(this.newBalance.amount) || 0;
+                        this.saveData();
+                        this.newBalance = { method: '', amount: 0 };
+                        this.showNewBalanceModal = false;
+                    } else {
+                        alert('এই নামের একটি ব্যালেন্স ইতিমধ্যেই রয়েছে!');
+                    }
+                },
+                
+                editBalance(method) {
+                    this.editingBalanceMethod = method;
+                    this.editingBalanceAmount = this.balances[method];
+                    this.showBalanceModal = true;
+                },
+                
+                updateBalance() {
+                    this.balances[this.editingBalanceMethod] = parseInt(this.editingBalanceAmount) || 0;
+                    this.showBalanceModal = false;
+                    this.saveData();
+                },
+                
+                addTransaction() {
+                    const transaction = {
+                        ...this.newTransaction,
+                        amount: parseInt(this.newTransaction.amount),
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    if (transaction.amount <= 0) {
+                        alert('পরিমাণ ইতিবাচক হতে হবে!');
+                        return;
+                    }
+                    if (transaction.type === 'expense' && this.balances[transaction.method] < transaction.amount) {
+                        alert('এই পেমেন্ট মাধ্যমে পর্যাপ্ত ব্যালেন্স নেই!');
+                        return;
+                    }
+                    if (transaction.type === 'income') {
+                        this.balances[transaction.method] += transaction.amount;
+                    } else {
+                        this.balances[transaction.method] -= transaction.amount;
+                    }
+                    this.transactions.unshift(transaction);
+                    this.saveData();
+                    this.newTransaction = {
+                        type: 'income',
+                        amount: 0,
+                        method: Object.keys(this.balances)[0],
+                        description: '',
+                        date: ''
+                    };
+                    this.showNewTransactionsModal = false;
+                },
+                
+                removeTransaction(index) {
+                    if (confirm('আপনি কি এই লেনদেন মুছে ফেলতে চান?')) {
+                        const transaction = this.transactions[index];
+                        if (transaction.type === 'income') {
+                            this.balances[transaction.method] -= transaction.amount;
+                        } else {
+                            this.balances[transaction.method] += transaction.amount;
+                        }
+                        this.transactions.splice(index, 1);
+                        this.saveData();
+                    }
+                },
+                
+                addLoan() {
+                    const loan = {
+                        ...this.newLoan,
+                        amount: parseInt(this.newLoan.amount),
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    if (loan.amount <= 0) {
+                        alert('পরিমাণ ইতিবাচক হতে হবে!');
+                        return;
+                    }
+                    this.loans[this.loanTab].unshift(loan);
+                    this.saveData();
+                    this.newLoan = {
+                        person: '',
+                        amount: 0,
+                        description: '',
+                        date: ''
+                    };
+                    this.showNewLoanModal = false;
+                },
+                
+                removeLoan(type, index) {
+                    if (confirm('আপনি কি এই এন্ট্রি মুছে ফেলতে চান?')) {
+                        this.loans[type].splice(index, 1);
+                        this.saveData();
+                    }
+                },
+                
+                endDay() {
+                    const today = new Date().toISOString().split('T')[0];
+                    const dailyData = {
+                        date: today,
+                        balances: { ...this.balances },
+                        transactions: [...this.transactions.filter(t => t.date === today)],
+                        loans: {
+                            borrowed: [...this.loans.borrowed.filter(l => l.date === today)],
+                            lent: [...this.loans.lent.filter(l => l.date === today)]
+                        }
+                    };
+                    this.saveDailyData(dailyData);
+                    this.previousDayBalance = this.totalBalance;
+                    this.saveData();
+                    alert('আজকের ডাটা সংরক্ষণ করা হয়েছে! নতুন দিনের জন্য প্রস্তুত: ' + today);
+                },
+                
+                saveData() {
+                    try {
+                        const data = {
+                            balances: this.balances,
+                            transactions: this.transactions,
+                            loans: this.loans,
+                            previousDayBalance: this.previousDayBalance
+                        };
+                        localStorage.setItem('storeAccountingAppData', JSON.stringify(data));
+                    } catch (e) {
+                        alert('ডাটা সংরক্ষণে সমস্যা হয়েছে: ' + e.message);
+                    }
+                },
+                
+                loadData() {
+                    try {
+                        const savedData = localStorage.getItem('storeAccountingAppData');
+                        if (savedData) {
+                            const parsedData = JSON.parse(savedData);
+                            this.balances = parsedData.balances || {};
+                            this.transactions = parsedData.transactions || [];
+                            this.loans = parsedData.loans || { borrowed: [], lent: [] };
+                            this.previousDayBalance = parsedData.previousDayBalance || 0;
+                        }
+                    } catch (e) {
+                        alert('ডাটা লোড করতে সমস্যা হয়েছে: ' + e.message);
+                    }
+                },
+                
+                saveDailyData(dailyData) {
+                    try {
+                        let allHistory = JSON.parse(localStorage.getItem('dailyHistory') || '[]');
+                        allHistory = allHistory.filter(item => item.date !== dailyData.date);
+                        allHistory.push(dailyData);
+                        allHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        localStorage.setItem('dailyHistory', JSON.stringify(allHistory));
+                    } catch (e) {
+                        alert('ইতিহাস সংরক্ষণে সমস্যা হয়েছে: ' + e.message);
+                    }
+                },
+                
+                loadHistoryData() {
+                    this.isLoading = true;
+                    setTimeout(() => {
+                        try {
+                            const allHistory = JSON.parse(localStorage.getItem('dailyHistory') || '[]');
+                            console.log(allHistory)
+                            const selectedData = allHistory.find(item => item.date === this.selectedHistoryDate);
+                            this.historyData = selectedData || { balances: {}, transactions: [], loans: { borrowed: [], lent: [] } };
+                        } catch (e) {
+                            alert('ইতিহাস লোড করতে সমস্যা হয়েছে: ' + e.message);
+                        } finally {
+                            this.isLoading = false;
+                        }
+                    }, 100);
+                },
+                
+                setHistoryDate(type) {
+                    const today = new Date();
+                    const date = new Date();
+                    if (type === 'yesterday') {
+                        date.setDate(today.getDate() - 1);
+                    } else if (type === '7days') {
+                        date.setDate(today.getDate() - 7);
+                    } else if (type === '30days') {
+                        date.setDate(today.getDate() - 30);
+                    }
+                    this.selectedHistoryDate = date.toISOString().split('T')[0];
+                    this.loadHistoryData();
+                },
+                
+                calculateTotalBalance(balances) {
+                    if (!balances) return 0;
+                    return Object.values(balances).reduce((sum, amount) => sum + amount, 0);
+                }
+                
+                // Optional: Uncomment to enable data reset functionality
+                /*
+                resetAllData() {
+                    if (confirm('সব ডাটা মুছে ফেলতে চান? এটি পুনরুদ্ধার করা যাবে না!')) {
+                        localStorage.removeItem('storeAccountingAppData');
+                        localStorage.removeItem('dailyHistory');
+                        this.balances = { cash: 0, bkash: 0, nagad: 0 };
+                        this.transactions = [];
+                        this.loans = { borrowed: [], lent: [] };
+                        this.previousDayBalance = 0;
+                        this.historyData = { balances: {}, transactions: [], loans: { borrowed: [], lent: [] } };
+                        this.saveData();
+                        alert('সব ডাটা মুছে ফেলা হয়েছে!');
+                    }
+                }
+                */
+            }));
+        });
+    </script>
+</body>
+
+</html>
