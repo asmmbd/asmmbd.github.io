@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" x-data="app()" x-cloak>
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>NotaAI - A/B Testing Results Review</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    [x-cloak] {
+      display: none !important;
+    }
+    
+    .prose ul ul {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .smooth-transition {
+      transition: all 0.2s ease-in-out;
+    }
+    
+    .highlight-box {
+      background: rgba(124, 58, 237, 0.05);
+      border-left: 3px solid rgba(124, 58, 237, 0.5);
+    }
+    
+    .tag {
+      background: rgba(124, 58, 237, 0.1);
+      color: rgba(124, 58, 237, 0.8);
+    }
+    
+    .note-editor {
+      min-height: 300px;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f5f4fb] text-[#1a1a1a] min-h-screen flex flex-col" x-cloak>
+  <!-- Header -->
+  <header class="flex items-center justify-between bg-[#f5f4fb] px-4 sm:px-6 md:px-10 py-4 border-b border-gray-200 sticky top-0 z-10">
+    <div class="flex items-center space-x-2">
+      <img alt="NotaAI logo, purple circular swirl icon" class="w-8 h-8" height="32" src="https://storage.googleapis.com/a1aa/image/a791932a-357f-46ca-0679-ff636d990b84.jpg" width="32" />
+      <span class="font-semibold text-lg text-[#1a1a1a] select-none">NotaAI</span>
+    </div>
+    <div class="flex-1 max-w-lg mx-6 hidden sm:block">
+      <div class="relative">
+        <input aria-label="Search" class="w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent smooth-transition" placeholder="Search notes..." type="search" x-model="searchQuery" @keyup.enter="performSearch" />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-md px-4 py-2 flex items-center space-x-2 smooth-transition" type="button" @click="openNewNoteModal">
+        <i class="fas fa-pen"></i>
+        <span>New Note</span>
+      </button>
+      <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" class="focus:outline-none">
+          <img alt="User profile picture, smiling person with short hair" class="w-8 h-8 rounded-full object-cover cursor-pointer smooth-transition hover:ring-2 hover:ring-purple-500" height="32" src="https://storage.googleapis.com/a1aa/image/7acc0258-cc28-496e-42cb-62734cd0f162.jpg" width="32" />
+        </button>
+        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 smooth-transition" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Your Profile</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Settings</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Sign out</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <main class="flex flex-1 overflow-hidden">
+    <!-- Mobile sidebar toggle -->
+    <div class="sm:hidden fixed bottom-4 right-4 z-10">
+      <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="p-3 bg-purple-600 text-white rounded-full shadow-lg focus:outline-none smooth-transition hover:bg-purple-700">
+        <i class="fas fa-bars" x-show="!mobileSidebarOpen"></i>
+        <i class="fas fa-times" x-show="mobileSidebarOpen"></i>
+      </button>
+    </div>
+    
+    <!-- Sidebar -->
+    <aside aria-label="Sidebar navigation" class="flex flex-col bg-white w-64 border-r border-gray-200 px-4 py-6 overflow-y-auto fixed h-[calc(100vh-65px)] z-10 smooth-transition" :class="{'left-0': mobileSidebarOpen, '-left-64': !mobileSidebarOpen}" class="sm:left-0 sm:relative sm:h-auto">
+      <nav class="flex flex-col space-y-3 text-gray-600 text-sm font-medium">
+        <a class="flex items-center space-x-2 hover:text-gray-900 smooth-transition px-2 py-1 rounded" :class="activeTab === 'home' ? 'text-purple-600 font-semibold bg-purple-50' : ''" href="#" @click.prevent="activeTab = 'home'">
+          <i class="fas fa-home text-sm"></i>
+          <span>Home</span>
+        </a>
+        <a class="flex items-center space-x-2 hover:text-gray-900 smooth-transition px-2 py-1 rounded" :class="activeTab === 'transcribe' ? 'text-purple-600 font-semibold bg-purple-50' : ''" href="#" @click.prevent="activeTab = 'transcribe'">
+          <i class="fas fa-file-alt text-xs"></i>
+          <span>Transcribe</span>
+        </a>
+        <a class="flex items-center space-x-2 hover:text-gray-900 smooth-transition px-2 py-1 rounded" :class="activeTab === 'library' ? 'text-purple-600 font-semibold bg-purple-50' : ''" href="#" @click.prevent="activeTab = 'library'; filterNotes('all')">
+          <i class="fas fa-book text-xs"></i>
+          <span>My Library</span>
+        </a>
+        <a class="flex items-center space-x-2 hover:text-gray-900 smooth-transition px-2 py-1 rounded" :class="activeTab === 'favorites' ? 'text-purple-600 font-semibold bg-purple-50' : ''" href="#" @click.prevent="activeTab = 'favorites'; filterNotes('favorites')">
+          <i class="fas fa-star text-xs"></i>
+          <span>Favorites</span>
+        </a>
+        <a class="flex items-center space-x-2 hover:text-gray-900 smooth-transition px-2 py-1 rounded" :class="activeTab === 'settings' ? 'text-purple-600 font-semibold bg-purple-50' : ''" href="#" @click.prevent="activeTab = 'settings'">
+          <i class="fas fa-cog text-xs"></i>
+          <span>Setting</span>
+        </a>
+      </nav>
+      
+      <div class="mt-8 flex justify-between items-center">
+        <span class="text-xs text-gray-400 font-semibold uppercase tracking-wide select-none">My notes</span>
+        <button aria-label="Add new note" class="text-gray-400 hover:text-purple-600 focus:outline-none smooth-transition" type="button" @click="openNewNoteModal">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+      
+      <!-- Tags filter -->
+      <div class="mt-3 flex flex-wrap gap-1">
+        <template x-for="tag in allTags" :key="tag">
+          <button @click="filterByTag(tag)" class="text-xs px-2 py-1 rounded-full tag smooth-transition hover:bg-purple-100" :class="activeTag === tag ? 'bg-purple-100 font-semibold' : ''">
+            <span x-text="tag"></span>
+          </button>
+        </template>
+      </div>
+      
+      <nav class="mt-3 flex flex-col space-y-1 text-gray-600 text-sm font-normal">
+        <template x-for="note in filteredNotes" :key="note.id">
+          <a class="flex items-center justify-between group hover:text-gray-900 truncate px-2 py-1.5 rounded smooth-transition" :class="activeNote === note.id ? 'bg-purple-50 text-purple-600' : ''" href="#" :title="note.title" @click.prevent="setActiveNote(note.id)">
+            <div class="flex items-center space-x-2 truncate">
+              <i class="fas" :class="note.icon"></i>
+              <span class="truncate" x-text="note.title"></span>
+            </div>
+            <button @click.stop="toggleFavorite(note.id)" class="opacity-0 group-hover:opacity-100 smooth-transition text-gray-400 hover:text-yellow-500" :class="{'opacity-100 text-yellow-500': note.favorite, 'opacity-0 group-hover:opacity-100': !note.favorite}">
+              <i class="fas" :class="note.favorite ? 'fa-star' : 'fa-star'"></i>
+            </button>
+          </a>
+        </template>
+      </nav>
+      
+      <!-- Search for mobile -->
+      <div class="mt-6 sm:hidden">
+        <div class="relative">
+          <input aria-label="Search notes" class="w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent smooth-transition" placeholder="Search notes..." type="search" x-model="searchQuery" @keyup.enter="performSearch" />
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <section class="flex-1 overflow-y-auto p-6 max-w-5xl mx-auto sm:ml-64">
+      <!-- Tabs -->
+      <div class="flex items-center space-x-2 mb-6 text-xs font-semibold text-gray-500 select-none">
+        <button class="flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 cursor-not-allowed opacity-50 smooth-transition" disabled="" type="button">
+          <i class="fas fa-file-alt text-[10px]"></i>
+          <span>Transcribe</span>
+        </button>
+        <button class="flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 smooth-transition" :class="contentTab === 'summary' ? 'border-b-2 border-b-purple-600 text-purple-600' : 'hover:bg-gray-50'" type="button" @click="contentTab = 'summary'">
+          <i class="fas fa-file-alt text-[10px]"></i>
+          <span>Summary</span>
+        </button>
+        <button class="flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 smooth-transition" :class="contentTab === 'edit' ? 'border-b-2 border-b-purple-600 text-purple-600' : 'hover:bg-gray-50'" type="button" @click="contentTab = 'edit'">
+          <i class="fas fa-edit text-[10px]"></i>
+          <span>Edit</span>
+        </button>
+        <button class="flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 cursor-not-allowed opacity-50 smooth-transition" disabled="" type="button">
+          <i class="fas fa-comments text-[10px]"></i>
+          <span>Chat</span>
+        </button>
+        <button class="ml-auto flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 smooth-transition hover:bg-gray-100 text-gray-600" type="button" @click="shareNote">
+          <i class="fas fa-share-alt text-[10px]"></i>
+          <span>Share</span>
+        </button>
+      </div>
+      
+      <!-- Content -->
+      <article class="prose prose-sm max-w-none text-gray-900">
+        <div class="flex justify-between items-start mb-4">
+          <h2 class="font-bold text-base mb-1" x-text="activeNoteDetails.title"></h2>
+          <div class="flex space-x-2">
+            <button class="p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded smooth-transition" @click="toggleFavorite(activeNote)" :class="{'text-yellow-500': activeNoteDetails.favorite}">
+              <i class="fas fa-star text-xs"></i>
+            </button>
+            <button class="p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded smooth-transition" @click="contentTab = 'edit'" x-show="contentTab !== 'edit'">
+              <i class="fas fa-edit text-xs"></i>
+            </button>
+            <button class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded smooth-transition" @click="deleteNote">
+              <i class="fas fa-trash-alt text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-2 mb-4 text-xs font-semibold text-gray-600">
+          <img alt="Icon of a man in suit representing Marvin McKinney" class="w-4 h-4 rounded-full" height="16" src="https://storage.googleapis.com/a1aa/image/c29f6e24-48b7-4752-9a2a-34b419098626.jpg" width="16" />
+          <span>Marvin McKinney</span>
+          <span class="text-gray-400">•</span>
+          <span class="text-gray-400 font-normal" x-text="noteDate"></span>
+          <template x-if="activeNoteDetails.tags && activeNoteDetails.tags.length > 0">
+            <div class="flex space-x-1 ml-2">
+              <template x-for="tag in activeNoteDetails.tags" :key="tag">
+                <span class="text-xs px-2 py-0.5 rounded-full tag" x-text="tag"></span>
+              </template>
+            </div>
+          </template>
+        </div>
+        
+        <!-- Summary View -->
+        <div x-show="contentTab === 'summary'">
+          <div x-html="parseMarkdown(activeNoteDetails.content)"></div>
+        </div>
+        
+        <!-- Edit View -->
+        <div x-show="contentTab === 'edit'" x-transition>
+          <div class="mb-4">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Title</label>
+            <input type="text" class="w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" x-model="activeNoteDetails.title">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Tags (comma separated)</label>
+            <input type="text" class="w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" x-model="activeNoteDetails.tagsInput" placeholder="marketing, research, ab-testing">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">Content</label>
+            <textarea class="w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent note-editor" x-model="activeNoteDetails.content" rows="15"></textarea>
+          </div>
+          
+          <div class="flex justify-end space-x-2">
+            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent smooth-transition" @click="contentTab = 'summary'">
+              Cancel
+            </button>
+            <button class="px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent smooth-transition" @click="saveNote">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+  
+  <!-- New Note Modal -->
+  <div x-show="showNewNoteModal" @keydown.escape="showNewNoteModal = false" class="fixed inset-0 z-30 overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div x-show="showNewNoteModal" class="fixed inset-0 transition-opacity" @click="showNewNoteModal = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+      
+      <!-- Modal content -->
+      <div x-show="showNewNoteModal" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Create New Note</h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <input type="text" class="w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" x-model="newNote.title" placeholder="Enter note title">
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tags (comma separated)</label>
+            <input type="text" class="w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" x-model="newNote.tagsInput" placeholder="e.g. marketing, research, ab-testing">
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm smooth-transition" @click="createNote">
+            Create
+          </button>
+          <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm smooth-transition" @click="showNewNoteModal = false">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Configure marked.js to sanitize output
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      sanitize: true
+    });
+    
+    function app() {
+      return {
+        mobileSidebarOpen: false,
+        activeTab: 'home',
+        contentTab: 'summary',
+        searchQuery: '',
+        activeNote: 'ab-testing',
+        activeTag: null,
+        showNewNoteModal: false,
+        notes: [
+        {
+          id: 'ab-testing',
+          title: 'A/B Testing Results Review',
+          icon: 'fa-folder',
+          date: '2023-06-15',
+          favorite: true,
+          tags: ['research', 'ab-testing', 'marketing'],
+          content: `### Meeting Overview\n**Purpose**\nReview and analyze the results of our recent A/B tests for the new travel app interface.\n\n### Key Findings\n- **Conversion Rates:** Variant B showed a 12% improvement in booking conversions compared to the control.\n- **User Engagement:** Time on page increased by 23% with the new layout.\n- **Bounce Rates:** Reduced by 8% in the test variant.\n\n### Recommendations\n- Implement Variant B as the new default interface.\n- Conduct follow-up tests on the checkout flow.\n- Monitor performance for 2 weeks after rollout.\n\n### Next Steps\n1. Prepare implementation plan by Friday.\n2. Coordinate with development team for rollout.\n3. Schedule follow-up meeting in 3 weeks.`
+        },
+        {
+          id: 'ux-client',
+          title: 'Worxspace UX Client',
+          icon: 'fa-folder',
+          date: '2023-06-10',
+          favorite: false,
+          tags: ['ux', 'client'],
+          content: 'Client meeting notes about UX improvements...'
+        },
+        {
+          id: 'branding',
+          title: 'Worxspace Branding',
+          icon: 'fa-folder',
+          date: '2023-06-05',
+          favorite: true,
+          tags: ['branding', 'marketing'],
+          content: 'Branding strategy discussion notes...'
+        },
+        {
+          id: 'demo',
+          title: 'Product Demo',
+          icon: 'fa-folder',
+          date: '2023-05-28',
+          favorite: false,
+          tags: ['demo', 'product'],
+          content: 'Notes from the product demo session...'
+        },
+        {
+          id: 'retro',
+          title: 'Team Retrospective',
+          icon: 'fa-folder',
+          date: '2023-05-20',
+          favorite: false,
+          tags: ['retrospective', 'team'],
+          content: 'Team retrospective meeting notes...'
+        },
+        {
+          id: 'analysis',
+          title: 'Competitor Analysis',
+          icon: 'fa-folder',
+          date: '2023-05-15',
+          favorite: true,
+          tags: ['research', 'competitors'],
+          content: 'Competitor analysis findings...'
+        }],
+        newNote: {
+          title: '',
+          tagsInput: '',
+          content: ''
+        },
+        parseMarkdown(content) {
+          return marked.parse(content || '');
+        },
+        get allTags() {
+          const allTags = new Set();
+          this.notes.forEach(note => {
+            if (note.tags) {
+              note.tags.forEach(tag => allTags.add(tag));
+            }
+          });
+          return Array.from(allTags);
+        },
+        get filteredNotes() {
+          let filtered = this.notes;
+          
+          // Filter by search query
+          if (this.searchQuery) {
+            filtered = filtered.filter(note =>
+              note.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+              (note.tags && note.tags.some(tag => tag.toLowerCase().includes(this.searchQuery.toLowerCase())))
+            );
+          }
+          
+          // Filter by active tag
+          if (this.activeTag) {
+            filtered = filtered.filter(note =>
+              note.tags && note.tags.includes(this.activeTag)
+            );
+          }
+          
+          // Filter favorites if on favorites tab
+          if (this.activeTab === 'favorites') {
+            filtered = filtered.filter(note => note.favorite);
+          }
+          
+          // Sort by date (newest first)
+          return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        },
+        get activeNoteDetails() {
+          const note = this.notes.find(n => n.id === this.activeNote) || {};
+          return {
+            ...note,
+            tagsInput: note.tags ? note.tags.join(', ') : ''
+          };
+        },
+        get activeNoteTitle() {
+          return this.activeNoteDetails.title || '';
+        },
+        get noteDate() {
+          const note = this.notes.find(n => n.id === this.activeNote);
+          if (!note) return '';
+          const date = new Date(note.date);
+          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        },
+        setActiveNote(id) {
+          this.activeNote = id;
+          this.contentTab = 'summary';
+          this.mobileSidebarOpen = false;
+        },
+        openNewNoteModal() {
+          this.newNote = {
+            title: '',
+            tagsInput: '',
+            content: ''
+          };
+          this.showNewNoteModal = true;
+        },
+        createNote() {
+          if (!this.newNote.title.trim()) {
+            alert('Please enter a title for your note');
+            return;
+          }
+          
+          const newId = 'note-' + Date.now();
+          const tags = this.newNote.tagsInput ?
+            this.newNote.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) :
+            [];
+          
+          const newNote = {
+            id: newId,
+            title: this.newNote.title,
+            icon: 'fa-folder',
+            date: new Date().toISOString().split('T')[0],
+            favorite: false,
+            tags: tags,
+            content: '# ' + this.newNote.title + '\n\nStart writing your note here...'
+          };
+          
+          this.notes.unshift(newNote);
+          this.setActiveNote(newId);
+          this.showNewNoteModal = false;
+        },
+        saveNote() {
+          const noteIndex = this.notes.findIndex(n => n.id === this.activeNote);
+          if (noteIndex === -1) return;
+          
+          // Update tags from comma-separated input
+          const updatedTags = this.activeNoteDetails.tagsInput ?
+            this.activeNoteDetails.tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) :
+            [];
+          
+          this.notes[noteIndex] = {
+            ...this.notes[noteIndex],
+            title: this.activeNoteDetails.title,
+            tags: updatedTags,
+            content: this.activeNoteDetails.content
+          };
+          
+          this.contentTab = 'summary';
+        },
+        deleteNote() {
+          if (confirm('Are you sure you want to delete this note?')) {
+            const noteIndex = this.notes.findIndex(n => n.id === this.activeNote);
+            if (noteIndex !== -1) {
+              this.notes.splice(noteIndex, 1);
+              // Set active note to the first available note or empty
+              this.activeNote = this.notes.length > 0 ? this.notes[0].id : null;
+            }
+          }
+        },
+        toggleFavorite(noteId) {
+          const noteIndex = this.notes.findIndex(n => n.id === noteId);
+          if (noteIndex !== -1) {
+            this.notes[noteIndex].favorite = !this.notes[noteIndex].favorite;
+          }
+        },
+        filterByTag(tag) {
+          this.activeTag = this.activeTag === tag ? null : tag;
+          this.activeTab = 'library';
+        },
+        filterNotes(filter) {
+          if (filter === 'favorites') {
+            this.activeTag = null;
+          }
+        },
+        shareNote() {
+          const note = this.notes.find(n => n.id === this.activeNote);
+          if (note) {
+            alert(`Sharing note: ${note.title}\n\nThis would open your system's sharing dialog in a real app.`);
+          }
+        },
+        performSearch() {
+          if (this.searchQuery.trim()) {
+            // In a real app, this might trigger a more comprehensive search
+            console.log(`Searching for: ${this.searchQuery}`);
+          }
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
