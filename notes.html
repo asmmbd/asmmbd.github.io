@@ -1,0 +1,384 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>
+    Police Narratives AI
+  </title>
+  <script src="https://cdn.tailwindcss.com/3.4.16?plugins=typography">
+  </script>
+  <style>
+    .field-sizing-content {
+      field-sizing: content;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Scrollbar for left and middle columns */
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-900" x-data="{
+    selectedText: '',
+    showCustomMenu: false,
+    menuPosition: { x: 0, y: 0 },
+    
+    getSelectedText() {
+      const selection = window.getSelection();
+      this.selectedText = selection.toString();
+      return this.selectedText;
+    },
+    
+    chatAi() {
+      this.$refs.textarea.value = this.getSelectedText();
+      this.showCustomMenu = false;
+    },
+    
+    handleContextMenu(e) {
+      e.preventDefault();
+      this.menuPosition = { x: e.pageX, y: e.pageY };
+      this.showCustomMenu = true;
+    },
+    
+    sendMessage() {
+      this.$refs.article.innerHTML += `<br />${this.$refs.textarea.value}`;
+      this.$refs.textarea.value = '';
+    }
+  }">
+  <div class="flex h-screen max-h-screen overflow-hidden select-none">
+    <!-- Left Sidebar -->
+    <section class=" print:hidden flex flex-col w-72 border-r border-gray-200 bg-white">
+      <header class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+        <h2 class="text-sm font-semibold text-gray-900">
+          All Cases
+        </h2>
+        <span class="text-xs text-gray-400">
+          Total 17 cases
+        </span>
+      </header>
+      
+      <div class="overflow-y-auto scrollbar-thin flex-1 bg-white">
+        <div class="px-5 py-3 border-b border-gray-100 w-full flex justify-between items-center gap-3">
+          <span class="text-xs text-gray-400">
+            Total 17 cases
+          </span>
+          <button class="text-xs font-semibold bg-blue-600 text-gray-100 flex items-center gap-2 px-3 py-1.5 rounded-md" type="button">
+            <i class="hgi hgi-stroke hgi-plus-sign"></i>
+            <span>ADD NOTE</span>
+            </i>
+          </button>
+        </div>
+        <div class="px-5 py-3 border-b border-gray-100 w-full flex justify-between items-center gap-3">
+          <div class="relative">
+            <i class="absolute top-1 left-2 hgi hgi-stroke hgi-search-01"></i>
+            <input type="text" class="w-full h-8 border border-gray-300 outline-none px-8 rounded-md" />
+          </div>
+          <button class="text-xs font-semibold text-gray-600" type="button">
+            <i class="hgi hgi-stroke hgi-preference-vertical"></i>
+          </button>
+        </div>
+        <!-- Case items -->
+        <div class="divide-y divide-gray-100">
+          <button class="w-full text-left px-5 py-3 border-l-4 border-blue-600 bg-blue-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Report: Stolen Bicycles
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 30th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Vandalism in Parking Lot Report
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Suspicious Activity Report
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+          <button class="w-full text-left px-5 py-3 hover:bg-gray-50" type="button">
+            <h3 class="text-xs font-semibold text-gray-900 truncate">
+              Police Incident Report: Vehicle Burglary
+            </h3>
+            <p class="text-[10px] text-gray-400 truncate">
+              On April 28th 2023, 1, Officer Ian Rogers...
+            </p>
+          </button>
+        </div>
+      </div>
+      <div class="mt-auto mb-5 pt-4 px-5 flex items-center gap-3 text-gray-700 text-xs font-semibold">
+        <img alt="User avatar placeholder, round blue background with initials BD" class="w-8 h-8 rounded-full" height="32" src="https://storage.googleapis.com/a1aa/image/9915fb4d-51b1-4416-0e5d-be9ae25f4f58.jpg" width="32" />
+        <div class="flex flex-col leading-tight">
+          <span>
+            Barakatullah
+          </span>
+          <span class="text-gray-400 text-xs font-normal">
+            Badge# 784
+          </span>
+        </div>
+        <button aria-label="User options" class="ml-auto text-gray-400 hover:text-gray-600 focus:outline-none" type="button">
+          <i class="hgi hgi-stroke hgi-logout-03 text-xl"></i>
+        </button>
+      </div>
+    </section>
+    <!-- Main Content -->
+    <main class="relative flex-1 flex flex-col overflow-hidden bg-white">
+      <div class="flex flex-col flex-1 overflow-auto px-8 py-6">
+        <div class="print:hidden flex items-center justify-between mb-6">
+          <div class="w-full flex items-center gap-2 text-gray-900 font-semibold text-lg">
+            <span>
+              Paragraph
+            </span>
+            <button aria-label="Bold" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-bold"></i>
+            </button>
+            <button aria-label="Italic" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-italic"></i>
+            </button>
+            <button aria-label="Underline" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-underline"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none mr-3" type="button">
+              <i class="hgi hgi-stroke hgi-text-strikethrough"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-color"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none mr-3" type="button">
+              <i class="hgi hgi-stroke hgi-brush"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-left-to-right-list-bullet"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none mr-3" type="button">
+              <i class="hgi hgi-stroke hgi-left-to-right-list-number"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-align-left"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-align-center"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-text-align-right"></i>
+            </button>
+            <button aria-label="Strikethrough" class="text-gray-600 hover:text-gray-900 focus:outline-none mr-3" type="button">
+              <i class="hgi hgi-stroke hgi-text-align-justify-center"></i>
+            </button>
+            
+            <button aria-label="Link" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-link-01"></i>
+            </button>
+            <button aria-label="Image" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-image-02"></i>
+            </button>
+            <button aria-label="Code" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-code-square"></i>
+            </button>
+            <button aria-label="Undo" class="ml-auto text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+                <path d="M3 8H15C18.3137 8 21 10.6863 21 14C21 17.3137 18.3137 20 15 20H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M7 4L5.8462 4.87652C3.94873 6.31801 3 7.03875 3 8C3 8.96125 3.94873 9.68199 5.8462 11.1235L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button aria-label="Redo" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+                <path d="M21 8H9C5.68629 8 3 10.6863 3 14C3 17.3137 5.68629 20 9 20H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M17 4L18.1538 4.87652C20.0513 6.31801 21 7.03875 21 8C21 8.96125 20.0513 9.68199 18.1538 11.1235L17 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button aria-label="Redo" class="text-gray-600 hover:text-gray-900 focus:outline-none" type="button">
+              <i class="hgi hgi-stroke hgi-printer"></i>
+            </button>
+          </div>
+        </div>
+        <article class="prose max-w-none text-gray-900 text-sm leading-relaxed outline-none" contenteditable="true" x-ref="article" @contextmenu="handleContextMenu($event)">
+          <h1 class="font-semibold text-base ">
+            Police Incident Report: Vehicle Burglary
+          </h1>
+          <p>
+            On April 28th 2023, 1, Officer Ian Rogers (Badge USC 114), responded to a
+            reported vehicle burglary at 348 Kincade Street, Columbia SC 29205. The
+            incident was discovered at 8:30 a.m., though it occurred sometime after 10
+            p.m. the previous night.
+          </p>
+          <p>
+            The victim, Rick Roll (DOB: January 14th 1987), reported that his Nikon CX
+            7800 camera, valued at approximately $1,500, was stolen from his unlocked
+            vehicle. The camera has a distinguishing scratch on the lens cap with the
+            owner's name and serial number SNEUY5634X8.
+          </p>
+          <p>
+            Mr. Roll provided a description of a potential suspect: a white male,
+            approximately six feet tall, weighing 200 pounds, last seen wearing a black
+            shirt, red shorts, and yellow Adidas shoes. The suspect was reportedly on a
+            bicycle. No vehicle information was available.
+          </p>
+          <p>
+            Upon inspection of the vehicle, I observed that belongings had been
+            scattered, indicating a thorough search. A business card labeled "Baseball
+            Bob. Wuz here" was found in the vehicle. The victim reported a strong odor
+            of body odor in the car.
+          </p>
+          <p>
+            I attempted to contact a neighbor with a Nest camera but was unsuccessful.
+            No evidence was collected at the scene. I entered the camera's serial number
+            into the Pawn Watch database.
+          </p>
+          <p>
+            This incident may be related to other burglaries in the area, possibly
+            connected to an individual known as "Baseball Bob," whom I previously
+            arrested for similar offenses (case ending in 14567).
+          </p>
+          <p>
+            The case status is open, pending further investigation and suspect
+            identification. No arrests have been made at this time.
+          </p>
+        </article>
+        
+        <div class="custom-menu absolute border rounded-md p-2 bg-white shadow-lg z-50" x-show="showCustomMenu" x-bind:style="`left: ${menuPosition.x}px; top: ${menuPosition.y}px`" @click.away="showCustomMenu = false">
+          <ul class="space-y-1.5">
+            <li @click="chatAi()" class="px-2 py-1 hover:bg-gray-100 rounded cursor-pointer">chat with ai</li>
+            <li class="px-2 py-1 hover:bg-gray-100 rounded cursor-pointer">summarise text</li>
+            <li class="px-2 py-1 hover:bg-gray-100 rounded cursor-pointer">explain with AI</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    
+    <section class="relative print:hidden flex flex-col w-80 border-l border-gray-200 bg-white">
+      <div class="print:hidden absolute bottom-4 left-0 w-full px-3">
+        <div class="relative">
+          <textarea x-ref="textarea" class="field-sizing-content w-full min-h-12 max-h-32 border border-gray-300 outline-none rounded-md py-2 px-4" placeholder="ask me anyone..."></textarea>
+          <i @click="sendMessage()" class="absolute bottom-3 right-3 hgi hgi-stroke hgi-sent bg-blue-100 text-blue-600 size-6 rounded-md grid place-items-center cursor-pointer hover:bg-blue-200"></i>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+
+</html>
