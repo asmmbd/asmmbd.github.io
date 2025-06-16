@@ -54,6 +54,37 @@
       white-space: pre-wrap;
     }
   </style>
+  <style>
+    .dots {
+      width: 40px;
+      height: 19.2px;
+      background: radial-gradient(circle closest-side, #000000 90%, #0000) 0% 50%,
+        radial-gradient(circle closest-side, #000000 90%, #0000) 50% 50%,
+        radial-gradient(circle closest-side, #000000 90%, #0000) 100% 50%;
+      background-size: calc(100%/3) 9.6px;
+      background-repeat: no-repeat;
+      animation: dots-7ar3yq 1s infinite linear;
+    }
+    
+    @keyframes dots-7ar3yq {
+      20% {
+        background-position: 0% 0%, 50% 50%, 100% 50%;
+      }
+      
+      40% {
+        background-position: 0% 100%, 50% 0%, 100% 50%;
+      }
+      
+      60% {
+        background-position: 0% 50%, 50% 100%, 100% 0%;
+      }
+      
+      80% {
+        background-position: 0% 50%, 50% 50%, 100% 100%;
+      }
+    }
+  </style>
+  
 </head>
 
 <body class="bg-white">
@@ -167,22 +198,9 @@
               </div>
             </li>
           </template>
-          <li x-show="isLoading" class="w-full max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+          <li x-show="isLoading" class="w-full max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex items-center gap-x-2 sm:gap-x-4">
             <img src="./images/nahdalogo.jpg" alt="" class="shrink-0 size-10 rounded-full" />
-            
-            <div class="w-full space-y-1.5 animate-pulse">
-              <p class="w-full h-2 bg-gray-200 rounded-full"></p>
-              <p class="w-full h-2 bg-gray-200 rounded-full"></p>
-              <p class="w-full h-2 bg-gray-200 rounded-full"></p>
-              <br />
-              <p class="w-80 h-2 bg-gray-200 rounded-full"></p>
-              <p class="w-52 h-2 bg-gray-200 rounded-full"></p>
-              <p class="w-full h-20 bg-gray-200 rounded-md"></p>
-              <br />
-              <p class="w-full h-2 bg-gray-200 rounded-full"></p>
-              <p class="w-full h-2 bg-gray-200 rounded-full"></p>
-              <p class="w-full h-2 bg-gray-200 rounded-full"></p>
-            </div>
+            <div class="dots"></div>
           </li>
         </ul>
       </div>
@@ -393,36 +411,6 @@
           let answer = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
           return answer;
         },
-        
-        typeMessage(message, index) {
-          let i = 0;
-          const typingSpeed = 30;
-          const messageElement = this.$refs.chatContainer.children[index].querySelector('.text-gray-800');
-          
-          if (!messageElement) {
-            console.error("Message element not found!");
-            return;
-          }
-          
-          // Clear the existing text before typing
-          messageElement.innerHTML = '';
-          this.isTyping = true;
-          const type = () => {
-            if (i < message.length) {
-              messageElement.innerHTML += message.charAt(i);
-              i++;
-              setTimeout(type, typingSpeed);
-              this.scrollToBottom();
-            } else {
-              messageElement.innerHTML = marked.parse(message);
-              this.isTyping = false;
-            }
-          };
-          
-          type();
-          
-        },
-        
         saveConversation() {
           localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
         },
@@ -497,4 +485,4 @@
   </script>
 </body>
 
-</html>i
+</html>
