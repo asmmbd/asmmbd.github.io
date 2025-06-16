@@ -160,7 +160,7 @@
         
         <ul class="mt-16 space-y-5" x-ref="chatContainer">
           <template x-for="(message, index) in conversationHistory" :key="index">
-            <li class="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+            <li class="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
               <img x-show="message.role === 'model'" src="./images/nahdalogo.jpg" alt="" class="shrink-0 size-10 rounded-full" />
               <img x-show="message.role === 'user'" src="./images/logo.jpg" alt="" class="shrink-0 size-10 rounded-full" />
               
