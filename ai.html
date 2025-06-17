@@ -91,22 +91,32 @@
   <div x-data="alemai()" x-cloak>
     <div x-show="sidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="transform -translate-x-full" x-transition:enter-end="transform translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="transform translate-x-0" x-transition:leave-end="transform -translate-x-full" class="fixed top-0 start-0 bottom-0 z-60 w-80 lg:w-64 h-full bg-white border-e border-gray-200 md:block md:translate-x-0 md:end-auto md:bottom-0 z-50" role="dialog" tabindex="-1" aria-label="সাইডবার">
       <nav class="size-full flex flex-col">
-        <div class="flex items-center justify-between pt-4 px-4">
-          <a class="flex-none focus:outline-hidden focus:opacity-80" href="/" aria-label="ইসলামিক সহায়ক">
-            <img src="./images/nahdalogo.jpg" alt="" class="shrink-0 size-8 rounded-full" />
-            
-          </a>
-          <a @click="clearConversation()" class="shrink-0 flex items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100">
-            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
+        <div class="w-full flex items-center justify-between pt-4 px-4 gap-3">
+          <div class="relative flex-1">
+            <svg class="absolute top-2 left-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
+              <path d="M17 17L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19C15.4183 19 19 15.4183 19 11Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            নতুন চ্যাট
-          </a>
+            <input type="text" class="w-full border border-gray-300 rounded-md h-10 pr-3 pl-10 outline-none" />
+          </div>
+          <button @click="clearConversation()" class="shrink-0 text-sm text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
+              <path d="M16.4249 4.60509L17.4149 3.6151C18.2351 2.79497 19.5648 2.79497 20.3849 3.6151C21.205 4.43524 21.205 5.76493 20.3849 6.58507L19.3949 7.57506M16.4249 4.60509L9.76558 11.2644C9.25807 11.772 8.89804 12.4078 8.72397 13.1041L8 16L10.8959 15.276C11.5922 15.102 12.228 14.7419 12.7356 14.2344L19.3949 7.57506M16.4249 4.60509L19.3949 7.57506" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M18.9999 13.5C18.9999 16.7875 18.9999 18.4312 18.092 19.5376C17.9258 19.7401 17.7401 19.9258 17.5375 20.092C16.4312 21 14.7874 21 11.4999 21H11C7.22876 21 5.34316 21 4.17159 19.8284C3.00003 18.6569 3 16.7712 3 13V12.5C3 9.21252 3 7.56879 3.90794 6.46244C4.07417 6.2599 4.2599 6.07417 4.46244 5.90794C5.56879 5 7.21252 5 10.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </div>
         
         <div class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
-          <div class="my-4 px-4">
+          <div class="mt-3 px-4 font-bold text-lg flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C7.52232 2 3.77426 4.94289 2.5 9H5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 8V12L14 14" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M2 12C2 12.3373 2.0152 12.6709 2.04494 13M9 22C8.6584 21.8876 8.32471 21.7564 8 21.6078M3.20939 17C3.01655 16.6284 2.84453 16.2433 2.69497 15.8462M4.83122 19.3065C5.1369 19.6358 5.46306 19.9441 5.80755 20.2292" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <h1>সাম্প্রতিক চ্যাট</h1>
+          </div>
+          <div class="mt-2 mb-4 px-4">
             <template x-for="(message, index) in conversationHistory" :key="index">
               <button x-show="message.role === 'user'" @click="sendMessage(message.parts[0].text)" class="w-full truncate mb-2 px-3 py-2 text-sm text-left text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
                 <span x-text="message.parts[0].text"></span>
@@ -117,14 +127,13 @@
         
         <div class="mt-auto">
           <div class="p-4 border-t border-gray-200">
-            <a class="flex justify-between items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100" href="#">
-              সাইন ইন
-              <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" x2="3" y1="12" y2="12" />
+            <button @click="showSetting = true" class="flex justify-between items-center gap-x-3 py-2 px-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+                <path d="M21.3175 7.14139L20.8239 6.28479C20.4506 5.63696 20.264 5.31305 19.9464 5.18388C19.6288 5.05472 19.2696 5.15664 18.5513 5.36048L17.3311 5.70418C16.8725 5.80994 16.3913 5.74994 15.9726 5.53479L15.6357 5.34042C15.2766 5.11043 15.0004 4.77133 14.8475 4.37274L14.5136 3.37536C14.294 2.71534 14.1842 2.38533 13.9228 2.19657C13.6615 2.00781 13.3143 2.00781 12.6199 2.00781H11.5051C10.8108 2.00781 10.4636 2.00781 10.2022 2.19657C9.94085 2.38533 9.83106 2.71534 9.61149 3.37536L9.27753 4.37274C9.12465 4.77133 8.84845 5.11043 8.48937 5.34042L8.15249 5.53479C7.73374 5.74994 7.25259 5.80994 6.79398 5.70418L5.57375 5.36048C4.85541 5.15664 4.49625 5.05472 4.17867 5.18388C3.86109 5.31305 3.67445 5.63696 3.30115 6.28479L2.80757 7.14139C2.45766 7.74864 2.2827 8.05227 2.31666 8.37549C2.35061 8.69871 2.58483 8.95918 3.05326 9.48012L4.0843 10.6328C4.3363 10.9518 4.51521 11.5078 4.51521 12.0077C4.51521 12.5078 4.33636 13.0636 4.08433 13.3827L3.05326 14.5354C2.58483 15.0564 2.35062 15.3168 2.31666 15.6401C2.2827 15.9633 2.45766 16.2669 2.80757 16.8741L3.30114 17.7307C3.67443 18.3785 3.86109 18.7025 4.17867 18.8316C4.49625 18.9608 4.85542 18.8589 5.57377 18.655L6.79394 18.3113C7.25263 18.2055 7.73387 18.2656 8.15267 18.4808L8.4895 18.6752C8.84851 18.9052 9.12464 19.2442 9.2775 19.6428L9.61149 20.6403C9.83106 21.3003 9.94085 21.6303 10.2022 21.8191C10.4636 22.0078 10.8108 22.0078 11.5051 22.0078H12.6199C13.3143 22.0078 13.6615 22.0078 13.9228 21.8191C14.1842 21.6303 14.294 21.3003 14.5136 20.6403L14.8476 19.6428C15.0004 19.2442 15.2765 18.9052 15.6356 18.6752L15.9724 18.4808C16.3912 18.2656 16.8724 18.2055 17.3311 18.3113L18.5513 18.655C19.2696 18.8589 19.6288 18.9608 19.9464 18.8316C20.264 18.7025 20.4506 18.3785 20.8239 17.7307L21.3175 16.8741C21.6674 16.2669 21.8423 15.9633 21.8084 15.6401C21.7744 15.3168 21.5402 15.0564 21.0718 14.5354L20.0407 13.3827C19.7887 13.0636 19.6098 12.5078 19.6098 12.0077C19.6098 11.5078 19.7888 10.9518 20.0407 10.6328L21.0718 9.48012C21.5402 8.95918 21.7744 8.69871 21.8084 8.37549C21.8423 8.05227 21.6674 7.74864 21.3175 7.14139Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M8.49997 16C9.1986 14.7923 10.5044 13.9797 12 13.9797C13.4955 13.9797 14.8013 14.7923 15.5 16M14 9.50002C14 10.6046 13.1046 11.5 12 11.5C10.8954 11.5 10 10.6046 10 9.50002C10 8.39545 10.8954 7.50002 12 7.50002C13.1046 7.50002 14 8.39545 14 9.50002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               </svg>
-            </a>
+              সেটিংস
+            </button>
           </div>
         </div>
       </nav>
@@ -281,98 +290,135 @@
         </div>
       </div>
     </div>
-  </div>
-  
-  <script>
-    function alemai() {
-      return {
-        islamicQuestions: [
-        {
-          category: "কুরআন",
-          questions: [
-            "কুরআন মাজিদে মোট কতটি সূরা আছে?",
-            "কুরআনের দীর্ঘতম সূরা কোনটি?",
-            "বিসমিল্লাহির রাহমানির রাহিম কতটি সূরায় নেই?",
-            "কুরআনে কারিমে মোট কতটি আয়াত আছে?",
-            "কোন সূরাকে কুরআনের হার্ট বলা হয়?"
-          ]
-        },
-        {
-          category: "হাদিস",
-          questions: [
-            "হাদিস শাস্ত্র অনুযায়ী ঈমানের শাখা কতটি?",
-            "রাসূল (সা.) এর মোট কতটি হাদিস বর্ণিত হয়েছে?",
-            "সহিহ বুখারি হাদিস গ্রন্থে মোট কতটি হাদিস আছে?",
-            "কিয়ামতের ছোট নিদর্শন有哪些?",
-            "রাসূল (সা.) এর শেষ হাদিস কী ছিল?"
-          ]
-        },
-        {
-          category: "ফিকহ",
-          questions: [
-            "নামাজের ফরজ কয়টি?",
-            "ওযুর ফরজ কয়টি?",
-            "রোজা ভঙ্গের কারণ有哪些?",
-            "হজ্জের ফরজ কয়টি?",
-            "যাকাতের নিসাব কত?"
-          ]
-        },
-        {
-          category: "ইতিহাস",
-          questions: [
-            "ইসলামের প্রথম মুয়াযযিন কে ছিলেন?",
-            "বদর যুদ্ধ কত সালে সংঘটিত হয়?",
-            "মক্কা বিজয়ের বছর কোনটি?",
-            "খুলাফায়ে রাশিদীন কে কে?",
-            "আন্দালুস (স্পেন) কত বছর মুসলিম শাসনাধীন ছিল?"
-          ]
-        },
-        {
-          category: "ঈমান ও আকিদা",
-          questions: [
-            "ঈমানের রুকন কয়টি?",
-            "আল্লাহর ৯৯টি নাম কী কী?",
-            "কিয়ামতের বড় নিদর্শন有哪些?",
-            "মালাইকা (ফেরেশতা) সম্পর্কে ইসলাম কী বলে?",
-            "তাকদীরে বিশ্বাস করা কেন জরুরি?"
-          ]
-        }],
-        API_KEY: "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g", // আপনার Gemini API কী এখানে বসান
-        API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=",
-        inputText: '',
-        errorText: '',
-        isLoading: false,
-        showConfirmationModal: false,
-        isVoiceOutputEnabled: true,
-        recognition: null,
-        isTyping: false,
-        isSpeaking: {}, // কোন মেসেজ পড়ছে তা ট্র্যাক করার জন্য
-        speechInstance: null,
-        sidebar: window.innerWidth < 768 ? false : true,
-        conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
-        
-        async sendMessage(question) {
-          if (!question.trim()) return;
-          this.scrollToBottom();
-          this.conversationHistory.push({ role: "user", parts: [{ text: question }] });
-          this.inputText = '';
-          this.saveConversation();
+    
+    <!-- সেটিংস মোডাল -->
+    <div x-show="showSetting" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div x-show="showSetting" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="bg-white rounded-lg shadow-xl w-96 overflow-hidden">
+        <!-- মেসেজ কন্টেন্ট -->
+        <div>
+          <div class="p-4">
+            <h1 class="text-gray-700 text-xl mb-3 font-bold">কাস্টম নির্দেশাবলী</h1>
+            <div class="w-full">
+              <label for="name">Nahda Ai আপনাকে কী নামে ডাকবে?</label>
+              <input id="name" class="w-full h-10 border rounded-md px-3 outline-none mt-1.5" placeholder="আপনার নাম" />
+            </div>
+            <div class="w-full my-3">
+              <label for="name">আপনি বর্তমানে কোন পেশায় নিয়োজিত</label>
+              <input id="name" class="w-full h-10 border rounded-md px-3 outline-none mt-1.5" placeholder="আপনার পেশা" />
+            </div>
+            <div class="w-full">
+              <label for="name">Nahda Ai-এর আপনার সম্পর্কে আর কিছু জানা উচিত?</label>
+              <textarea id="name" class="w-full h-28 max-h-32 border rounded-md px-3 outline-none mt-1.5" placeholder="Interests, values, or preferences to keep in mind"> </textarea>
+            </div>
+            <div class="w-full mt-3">
+              <label for="name">Nahda Ai-এর কী কী বৈশিষ্ট্য থাকা উচিত?</label>
+              <textarea id="name" class="w-full h-20 max-h-32 border rounded-md px-3 outline-none mt-1.5" placeholder="Interests, values, or preferences to keep in mind"> </textarea>
+            </div>
+          </div>
+          <!-- বাটন গ্রুপ -->
+          <div class="flex border-t divide-x">
+            <button @click="showSetting = false" class="flex-1 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
+              বাতিল
+            </button>
+            <button @click="showSetting = false" class="flex-1 py-3 text-red-600 bg-gray-50 transition-colors relative">
+              <span>সংরক্ষণ করুন</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      function alemai() {
+        return {
+          islamicQuestions: [
+          {
+            category: "কুরআন",
+            questions: [
+              "কুরআন মাজিদে মোট কতটি সূরা আছে?",
+              "কুরআনের দীর্ঘতম সূরা কোনটি?",
+              "বিসমিল্লাহির রাহমানির রাহিম কতটি সূরায় নেই?",
+              "কুরআনে কারিমে মোট কতটি আয়াত আছে?",
+              "কোন সূরাকে কুরআনের হার্ট বলা হয়?"
+            ]
+          },
+          {
+            category: "হাদিস",
+            questions: [
+              "হাদিস শাস্ত্র অনুযায়ী ঈমানের শাখা কতটি?",
+              "রাসূল (সা.) এর মোট কতটি হাদিস বর্ণিত হয়েছে?",
+              "সহিহ বুখারি হাদিস গ্রন্থে মোট কতটি হাদিস আছে?",
+              "কিয়ামতের ছোট নিদর্শন有哪些?",
+              "রাসূল (সা.) এর শেষ হাদিস কী ছিল?"
+            ]
+          },
+          {
+            category: "ফিকহ",
+            questions: [
+              "নামাজের ফরজ কয়টি?",
+              "ওযুর ফরজ কয়টি?",
+              "রোজা ভঙ্গের কারণ有哪些?",
+              "হজ্জের ফরজ কয়টি?",
+              "যাকাতের নিসাব কত?"
+            ]
+          },
+          {
+            category: "ইতিহাস",
+            questions: [
+              "ইসলামের প্রথম মুয়াযযিন কে ছিলেন?",
+              "বদর যুদ্ধ কত সালে সংঘটিত হয়?",
+              "মক্কা বিজয়ের বছর কোনটি?",
+              "খুলাফায়ে রাশিদীন কে কে?",
+              "আন্দালুস (স্পেন) কত বছর মুসলিম শাসনাধীন ছিল?"
+            ]
+          },
+          {
+            category: "ঈমান ও আকিদা",
+            questions: [
+              "ঈমানের রুকন কয়টি?",
+              "আল্লাহর ৯৯টি নাম কী কী?",
+              "কিয়ামতের বড় নিদর্শন有哪些?",
+              "মালাইকা (ফেরেশতা) সম্পর্কে ইসলাম কী বলে?",
+              "তাকদীরে বিশ্বাস করা কেন জরুরি?"
+            ]
+          }],
+          API_KEY: "AIzaSyAcwMTJH9opXgxoFqC8ijuZtPs-ov1hO6g", // আপনার Gemini API কী এখানে বসান
+          API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=",
+          inputText: '',
+          errorText: '',
+          showSetting: false,
+          isLoading: false,
+          showConfirmationModal: false,
+          isVoiceOutputEnabled: true,
+          recognition: null,
+          isTyping: false,
+          isSpeaking: {}, // কোন মেসেজ পড়ছে তা ট্র্যাক করার জন্য
+          speechInstance: null,
+          sidebar: window.innerWidth < 768 ? false : true,
+          conversationHistory: JSON.parse(localStorage.getItem('conversationHistory')) || [],
           
-          try {
-            const answer = await this.getAnswer(question);
-            this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
-            this.saveConversation();
+          async sendMessage(question) {
+            if (!question.trim()) return;
             this.scrollToBottom();
-          } catch (error) {
-            this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
-            console.error(error);
-          }
-        },
-        
-        async getAnswer(question) {
-          this.isLoading = true;
-          this.scrollToBottom();
-          const islamicPrompt = `
+            this.conversationHistory.push({ role: "user", parts: [{ text: question }] });
+            this.inputText = '';
+            this.saveConversation();
+            
+            try {
+              const answer = await this.getAnswer(question);
+              this.conversationHistory.push({ role: "model", parts: [{ text: answer }] });
+              this.saveConversation();
+              this.scrollToBottom();
+            } catch (error) {
+              this.errorText = "দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+              console.error(error);
+            }
+          },
+          
+          async getAnswer(question) {
+            this.isLoading = true;
+            this.scrollToBottom();
+            const islamicPrompt = `
 তুমি একটি ইসলামিক চ্যাটবট যার নাম 'নাহদা এআই'।
 তোমার প্রধান কাজ হলো কুরআন, হাদিস, এবং বিশ্বস্ত ইসলামিক উৎসের ভিত্তিতে ব্যবহারকারীর প্রশ্নের সঠিক, সুনির্দিষ্ট, এবং সম্মানজনক উত্তর দেওয়া।
 
@@ -394,96 +440,96 @@
 
 ---
 ব্যবহারকারীর প্রশ্ন: ${question}
-`;        
-          const response = await fetch(this.API_URL + this.API_KEY, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [
-                ...this.conversationHistory,
-                { role: "user", parts: [{ text: islamicPrompt }] }
-              ],
-            }),
-          });
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.error.message);
-          this.isLoading = false;
-          this.scrollToBottom();
-          let answer = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
-          return answer;
-        },
-        saveConversation() {
-          localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
-        },
-        
-        openConfirmationModal() {
-          this.showConfirmationModal = true;
-        },
-        
-        confirmDelete() {
-          this.conversationHistory = [];
-          localStorage.removeItem('conversationHistory');
-          this.showConfirmationModal = false;
-        },
-        
-        cancelDelete() {
-          this.showConfirmationModal = false;
-        },
-        
-        clearConversation() {
-          this.openConfirmationModal();
-        },
-        
-        scrollToBottom() {
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: 'smooth'
-          });
-        },
-        
-        startVoiceInput() {
-          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-          this.recognition = new SpeechRecognition();
-          this.recognition.lang = 'bn-BD';
-          this.recognition.onresult = (event) => {
-            this.inputText = event.results[0][0].transcript;
-            this.sendMessage(this.inputText);
-          };
-          this.recognition.start();
-        },
-        
-        toggleVoiceOutput() {
-          this.isVoiceOutputEnabled = !this.isVoiceOutputEnabled;
-        },
-        
-        toggleSpeech(text, index) {
-          if (this.isSpeaking[index]) {
-            // পড়া বন্ধ করা
-            speechSynthesis.cancel();
-            this.isSpeaking[index] = false;
-          } else {
-            // পড়া শুরু করা
-            this.speechInstance = new SpeechSynthesisUtterance(text);
-            this.speechInstance.lang = 'bn-BD';
-            this.speechInstance.volume = 1.0;
-            this.speechInstance.rate = 1.0;
-            this.speechInstance.pitch = 1.0;
-            this.speechInstance.onend = () => {
-              this.isSpeaking[index] = false;
+`;
+            const response = await fetch(this.API_URL + this.API_KEY, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [
+                  ...this.conversationHistory,
+                  { role: "user", parts: [{ text: islamicPrompt }] }
+                ],
+              }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error.message);
+            this.isLoading = false;
+            this.scrollToBottom();
+            let answer = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1');
+            return answer;
+          },
+          saveConversation() {
+            localStorage.setItem('conversationHistory', JSON.stringify(this.conversationHistory));
+          },
+          
+          openConfirmationModal() {
+            this.showConfirmationModal = true;
+          },
+          
+          confirmDelete() {
+            this.conversationHistory = [];
+            localStorage.removeItem('conversationHistory');
+            this.showConfirmationModal = false;
+          },
+          
+          cancelDelete() {
+            this.showConfirmationModal = false;
+          },
+          
+          clearConversation() {
+            this.openConfirmationModal();
+          },
+          
+          scrollToBottom() {
+            window.scrollTo({
+              top: document.documentElement.scrollHeight,
+              behavior: 'smooth'
+            });
+          },
+          
+          startVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+            this.recognition.lang = 'bn-BD';
+            this.recognition.onresult = (event) => {
+              this.inputText = event.results[0][0].transcript;
+              this.sendMessage(this.inputText);
             };
-            speechSynthesis.speak(this.speechInstance);
-            this.isSpeaking[index] = true;
+            this.recognition.start();
+          },
+          
+          toggleVoiceOutput() {
+            this.isVoiceOutputEnabled = !this.isVoiceOutputEnabled;
+          },
+          
+          toggleSpeech(text, index) {
+            if (this.isSpeaking[index]) {
+              // পড়া বন্ধ করা
+              speechSynthesis.cancel();
+              this.isSpeaking[index] = false;
+            } else {
+              // পড়া শুরু করা
+              this.speechInstance = new SpeechSynthesisUtterance(text);
+              this.speechInstance.lang = 'bn-BD';
+              this.speechInstance.volume = 1.0;
+              this.speechInstance.rate = 1.0;
+              this.speechInstance.pitch = 1.0;
+              this.speechInstance.onend = () => {
+                this.isSpeaking[index] = false;
+              };
+              speechSynthesis.speak(this.speechInstance);
+              this.isSpeaking[index] = true;
+            }
+          },
+          
+          init() {
+            window.addEventListener('resize', () => {
+              this.sidebar = window.innerWidth < 768 ? this.sidebar : true;
+            });
           }
-        },
-        
-        init() {
-          window.addEventListener('resize', () => {
-            this.sidebar = window.innerWidth < 768 ? this.sidebar : true;
-          });
         }
       }
-    }
-  </script>
+    </script>
 </body>
 
 </html>
