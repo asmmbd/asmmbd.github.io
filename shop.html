@@ -52,7 +52,7 @@
                     <i class="fas fa-bars text-xl"></i>
                 </button>
                 <a href="#" class="text-2xl font-bold text-primary-600">
-                    <img class="w-20" src="./images/20250612_171930~2.png" alt="">
+                    <img class="w-20" src="/images/logo.png" alt="">
                 </a>
             </div>
             
@@ -424,30 +424,40 @@
                                                     <i :class="i <= Math.floor(selectedProduct?.rating) ? 'fas fa-star' : (i - 0.5 <= selectedProduct?.rating ? 'fas fa-star-half-alt' : 'far fa-star')"></i>
                                                 </template>
                                             </div>
-                                            <span class="text-gray-500 text-sm" x-text="`${selectedProduct?.rating} (${selectedProduct?.reviews} reviews)`"></span>
+                                            <span class="text-gray-500 text-sm" x-text="`${selectedProduct?.rating} (${selectedProduct?.reviews.length} reviews)`"></span>
                                         </div>
-                                        <p class="text-2xl font-bold text-primary-600 mb-4" x-text="'$' + selectedProduct?.price"></p>
                                         <p class="text-gray-600 mb-6" x-text="selectedProduct?.description"></p>
                                         
-                                        <div class="mb-6">
-                                            <h4 class="font-medium mb-2">Colors:</h4>
-                                            <div class="flex space-x-2">
-                                                <template x-for="color in selectedProduct?.colors" :key="color">
-                                                    <button class="w-8 h-8 rounded-full border-2 border-gray-200 hover:border-primary-600 transition" :style="`background-color: ${color.toLowerCase()}`"></button>
-                                                </template>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="flex items-center space-x-4">
-                                            <div class="flex items-center border rounded-md">
-                                                <button class="px-3 py-2 text-gray-600 hover:bg-gray-100">-</button>
-                                                <span class="px-4">1</span>
-                                                <button class="px-3 py-2 text-gray-600 hover:bg-gray-100">+</button>
-                                            </div>
+                                                                       <div>
+                                            <template x-for="review in selectedProduct?.reviews">
+                                                <div class="bg-white p-6 rounded-lg shadow-sm">
+                                                    <div class="flex items-center mb-4">
+                                                        <div class="flex text-yellow-400 mr-2">
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        </div>
+                                                        <span class="text-gray-500 text-sm">৫/৫</span>
+                                                    </div>
+                                                    <p class="text-gray-700 mb-4" x-text="review.comment">"চমৎকার পণ্য এবং দ্রুত ডেলিভারি! আমি একাধিকবার অর্ডার করেছি এবং পণ্যের গুণমান সবসময়ই ভালো পেয়েছি।"</p>
+                                                    <div class="flex items-center">
+                                                        <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
+                                                        <div>
+                                                            <h4 class="font-medium" x-text="review.reviewerName">সারা জনসন</h4>
+                                                            <p class="text-gray-500 text-sm">যাচাইকৃত ক্রেতা</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>         <div class="flex items-center space-x-4">
+                                            <p class="text-xl font-bold text-primary-600" x-text="'$' + selectedProduct?.price"></p>
                                             <button @click="addToCart(selectedProduct)" class="flex-1 bg-primary-600 text-white px-6 py-3 rounded hover:bg-primary-700 transition font-medium">
                                                 Add to Cart
                                             </button>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -457,6 +467,8 @@
             </div>
         </div>
     </div>
+    
+    <!-- login Modal -->
     
     <!-- Footer -->
     <footer class="bg-gray-800 text-white pt-12 pb-6">
@@ -582,7 +594,7 @@
                                 description: p.description,
                                 image: p.thumbnail,
                                 rating: p.rating,
-                                reviews: p.rating,
+                                reviews: p.reviews,
                                 colors: ['Black', 'White', 'Blue'],
                                 inStock: true
                             }
