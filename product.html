@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en" x-data="productDetail()" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - HatBat</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              600: '#FF6600',
+              700: '#FF6603'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    
+    [x-cloak] {
+      display: none !important;
+    }
+    
+    .product-thumbnail {
+      transition: all 0.3s ease;
+    }
+    
+    .product-thumbnail:hover {
+      transform: scale(1.05);
+    }
+    
+    .product-thumbnail.active {
+      border-color: #FF6600;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans" x-cloak>
+  <!-- Header/Navbar -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo and Mobile Menu Button -->
+      <div class="flex items-center">
+        <button @click="mobileMenuOpen = true" class="mr-4 md:hidden text-gray-600">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <a href="#" class="text-2xl font-bold text-primary-600">
+          <img class="w-20" src="https://asmmbd.github.io/images/20250612_171930~2.png" alt="HatBat">
+        </a>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex space-x-8">
+        <a href="#" class="text-gray-700 hover:text-primary-600 transition">Home</a>
+        <a href="#" class="text-gray-700 hover:text-primary-600 transition">Electronics</a>
+        <a href="#" class="text-gray-700 hover:text-primary-600 transition">Fashion</a>
+        <a href="#" class="text-gray-700 hover:text-primary-600 transition">Home & Garden</a>
+        <a href="#" class="text-gray-700 hover:text-primary-600 transition">Account</a>
+      </nav>
+      
+      <!-- Icons -->
+      <div class="flex items-center space-x-4">
+        <button @click="searchOpen = !searchOpen" class="text-gray-600 hover:text-primary-600 transition">
+          <i class="fas fa-search text-xl"></i>
+        </button>
+        <button @click="cartOpen = true" class="relative text-gray-600 hover:text-primary-600 transition">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span x-text="cartItemCount" class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+        </button>
+        <a href="#" class="text-gray-600 hover:text-primary-600 transition">
+          <i class="fas fa-user text-xl"></i>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
+      <div class="bg-white h-full w-4/5 max-w-sm shadow-xl">
+        <div class="flex justify-between items-center p-4 border-b">
+          <h3 class="text-lg font-semibold">Menu</h3>
+          <button @click="mobileMenuOpen = false" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="p-4">
+          <ul class="space-y-1.5">
+            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Home</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Electronics</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Fashion</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Home & Garden</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Account</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Product Detail Section -->
+  <section class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- Product Images -->
+      <div class="md:w-1/2">
+        <div class="sticky top-24">
+          <!-- Main Image -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-4">
+            <img :src="activeImage" alt="Product Image" class="w-full h-96 object-contain">
+          </div>
+          
+          <!-- Thumbnails -->
+          <div class="grid grid-cols-4 gap-2">
+            <template x-for="(image, index) in product.images" :key="index">
+              <div @click="activeImage = image" class="product-thumbnail cursor-pointer border-2 rounded-md overflow-hidden" :class="{'active': activeImage === image}">
+                <img :src="image" alt="Thumbnail" class="w-full h-20 object-contain">
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Product Info -->
+      <div class="md:w-1/2">
+        <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+          <!-- Breadcrumb -->
+          <div class="text-sm text-gray-500 mb-4">
+            <a href="#" class="hover:text-primary-600">Home</a> /
+            <a href="#" class="hover:text-primary-600" x-text="product.category"></a> /
+            <span x-text="product.name"></span>
+          </div>
+          
+          <!-- Product Title -->
+          <h1 class="text-2xl font-bold mb-2" x-text="product.name"></h1>
+          
+          <!-- Rating -->
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400 mr-2">
+              <template x-for="i in 5" :key="i">
+                <i :class="i <= Math.floor(product.rating) ? 'fas fa-star' : (i - 0.5 <= product.rating ? 'fas fa-star-half-alt' : 'far fa-star')"></i>
+              </template>
+            </div>
+            <span class="text-gray-500 text-sm" x-text="product.rating + ' (' + product.reviewCount + ' reviews)'"></span>
+            <span class="mx-2 text-gray-300">|</span>
+            <span class="text-green-600 text-sm font-medium" x-text="product.stock > 0 ? 'In Stock' : 'Out of Stock'"></span>
+          </div>
+          
+          <!-- Price -->
+          <div class="mb-6">
+            <span class="text-3xl font-bold text-primary-600" x-text="'$' + product.price"></span>
+            <span x-show="product.oldPrice" class="ml-2 text-gray-500 line-through" x-text="'$' + product.oldPrice"></span>
+            <span x-show="product.discount" class="ml-2 bg-red-100 text-red-600 px-2 py-1 rounded text-sm font-medium" x-text="'-' + product.discount + '%'"></span>
+          </div>
+          
+          <!-- Color Selection -->
+          <div class="mb-6" x-show="product.colors.length > 0">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">Color:</h3>
+            <div class="flex space-x-2">
+              <template x-for="(color, index) in product.colors" :key="index">
+                <button @click="selectedColor = color" class="w-10 h-10 rounded-full border-2 flex items-center justify-center" :class="{'border-primary-600': selectedColor === color, 'border-transparent': selectedColor !== color}" :style="'background-color: ' + color.hex">
+                  <span x-show="selectedColor === color" class="text-white text-xs">
+                    <i class="fas fa-check"></i>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </div>
+          
+          <!-- Size Selection -->
+          <div class="mb-6" x-show="product.sizes.length > 0">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">Size:</h3>
+            <div class="flex flex-wrap gap-2">
+              <template x-for="(size, index) in product.sizes" :key="index">
+                <button @click="selectedSize = size" class="px-4 py-2 border rounded-md text-sm font-medium" :class="{'border-primary-600 bg-primary-50 text-primary-600': selectedSize === size, 'border-gray-300': selectedSize !== size}" x-text="size">
+                </button>
+              </template>
+            </div>
+          </div>
+          
+          <!-- Quantity -->
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">Quantity:</h3>
+            <div class="flex items-center border rounded-md w-32">
+              <button @click="quantity > 1 ? quantity-- : null" class="px-3 py-2 text-gray-600 hover:bg-gray-100">
+                -
+              </button>
+              <span class="flex-1 text-center" x-text="quantity"></span>
+              <button @click="quantity++" class="px-3 py-2 text-gray-600 hover:bg-gray-100">
+                +
+              </button>
+            </div>
+          </div>
+          
+          <!-- Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 mb-6">
+            <button @click="addToCart()" class="flex-1 bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition flex items-center justify-center">
+              <i class="fas fa-shopping-cart mr-2"></i>
+              Add to Cart
+            </button>
+            <button @click="addToWishlist()" class="flex-1 border border-primary-600 text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition flex items-center justify-center">
+              <i class="far fa-heart mr-2"></i>
+              Wishlist
+            </button>
+          </div>
+          
+          <!-- Delivery Info -->
+          <div class="border-t border-gray-200 pt-4 mb-6">
+            <div class="flex items-start mb-3">
+              <i class="fas fa-truck text-gray-500 mt-1 mr-3"></i>
+              <div>
+                <h3 class="font-medium">Free Delivery</h3>
+                <p class="text-sm text-gray-500">Free shipping on all orders over $50</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-undo-alt text-gray-500 mt-1 mr-3"></i>
+              <div>
+                <h3 class="font-medium">Easy Returns</h3>
+                <p class="text-sm text-gray-500">30 days return policy</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Share Buttons -->
+          <div class="flex items-center">
+            <span class="text-sm text-gray-700 mr-3">Share:</span>
+            <a href="#" class="text-gray-500 hover:text-blue-600 mx-1"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-500 hover:text-blue-400 mx-1"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-500 hover:text-pink-600 mx-1"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-500 hover:text-red-600 mx-1"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Product Tabs -->
+  <section class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <!-- Tab Headers -->
+      <div class="border-b border-gray-200">
+        <nav class="flex -mb-px">
+          <button @click="activeTab = 'description'" :class="{'border-primary-600 text-primary-600': activeTab === 'description', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'description'}" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+            Description
+          </button>
+          <button @click="activeTab = 'specifications'" :class="{'border-primary-600 text-primary-600': activeTab === 'specifications', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'specifications'}" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+            Specifications
+          </button>
+          <button @click="activeTab = 'reviews'" :class="{'border-primary-600 text-primary-600': activeTab === 'reviews', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'reviews'}" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+            Reviews (<span x-text="product.reviewCount"></span>)
+          </button>
+        </nav>
+      </div>
+      
+      <!-- Tab Contents -->
+      <div class="p-6">
+        <!-- Description Tab -->
+        <div x-show="activeTab === 'description'" x-transition>
+          <h3 class="text-lg font-bold mb-4">Product Description</h3>
+          <div class="prose max-w-none" x-html="product.description"></div>
+        </div>
+        
+        <!-- Specifications Tab -->
+        <div x-show="activeTab === 'specifications'" x-transition>
+          <h3 class="text-lg font-bold mb-4">Product Specifications</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <template x-for="(value, key) in product.specifications" :key="key">
+              <div class="border-b border-gray-100 py-2">
+                <span class="font-medium text-gray-700" x-text="key + ':'"></span>
+                <span class="text-gray-600" x-text="value"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+        
+        <!-- Reviews Tab -->
+        <div x-show="activeTab === 'reviews'" x-transition>
+          <h3 class="text-lg font-bold mb-4">Customer Reviews</h3>
+          
+          <!-- Review Summary -->
+          <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-center md:items-start">
+              <div class="text-center md:text-left mb-4 md:mb-0 md:mr-8">
+                <div class="text-4xl font-bold mb-1" x-text="product.rating"></div>
+                <div class="flex justify-center md:justify-start text-yellow-400 mb-2">
+                  <template x-for="i in 5" :key="i">
+                    <i :class="i <= Math.floor(product.rating) ? 'fas fa-star' : (i - 0.5 <= product.rating ? 'fas fa-star-half-alt' : 'far fa-star')"></i>
+                  </template>
+                </div>
+                <div class="text-sm text-gray-500" x-text="product.reviewCount + ' reviews'"></div>
+              </div>
+              <div class="flex-1 w-full">
+                <template x-for="i in 5" :key="i">
+                  <div class="flex items-center mb-2">
+                    <span class="text-sm font-medium w-8" x-text="(6 - i) + ' star'"></span>
+                    <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
+                      <div class="bg-yellow-400 h-2 rounded-full" :style="'width: ' + (product.ratingDistribution[6-i] / product.reviewCount * 100) + '%'"></div>
+                    </div>
+                    <span class="text-sm text-gray-500 w-10" x-text="Math.round(product.ratingDistribution[6-i] / product.reviewCount * 100) + '%'"></span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Review List -->
+          <div class="space-y-6">
+            <template x-for="review in product.reviews" :key="review.id">
+              <div class="border-b border-gray-100 pb-6">
+                <div class="flex items-center mb-3">
+                  <img :src="review.avatar" alt="User" class="w-10 h-10 rounded-full mr-3">
+                  <div>
+                    <h4 class="font-medium" x-text="review.name"></h4>
+                    <div class="flex items-center">
+                      <div class="flex text-yellow-400 mr-2">
+                        <template x-for="i in 5" :key="i">
+                          <i :class="i <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
+                        </template>
+                      </div>
+                      <span class="text-sm text-gray-500" x-text="review.date"></span>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-gray-700 mb-2" x-text="review.comment"></p>
+                <div class="flex space-x-4">
+                  <button class="text-sm text-gray-500 hover:text-primary-600">
+                    <i class="far fa-thumbs-up mr-1"></i> Helpful (<span x-text="review.helpful"></span>)
+                  </button>
+                  <button class="text-sm text-gray-500 hover:text-primary-600">
+                    <i class="far fa-thumbs-down mr-1"></i> Not Helpful (<span x-text="review.notHelpful"></span>)
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+          
+          <!-- Write Review Button -->
+          <button @click="reviewModalOpen = true" class="mt-6 bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition">
+            Write a Review
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Related Products -->
+  <section class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">Related Products</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <template x-for="product in relatedProducts" :key="product.id">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition group">
+          <div class="relative">
+            <img :src="product.image" :alt="product.name" class="w-full h-48 object-contain">
+            <div class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
+              <button @click="addToWishlist(product)" class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
+                <i class="fas fa-heart text-gray-600"></i>
+              </button>
+              <button @click="viewProduct(product)" class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
+                <i class="fas fa-eye text-gray-600"></i>
+              </button>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold mb-1 truncate" x-text="product.name"></h3>
+            <div class="flex items-center mb-2">
+              <div class="flex text-yellow-400 mr-2 text-sm">
+                <template x-for="i in 5" :key="i">
+                  <i :class="i <= Math.floor(product.rating) ? 'fas fa-star' : 'far fa-star'"></i>
+                </template>
+              </div>
+              <span class="text-xs text-gray-500" x-text="'(' + product.reviewCount + ')'"></span>
+            </div>
+            <p class="text-lg font-bold text-primary-600 mb-3" x-text="'$' + product.price"></p>
+            <button @click="addToCart(product)" class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
+              <i class="fas fa-shopping-cart"></i> Add to cart
+            </button>
+          </div>
+        </div>
+      </template>
+    </div>
+  </section>
+  
+  <!-- Review Modal -->
+  <div x-show="reviewModalOpen" @click.away="reviewModalOpen = false" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+              <div class="flex justify-between items-start">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Write a Review</h3>
+                <button @click="reviewModalOpen = false" type="button" class="text-gray-400 hover:text-gray-500">
+                  <i class="fas fa-times text-xl"></i>
+                </button>
+              </div>
+              <div class="mt-4">
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+                  <div class="flex">
+                    <template x-for="i in 5" :key="i">
+                      <button @click="newReview.rating = i" class="text-2xl mr-1">
+                        <i :class="i <= newReview.rating ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'"></i>
+                      </button>
+                    </template>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="reviewTitle" class="block text-sm font-medium text-gray-700 mb-1">Review Title</label>
+                  <input type="text" id="reviewTitle" x-model="newReview.title" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="Summarize your review">
+                </div>
+                <div class="mb-4">
+                  <label for="reviewComment" class="block text-sm font-medium text-gray-700 mb-1">Your Review</label>
+                  <textarea id="reviewComment" x-model="newReview.comment" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="Share your experience with this product"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="button" @click="submitReview()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm">
+            Submit Review
+          </button>
+          <button type="button" @click="reviewModalOpen = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Cart Sidebar -->
+  <div x-show="cartOpen" @click.away="cartOpen = false" class="fixed inset-0 z-50 overflow-hidden">
+    <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex">
+      <div class="relative w-screen max-w-md">
+        <div class="h-full flex flex-col bg-white shadow-xl">
+          <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
+            <div class="flex items-start justify-between">
+              <h2 class="text-lg font-medium text-gray-900">Shopping cart</h2>
+              <button @click="cartOpen = false" type="button" class="text-gray-400 hover:text-gray-500">
+                <i class="fas fa-times text-xl"></i>
+              </button>
+            </div>
+            
+            <div class="mt-8">
+              <div class="flow-root">
+                <ul class="-my-6 divide-y divide-gray-200">
+                  <template x-for="(item, index) in cartItems" :key="index">
+                    <li class="py-6 flex">
+                      <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+                        <img :src="item.image" :alt="item.name" class="w-full h-full object-cover">
+                      </div>
+                      <div class="ml-4 flex-1 flex flex-col">
+                        <div>
+                          <div class="flex justify-between text-base font-medium text-gray-900">
+                            <h3 x-text="item.name"></h3>
+                            <p class="ml-4" x-text="'$' + (item.price * item.quantity).toFixed(2)"></p>
+                          </div>
+                          <p class="mt-1 text-sm text-gray-500" x-text="'Color: ' + item.color"></p>
+                        </div>
+                        <div class="flex-1 flex items-end justify-between text-sm">
+                          <div class="flex items-center border rounded-md">
+                            <button @click="updateQuantity(index, -1)" class="px-2 py-1 text-gray-600 hover:bg-gray-100">
+                              -
+                            </button>
+                            <span class="px-2" x-text="item.quantity"></span>
+                            <button @click="updateQuantity(index, 1)" class="px-2 py-1 text-gray-600 hover:bg-gray-100">
+                              +
+                            </button>
+                          </div>
+                          <button @click="removeFromCart(index)" type="button" class="font-medium text-primary-600 hover:text-primary-500">
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+            <div class="flex justify-between text-base font-medium text-gray-900">
+              <p>Subtotal</p>
+              <p x-text="'$' + cartTotal"></p>
+            </div>
+            <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+            <div class="mt-6">
+              <a href="./checkout" class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700">
+                Checkout
+              </a>
+            </div>
+            <div class="mt-6 flex justify-center text-sm text-center text-gray-500">
+              <p>
+                or
+                <button @click="cartOpen = false" type="button" class="text-primary-600 font-medium hover:text-primary-500 ml-1">
+                  Continue Shopping<span aria-hidden="true"> &rarr;</span>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white pt-12 pb-6">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">হাটবাট</h3>
+          <p class="text-gray-400 mb-4">আপনার সকল চাহিদার একক ঠিকানা। সাশ্রয়ী মূল্যে মানসম্মত পণ্য।</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">শপ</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">সকল পণ্য</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">ফিচার্ড</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">নতুন আগমন</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">ডিসকাউন্ট</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">আমাদের সম্পর্কে</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">আমাদের গল্প</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">ক্যারিয়ার</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">শর্তাবলী</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">গোপনীয়তা নীতি</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">যোগাযোগ</h4>
+          <address class="text-gray-400 not-italic">
+            <p class="mb-2">১২৩ শপ স্ট্রিট, বাণিজ্য নগর</p>
+            <p class="mb-2">ইমেইল: info@hatbat.com</p>
+            <p>ফোন: ০১২৩-৪৫৬৭৮৯০</p>
+          </address>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; ২০২৫ হাতবাট। সর্বস্বত্ব সংরক্ষিত।</p>
+        <div class="mt-2 flex justify-center space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white transition">গোপনীয়তা নীতি</a>
+          <a href="#" class="text-gray-400 hover:text-white transition">সেবার শর্তাবলী</a>
+          <a href="#" class="text-gray-400 hover:text-white transition">ডেলিভারি নীতি</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    function productDetail() {
+      return {
+        mobileMenuOpen: false,
+        searchOpen: false,
+        cartOpen: false,
+        reviewModalOpen: false,
+        activeTab: 'description',
+        activeImage: '',
+        selectedColor: null,
+        selectedSize: null,
+        quantity: 1,
+        cartItems: [],
+        newReview: {
+          rating: 0,
+          title: '',
+          comment: ''
+        },
+        product: {
+          id: 1,
+          name: 'Wireless Bluetooth Headphones',
+          category: 'Electronics',
+          description: '<p>Experience premium sound quality with our Wireless Bluetooth Headphones. Featuring noise cancellation technology, these headphones provide crystal clear audio with deep bass. The ergonomic design ensures comfort for long listening sessions.</p><ul><li>40mm dynamic drivers</li><li>30 hours playback time</li><li>Bluetooth 5.0</li><li>Built-in microphone</li><li>Foldable design</li></ul>',
+          price: 129.99,
+          oldPrice: 159.99,
+          discount: 20,
+          rating: 4.5,
+          reviewCount: 124,
+          stock: 15,
+          images: [
+            'https://via.placeholder.com/600x600?text=Headphones+Front',
+            'https://via.placeholder.com/600x600?text=Headphones+Side',
+            'https://via.placeholder.com/600x600?text=Headphones+Back',
+            'https://via.placeholder.com/600x600?text=Headphones+Case'
+          ],
+          colors: [
+            { name: 'Black', hex: '#000000' },
+            { name: 'White', hex: '#FFFFFF' },
+            { name: 'Blue', hex: '#2563EB' }
+          ],
+          sizes: ['Small', 'Medium', 'Large'],
+          specifications: {
+            'Brand': 'SoundMaster',
+            'Model': 'SM-BT450',
+            'Connectivity': 'Bluetooth 5.0',
+            'Battery Life': '30 hours',
+            'Charging Time': '2 hours',
+            'Weight': '250g',
+            'Warranty': '1 year'
+          },
+          ratingDistribution: {
+            5: 80,
+            4: 30,
+            3: 10,
+            2: 3,
+            1: 1
+          },
+          reviews: [
+          {
+            id: 1,
+            name: 'John Doe',
+            avatar: 'https://via.placeholder.com/100x100?text=JD',
+            rating: 5,
+            date: '2 weeks ago',
+            comment: 'These headphones are amazing! The sound quality is exceptional and the battery life lasts forever. Very comfortable for long sessions.',
+            helpful: 24,
+            notHelpful: 2
+          },
+          {
+            id: 2,
+            name: 'Sarah Smith',
+            avatar: 'https://via.placeholder.com/100x100?text=SS',
+            rating: 4,
+            date: '1 month ago',
+            comment: 'Great headphones for the price. The noise cancellation works well and they are comfortable to wear. The only downside is they are a bit heavy.',
+            helpful: 12,
+            notHelpful: 1
+          }]
+        },
+        relatedProducts: [
+        {
+          id: 2,
+          name: 'Wireless Earbuds',
+          price: 79.99,
+          image: 'https://via.placeholder.com/300x300?text=Earbuds',
+          rating: 4.2,
+          reviewCount: 89
+        },
+        {
+          id: 3,
+          name: 'Bluetooth Speaker',
+          price: 59.99,
+          image: 'https://via.placeholder.com/300x300?text=Speaker',
+          rating: 4.5,
+          reviewCount: 45
+        },
+        {
+          id: 4,
+          name: 'Noise Cancelling Headphones',
+          price: 199.99,
+          image: 'https://via.placeholder.com/300x300?text=Noise+Cancelling',
+          rating: 4.8,
+          reviewCount: 156
+        },
+        {
+          id: 5,
+          name: 'Portable Headphone Amp',
+          price: 89.99,
+          image: 'https://via.placeholder.com/300x300?text=Amp',
+          rating: 4.3,
+          reviewCount: 32
+        }],
+        get cartTotal() {
+          return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+        },
+        get cartItemCount() {
+          return this.cartItems.reduce((count, item) => count + item.quantity, 0);
+        },
+        init() {
+          this.activeImage = this.product.images[0];
+          this.selectedColor = this.product.colors[0];
+          this.selectedSize = this.product.sizes[0];
+          
+          // Load cart items from localStorage or API
+          this.cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        },
+        addToCart(product = null) {
+          const itemToAdd = product || {
+            id: this.product.id,
+            name: this.product.name,
+            price: this.product.price,
+            image: this.product.images[0],
+            color: this.selectedColor.name,
+            size: this.selectedSize,
+            quantity: this.quantity
+          };
+          
+          const existingItem = this.cartItems.find(item =>
+            item.id === itemToAdd.id &&
+            item.color === itemToAdd.color &&
+            item.size === itemToAdd.size
+          );
+          
+          if (existingItem) {
+            existingItem.quantity += Number(itemToAdd.quantity);
+          } else {
+            this.cartItems.push(itemToAdd);
+          }
+          
+          localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+          this.cartOpen = true;
+        },
+        addToWishlist(product = null) {
+          // In a real app, this would add to wishlist
+          alert('Added to wishlist');
+        },
+        viewProduct(product) {
+          // In a real app, this would navigate to product page
+          console.log('View product:', product);
+        },
+        updateQuantity(index, change) {
+          const newQuantity = this.cartItems[index].quantity + change;
+          if (newQuantity > 0) {
+            this.cartItems[index].quantity = newQuantity;
+            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+          }
+        },
+        removeFromCart(index) {
+          this.cartItems.splice(index, 1);
+          localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+        },
+        submitReview() {
+          // In a real app, this would submit to backend
+          const newReview = {
+            id: Date.now(),
+            name: 'You',
+            avatar: 'https://via.placeholder.com/100x100?text=Y',
+            rating: this.newReview.rating,
+            date: 'Just now',
+            comment: this.newReview.comment,
+            helpful: 0,
+            notHelpful: 0
+          };
+          
+          this.product.reviews.unshift(newReview);
+          this.product.reviewCount++;
+          this.product.rating = (
+            (this.product.rating * (this.product.reviewCount - 1)) + this.newReview.rating
+          ) / this.product.reviewCount;
+          
+          this.reviewModalOpen = false;
+          this.newReview = { rating: 0, title: '', comment: '' };
+          this.activeTab = 'reviews';
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
