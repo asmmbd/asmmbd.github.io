@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" x-data="checkout()" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - HatBat</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              600: '#FF6600',
+              700: '#FF6603'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    * {
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    
+    [x-cloak] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans" x-cloak>
+  <!-- Header/Navbar -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a href="./shop" class="text-2xl font-bold text-primary-600">
+          <img class="w-20" src="https://asmmbd.github.io/images/20250612_171930~2.png" alt="HatBat">
+        </a>
+      </div>
+      
+      <!-- Progress Steps -->
+      <div class="hidden md:flex items-center space-x-8">
+        <div class="flex items-center" :class="{'text-primary-600': currentStep >= 1}">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center border-2 mr-2" :class="currentStep >= 1 ? 'border-primary-600 bg-primary-600 text-white' : 'border-gray-300'">1</div>
+          <span>Information</span>
+        </div>
+        <div class="flex items-center" :class="{'text-primary-600': currentStep >= 2}">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center border-2 mr-2" :class="currentStep >= 2 ? 'border-primary-600 bg-primary-600 text-white' : 'border-gray-300'">2</div>
+          <span>Shipping</span>
+        </div>
+        <div class="flex items-center" :class="{'text-primary-600': currentStep >= 3}">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center border-2 mr-2" :class="currentStep >= 3 ? 'border-primary-600 bg-primary-600 text-white' : 'border-gray-300'">3</div>
+          <span>Payment</span>
+        </div>
+      </div>
+      
+      <!-- Cart Icon -->
+      <div class="flex items-center">
+        <a href="#" class="relative text-gray-600 hover:text-primary-600 transition">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span x-text="cartItemCount" class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+  
+  <main class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Left Column - Checkout Form -->
+      <div class="lg:w-2/3">
+        <!-- Mobile Progress Steps -->
+        <div class="md:hidden mb-6">
+          <div class="flex justify-between items-center mb-2">
+            <div class="text-sm" :class="{'text-primary-600': currentStep >= 1}">Information</div>
+            <div class="text-sm" :class="{'text-primary-600': currentStep >= 2}">Shipping</div>
+            <div class="text-sm" :class="{'text-primary-600': currentStep >= 3}">Payment</div>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-primary-600 h-2 rounded-full" :style="`width: ${stepProgress}%`"></div>
+          </div>
+        </div>
+        
+        <!-- Step 1: Customer Information -->
+        <div x-show="currentStep === 1" x-transition>
+          <h2 class="text-2xl font-bold mb-6">যোগাযোগের তথ্য</h2>
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="mb-4">
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">ইমেইল ঠিকানা</label>
+              <input type="email" id="email" x-model="checkoutData.email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="আপনার ইমেইল ঠিকানা">
+            </div>
+            <div class="flex items-center mb-6">
+              <input type="checkbox" id="emailUpdates" x-model="checkoutData.emailUpdates" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+              <label for="emailUpdates" class="ml-2 block text-sm text-gray-700">
+                আমাকে ইমেইলের মাধ্যমে নতুন পণ্য, অফার এবং অন্যান্য তথ্য জানান
+              </label>
+            </div>
+            <div class="flex justify-end">
+              <button @click="nextStep" class="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition">
+                পরবর্তী ধাপ: শিপিং
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Step 2: Shipping Information -->
+        <div x-show="currentStep === 2" x-transition>
+          <h2 class="text-2xl font-bold mb-6">শিপিং তথ্য</h2>
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">নামের প্রথম অংশ</label>
+                <input type="text" id="firstName" x-model="checkoutData.shipping.firstName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="প্রথম নাম">
+              </div>
+              <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">নামের শেষ অংশ</label>
+                <input type="text" id="lastName" x-model="checkoutData.shipping.lastName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="শেষ নাম">
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="address" class="block text-sm font-medium text-gray-700 mb-1">ঠিকানা</label>
+              <input type="text" id="address" x-model="checkoutData.shipping.address" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="রাস্তা নম্বর এবং নাম">
+            </div>
+            <div class="mb-4">
+              <label for="apartment" class="block text-sm font-medium text-gray-700 mb-1">অ্যাপার্টমেন্ট, স্যুট ইত্যাদি (ঐচ্ছিক)</label>
+              <input type="text" id="apartment" x-model="checkoutData.shipping.apartment" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="অ্যাপার্টমেন্ট নম্বর">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">শহর</label>
+                <input type="text" id="city" x-model="checkoutData.shipping.city" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="শহর">
+              </div>
+              <div>
+                <label for="country" class="block text-sm font-medium text-gray-700 mb-1">দেশ</label>
+                <select id="country" x-model="checkoutData.shipping.country" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent">
+                  <option value="Bangladesh">বাংলাদেশ</option>
+                  <option value="India">ভারত</option>
+                  <option value="USA">যুক্তরাষ্ট্র</option>
+                  <option value="UK">যুক্তরাজ্য</option>
+                </select>
+              </div>
+              <div>
+                <label for="postalCode" class="block text-sm font-medium text-gray-700 mb-1">পোস্টাল কোড</label>
+                <input type="text" id="postalCode" x-model="checkoutData.shipping.postalCode" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="পোস্টাল কোড">
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">ফোন নম্বর</label>
+              <input type="tel" id="phone" x-model="checkoutData.shipping.phone" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="ফোন নম্বর">
+            </div>
+            <div class="flex justify-between mt-6">
+              <button @click="prevStep" class="text-primary-600 px-6 py-3 rounded-lg font-medium hover:text-primary-700 transition">
+                পূর্ববর্তী ধাপ
+              </button>
+              <button @click="nextStep" class="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition">
+                পরবর্তী ধাপ: পেমেন্ট
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Step 3: Payment Information -->
+        <div x-show="currentStep === 3" x-transition>
+          <h2 class="text-2xl font-bold mb-6">পেমেন্ট পদ্ধতি</h2>
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="mb-6">
+              <h3 class="text-lg font-medium mb-4">পেমেন্ট অপশন</h3>
+              <div class="space-y-4">
+                <div>
+                  <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" x-model="checkoutData.payment.method" class="hidden peer">
+                  <label for="creditCard" class="flex items-center p-4 border rounded-lg cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50">
+                    <i class="far fa-credit-card text-xl mr-3"></i>
+                    <span>ক্রেডিট কার্ড</span>
+                  </label>
+                </div>
+                <div>
+                  <input type="radio" id="bKash" name="paymentMethod" value="bKash" x-model="checkoutData.payment.method" class="hidden peer">
+                  <label for="bKash" class="flex items-center p-4 border rounded-lg cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50">
+                    <i class="fas fa-mobile-alt text-xl mr-3"></i>
+                    <span>bKash</span>
+                  </label>
+                </div>
+                <div>
+                  <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cashOnDelivery" x-model="checkoutData.payment.method" class="hidden peer">
+                  <label for="cashOnDelivery" class="flex items-center p-4 border rounded-lg cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50">
+                    <i class="fas fa-money-bill-wave text-xl mr-3"></i>
+                    <span>ক্যাশ অন ডেলিভারি</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Credit Card Form -->
+            <div x-show="checkoutData.payment.method === 'creditCard'" x-transition class="mb-6">
+              <div class="mb-4">
+                <label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">কার্ড নম্বর</label>
+                <input type="text" id="cardNumber" x-model="checkoutData.payment.cardNumber" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="1234 5678 9012 3456">
+              </div>
+              <div class="mb-4">
+                <label for="cardName" class="block text-sm font-medium text-gray-700 mb-1">কার্ডে নাম</label>
+                <input type="text" id="cardName" x-model="checkoutData.payment.cardName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="কার্ডে নাম">
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label for="expiryDate" class="block text-sm font-medium text-gray-700 mb-1">মেয়াদ শেষ</label>
+                  <input type="text" id="expiryDate" x-model="checkoutData.payment.expiryDate" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="MM/YY">
+                </div>
+                <div>
+                  <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                  <input type="text" id="cvv" x-model="checkoutData.payment.cvv" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="123">
+                </div>
+              </div>
+            </div>
+            
+            <!-- bKash Form -->
+            <div x-show="checkoutData.payment.method === 'bKash'" x-transition class="mb-6">
+              <div class="mb-4">
+                <label for="bKashNumber" class="block text-sm font-medium text-gray-700 mb-1">bKash নম্বর</label>
+                <input type="text" id="bKashNumber" x-model="checkoutData.payment.bKashNumber" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="01XXXXXXXXX">
+              </div>
+              <div class="mb-4">
+                <label for="bKashTrxId" class="block text-sm font-medium text-gray-700 mb-1">ট্রানজেকশন আইডি</label>
+                <input type="text" id="bKashTrxId" x-model="checkoutData.payment.bKashTrxId" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent" placeholder="TRX123456789">
+              </div>
+            </div>
+            
+            <div class="flex items-center mb-6">
+              <input type="checkbox" id="terms" x-model="checkoutData.agreeTerms" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+              <label for="terms" class="ml-2 block text-sm text-gray-700">
+                আমি <a href="#" class="text-primary-600 hover:underline">শর্তাবলী</a> এবং <a href="#" class="text-primary-600 hover:underline">গোপনীয়তা নীতি</a> পড়েছি এবং সম্মত
+              </label>
+            </div>
+            
+            <div class="flex justify-between">
+              <button @click="prevStep" class="text-primary-600 px-6 py-3 rounded-lg font-medium hover:text-primary-700 transition">
+                পূর্ববর্তী ধাপ
+              </button>
+              <button @click="completeOrder" :disabled="!checkoutData.agreeTerms" class="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                অর্ডার সম্পূর্ণ করুন
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Order Confirmation -->
+        <div x-show="currentStep === 4" x-transition>
+          <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-check text-green-600 text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-4">অর্ডার সফলভাবে সম্পন্ন হয়েছে!</h2>
+            <p class="text-gray-600 mb-6">আপনার অর্ডার নম্বর: <span class="font-semibold" x-text="orderNumber"></span></p>
+            <p class="text-gray-600 mb-8">আপনার অর্ডার কনফার্মেশন ইমেইল আপনার প্রদত্ত ইমেইল ঠিকানায় পাঠানো হয়েছে।</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <a href="/" class="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition">
+                শপিং চালিয়ে যান
+              </a>
+              <a href="/orders" class="border border-primary-600 text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition">
+                আমার অর্ডার দেখুন
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column - Order Summary -->
+      <div class="lg:w-1/3" x-show="currentStep < 4">
+        <div class="bg-white rounded-lg shadow-sm sticky top-24">
+          <div class="p-6 border-b">
+            <h2 class="text-xl font-bold mb-4">আপনার অর্ডার</h2>
+            <div class="space-y-4">
+              <template x-for="item in cartItems" :key="item.id">
+                <div class="flex justify-between">
+                  <div class="flex items-center">
+                    <div class="w-16 h-16 rounded-md overflow-hidden mr-4">
+                      <img :src="item.image" :alt="item.name" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                      <h3 class="font-medium" x-text="item.name"></h3>
+                      <p class="text-sm text-gray-500" x-text="'Quantity: ' + item.quantity"></p>
+                    </div>
+                  </div>
+                  <p class="font-medium" x-text="'$' + (item.price * item.quantity).toFixed(2)"></p>
+                </div>
+              </template>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between">
+                <span class="text-gray-600">সাবটোটাল</span>
+                <span x-text="'$' + cartTotal"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">শিপিং</span>
+                <span>$5.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">ট্যাক্স</span>
+                <span>$2.50</span>
+              </div>
+              <div class="flex justify-between border-t pt-3">
+                <span class="font-bold">মোট</span>
+                <span class="font-bold" x-text="'$' + (parseFloat(cartTotal) + 7.50).toFixed(2)"></span>
+              </div>
+            </div>
+            <div class="text-sm text-gray-500">
+              <p class="mb-2">* ট্যাক্স এবং শিপিং ফি আনুমানিক</p>
+              <p>* ফাইনাল অ্যামাউন্ট চেকআউটে দেখানো হবে</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white pt-12 pb-6">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">হাটবাট</h3>
+          <p class="text-gray-400 mb-4">আপনার সকল চাহিদার একক ঠিকানা। সাশ্রয়ী মূল্যে মানসম্মত পণ্য।</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">শপ</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">সকল পণ্য</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">ফিচার্ড</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">নতুন আগমন</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">ডিসকাউন্ট</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">আমাদের সম্পর্কে</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">আমাদের গল্প</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">ক্যারিয়ার</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">শর্তাবলী</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">গোপনীয়তা নীতি</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">যোগাযোগ</h4>
+          <address class="text-gray-400 not-italic">
+            <p class="mb-2">১২৩ শপ স্ট্রিট, বাণিজ্য নগর</p>
+            <p class="mb-2">ইমেইল: info@hatbat.com</p>
+            <p>ফোন: ০১২৩-৪৫৬৭৮৯০</p>
+          </address>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; ২০২৫ হাতবাট। সর্বস্বত্ব সংরক্ষিত।</p>
+        <div class="mt-2 flex justify-center space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white transition">গোপনীয়তা নীতি</a>
+          <a href="#" class="text-gray-400 hover:text-white transition">সেবার শর্তাবলী</a>
+          <a href="#" class="text-gray-400 hover:text-white transition">ডেলিভারি নীতি</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    function checkout() {
+      return {
+        currentStep: 1,
+        cartItems: [
+        {
+          id: 1,
+          name: 'Wireless Headphones',
+          price: 99.99,
+          quantity: 1,
+          image: 'https://via.placeholder.com/100x100'
+        },
+        {
+          id: 2,
+          name: 'Smart Watch',
+          price: 149.99,
+          quantity: 1,
+          image: 'https://via.placeholder.com/100x100'
+        }],
+        orderNumber: '',
+        checkoutData: {
+          email: '',
+          emailUpdates: false,
+          shipping: {
+            firstName: '',
+            lastName: '',
+            address: '',
+            apartment: '',
+            city: '',
+            country: 'Bangladesh',
+            postalCode: '',
+            phone: ''
+          },
+          payment: {
+            method: 'cashOnDelivery',
+            cardNumber: '',
+            cardName: '',
+            expiryDate: '',
+            cvv: '',
+            bKashNumber: '',
+            bKashTrxId: ''
+          },
+          agreeTerms: false
+        },
+        get cartTotal() {
+          return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+        },
+        get cartItemCount() {
+          return this.cartItems.reduce((count, item) => count + item.quantity, 0);
+        },
+        get stepProgress() {
+          return (this.currentStep - 1) * 50;
+        },
+        nextStep() {
+          if (this.validateStep()) {
+            this.currentStep++;
+          }
+        },
+        prevStep() {
+          this.currentStep--;
+        },
+        validateStep() {
+          // Basic validation for each step
+          if (this.currentStep === 1 && !this.checkoutData.email) {
+            alert('Please enter your email address');
+            return false;
+          }
+          if (this.currentStep === 2) {
+            const shipping = this.checkoutData.shipping;
+            if (!shipping.firstName || !shipping.lastName || !shipping.address ||
+              !shipping.city || !shipping.phone) {
+              alert('Please fill in all required shipping information');
+              return false;
+            }
+          }
+          return true;
+        },
+        completeOrder() {
+          if (!this.checkoutData.agreeTerms) {
+            alert('You must agree to the terms and conditions');
+            return;
+          }
+          
+          // Generate random order number
+          this.orderNumber = 'HB-' + Math.floor(Math.random() * 1000000);
+          
+          // In a real app, you would send this data to your backend
+          console.log('Order completed:', {
+            orderNumber: this.orderNumber,
+            customerData: this.checkoutData,
+            items: this.cartItems,
+            total: (parseFloat(this.cartTotal) + 7.50).toFixed(2)
+          });
+          
+          // Move to confirmation step
+          this.currentStep = 4;
+          
+          // In a real app, you would clear the cart here
+          // this.cartItems = [];
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
