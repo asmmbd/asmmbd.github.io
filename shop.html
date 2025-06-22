@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="app()">
+<html lang="en" x-data="app()" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
@@ -7,11 +7,12 @@
     <title>HatBat - Modern E-commerce</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
     <script>
         tailwind.config = {
             theme: {
@@ -29,13 +30,13 @@
     <style>
         * {
             font-family: 'Hind Siliguri', sans-serif;
-            
+
         }
-        
+
         [x-cloak] {
             display: none !important;
         }
-        
+
         .hero-slide {
             transition: opacity 0.5s ease;
         }
@@ -52,18 +53,21 @@
                     <i class="fas fa-bars text-xl"></i>
                 </button>
                 <a href="#" class="text-2xl font-bold text-primary-600">
-                    <img class="w-20" src="./images/20250612_171930~2.png" alt="">
+                    <img class="w-20" src="https://asmmbd.github.io/images/20250612_171930~2.png" alt="">
                 </a>
             </div>
-            
+
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex space-x-8">
                 <a href="#" class="text-gray-700 hover:text-primary-600 transition">Home</a>
                 <template x-for="category in categories.slice(0,4)" :key="category">
                     <a href="#" class="text-gray-700 hover:text-primary-600 transition" x-text="category"></a>
                 </template>
+                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Account</a>
+                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Orders</a>
+                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Wishlist</a>
             </nav>
-            
+
             <!-- Icons -->
             <div class="flex items-center space-x-4">
                 <button @click="searchOpen = !searchOpen" class="text-gray-600 hover:text-primary-600 transition">
@@ -71,24 +75,27 @@
                 </button>
                 <button @click="cartOpen = true" class="relative text-gray-600 hover:text-primary-600 transition">
                     <i class="fas fa-shopping-cart text-xl"></i>
-                    <span x-text="cartItemCount" class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+                    <span x-text="cartItemCount"
+                        class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
                 </button>
                 <a href="#" class="text-gray-600 hover:text-primary-600 transition">
                     <i class="fas fa-user text-xl"></i>
                 </a>
             </div>
         </div>
-        
+
         <!-- Search Bar -->
         <div x-show="searchOpen" @click.away="searchOpen = false" class="container mx-auto px-4 py-3 border-t">
             <div class="relative">
-                <input type="text" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent">
+                <input type="text" placeholder="Search products..."
+                    class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent">
                 <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
         </div>
-        
+
         <!-- Mobile Menu -->
-        <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
+        <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false"
+            class="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
             <div class="bg-white h-full w-4/5 max-w-sm shadow-xl">
                 <div class="flex justify-between items-center p-4 border-b">
                     <h3 class="text-lg font-semibold">Menu</h3>
@@ -97,10 +104,11 @@
                     </button>
                 </div>
                 <div class="p-4">
-                    <ul class="space-y-3">
+                    <ul class="space-y-1.5">
                         <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Home</a></li>
                         <template x-for="category in categories" :key="category">
-                            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100" x-text="category"></a></li>
+                            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100" x-text="category"></a>
+                            </li>
                         </template>
                         <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Account</a></li>
                         <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Orders</a></li>
@@ -110,17 +118,20 @@
             </div>
         </div>
     </header>
-    
+
     <!-- Hero Slider -->
     <section class="relative overflow-hidden">
         <div class="relative h-96 md:h-[32rem]">
             <template x-for="(slide, index) in heroSlides" :key="index">
-                <div x-show="currentSlide === index" class="hero-slide absolute inset-0 bg-primary-600 flex items-center" :style="`background-image: url('${slide.image}'); opacity: ${currentSlide === index ? 1 : 0}`">
+                <div x-show="currentSlide === index"
+                    class="hero-slide absolute inset-0 bg-primary-600 flex items-center"
+                    :style="`background-image: url('${slide.image}'); opacity: ${currentSlide === index ? 1 : 0}`">
                     <div class="container mx-auto px-4 text-white">
                         <div class="max-w-lg">
                             <h1 class="text-4xl md:text-5xl font-bold mb-4" x-text="slide.title"></h1>
                             <p class="text-xl mb-6" x-text="slide.subtitle"></p>
-                            <button class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg">
+                            <button
+                                class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg">
                                 <span x-text="slide.button"></span>
                             </button>
                         </div>
@@ -128,23 +139,26 @@
                 </div>
             </template>
         </div>
-        
+
         <!-- Slider Controls -->
-        <button @click="prevSlide" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full size-8 grid place-items-center shadow-md hover:bg-opacity-100 transition">
+        <button @click="prevSlide"
+            class="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full size-8 grid place-items-center shadow-md hover:bg-opacity-100 transition">
             <i class="fas fa-chevron-left text-gray-800"></i>
         </button>
-        <button @click="nextSlide" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full size-8 grid place-items-center shadow-md hover:bg-opacity-100 transition">
+        <button @click="nextSlide"
+            class="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full size-8 grid place-items-center shadow-md hover:bg-opacity-100 transition">
             <i class="fas fa-chevron-right text-gray-800"></i>
         </button>
-        
+
         <!-- Slider Indicators -->
         <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
             <template x-for="(slide, index) in heroSlides" :key="index">
-                <button @click="currentSlide = index" class="w-3 h-3 rounded-full transition" :class="currentSlide === index ? 'bg-white w-6' : 'bg-white bg-opacity-50'"></button>
+                <button @click="currentSlide = index" class="w-3 h-3 rounded-full transition"
+                    :class="currentSlide === index ? 'bg-white w-6' : 'bg-white bg-opacity-50'"></button>
             </template>
         </div>
     </section>
-    
+
     <!-- Featured Categories -->
     <section class="container mx-auto px-4 py-12">
         <h2 class="text-3xl font-bold text-center mb-8">Shop by Category</h2>
@@ -159,82 +173,88 @@
             </template>
         </div>
     </section>
-    
+
     <!-- Featured Products -->
     <section class="container mx-auto px-2 py-12">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold">Featured Products</h2>
             <a href="#" class="text-primary-600 hover:underline">View All</a>
         </div>
-        
+
         <div class="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2">
             <template x-for="product in products.slice(0,4)" :key="product.id">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition group mb-2">
                     <div class="relative">
                         <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover">
-                        <div class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
+                        <div
+                            class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
                             <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
                                 <i class="fas fa-heart text-gray-600"></i>
                             </button>
-                            <button @click="selectedProduct = product; productModalOpen = true" class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
+                            <button @click="selectedProduct = product; productModalOpen = true"
+                                class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
                                 <i class="fas fa-eye text-gray-600"></i>
                             </button>
                         </div>
                     </div>
                     <div class="p-2">
-                        
+
                         <h3 class="text-lg font-semibold mb-1" x-text="product.name"></h3>
-                        
+
                         <p class="text-xl font-bold text-primary-600" x-text="'$' + product.price"></p>
-                        <button @click="addToCart(product)" class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
+                        <button @click="addToCart(product)"
+                            class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
                             <i class="fas fa-shopping-cart"></i>
                             Add to cart
                         </button>
-                        
+
                     </div>
                 </div>
             </template>
         </div>
     </section>
-    
-    
+
+
     <!-- New Arrivals -->
     <section class="container mx-auto px-2 py-12">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold">New Arrivals</h2>
             <a href="#" class="text-primary-600 hover:underline">View All</a>
         </div>
-        
+
         <div class="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2">
             <template x-for="product in products" :key="product.id">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition group mb-2">
                     <div class="relative">
                         <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover">
-                        <div class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
+                        <div
+                            class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
                             <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
                                 <i class="fas fa-heart text-gray-600"></i>
                             </button>
-                            <button @click="selectedProduct = product; productModalOpen = true" class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
+                            <button @click="selectedProduct = product; productModalOpen = true"
+                                class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
                                 <i class="fas fa-eye text-gray-600"></i>
                             </button>
                         </div>
                     </div>
                     <div class="p-2">
-                        
+
                         <h3 class="text-lg font-semibold mb-1" x-text="product.name"></h3>
-                        
+
                         <p class="text-xl font-bold text-primary-600" x-text="'$' + product.price"></p>
-                        <button @click="addToCart(product)" class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
+                        <button @click="addToCart(product)"
+                            class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
                             <i class="fas fa-shopping-cart"></i>
                             Add to cart
                         </button>
-                        
+
                     </div>
                 </div>
             </template>
         </div>
     </section>
-    
+
     <!-- Testimonials -->
     <section class="bg-gray-100 py-12">
         <div class="container mx-auto px-4">
@@ -251,7 +271,8 @@
                         </div>
                         <span class="text-gray-500 text-sm">৫/৫</span>
                     </div>
-                    <p class="text-gray-700 mb-4">"চমৎকার পণ্য এবং দ্রুত ডেলিভারি! আমি একাধিকবার অর্ডার করেছি এবং পণ্যের গুণমান সবসময়ই ভালো পেয়েছি।"</p>
+                    <p class="text-gray-700 mb-4">"চমৎকার পণ্য এবং দ্রুত ডেলিভারি! আমি একাধিকবার অর্ডার করেছি এবং পণ্যের
+                        গুণমান সবসময়ই ভালো পেয়েছি।"</p>
                     <div class="flex items-center">
                         <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
                         <div>
@@ -271,7 +292,8 @@
                         </div>
                         <span class="text-gray-500 text-sm">৪.৫/৫</span>
                     </div>
-                    <p class="text-gray-700 mb-4">"অসাধারণ গ্রাহক সেবা। আমার অর্ডারে একটি ছোট সমস্যা ছিল এবং তারা সাথে সাথে এটি সমাধান করে দিয়েছে।"</p>
+                    <p class="text-gray-700 mb-4">"অসাধারণ গ্রাহক সেবা। আমার অর্ডারে একটি ছোট সমস্যা ছিল এবং তারা সাথে
+                        সাথে এটি সমাধান করে দিয়েছে।"</p>
                     <div class="flex items-center">
                         <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
                         <div>
@@ -291,7 +313,8 @@
                         </div>
                         <span class="text-gray-500 text-sm">৪/৫</span>
                     </div>
-                    <p class="text-gray-700 mb-4">"প্রতিযোগিতামূলক দামে ভালো পণ্যের সমাহার। আমি অবশ্যই আবার এখান থেকে কেনাকাটা করব।"</p>
+                    <p class="text-gray-700 mb-4">"প্রতিযোগিতামূলক দামে ভালো পণ্যের সমাহার। আমি অবশ্যই আবার এখান থেকে
+                        কেনাকাটা করব।"</p>
                     <div class="flex items-center">
                         <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
                         <div>
@@ -303,26 +326,35 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Banner -->
     <section class="bg-primary-600 text-white py-12">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold mb-4">আমাদের নিউজলেটার সাবস্ক্রাইব করুন</h2>
             <p class="max-w-2xl mx-auto mb-6">নতুন পণ্য এবং আসন্ন অফার সম্পর্কে সর্বশেষ আপডেট পেতে</p>
             <div class="max-w-md mx-auto flex">
-                <input type="email" placeholder="আপনার ইমেইল ঠিকানা" class="flex-grow px-4 py-3 rounded-l-lg focus:outline-none text-gray-900">
-                <button class="bg-gray-900 text-white px-6 py-3 rounded-r-lg font-semibold hover:bg-gray-800 transition">
+                <input type="email" placeholder="আপনার ইমেইল ঠিকানা"
+                    class="flex-grow px-4 py-3 rounded-l-lg focus:outline-none text-gray-900">
+                <button
+                    class="bg-gray-900 text-white px-6 py-3 rounded-r-lg font-semibold hover:bg-gray-800 transition">
                     সাবস্ক্রাইব
                 </button>
             </div>
         </div>
     </section>
-    
+
     <!-- Cart Sidebar -->
-    <div x-show="cartOpen" @click.away="cartOpen = false" class="fixed inset-0 z-50 overflow-hidden" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+    <div x-show="cartOpen" @click.away="cartOpen = false" class="fixed inset-0 z-50 overflow-hidden"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
         <div class="fixed inset-y-0 right-0 max-w-full flex">
-            <div class="relative w-screen max-w-md" x-transition:enter="transform transition ease-in-out duration-300 sm:duration-500" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-300 sm:duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+            <div class="relative w-screen max-w-md"
+                x-transition:enter="transform transition ease-in-out duration-300 sm:duration-500"
+                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in-out duration-300 sm:duration-500"
+                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
                 <div class="h-full flex flex-col bg-white shadow-xl">
                     <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                         <div class="flex items-start justify-between">
@@ -331,34 +363,42 @@
                                 <i class="fas fa-times text-xl"></i>
                             </button>
                         </div>
-                        
+
                         <div class="mt-8">
                             <div class="flow-root">
                                 <ul class="-my-6 divide-y divide-gray-200">
                                     <template x-for="(item, index) in cartItems" :key="index">
                                         <li class="py-6 flex">
-                                            <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-                                                <img :src="item.image" :alt="item.name" class="w-full h-full object-cover">
+                                            <div
+                                                class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+                                                <img :src="item.image" :alt="item.name"
+                                                    class="w-full h-full object-cover">
                                             </div>
                                             <div class="ml-4 flex-1 flex flex-col">
                                                 <div>
-                                                    <div class="flex justify-between text-base font-medium text-gray-900">
+                                                    <div
+                                                        class="flex justify-between text-base font-medium text-gray-900">
                                                         <h3 x-text="item.name"></h3>
-                                                        <p class="ml-4" x-text="'$' + (item.price * item.quantity).toFixed(2)"></p>
+                                                        <p class="ml-4"
+                                                            x-text="'$' + (item.price * item.quantity).toFixed(2)"></p>
                                                     </div>
-                                                    <p class="mt-1 text-sm text-gray-500" x-text="'Color: ' + item.color"></p>
+                                                    <p class="mt-1 text-sm text-gray-500"
+                                                        x-text="'Color: ' + item.color"></p>
                                                 </div>
                                                 <div class="flex-1 flex items-end justify-between text-sm">
                                                     <div class="flex items-center border rounded-md">
-                                                        <button @click="updateQuantity(index, -1)" class="px-2 py-1 text-gray-600 hover:bg-gray-100">
+                                                        <button @click="updateQuantity(index, -1)"
+                                                            class="px-2 py-1 text-gray-600 hover:bg-gray-100">
                                                             -
                                                         </button>
                                                         <span class="px-2" x-text="item.quantity"></span>
-                                                        <button @click="updateQuantity(index, 1)" class="px-2 py-1 text-gray-600 hover:bg-gray-100">
+                                                        <button @click="updateQuantity(index, 1)"
+                                                            class="px-2 py-1 text-gray-600 hover:bg-gray-100">
                                                             +
                                                         </button>
                                                     </div>
-                                                    <button @click="removeFromCart(index)" type="button" class="font-medium text-primary-600 hover:text-primary-500">
+                                                    <button @click="removeFromCart(index)" type="button"
+                                                        class="font-medium text-primary-600 hover:text-primary-500">
                                                         Remove
                                                     </button>
                                                 </div>
@@ -369,7 +409,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
                         <div class="flex justify-between text-base font-medium text-gray-900">
                             <p>Subtotal</p>
@@ -377,14 +417,16 @@
                         </div>
                         <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                         <div class="mt-6">
-                            <a href="#" class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700">
+                            <a href="#"
+                                class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700">
                                 Checkout
                             </a>
                         </div>
                         <div class="mt-6 flex justify-center text-sm text-center text-gray-500">
                             <p>
                                 or
-                                <button @click="cartOpen = false" type="button" class="text-primary-600 font-medium hover:text-primary-500 ml-1">
+                                <button @click="cartOpen = false" type="button"
+                                    class="text-primary-600 font-medium hover:text-primary-500 ml-1">
                                     Continue Shopping<span aria-hidden="true"> &rarr;</span>
                                 </button>
                             </p>
@@ -394,21 +436,32 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Product Detail Modal -->
-    <div x-show="productModalOpen" @click.away="productModalOpen = false" class="fixed z-50 inset-0 overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+    <div x-show="productModalOpen" @click.away="productModalOpen = false" class="fixed z-50 inset-0 overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full" x-show="productModalOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
+                x-show="productModalOpen" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
                             <div class="flex justify-between items-start">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" x-text="selectedProduct?.name"></h3>
-                                <button @click="productModalOpen = false" type="button" class="text-gray-400 hover:text-gray-500">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" x-text="selectedProduct?.name">
+                                </h3>
+                                <button @click="productModalOpen = false" type="button"
+                                    class="text-gray-400 hover:text-gray-500">
                                     <i class="fas fa-times text-xl"></i>
                                 </button>
                             </div>
@@ -421,17 +474,21 @@
                                         <div class="flex items-center mb-4">
                                             <div class="flex text-yellow-400 mr-2">
                                                 <template x-for="i in 5" :key="i">
-                                                    <i :class="i <= Math.floor(selectedProduct?.rating) ? 'fas fa-star' : (i - 0.5 <= selectedProduct?.rating ? 'fas fa-star-half-alt' : 'far fa-star')"></i>
+                                                    <i
+                                                        :class="i <= Math.floor(selectedProduct?.rating) ? 'fas fa-star' : (i - 0.5 <= selectedProduct?.rating ? 'fas fa-star-half-alt' : 'far fa-star')"></i>
                                                 </template>
                                             </div>
-                                            <span class="text-gray-500 text-sm" x-text="`${selectedProduct?.rating} (${selectedProduct?.reviews.length} reviews)`"></span>
+                                            <span class="text-gray-500 text-sm"
+                                                x-text="`${selectedProduct?.rating} (${selectedProduct?.reviews.length} reviews)`"></span>
                                         </div>
                                         <p class="text-gray-600 mb-6" x-text="selectedProduct?.description"></p>
-                                        
-                                                                       <div>
+                                        <h4 class="mb-3 font-bold">Reviews</h4>
+
+                                        <div>
                                             <template x-for="review in selectedProduct?.reviews">
-                                                <div class="bg-white p-6 rounded-lg shadow-sm">
-                                                    <div class="flex items-center mb-4">
+                                                <div
+                                                    class="bg-white rounded-lg shadow-sm mb-2 border-l pl-2 border-primary-600">
+                                                    <div class="flex items-center mb-1">
                                                         <div class="flex text-yellow-400 mr-2">
                                                             <i class="fas fa-star"></i>
                                                             <i class="fas fa-star"></i>
@@ -441,23 +498,20 @@
                                                         </div>
                                                         <span class="text-gray-500 text-sm">৫/৫</span>
                                                     </div>
-                                                    <p class="text-gray-700 mb-4" x-text="review.comment">"চমৎকার পণ্য এবং দ্রুত ডেলিভারি! আমি একাধিকবার অর্ডার করেছি এবং পণ্যের গুণমান সবসময়ই ভালো পেয়েছি।"</p>
-                                                    <div class="flex items-center">
-                                                        <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
-                                                        <div>
-                                                            <h4 class="font-medium" x-text="review.reviewerName">সারা জনসন</h4>
-                                                            <p class="text-gray-500 text-sm">যাচাইকৃত ক্রেতা</p>
-                                                        </div>
-                                                    </div>
+                                                    <p class="text-gray-700 mb-1" x-text="review.comment"></p>
+                                                    <h4 class="font-medium" x-text="review.reviewerName"></h4>
                                                 </div>
                                             </template>
-                                        </div>         <div class="flex items-center space-x-4">
-                                            <p class="text-xl font-bold text-primary-600" x-text="'$' + selectedProduct?.price"></p>
-                                            <button @click="addToCart(selectedProduct)" class="flex-1 bg-primary-600 text-white px-6 py-3 rounded hover:bg-primary-700 transition font-medium">
+                                        </div>
+                                        <div class="flex items-center space-x-4 mt-4">
+                                            <p class="text-xl font-bold text-primary-600"
+                                                x-text="'$' + selectedProduct?.price"></p>
+                                            <button @click="addToCart(selectedProduct)"
+                                                class="flex-1 bg-primary-600 text-white px-6 py-3 rounded hover:bg-primary-700 transition font-medium">
                                                 Add to Cart
                                             </button>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -467,9 +521,9 @@
             </div>
         </div>
     </div>
-    
+
     <!-- login Modal -->
-    
+
     <!-- Footer -->
     <footer class="bg-gray-800 text-white pt-12 pb-6">
         <div class="container mx-auto px-4">
@@ -478,10 +532,13 @@
                     <h3 class="text-xl font-bold mb-4">হাটবাট</h3>
                     <p class="text-gray-400 mb-4">আপনার সকল চাহিদার একক ঠিকানা। সাশ্রয়ী মূল্যে মানসম্মত পণ্য।</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-facebook-f"></i></a>
                         <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-pinterest"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-pinterest"></i></a>
                     </div>
                 </div>
                 <div>
@@ -511,7 +568,8 @@
                     </address>
                     <h4 class="text-lg font-semibold mt-6 mb-2">নিউজলেটার</h4>
                     <div class="flex">
-                        <input type="email" placeholder="আপনার ইমেইল" class="px-3 py-2 bg-gray-700 text-white rounded-l focus:outline-none w-full">
+                        <input type="email" placeholder="আপনার ইমেইল"
+                            class="px-3 py-2 bg-gray-700 text-white rounded-l focus:outline-none w-full">
                         <button class="bg-primary-600 text-white px-4 py-2 rounded-r hover:bg-primary-700 transition">
                             <i class="fas fa-paper-plane"></i>
                         </button>
@@ -528,7 +586,7 @@
             </div>
         </div>
     </footer>
-    
+
     <script>
         function app() {
             return {
