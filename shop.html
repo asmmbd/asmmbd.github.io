@@ -1,670 +1,567 @@
-<!DOCTYPE html>
-<html lang="en" x-data="app()" class="scroll-smooth">
+<html lang="bn">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HatBat - Modern E-commerce</title>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            600: '#FF6600',
-                            700: '#FF6603'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        * {
-            font-family: 'Hind Siliguri', sans-serif;
-
-        }
-
-        [x-cloak] {
-            display: none !important;
-        }
-
-        .hero-slide {
-            transition: opacity 0.5s ease;
-        }
-    </style>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
+	<title>
+		WafiLife
+	</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		/* Override Tailwind's default font for Bengali text if needed */
+		* {
+			font-family: 'Hind Siliguri', sans-serif;
+		}
+	</style>
 </head>
 
-<body class="bg-gray-50 font-sans" x-cloak>
-    <!-- Header/Navbar -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Logo and Mobile Menu Button -->
-            <div class="flex items-center">
-                <button @click="mobileMenuOpen = true" class="mr-4 md:hidden text-gray-600">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-                <a href="#" class="text-2xl font-bold text-primary-600">
-                    <img class="w-20" src="https://asmmbd.github.io/images/20250612_171930~2.png" alt="">
-                </a>
-            </div>
+<body class="bg-white text-gray-900" x-data="app()">
+	<!-- Header -->
+	<header class="sticky top-0 bg-white flex items-center justify-between px-4 py-3 border-b border-gray-200">
+		<div class="text-2xl font-bold text-red-600 font-[cursive] select-none" style="font-family: cursive, sans-serif;">
+			Kitabhut
+		</div>
+		<div class="flex space-x-3 text-gray-900 text-xl">
+			<button aria-label="Search" class="focus:outline-none">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+					<path d="M17 17L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+					<path d="M19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19C15.4183 19 19 15.4183 19 11Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</button>
+			<button aria-label="Notifications" class="focus:outline-none">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+					<path d="M15.5 18C15.5 19.933 13.933 21.5 12 21.5C10.067 21.5 8.5 19.933 8.5 18" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M19.2311 18H4.76887C3.79195 18 3 17.208 3 16.2311C3 15.762 3.18636 15.3121 3.51809 14.9803L4.12132 14.3771C4.68393 13.8145 5 13.0514 5 12.2558V9.5C5 5.63401 8.13401 2.5 12 2.5C15.866 2.5 19 5.634 19 9.5V12.2558C19 13.0514 19.3161 13.8145 19.8787 14.3771L20.4819 14.9803C20.8136 15.3121 21 15.762 21 16.2311C21 17.208 20.208 18 19.2311 18Z" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+				</svg>
+			</button>
+			<button aria-label="Cart" class="focus:outline-none">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+					<path d="M8 16H15.2632C19.7508 16 20.4333 13.1808 21.261 9.06908C21.4998 7.88311 21.6192 7.29013 21.3321 6.89507C21.045 6.5 20.4947 6.5 19.3941 6.5H6" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" />
+					<path d="M8 16L5.37873 3.51493C5.15615 2.62459 4.35618 2 3.43845 2H2.5" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" />
+					<path d="M8.88 16H8.46857C7.10522 16 6 17.1513 6 18.5714C6 18.8081 6.1842 19 6.41143 19H17.5" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					<circle cx="10.5" cy="20.5" r="1.5" stroke="#141B34" stroke-width="1.5" />
+					<circle cx="17.5" cy="20.5" r="1.5" stroke="#141B34" stroke-width="1.5" />
+				</svg>
+			</button>
+		</div>
 
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex space-x-8">
-                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Home</a>
-                <template x-for="category in categories.slice(0,4)" :key="category">
-                    <a href="#" class="text-gray-700 hover:text-primary-600 transition" x-text="category"></a>
-                </template>
-                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Account</a>
-                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Orders</a>
-                <a href="#" class="text-gray-700 hover:text-primary-600 transition">Wishlist</a>
-            </nav>
-
-            <!-- Icons -->
-            <div class="flex items-center space-x-4">
-                <button @click="searchOpen = !searchOpen" class="text-gray-600 hover:text-primary-600 transition">
-                    <i class="fas fa-search text-xl"></i>
-                </button>
-                <button @click="cartOpen = true" class="relative text-gray-600 hover:text-primary-600 transition">
-                    <i class="fas fa-shopping-cart text-xl"></i>
-                    <span x-text="cartItemCount"
-                        class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
-                </button>
-                <a href="#" class="text-gray-600 hover:text-primary-600 transition">
-                    <i class="fas fa-user text-xl"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Search Bar -->
-        <div x-show="searchOpen" @click.away="searchOpen = false" class="container mx-auto px-4 py-3 border-t">
-            <div class="relative">
-                <input type="text" placeholder="Search products..."
-                    class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false"
-            class="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
-            <div class="bg-white h-full w-4/5 max-w-sm shadow-xl">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h3 class="text-lg font-semibold">Menu</h3>
-                    <button @click="mobileMenuOpen = false" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <ul class="space-y-1.5">
-                        <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Home</a></li>
-                        <template x-for="category in categories" :key="category">
-                            <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100" x-text="category"></a>
-                            </li>
-                        </template>
-                        <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Account</a></li>
-                        <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Orders</a></li>
-                        <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Wishlist</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Slider -->
-    <section class="relative overflow-hidden">
-        <div class="relative h-96 md:h-[32rem]">
-            <template x-for="(slide, index) in heroSlides" :key="index">
-                <div x-show="currentSlide === index"
-                    class="hero-slide absolute inset-0 bg-primary-600 flex items-center"
-                    :style="`background-image: url('${slide.image}'); opacity: ${currentSlide === index ? 1 : 0}`">
-                    <div class="container mx-auto px-4 text-white">
-                        <div class="max-w-lg">
-                            <h1 class="text-4xl md:text-5xl font-bold mb-4" x-text="slide.title"></h1>
-                            <p class="text-xl mb-6" x-text="slide.subtitle"></p>
-                            <button
-                                class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg">
-                                <span x-text="slide.button"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </template>
-        </div>
-
-        <!-- Slider Controls -->
-        <button @click="prevSlide"
-            class="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full size-8 grid place-items-center shadow-md hover:bg-opacity-100 transition">
-            <i class="fas fa-chevron-left text-gray-800"></i>
-        </button>
-        <button @click="nextSlide"
-            class="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full size-8 grid place-items-center shadow-md hover:bg-opacity-100 transition">
-            <i class="fas fa-chevron-right text-gray-800"></i>
-        </button>
-
-        <!-- Slider Indicators -->
-        <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-            <template x-for="(slide, index) in heroSlides" :key="index">
-                <button @click="currentSlide = index" class="w-3 h-3 rounded-full transition"
-                    :class="currentSlide === index ? 'bg-white w-6' : 'bg-white bg-opacity-50'"></button>
-            </template>
-        </div>
-    </section>
-
-    <!-- Featured Categories -->
-    <section class="container mx-auto px-4 py-12">
-        <h2 class="text-3xl font-bold text-center mb-8">Shop by Category</h2>
-        <div class="w-full flex items-center overflow-x-auto gap-3">
-            <template x-for="category in categories" :key="category">
-                <a href="#" class="shrink-0 bg-white rounded-lg shadow-sm p-6 text-center hover:shadow-md transition">
-                    <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-                        <i class="fas fa-box text-primary-600 text-xl"></i>
-                    </div>
-                    <h3 class="font-medium" x-text="category"></h3>
-                </a>
-            </template>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="container mx-auto px-2 py-12">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold">Featured Products</h2>
-            <a href="#" class="text-primary-600 hover:underline">View All</a>
-        </div>
-
-        <div class="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2">
-            <template x-for="product in products.slice(0,4)" :key="product.id">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition group mb-2">
-                    <div class="relative">
-                        <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover">
-                        <div
-                            class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
-                            <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-                                <i class="fas fa-heart text-gray-600"></i>
-                            </button>
-                            <button @click="selectedProduct = product; productModalOpen = true"
-                                class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-                                <i class="fas fa-eye text-gray-600"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-2">
-
-                        <a href="./product" class="text-lg font-semibold mb-1" x-text="product.name"></a>
-
-                        <p class="text-xl font-bold text-primary-600" x-text="'$' + product.price"></p>
-                        <button @click="addToCart(product)"
-                            class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
-                            <i class="fas fa-shopping-cart"></i>
-                            Add to cart
-                        </button>
-
-                    </div>
-                </div>
-            </template>
-        </div>
-    </section>
-
-
-    <!-- New Arrivals -->
-    <section class="container mx-auto px-2 py-12">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold">New Arrivals</h2>
-            <a href="#" class="text-primary-600 hover:underline">View All</a>
-        </div>
-
-        <div class="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2">
-            <template x-for="product in products" :key="product.id">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition group mb-2">
-                    <div class="relative">
-                        <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover">
-                        <div
-                            class="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition">
-                            <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-                                <i class="fas fa-heart text-gray-600"></i>
-                            </button>
-                            <button @click="selectedProduct = product; productModalOpen = true"
-                                class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-                                <i class="fas fa-eye text-gray-600"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-2">
-
-                        <a href="./product" class="text-lg font-semibold mb-1" x-text="product.name"></a>
-
-                        <p class="text-xl font-bold text-primary-600" x-text="'$' + product.price"></p>
-                        <button @click="addToCart(product)"
-                            class="w-full bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
-                            <i class="fas fa-shopping-cart"></i>
-                            Add to cart
-                        </button>
-
-                    </div>
-                </div>
-            </template>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="bg-gray-100 py-12">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">আমাদের গ্রাহকরা কি বলেন</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <div class="flex text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="text-gray-500 text-sm">৫/৫</span>
-                    </div>
-                    <p class="text-gray-700 mb-4">"চমৎকার পণ্য এবং দ্রুত ডেলিভারি! আমি একাধিকবার অর্ডার করেছি এবং পণ্যের
-                        গুণমান সবসময়ই ভালো পেয়েছি।"</p>
-                    <div class="flex items-center">
-                        <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <h4 class="font-medium">সারা জনসন</h4>
-                            <p class="text-gray-500 text-sm">যাচাইকৃত ক্রেতা</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <div class="flex text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="text-gray-500 text-sm">৪.৫/৫</span>
-                    </div>
-                    <p class="text-gray-700 mb-4">"অসাধারণ গ্রাহক সেবা। আমার অর্ডারে একটি ছোট সমস্যা ছিল এবং তারা সাথে
-                        সাথে এটি সমাধান করে দিয়েছে।"</p>
-                    <div class="flex items-center">
-                        <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <h4 class="font-medium">মাইকেল চেন</h4>
-                            <p class="text-gray-500 text-sm">যাচাইকৃত ক্রেতা</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <div class="flex text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <span class="text-gray-500 text-sm">৪/৫</span>
-                    </div>
-                    <p class="text-gray-700 mb-4">"প্রতিযোগিতামূলক দামে ভালো পণ্যের সমাহার। আমি অবশ্যই আবার এখান থেকে
-                        কেনাকাটা করব।"</p>
-                    <div class="flex items-center">
-                        <img src="https://via.placeholder.com/40x40" alt="গ্রাহক" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <h4 class="font-medium">ডেভিড উইলসন</h4>
-                            <p class="text-gray-500 text-sm">যাচাইকৃত ক্রেতা</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Banner -->
-    <section class="bg-primary-600 text-white py-12">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-4">আমাদের নিউজলেটার সাবস্ক্রাইব করুন</h2>
-            <p class="max-w-2xl mx-auto mb-6">নতুন পণ্য এবং আসন্ন অফার সম্পর্কে সর্বশেষ আপডেট পেতে</p>
-            <div class="max-w-md mx-auto flex">
-                <input type="email" placeholder="আপনার ইমেইল ঠিকানা"
-                    class="flex-grow px-4 py-3 rounded-l-lg focus:outline-none text-gray-900">
-                <button
-                    class="bg-gray-900 text-white px-6 py-3 rounded-r-lg font-semibold hover:bg-gray-800 transition">
-                    সাবস্ক্রাইব
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cart Sidebar -->
-    <div x-show="cartOpen" @click.away="cartOpen = false" class="fixed inset-0 z-50 overflow-hidden"
-        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-        <div class="fixed inset-y-0 right-0 max-w-full flex">
-            <div class="relative w-screen max-w-md"
-                x-transition:enter="transform transition ease-in-out duration-300 sm:duration-500"
-                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
-                x-transition:leave="transform transition ease-in-out duration-300 sm:duration-500"
-                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
-                <div class="h-full flex flex-col bg-white shadow-xl">
-                    <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
-                        <div class="flex items-start justify-between">
-                            <h2 class="text-lg font-medium text-gray-900">Shopping cart</h2>
-                            <button @click="cartOpen = false" type="button" class="text-gray-400 hover:text-gray-500">
-                                <i class="fas fa-times text-xl"></i>
-                            </button>
-                        </div>
-
-                        <div class="mt-8">
-                            <div class="flow-root">
-                                <ul class="-my-6 divide-y divide-gray-200">
-                                    <template x-for="(item, index) in cartItems" :key="index">
-                                        <li class="py-6 flex">
-                                            <div
-                                                class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-                                                <img :src="item.image" :alt="item.name"
-                                                    class="w-full h-full object-cover">
-                                            </div>
-                                            <div class="ml-4 flex-1 flex flex-col">
-                                                <div>
-                                                    <div
-                                                        class="flex justify-between text-base font-medium text-gray-900">
-                                                        <h3 x-text="item.name"></h3>
-                                                        <p class="ml-4"
-                                                            x-text="'$' + (item.price * item.quantity).toFixed(2)"></p>
-                                                    </div>
-                                                    <p class="mt-1 text-sm text-gray-500"
-                                                        x-text="'Color: ' + item.color"></p>
-                                                </div>
-                                                <div class="flex-1 flex items-end justify-between text-sm">
-                                                    <div class="flex items-center border rounded-md">
-                                                        <button @click="updateQuantity(index, -1)"
-                                                            class="px-2 py-1 text-gray-600 hover:bg-gray-100">
-                                                            -
-                                                        </button>
-                                                        <span class="px-2" x-text="item.quantity"></span>
-                                                        <button @click="updateQuantity(index, 1)"
-                                                            class="px-2 py-1 text-gray-600 hover:bg-gray-100">
-                                                            +
-                                                        </button>
-                                                    </div>
-                                                    <button @click="removeFromCart(index)" type="button"
-                                                        class="font-medium text-primary-600 hover:text-primary-500">
-                                                        Remove
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
-                        <div class="flex justify-between text-base font-medium text-gray-900">
-                            <p>Subtotal</p>
-                            <p x-text="'$' + cartTotal"></p>
-                        </div>
-                        <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                        <div class="mt-6">
-                            <a href="./checkout"
-                                class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700">
-                                Checkout
-                            </a>
-                        </div>
-                        <div class="mt-6 flex justify-center text-sm text-center text-gray-500">
-                            <p>
-                                or
-                                <button @click="cartOpen = false" type="button"
-                                    class="text-primary-600 font-medium hover:text-primary-500 ml-1">
-                                    Continue Shopping<span aria-hidden="true"> &rarr;</span>
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Product Detail Modal -->
-    <div x-show="productModalOpen" @click.away="productModalOpen = false" class="fixed z-50 inset-0 overflow-y-auto"
-        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
-                x-show="productModalOpen" x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                            <div class="flex justify-between items-start">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" x-text="selectedProduct?.name">
-                                </h3>
-                                <button @click="productModalOpen = false" type="button"
-                                    class="text-gray-400 hover:text-gray-500">
-                                    <i class="fas fa-times text-xl"></i>
-                                </button>
-                            </div>
-                            <div class="mt-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <img :src="selectedProduct?.image" alt="Product" class="w-full rounded-lg">
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center mb-4">
-                                            <div class="flex text-yellow-400 mr-2">
-                                                <template x-for="i in 5" :key="i">
-                                                    <i
-                                                        :class="i <= Math.floor(selectedProduct?.rating) ? 'fas fa-star' : (i - 0.5 <= selectedProduct?.rating ? 'fas fa-star-half-alt' : 'far fa-star')"></i>
-                                                </template>
-                                            </div>
-                                            <span class="text-gray-500 text-sm"
-                                                x-text="`${selectedProduct?.rating} (${selectedProduct?.reviews.length} reviews)`"></span>
-                                        </div>
-                                        <p class="text-gray-600 mb-6" x-text="selectedProduct?.description"></p>
-                                        <h4 class="mb-3 font-bold">Reviews</h4>
-
-                                        <div>
-                                            <template x-for="review in selectedProduct?.reviews">
-                                                <div
-                                                    class="bg-white rounded-lg shadow-sm mb-2 border-l pl-2 border-primary-600">
-                                                    <div class="flex items-center mb-1">
-                                                        <div class="flex text-yellow-400 mr-2">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <span class="text-gray-500 text-sm">৫/৫</span>
-                                                    </div>
-                                                    <p class="text-gray-700 mb-1" x-text="review.comment"></p>
-                                                    <h4 class="font-medium" x-text="review.reviewerName"></h4>
-                                                </div>
-                                            </template>
-                                        </div>
-                                        <div class="flex items-center space-x-4 mt-4">
-                                            <p class="text-xl font-bold text-primary-600"
-                                                x-text="'$' + selectedProduct?.price"></p>
-                                            <button @click="addToCart(selectedProduct)"
-                                                class="flex-1 bg-primary-600 text-white px-6 py-3 rounded hover:bg-primary-700 transition font-medium">
-                                                Add to Cart
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- login Modal -->
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white pt-12 pb-6">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">হাটবাট</h3>
-                    <p class="text-gray-400 mb-4">আপনার সকল চাহিদার একক ঠিকানা। সাশ্রয়ী মূল্যে মানসম্মত পণ্য।</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-pinterest"></i></a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">শপ</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">সকল পণ্য</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">ফিচার্ড</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">নতুন আগমন</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">ডিসকাউন্ট</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">আমাদের সম্পর্কে</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">আমাদের গল্প</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">ক্যারিয়ার</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">শর্তাবলী</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">গোপনীয়তা নীতি</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">যোগাযোগ</h4>
-                    <address class="text-gray-400 not-italic">
-                        <p class="mb-2">১২৩ শপ স্ট্রিট, বাণিজ্য নগর</p>
-                        <p class="mb-2">ইমেইল: info@shopease.com</p>
-                        <p>ফোন: ০১২৩-৪৫৬৭৮৯০</p>
-                    </address>
-                    <h4 class="text-lg font-semibold mt-6 mb-2">নিউজলেটার</h4>
-                    <div class="flex">
-                        <input type="email" placeholder="আপনার ইমেইল"
-                            class="px-3 py-2 bg-gray-700 text-white rounded-l focus:outline-none w-full">
-                        <button class="bg-primary-600 text-white px-4 py-2 rounded-r hover:bg-primary-700 transition">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-                <p>&copy; ২০২৫ হাতবাট। সর্বস্বত্ব সংরক্ষিত।</p>
-                <div class="mt-2 flex justify-center space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition">গোপনীয়তা নীতি</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">সেবার শর্তাবলী</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">ডেলিভারি নীতি</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function app() {
-            return {
-                cartOpen: false,
-                productModalOpen: false,
-                selectedProduct: null,
-                mobileMenuOpen: false,
-                searchOpen: false,
-                currentSlide: 0,
-                cartItems: [],
-                products: [],
-                categories: ['Electronics', 'Fashion', 'Home & Garden', 'Sports', 'Beauty'],
-                heroSlides: [
-                    { title: 'Summer Collection 2023', subtitle: 'Up to 30% off selected items', button: 'Shop Now', image: 'https://via.placeholder.com/800x400/4F46E5/FFFFFF' },
-                    { title: 'New Arrivals', subtitle: 'Discover the latest trends', button: 'Explore', image: 'https://via.placeholder.com/800x400/7C3AED/FFFFFF' },
-                    { title: 'Limited Time Offer', subtitle: 'Flash sale - ends soon!', button: 'Grab Deal', image: 'https://via.placeholder.com/800x400/2563EB/FFFFFF' }
-                ],
-                get cartTotal() {
-                    return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
-                },
-                get cartItemCount() {
-                    return this.cartItems.reduce((count, item) => count + item.quantity, 0);
-                },
-                nextSlide() {
-                    this.currentSlide = (this.currentSlide + 1) % this.heroSlides.length;
-                },
-                prevSlide() {
-                    this.currentSlide = (this.currentSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
-                },
-                addToCart(product) {
-                    const existingItem = this.cartItems.find(item => item.id === product.id);
-                    if (existingItem) {
-                        existingItem.quantity++;
-                    } else {
-                        this.cartItems.push({
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                            color: product.colors[0],
-                            quantity: 1,
-                            image: product.image
-                        });
-                    }
-                    this.productModalOpen = false;
-                    this.cartOpen = true;
-                },
-                removeFromCart(index) {
-                    this.cartItems.splice(index, 1);
-                },
-                updateQuantity(index, change) {
-                    const newQuantity = this.cartItems[index].quantity + change;
-                    if (newQuantity > 0) {
-                        this.cartItems[index].quantity = newQuantity;
-                    }
-                },
-                init() {
-                    fetch('https://dummyjson.com/products').then(ress => ress.json()).then(data => {
-                        this.products = data.products.map(p => {
-                            return {
-                                id: p.id,
-                                name: p.title,
-                                price: p.price,
-                                description: p.description,
-                                image: p.thumbnail,
-                                rating: p.rating,
-                                reviews: p.reviews,
-                                colors: ['Black', 'White', 'Blue'],
-                                inStock: true
-                            }
-                        })
-                    });
-                    fetch('https://dummyjson.com/products/category-list')
-                        .then(res => res.json())
-                        .then(data => this.categories = data);
-                }
-            }
-        }
-    </script>
+	</header>
+	<!-- Banner -->
+	<div class="p-4">
+		<img alt="বইয়ের প্রচারমূলক ব্যানার, যেখানে লেখকের ছবি, বইয়ের নাম, ৫% ছাড় এবং ফ্রি শিপিংয়ের তথ্য রয়েছে" class="rounded-lg w-full object-contain" height="150" src="https://wafilife-media.wafilife.com/uploads/2025/06/writer-week_yousuf-al-kardavi_mobile.png" width="600" />
+	</div>
+	<!-- Content -->
+	<main class="flex-1 px-4 space-y-6">
+		<!-- নতুন প্রকাশিত বই Section -->
+		<section>
+			<div class="flex justify-between items-center mb-2">
+				<h2 class="text-lg font-normal text-gray-900 select-none">
+					নতুন প্রকাশিত বই
+				</h2>
+				<a class="text-red-700 text-sm font-normal select-none" href="#">
+					আরো দেখুন
+				</a>
+			</div>
+			<div class="flex space-x-3 overflow-x-auto pb-2">
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+			</div>
+		</section>
+		
+		<!-- প্রি-অর্ডার Section -->
+		<section>
+			<div class="flex justify-between items-center mb-2">
+				<h2 class="text-lg font-normal text-gray-900 select-none">
+					প্রি-অর্ডার
+				</h2>
+				<a class="text-red-700 text-sm font-normal select-none" href="#">
+					আরো দেখুন
+				</a>
+			</div>
+			<div class="flex space-x-3 overflow-x-auto pb-2">
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="150" loading="lazy" src="https://wafilife-media.wafilife.com/uploads/2021/02/%E0%A6%AE%E0%A7%81%E0%A6%B8%E0%A6%BE%E0%A6%A8%E0%A7%8D%E0%A6%A8%E0%A6%BE%E0%A6%AB%E0%A7%87-%E0%A6%87%E0%A6%AC%E0%A6%A8%E0%A7%81-%E0%A6%86%E0%A6%AC%E0%A6%BF-%E0%A6%B6%E0%A6%BE%E0%A6%87%E0%A6%AC%E0%A6%BE_1-250x385.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+			</div>
+		</section>
+		
+		<!-- best selling Section -->
+		<section>
+			<div class="flex justify-between items-center mb-2">
+				<h2 class="text-lg font-normal text-gray-900 select-none">
+					বেস্ট-সেলিং
+				</h2>
+				<a class="text-red-700 text-sm font-normal select-none" href="#">
+					আরো দেখুন
+				</a>
+			</div>
+			<div class="flex space-x-3 overflow-x-auto pb-2">
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+			</div>
+		</section>
+		
+		<!-- best selling Section -->
+		<section>
+			<div class="flex justify-between items-center mb-2">
+				<h2 class="text-lg font-normal text-gray-900 select-none">
+					বেস্ট-সেলিং
+				</h2>
+				<a class="text-red-700 text-sm font-normal select-none" href="#">
+					আরো দেখুন
+				</a>
+			</div>
+			<div class="flex space-x-3 overflow-x-auto pb-2">
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+				<article class="flex-shrink-0 w-28">
+					<img alt="The Dollar Conversation বইয়ের কভার, যেখানে লেখকের ছবি এবং সবুজ-সাদা রঙের টেক্সট রয়েছে" class="w-full h-36 object-cover rounded" height="140" loading="lazy" src="https://storage.googleapis.com/a1aa/image/fc75d613-301d-44aa-2173-3f9d69ea6aa5.jpg" width="112" />
+					<h3 class="text-xs font-normal truncate mt-1 select-none">
+						দ্য ডলার কনভার...
+					</h3>
+					<p class="text-xs text-gray-700 truncate select-none">
+						রাফি ইসলাম স
+					</p>
+					<p class="text-xs text-gray-500 select-none">
+						<span class="line-through me-1">৪৮০ ৳</span>
+						<span>৪১৩ ৳</span>
+					</p>
+				</article>
+			</div>
+		</section>
+	</main>
+	<!-- Bottom Navigation -->
+	<nav aria-label="Primary" class="bg-white/80 sticky bottom-0 left-0 w-full border-t border-gray-200 flex justify-between text-xs text-gray-700 px-6 py-2 select-none">
+		<button aria-current="page" aria-label="Home" class="flex flex-col items-center text-red-600">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+				<path d="M3 11.9896V14.5C3 17.7998 3 19.4497 4.02513 20.4749C5.05025 21.5 6.70017 21.5 10 21.5H14C17.2998 21.5 18.9497 21.5 19.9749 20.4749C21 19.4497 21 17.7998 21 14.5V11.9896C21 10.3083 21 9.46773 20.6441 8.74005C20.2882 8.01237 19.6247 7.49628 18.2976 6.46411L16.2976 4.90855C14.2331 3.30285 13.2009 2.5 12 2.5C10.7991 2.5 9.76689 3.30285 7.70242 4.90855L5.70241 6.46411C4.37533 7.49628 3.71179 8.01237 3.3559 8.74005C3 9.46773 3 10.3083 3 11.9896Z" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+				<path d="M15 21.5V16.5C15 15.0858 15 14.3787 14.5607 13.9393C14.1213 13.5 13.4142 13.5 12 13.5C10.5858 13.5 9.87868 13.5 9.43934 13.9393C9 14.3787 9 15.0858 9 16.5V21.5" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+			</svg>
+			<span class="mt-0.5">
+				হোম
+			</span>
+		</button>
+		<button @click="isOpen = true" aria-label="Category" class="flex flex-col items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+				<path d="M3.88884 9.66294C4.39329 10 5.09552 10 6.49998 10C7.90445 10 8.60668 10 9.11113 9.66294C9.32951 9.51702 9.51701 9.32952 9.66292 9.11114C9.99998 8.60669 9.99998 7.90446 9.99998 6.5C9.99998 5.09554 9.99998 4.39331 9.66292 3.88886C9.51701 3.67048 9.32951 3.48298 9.11113 3.33706C8.60668 3 7.90445 3 6.49998 3C5.09552 3 4.39329 3 3.88884 3.33706C3.67046 3.48298 3.48296 3.67048 3.33705 3.88886C2.99998 4.39331 2.99998 5.09554 2.99998 6.5C2.99998 7.90446 2.99998 8.60669 3.33705 9.11114C3.48296 9.32952 3.67046 9.51702 3.88884 9.66294Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round" />
+				<path d="M14.8888 9.66294C15.3933 10 16.0955 10 17.5 10C18.9044 10 19.6067 10 20.1111 9.66294C20.3295 9.51702 20.517 9.32952 20.6629 9.11114C21 8.60669 21 7.90446 21 6.5C21 5.09554 21 4.39331 20.6629 3.88886C20.517 3.67048 20.3295 3.48298 20.1111 3.33706C19.6067 3 18.9044 3 17.5 3C16.0955 3 15.3933 3 14.8888 3.33706C14.6705 3.48298 14.483 3.67048 14.337 3.88886C14 4.39331 14 5.09554 14 6.5C14 7.90446 14 8.60669 14.337 9.11114C14.483 9.32952 14.6705 9.51702 14.8888 9.66294Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round" />
+				<path d="M3.88884 20.6629C4.39329 21 5.09552 21 6.49998 21C7.90445 21 8.60668 21 9.11113 20.6629C9.32951 20.517 9.51701 20.3295 9.66292 20.1111C9.99998 19.6067 9.99998 18.9045 9.99998 17.5C9.99998 16.0955 9.99998 15.3933 9.66292 14.8889C9.51701 14.6705 9.32951 14.483 9.11113 14.3371C8.60668 14 7.90445 14 6.49998 14C5.09552 14 4.39329 14 3.88884 14.3371C3.67046 14.483 3.48296 14.6705 3.33705 14.8889C2.99998 15.3933 2.99998 16.0955 2.99998 17.5C2.99998 18.9045 2.99998 19.6067 3.33705 20.1111C3.48296 20.3295 3.67046 20.517 3.88884 20.6629Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round" />
+				<path d="M14.8888 20.6629C15.3933 21 16.0955 21 17.5 21C18.9044 21 19.6067 21 20.1111 20.6629C20.3295 20.517 20.517 20.3295 20.6629 20.1111C21 19.6067 21 18.9045 21 17.5C21 16.0955 21 15.3933 20.6629 14.8889C20.517 14.6705 20.3295 14.483 20.1111 14.3371C19.6067 14 18.9044 14 17.5 14C16.0955 14 15.3933 14 14.8888 14.3371C14.6705 14.483 14.483 14.6705 14.337 14.8889C14 15.3933 14 16.0955 14 17.5C14 18.9045 14 19.6067 14.337 20.1111C14.483 20.3295 14.6705 20.517 14.8888 20.6629Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round" />
+			</svg>
+			<span class="mt-0.5">
+				ক্যাটেগরি
+			</span>
+		</button>
+		<button aria-label="Shopping Bag" class="flex flex-col items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+				<path d="M8 16H15.2632C19.7508 16 20.4333 13.1808 21.261 9.06908C21.4998 7.88311 21.6192 7.29013 21.3321 6.89507C21.045 6.5 20.4947 6.5 19.3941 6.5H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+				<path d="M8 16L5.37873 3.51493C5.15615 2.62459 4.35618 2 3.43845 2H2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+				<path d="M8.88 16H8.46857C7.10522 16 6 17.1513 6 18.5714C6 18.8081 6.1842 19 6.41143 19H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				<circle cx="10.5" cy="20.5" r="1.5" stroke="currentColor" stroke-width="1.5"></circle>
+				<circle cx="17.5" cy="20.5" r="1.5" stroke="currentColor" stroke-width="1.5"></circle>
+			</svg>
+			<span class="mt-0.5">
+				শপিং ব্যাগ
+			</span>
+		</button>
+		<button aria-label="Menu" class="flex flex-col items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#000000" fill="none">
+				<path d="M4 5L20 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				<path d="M4 12L20 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				<path d="M4 19L20 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+			</svg>
+			<span class="mt-0.5">
+				মেনু
+			</span>
+		</button>
+	</nav>
+	
+	
+	
+	<div x-show="isOpen" x-transition:enter="transition duration-300 ease-out" x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100" x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" class="fixed inset-0 z-10 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+		<div class="flex items-end justify-center min-h-screen text-center sm:block sm:p-0">
+			
+			<div @click.outside="isOpen = false" class="border-t w-full relative inline-block pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900">
+				<div class="relative">
+					<span class="absolute inset-y-0 left-0 flex items-center pl-3">
+						<svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none">
+							<path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+						</svg>
+					</span>
+					
+					<input type="text" class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border-b rounded-t-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:outline-none" placeholder="Search" />
+				</div>
+				<div class="my-4 px-4">
+					<p>Categories</p>
+					<div class=" mt-2">
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+						<p class="border-b py-2 text-sm font-medium text-gray-600">ইসলামিক বই</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<script>
+		function app() {
+			return {
+				isOpen: false
+			}
+		}
+	</script>
 </body>
 
 </html>
