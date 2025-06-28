@@ -525,7 +525,7 @@
 	<div x-show="isOpen" x-transition:enter="transition duration-300 ease-out" x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100" x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" class="fixed inset-0 z-10 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
 		<div class="flex items-end justify-center min-h-screen text-center sm:block sm:p-0">
 			
-			<div @click.outside="isOpen = false" class="border-t w-full relative inline-block pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900">
+			<div @click.outside="isOpen = false" class="border-t w-full relative inline-block pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl">
 				<div class="relative">
 					<span class="absolute inset-y-0 left-0 flex items-center pl-3">
 						<svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none">
@@ -533,7 +533,7 @@
 						</svg>
 					</span>
 					
-					<input type="text" class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border-b rounded-t-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:outline-none" placeholder="Search" />
+					<input type="text" class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border-b rounded-t-lg focus:outline-none" placeholder="Search" />
 				</div>
 				<div class="my-4 px-4">
 					<p>Categories</p>
