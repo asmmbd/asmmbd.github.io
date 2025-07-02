@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Social Media Post (Improved)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <script src="//unpkg.com/alpinejs" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Hind Siliguri', 'SolaimanLipi', sans-serif;
+    }
+    
+    .post-interaction:hover {
+      color: #3b82f6;
+      /* Blue-500 */
+      transform: scale(1.05);
+    }
+    
+    .engagement-bar div:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900" x-data="{activeTab: 'threads', questionModalOpen: false}">
+  <!-- Header (Sticky) -->
+  <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-sm border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <img src="https://storage.googleapis.com/a1aa/image/857fbfff-b9f5-40a7-b7e7-35f8b4d54d8c.jpg" alt="Profile" class="w-9 h-9 rounded-full object-cover border border-gray-200" />
+      <span class="font-semibold text-sm">Home</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button class="text-blue-500 hover:text-blue-600">
+        <i class="fas fa-magic"></i> <!-- Sparkle icon for Premium -->
+      </button>
+      <button class="text-gray-700 hover:text-black">
+        <i class="fas fa-ellipsis-h"></i>
+      </button>
+    </div>
+  </header>
+  <nav class="flex justify-center p-1 rounded-full bg-gray-100 mx-4 my-2">
+    <button @click="activeTab = 'threads'" class="w-1/2 px-6 py-2 text-gray-600 hover:text-gray-900" :class="{'rounded-full bg-white shadow-sm font-semibold': activeTab === 'threads'}">Threads</button>
+    <button @click="activeTab = 'discussions'" class="w-1/2 px-6 py-2 text-gray-600 hover:text-gray-900" :class="{'rounded-full bg-white shadow-sm font-semibold': activeTab === 'discussions'}">Discussions</button>
+  </nav>
+  <!-- Main Content -->
+  <main class="max-w-xl mx-auto pb-20">
+    <section x-show="activeTab === 'threads'" x-transition>
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl shadow-sm border border-gray-100 mt-3 mx-3 overflow-hidden">
+        <!-- Post Header -->
+        <div class="flex items-center p-4">
+          <img src="https://storage.googleapis.com/a1aa/image/290b58ac-c9cc-426f-9bfd-4a55a1dd38b1.jpg" alt="Mr Sinha" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+          <div class="ml-3 flex-1">
+            <div class="flex items-center space-x-1">
+              <span class="font-bold text-sm">Mr Sinha</span>
+              <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.5 12l-2.25 2.25-2.25-2.25 2.25-2.25L22.5 12zM12 2.25l2.25 2.25-2.25 2.25-2.25-2.25L12 2.25zM2.25 12l2.25-2.25 2.25 2.25-2.25 2.25L2.25 12zM12 21.75l-2.25-2.25 2.25-2.25 2.25 2.25L12 21.75z" />
+              </svg>
+              <span class="text-gray-500 text-sm">@MrSinha_ · 1d</span>
+            </div>
+            <p class="text-gray-600 text-xs">Political Commentator</p>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="px-4 pb-3">
+          <p class="text-gray-800 mb-3">
+            MNS goons slapped an elderly Gujarati shopkeeper for not being able to speak Marathi.
+            <br><br>
+            These morons pee in their pants seeing Muslims but start behaving like warriors in front of poor Hindus.
+            <br><br>
+            Hey <a href="#" class="text-blue-500 hover:underline">@RajThackeray</a>, if you have guts, try doing the same with Ambanis.
+          </p>
+          <div class="relative rounded-xl overflow-hidden mb-3 border border-gray-100">
+            <img src="https://storage.googleapis.com/a1aa/image/21cc1536-7fc0-4d12-ea65-e99c3ae009c2.jpg" alt="MNS incident" class="w-full h-auto object-cover" />
+            <button class="absolute bottom-3 right-3 bg-black/50 text-white rounded-full p-1.5 hover:bg-black/70">
+              <i class="fas fa-volume-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar px-4 py-2 border-t border-gray-100 flex justify-between text-gray-500 text-sm">
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="far fa-comment"></i>
+            <span>4.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-green-500">
+            <i class="fas fa-retweet"></i>
+            <span>10.9K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-pink-500">
+            <i class="far fa-heart"></i>
+            <span>29.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="fas fa-chart-bar"></i>
+            <span>2.7M</span>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="fas fa-share"></i>
+          </button>
+        </div>
+      </article>
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl shadow-sm border border-gray-100 mt-3 mx-3 overflow-hidden">
+        <!-- Post Header -->
+        <div class="flex items-center p-4">
+          <img src="https://storage.googleapis.com/a1aa/image/290b58ac-c9cc-426f-9bfd-4a55a1dd38b1.jpg" alt="Mr Sinha" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+          <div class="ml-3 flex-1">
+            <div class="flex items-center space-x-1">
+              <span class="font-bold text-sm">Mr Sinha</span>
+              <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.5 12l-2.25 2.25-2.25-2.25 2.25-2.25L22.5 12zM12 2.25l2.25 2.25-2.25 2.25-2.25-2.25L12 2.25zM2.25 12l2.25-2.25 2.25 2.25-2.25 2.25L2.25 12zM12 21.75l-2.25-2.25 2.25-2.25 2.25 2.25L12 21.75z" />
+              </svg>
+              <span class="text-gray-500 text-sm">@MrSinha_ · 1d</span>
+            </div>
+            <p class="text-gray-600 text-xs">Political Commentator</p>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="px-4 pb-3">
+          <p class="text-gray-800 mb-3">
+            MNS goons slapped an elderly Gujarati shopkeeper for not being able to speak Marathi.
+            <br><br>
+            These morons pee in their pants seeing Muslims but start behaving like warriors in front of poor Hindus.
+            <br><br>
+            Hey <a href="#" class="text-blue-500 hover:underline">@RajThackeray</a>, if you have guts, try doing the same with Ambanis.
+          </p>
+          <div class="relative rounded-xl overflow-hidden mb-3 border border-gray-100">
+            <img src="https://storage.googleapis.com/a1aa/image/21cc1536-7fc0-4d12-ea65-e99c3ae009c2.jpg" alt="MNS incident" class="w-full h-auto object-cover" />
+            <button class="absolute bottom-3 right-3 bg-black/50 text-white rounded-full p-1.5 hover:bg-black/70">
+              <i class="fas fa-volume-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar px-4 py-2 border-t border-gray-100 flex justify-between text-gray-500 text-sm">
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="far fa-comment"></i>
+            <span>4.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-green-500">
+            <i class="fas fa-retweet"></i>
+            <span>10.9K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-pink-500">
+            <i class="far fa-heart"></i>
+            <span>29.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="fas fa-chart-bar"></i>
+            <span>2.7M</span>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="fas fa-share"></i>
+          </button>
+        </div>
+      </article>
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl shadow-sm border border-gray-100 mt-3 mx-3 overflow-hidden">
+        <!-- Post Header -->
+        <div class="flex items-center p-4">
+          <img src="https://storage.googleapis.com/a1aa/image/290b58ac-c9cc-426f-9bfd-4a55a1dd38b1.jpg" alt="Mr Sinha" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+          <div class="ml-3 flex-1">
+            <div class="flex items-center space-x-1">
+              <span class="font-bold text-sm">Mr Sinha</span>
+              <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.5 12l-2.25 2.25-2.25-2.25 2.25-2.25L22.5 12zM12 2.25l2.25 2.25-2.25 2.25-2.25-2.25L12 2.25zM2.25 12l2.25-2.25 2.25 2.25-2.25 2.25L2.25 12zM12 21.75l-2.25-2.25 2.25-2.25 2.25 2.25L12 21.75z" />
+              </svg>
+              <span class="text-gray-500 text-sm">@MrSinha_ · 1d</span>
+            </div>
+            <p class="text-gray-600 text-xs">Political Commentator</p>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="px-4 pb-3">
+          <p class="text-gray-800 mb-3">
+            MNS goons slapped an elderly Gujarati shopkeeper for not being able to speak Marathi.
+            <br><br>
+            These morons pee in their pants seeing Muslims but start behaving like warriors in front of poor Hindus.
+            <br><br>
+            Hey <a href="#" class="text-blue-500 hover:underline">@RajThackeray</a>, if you have guts, try doing the same with Ambanis.
+          </p>
+          <div class="relative rounded-xl overflow-hidden mb-3 border border-gray-100">
+            <img src="https://storage.googleapis.com/a1aa/image/21cc1536-7fc0-4d12-ea65-e99c3ae009c2.jpg" alt="MNS incident" class="w-full h-auto object-cover" />
+            <button class="absolute bottom-3 right-3 bg-black/50 text-white rounded-full p-1.5 hover:bg-black/70">
+              <i class="fas fa-volume-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar px-4 py-2 border-t border-gray-100 flex justify-between text-gray-500 text-sm">
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="far fa-comment"></i>
+            <span>4.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-green-500">
+            <i class="fas fa-retweet"></i>
+            <span>10.9K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-pink-500">
+            <i class="far fa-heart"></i>
+            <span>29.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="fas fa-chart-bar"></i>
+            <span>2.7M</span>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="fas fa-share"></i>
+          </button>
+        </div>
+      </article>
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl shadow-sm border border-gray-100 mt-3 mx-3 overflow-hidden">
+        <!-- Post Header -->
+        <div class="flex items-center p-4">
+          <img src="https://storage.googleapis.com/a1aa/image/290b58ac-c9cc-426f-9bfd-4a55a1dd38b1.jpg" alt="Mr Sinha" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+          <div class="ml-3 flex-1">
+            <div class="flex items-center space-x-1">
+              <span class="font-bold text-sm">Mr Sinha</span>
+              <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.5 12l-2.25 2.25-2.25-2.25 2.25-2.25L22.5 12zM12 2.25l2.25 2.25-2.25 2.25-2.25-2.25L12 2.25zM2.25 12l2.25-2.25 2.25 2.25-2.25 2.25L2.25 12zM12 21.75l-2.25-2.25 2.25-2.25 2.25 2.25L12 21.75z" />
+              </svg>
+              <span class="text-gray-500 text-sm">@MrSinha_ · 1d</span>
+            </div>
+            <p class="text-gray-600 text-xs">Political Commentator</p>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="px-4 pb-3">
+          <p class="text-gray-800 mb-3">
+            MNS goons slapped an elderly Gujarati shopkeeper for not being able to speak Marathi.
+            <br><br>
+            These morons pee in their pants seeing Muslims but start behaving like warriors in front of poor Hindus.
+            <br><br>
+            Hey <a href="#" class="text-blue-500 hover:underline">@RajThackeray</a>, if you have guts, try doing the same with Ambanis.
+          </p>
+          <div class="relative rounded-xl overflow-hidden mb-3 border border-gray-100">
+            <img src="https://storage.googleapis.com/a1aa/image/21cc1536-7fc0-4d12-ea65-e99c3ae009c2.jpg" alt="MNS incident" class="w-full h-auto object-cover" />
+            <button class="absolute bottom-3 right-3 bg-black/50 text-white rounded-full p-1.5 hover:bg-black/70">
+              <i class="fas fa-volume-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar px-4 py-2 border-t border-gray-100 flex justify-between text-gray-500 text-sm">
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="far fa-comment"></i>
+            <span>4.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-green-500">
+            <i class="fas fa-retweet"></i>
+            <span>10.9K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-pink-500">
+            <i class="far fa-heart"></i>
+            <span>29.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="fas fa-chart-bar"></i>
+            <span>2.7M</span>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="fas fa-share"></i>
+          </button>
+        </div>
+      </article>
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl shadow-sm border border-gray-100 mt-3 mx-3 overflow-hidden">
+        <!-- Post Header -->
+        <div class="flex items-center p-4">
+          <img src="https://storage.googleapis.com/a1aa/image/290b58ac-c9cc-426f-9bfd-4a55a1dd38b1.jpg" alt="Mr Sinha" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+          <div class="ml-3 flex-1">
+            <div class="flex items-center space-x-1">
+              <span class="font-bold text-sm">Mr Sinha</span>
+              <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.5 12l-2.25 2.25-2.25-2.25 2.25-2.25L22.5 12zM12 2.25l2.25 2.25-2.25 2.25-2.25-2.25L12 2.25zM2.25 12l2.25-2.25 2.25 2.25-2.25 2.25L2.25 12zM12 21.75l-2.25-2.25 2.25-2.25 2.25 2.25L12 21.75z" />
+              </svg>
+              <span class="text-gray-500 text-sm">@MrSinha_ · 1d</span>
+            </div>
+            <p class="text-gray-600 text-xs">Political Commentator</p>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="px-4 pb-3">
+          <p class="text-gray-800 mb-3">
+            MNS goons slapped an elderly Gujarati shopkeeper for not being able to speak Marathi.
+            <br><br>
+            These morons pee in their pants seeing Muslims but start behaving like warriors in front of poor Hindus.
+            <br><br>
+            Hey <a href="#" class="text-blue-500 hover:underline">@RajThackeray</a>, if you have guts, try doing the same with Ambanis.
+          </p>
+          <div class="relative rounded-xl overflow-hidden mb-3 border border-gray-100">
+            <img src="https://storage.googleapis.com/a1aa/image/21cc1536-7fc0-4d12-ea65-e99c3ae009c2.jpg" alt="MNS incident" class="w-full h-auto object-cover" />
+            <button class="absolute bottom-3 right-3 bg-black/50 text-white rounded-full p-1.5 hover:bg-black/70">
+              <i class="fas fa-volume-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar px-4 py-2 border-t border-gray-100 flex justify-between text-gray-500 text-sm">
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="far fa-comment"></i>
+            <span>4.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-green-500">
+            <i class="fas fa-retweet"></i>
+            <span>10.9K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-pink-500">
+            <i class="far fa-heart"></i>
+            <span>29.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="fas fa-chart-bar"></i>
+            <span>2.7M</span>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="fas fa-share"></i>
+          </button>
+        </div>
+      </article>
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl shadow-sm border border-gray-100 mt-3 mx-3 overflow-hidden">
+        <!-- Post Header -->
+        <div class="flex items-center p-4">
+          <img src="https://storage.googleapis.com/a1aa/image/290b58ac-c9cc-426f-9bfd-4a55a1dd38b1.jpg" alt="Mr Sinha" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+          <div class="ml-3 flex-1">
+            <div class="flex items-center space-x-1">
+              <span class="font-bold text-sm">Mr Sinha</span>
+              <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.5 12l-2.25 2.25-2.25-2.25 2.25-2.25L22.5 12zM12 2.25l2.25 2.25-2.25 2.25-2.25-2.25L12 2.25zM2.25 12l2.25-2.25 2.25 2.25-2.25 2.25L2.25 12zM12 21.75l-2.25-2.25 2.25-2.25 2.25 2.25L12 21.75z" />
+              </svg>
+              <span class="text-gray-500 text-sm">@MrSinha_ · 1d</span>
+            </div>
+            <p class="text-gray-600 text-xs">Political Commentator</p>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="px-4 pb-3">
+          <p class="text-gray-800 mb-3">
+            MNS goons slapped an elderly Gujarati shopkeeper for not being able to speak Marathi.
+            <br><br>
+            These morons pee in their pants seeing Muslims but start behaving like warriors in front of poor Hindus.
+            <br><br>
+            Hey <a href="#" class="text-blue-500 hover:underline">@RajThackeray</a>, if you have guts, try doing the same with Ambanis.
+          </p>
+          <div class="relative rounded-xl overflow-hidden mb-3 border border-gray-100">
+            <img src="https://storage.googleapis.com/a1aa/image/21cc1536-7fc0-4d12-ea65-e99c3ae009c2.jpg" alt="MNS incident" class="w-full h-auto object-cover" />
+            <button class="absolute bottom-3 right-3 bg-black/50 text-white rounded-full p-1.5 hover:bg-black/70">
+              <i class="fas fa-volume-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Engagement Bar -->
+        <div class="engagement-bar px-4 py-2 border-t border-gray-100 flex justify-between text-gray-500 text-sm">
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="far fa-comment"></i>
+            <span>4.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-green-500">
+            <i class="fas fa-retweet"></i>
+            <span>10.9K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-pink-500">
+            <i class="far fa-heart"></i>
+            <span>29.4K</span>
+          </button>
+          <button class="flex items-center space-x-1 hover:text-blue-500">
+            <i class="fas fa-chart-bar"></i>
+            <span>2.7M</span>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="hover:text-blue-500">
+            <i class="fas fa-share"></i>
+          </button>
+        </div>
+      </article>
+    </section>
+    <!-- সাম্প্রতিক আলোচনা -->
+    <section x-show="activeTab === 'discussions'" x-transition class="px-4">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-2xl font-bold text-primary-600">সাম্প্রতিক আলোচনা</h2>
+        <button class="text-primary-500 hover:text-primary-600 text-sm font-medium">সব দেখুন</button>
+      </div>
+      
+      <div class="space-y-4">
+        <!-- আলোচনা পোস্ট ১ -->
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-primary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">নামাজে হাত বাঁধার হানাফি পদ্ধতি সম্পর্কে বিস্তারিত জানতে চাই</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-primary-100 text-primary-600 px-2 py-1 rounded mr-2">ফিকহ</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">আব্দুল্লাহ</span> • ২ দিন আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">নামাজে হাত বাঁধার ক্ষেত্রে হানাফি মাযহাবে নাভির নিচে বাঁধার কথা বলা হয়েছে। কিন্তু বর্তমানে অনেকেই নাভির উপর বাঁধে। এ বিষয়ে বিশদ জানতে চাই।</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৪</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- আলোচনা পোস্ট ২ -->
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">হানাফি উসুলে ফিকহ শেখার জন্য প্রাথমিক বইয়ের তালিকা চাই</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-green-100 text-secondary-600 px-2 py-1 rounded mr-2">উসুলুল ফিকহ</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইলমেরতালিব</span> • ৫ দিন আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">হানাফি উসুলে ফিকহে একজন প্রাথমিক শিক্ষার্থীর জন্য কোন কোন বই পড়া উচিত? বাংলা ও আরবি উভয় ভাষার বইয়ের সুপারিশ চাই।</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">৮</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- আলোচনা পোস্ট ৩ -->
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-primary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ক্রিপ্টোকারেন্সি নিয়ে হানাফি ফিকহের দৃষ্টিভঙ্গি কি?</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-blue-100 text-primary-600 px-2 py-1 rounded mr-2">আধুনিক সমস্যা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">হেদায়াত</span> • ১ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ডিজিটাল মুদ্রা বা ক্রিপ্টোকারেন্সি সম্পর্কে হানাফি ফিকহের অবস্থান কি? বর্তমান সময়ের কোন কোন হানাফি আলেম এ বিষয়ে ফাতাওয়া দিয়েছেন?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">২২</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- আলোচনা পোস্ট ৪ -->
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ইমাম আবু হানিফা (রহ.) এর ঈমান সংক্রান্ত মতবাদ</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-purple-100 text-secondary-600 px-2 py-1 rounded mr-2">আকিদা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইবনে নুসাইর</span> • ২ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ইমাম আবু হানিফা (রহ.) এর মতে আমল কি ঈমানের অংশ? এ বিষয়ে আল-ফিকহুল আকবার ও অন্যান্য প্রামাণ্য গ্রন্থে কি বলা হয়েছে?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৭</span>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ইমাম আবু হানিফা (রহ.) এর ঈমান সংক্রান্ত মতবাদ</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-purple-100 text-secondary-600 px-2 py-1 rounded mr-2">আকিদা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইবনে নুসাইর</span> • ২ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ইমাম আবু হানিফা (রহ.) এর মতে আমল কি ঈমানের অংশ? এ বিষয়ে আল-ফিকহুল আকবার ও অন্যান্য প্রামাণ্য গ্রন্থে কি বলা হয়েছে?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৭</span>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ইমাম আবু হানিফা (রহ.) এর ঈমান সংক্রান্ত মতবাদ</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-purple-100 text-secondary-600 px-2 py-1 rounded mr-2">আকিদা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইবনে নুসাইর</span> • ২ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ইমাম আবু হানিফা (রহ.) এর মতে আমল কি ঈমানের অংশ? এ বিষয়ে আল-ফিকহুল আকবার ও অন্যান্য প্রামাণ্য গ্রন্থে কি বলা হয়েছে?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৭</span>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ইমাম আবু হানিফা (রহ.) এর ঈমান সংক্রান্ত মতবাদ</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-purple-100 text-secondary-600 px-2 py-1 rounded mr-2">আকিদা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইবনে নুসাইর</span> • ২ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ইমাম আবু হানিফা (রহ.) এর মতে আমল কি ঈমানের অংশ? এ বিষয়ে আল-ফিকহুল আকবার ও অন্যান্য প্রামাণ্য গ্রন্থে কি বলা হয়েছে?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৭</span>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ইমাম আবু হানিফা (রহ.) এর ঈমান সংক্রান্ত মতবাদ</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-purple-100 text-secondary-600 px-2 py-1 rounded mr-2">আকিদা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইবনে নুসাইর</span> • ২ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ইমাম আবু হানিফা (রহ.) এর মতে আমল কি ঈমানের অংশ? এ বিষয়ে আল-ফিকহুল আকবার ও অন্যান্য প্রামাণ্য গ্রন্থে কি বলা হয়েছে?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৭</span>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="card-hover block bg-white rounded-lg shadow p-5 hover:border-l-4 hover:border-secondary-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg mb-1">ইমাম আবু হানিফা (রহ.) এর ঈমান সংক্রান্ত মতবাদ</h3>
+              <div class="flex items-center text-sm text-gray-500 mb-2">
+                <span class="bg-purple-100 text-secondary-600 px-2 py-1 rounded mr-2">আকিদা</span>
+                <span>পোস্ট করেছেন <span class="text-primary-600">ইবনে নুসাইর</span> • ২ সপ্তাহ আগে</span>
+              </div>
+              <p class="text-gray-600 line-clamp-2">ইমাম আবু হানিফা (রহ.) এর মতে আমল কি ঈমানের অংশ? এ বিষয়ে আল-ফিকহুল আকবার ও অন্যান্য প্রামাণ্য গ্রন্থে কি বলা হয়েছে?</p>
+            </div>
+            <div class="flex items-center ml-4">
+              <i class="fas fa-comment-alt text-gray-400 mr-1"></i>
+              <span class="text-sm text-gray-600">১৭</span>
+            </div>
+          </div>
+        </a>
+        
+      </div>
+    </section>
+  </main>
+  
+  <!-- Bottom Navigation (Fixed) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2">
+    <button class="flex flex-col items-center text-blue-500">
+      <i class="fas fa-home text-lg"></i>
+      <span class="text-xs mt-1">Home</span>
+    </button>
+    <button class="flex flex-col items-center text-gray-500 hover:text-blue-500">
+      <i class="fas fa-search text-lg"></i>
+      <span class="text-xs mt-1">Search</span>
+    </button>
+    <button class="flex flex-col items-center text-gray-500 hover:text-blue-500">
+      <i class="fas fa-robot text-lg"></i>
+      <span class="text-xs mt-1">AI</span>
+    </button>
+    <button class="flex flex-col items-center text-gray-500 hover:text-blue-500">
+      <i class="far fa-bell text-lg"></i>
+      <span class="text-xs mt-1">Alerts</span>
+    </button>
+    <button class="flex flex-col items-center text-gray-500 hover:text-blue-500">
+      <i class="far fa-envelope text-lg"></i>
+      <span class="text-xs mt-1">DMs</span>
+    </button>
+  </nav>
+  
+  <!-- Floating Action Button -->
+  <button @click="questionModalOpen = true" class="fixed bottom-20 right-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-transform hover:scale-110">
+    <i class="fas fa-plus text-xl"></i>
+  </button>
+  
+  <div x-show="questionModalOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    
+    <!-- মোডাল কন্টেন্ট -->
+    <div x-show="questionModalOpen" @click.away="questionModalOpen = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+      
+      <!-- মোডাল হেডার -->
+      <div class="border-b px-6 py-4 flex justify-between items-center">
+        <h3 class="text-lg font-bold text-primary-600" x-text="activeTab !== 'threads'? 'নতুন প্রশ্ন করুন' : 'নতুন পোস্ট করুন'"></h3>
+        <button @click="questionModalOpen = false" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- মোডাল বডি -->
+      <div class="p-6">
+        <form x-data="{ 
+                    question: '', 
+                    category: '', 
+                    isSubmitting: false,
+                    submitQuestion() {
+                        this.isSubmitting = true;
+                        // এখানে AJAX রিকুয়েস্ট বা ফর্ম সাবমিশন লজিক যোগ করুন
+                        setTimeout(() => {
+                            this.isSubmitting = false;
+                            this.questionModalOpen = false;
+                            alert('আপনার প্রশ্নটি সফলভাবে জমা হয়েছে!');
+                        }, 1000);
+                    }
+                }" @submit.prevent="submitQuestion">
+          <template x-if="activeTab === 'discussions'">
+            <div>
+              <div class="mb-4">
+                <label for="question-title" class="block text-gray-700 font-medium mb-2">প্রশ্নের শিরোনাম</label>
+                <input x-model="question" type="text" id="question-title" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500" placeholder="উদা: নামাজে সূরা ফাতিহার পর আমিন বলার হুকুম কি?" required>
+              </div>
+              
+              <div class="mb-4">
+                <label for="question-category" class="block text-gray-700 font-medium mb-2">বিষয়</label>
+                <select x-model="category" id="question-category" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500" required>
+                  <option value="">একটি বিষয় নির্বাচন করুন</option>
+                  <option value="fiqh">ফিকহ</option>
+                  <option value="aqeedah">আকিদা</option>
+                  <option value="hadith">হাদিস</option>
+                  <option value="modern">আধুনিক সমস্যা</option>
+                  <option value="other">অন্যান্য</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label for="question-details" class="block text-gray-700 font-medium mb-2">বিস্তারিত বিবরণ</label>
+                <textarea id="question-details" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500" placeholder="প্রশ্নটি সম্পর্কে বিস্তারিত লিখুন..."></textarea>
+              </div>
+            </div>
+          </template>
+          <template x-if="activeTab === 'threads'">
+            <div class="mb-4">
+              <textarea id="question-details" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-500" placeholder="আপনার মতামত শেয়ার করুন..."></textarea>
+            </div>
+          </template>
+          
+          
+          <div class="flex justify-end space-x-3">
+            <button type="button" @click="questionModalOpen = false" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+              বাতিল করুন
+            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50" :disabled="isSubmitting">
+              <span x-show="!isSubmitting">প্রশ্ন জমা দিন</span>
+              <span x-show="isSubmitting">জমা হচ্ছে...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
