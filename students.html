@@ -53,13 +53,6 @@
             গ্রাম
           </td>
           <td class="px-2 py-1 border-r border-gray-400">মোবাইল নং</td>
-          <td class="px-2 py-1 border-r border-gray-400">মাসিক বেতন</td>
-            <td class="px-2 py-1 border-r border-gray-400">পরিবহন ফি</td>
-          <td class="px-2 py-1 border-r border-gray-400">টিউটোরিয়াল</td>
-            <td class="px-2 py-1 border-r border-gray-400">আবাসিক চার্জ</td>
-            <td class="px-2 py-1 border-r border-gray-400">বোর্ডিং ফি</td>
-            <td class="px-2 py-1 border-r border-gray-400">সর্বমোট</td>
-          <td class="px-2 py-1 border-r border-gray-400">ছাড়</td>
         </tr>
         <template x-for="(student,index) in students.filter(student => student.active)">
           <tr class="border-b border-gray-400" :class="student.active ? '' : 'bg-gray-200'">
@@ -76,13 +69,6 @@
             
             </td>
             <td class="px-2 py-1 border-r border-gray-400" x-text="getBangla(student?.faPhone)"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
-            <td class="px-2 py-1 border-r border-gray-400"></td>
           </tr>
         </template>
       </tbody>
