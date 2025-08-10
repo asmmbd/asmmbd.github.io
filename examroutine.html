@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ক্লাস রুটিন</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
+  <style>
+    * {
+      font-family: SolaimanLipi;
+    }
+    
+    table,
+    tr,
+    th,
+    td {
+      border: 1px solid #898A94;
+      text-align: center;
+      font-size: 15px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <div class="p-4" x-data="classRoutineManager()">
+    <div class="text-center mb-5">
+      <h1 x-text="madrasa === 'asmm' ? 'আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা' : 'জামিয়াতুল উলুম আল ইসলামিয়া মেহেরপুর'" class="text-4xl font-bold"> </h1>
+      <h3 class="text-xl font-bold">মারকাজ মসজিদ পাড়া, কলেজ মোড়, মেহেরপুর</h3>
+      <h3 class="text-lg font-semibold">দ্বিতীয় সাময়িক পরীক্ষার রুটিন ও পরীক্ষার ফি ২০২৫ খ্রি.</h3>
+      <h5 class="text-md font-semibold">সময় সূচি: সকাল ৯.০০ টা থেকে ১২.০০ টা পর্যন্ত।</h5>
+    </div>
+    
+    <div>
+      
+      <!-- Routine Table -->
+      <div class="w-full overflow-x-auto">
+        <div class="w-full flex items-center justify-between mb-4 print:hidden">
+          <h2 class="text-xl font-bold">মাদ্রাসার সকল শ্রেণীর ক্লাস রুটিন - ২০২৫</h2>
+          <div class="flex items-center gap-4">
+            <button @click="changeMadrasa" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">মাদরাসা পরিবর্তন করুন</button>
+            <button @click="addMode = true" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">রুটিন তৈরি করুন</button>
+            <button @click="print()" class="bg-emerald-500 text-white px-4 py-2 rounded hover:bg-emerald-500">রুটিন প্রিন্ট করুন</button>
+          </div>
+        </div>
+        <table class="w-full bg-white rounded-lg shadow-md">
+          <thead>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="px-2 py-1">তারিখ</th>
+              <th class="px-2 py-1">১৬/০৮/২৫</th>
+              <th class="px-2 py-1">১৭/০৮/২৫</th>
+              <th class="px-2 py-1">১৮/০৮/২৫</th>
+              <th class="px-2 py-1">১৯/০৮/২৫</th>
+              <th class="px-2 py-1">২০/০৮/২৫</th>
+              <th class="px-2 py-1">২১/০৮/২৫</th>
+              <th class="px-2 py-1">২৩/০৮/২৫</th>
+              <th class="px-2 py-1">২৪/০৮/২৫</th>
+              <th class="px-2 py-1">২৫/০৮/২৫</th>
+              <th class="px-2 py-1" rowspan="2">পরীক্ষার ফি</th>
+              <th class="px-2 py-1 print:hidden" rowspan="2">ক্রিয়া</th>
+            </tr>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="px-2 py-1">বার</th>
+              <th class="px-2 py-1">শনিবার</th>
+              <th class="px-2 py-1">রবিবার</th>
+              <th class="px-2 py-1">সোমবার</th>
+              <th class="px-2 py-1">মঙ্গলবার</th>
+              <th class="px-2 py-1">বুধবার</th>
+              <th class="px-2 py-1">বৃহস্পতিবার</th>
+              <th class="px-2 py-1">শনিবার</th>
+              <th class="px-2 py-1">রবিবার</th>
+              <th class="px-2 py-1">সোমবার</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="routine in routines" :key="routine.id">
+              <tr class="border-b">
+                <td class="px-2 py-1" x-text="routine.className"></td>
+                <template x-for="(period,index) in routine.periods" :key="index">
+                  <td class="px-2 py-1" x-text="period.subject"></td>
+                </template>
+                <td class="px-2 py-1" x-text="routine.exam_fee"></td>
+                <td class="border-0 px-2 py-1 flex space-x-2 print:hidden">
+                  <button @click="editRoutine(routine)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">আপডেট</button>
+                  <button @click="deleteRoutine(routine.id)" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">ডিলিট</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      
+      <p class="font-bold mt-5">বি.দ্র. পরীক্ষার ফি ও চলতি মাসের বেতন সহ সকল বকেয়া আগামী ১২/০৮/২০২৫ এর মধ্যে পরিশোধ করতে হবে অন্যথায় প্রবেশপত্র দেওয়া হবে না এবং পরীক্ষায় অংশগ্রহণ করতে দেওয়া হবে না। এক্ষেত্রে কোনপ্রকার সুপারিশ গ্রহণযোগ্য নয়।</p>
+      
+      
+      <!-- Add Class Routine Form -->
+      <div x-show="addMode" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center" x-transition>
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl overflow-y-auto max-h-[80vh]">
+          <h2 class="text-xl font-bold mb-4">নতুন ক্লাস রুটিন তৈরি করুন</h2>
+          <div class="grid gap-4">
+            <label class="block">
+              <span class="text-gray-700">ক্লাসের নাম:</span>
+              <input type="text" x-model="newClass.className" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="যেমন: পঞ্চম">
+            </label>
+            <label class="block">
+              <span class="text-gray-700">পরীক্ষার ফি:</span>
+              <input type="number" x-model="newClass.exam_fee" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="পরীক্ষার ফি">
+            </label>
+            <div class="grid md:grid-cols-2 gap-4">
+              <template x-for="(period, index) in newClass.periods" :key="index">
+                <label class="block">
+                  <span class="text-gray-700" x-text="'পিরিয়ড ' + (index + 1) + ' - বিষয়:'"></span>
+                  <input type="text" x-model="period.subject" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" :placeholder="'পিরিয়ড ' + (index + 1) + ' এর বিষয়'">
+                </label>
+              </template>
+            </div>
+            <div class="mt-6 flex space-x-2">
+              <button @click="addClassRoutine" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">রুটিন তৈরি করুন</button>
+              <button @click="addMode = false" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">বাতিল</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Edit Routine Modal -->
+      <div x-show="editMode" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center" x-transition>
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl overflow-y-auto max-h-[80vh]">
+          <h2 class="text-xl font-bold mb-4 sticky top-0 bg-white z-10">রুটিন আপডেট করুন</h2>
+          <div class="grid gap-4">
+            <label class="block">
+              <span class="text-gray-700">ক্লাসের নাম:</span>
+              <input type="text" x-model="editRoutineData.className" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="যেমন: পঞ্চম">
+            </label>
+            <label class="block">
+              <span class="text-gray-700">পরীক্ষার ফি:</span>
+              <input type="text" x-model="editRoutineData.exam_fee" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="পরীক্ষার ফি">
+            </label>
+            <div class="grid md:grid-cols-2 gap-4">
+              <template x-for="(period, index) in editRoutineData.periods" :key="index">
+                <label class="block">
+                  <span class="text-gray-700" x-text="'পিরিয়ড ' + (index + 1) + ' - বিষয়:'"></span>
+                  <input type="text" x-model="period.subject" class="mt-1 block w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500" :placeholder="'পিরিয়ড ' + (index + 1) + ' এর বিষয়'">
+                </label>
+              </template>
+            </div>
+            <div class="mt-6 flex space-x-2">
+              <button @click="updateRoutine" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">সংরক্ষণ</button>
+              <button @click="editMode = false" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">বাতিল</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('classRoutineManager', () => ({
+        madrasa: 'juai',
+        changeMadrasa() {
+          this.madrasa = this.madrasa === 'asmm' ? 'juai' : 'asmm';
+        },
+        routines: [
+        {
+          id: "0",
+          className: "প্লে",
+          exam_fee: "১৫০",
+          periods: [
+            { subject: "বাংলা" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "দ্বীন শিক্ষা" },
+            { subject: "হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ" },
+            { subject: "আদইয়ায়ে সলাহ্ ও মাসআলাহ্" },
+            { subject: "গণিত" },
+            { subject: "ইংরেজি" },
+            { subject: "সাধারণ জ্ঞান" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "1",
+          className: "নার্সারি",
+          exam_fee: "১৫০",
+          periods: [
+            { subject: "বাংলা" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "আরবি বর্ণ শিক্ষা" },
+            { subject: "হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ" },
+            { subject: "আদইয়ায়ে সলাহ্ ও মাসআলাহ্" },
+            { subject: "গণিত" },
+            { subject: "ইংরেজি" },
+            { subject: "সাধারণ জ্ঞান" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "2",
+          className: "১ম শ্রেণী",
+          exam_fee: "২৫০",
+          periods: [
+            { subject: "বাংলা" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "আরবী শিক্ষা" },
+            { subject: "হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ" }, { subject: "আদইয়ায়ে সলাহ্ ও মাসআলাহ্" },
+            { subject: "গণিত" },
+            { subject: "ইংরেজি" },
+            { subject: "সাধারণ জ্ঞান" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "3",
+          className: "২য় শ্রেণী",
+          exam_fee: "২৫০",
+          periods: [
+            { subject: "বাংলা" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "আরবী শিক্ষা" },
+            { subject: "হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ" }, { subject: "আদইয়ায়ে সলাহ্ ও মাসআলাহ্" },
+            { subject: "গণিত" },
+            { subject: "ইংরেজি" },
+            { subject: "সাধারণ জ্ঞান" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "4",
+          className: "৩য় শ্রেণী",
+          exam_fee: "৩০০",
+          periods: [
+            { subject: "বাংলা" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "আরবী শিক্ষা" },
+            { subject: "হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ" },
+            { subject: "আদইয়ায়ে সলাহ্ ও মাসআলাহ্" },
+            { subject: "গণিত" },
+            { subject: "ইংরেজি" },
+            { subject: "সাধারণ জ্ঞান" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "5",
+          className: "৪র্থ শ্রেণী",
+          exam_fee: "৩০০",
+          periods: [
+            { subject: "বাংলা" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "আরবী শিক্ষা" },
+            { subject: "হাদিস, মাসআলা ও দোয়া" },
+            { subject: "কুরআন শিক্ষা ও আমলী" },
+            { subject: "গণিত" },
+            { subject: "ইংরেজি" },
+            { subject: "সমাজ ও বিজ্ঞান" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "6",
+          className: "৫ম শ্রেণী",
+          exam_fee: "৩৫০",
+          periods: [
+            { subject: "বাংলা ও ব্যাকরণ" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "এসো আরবী শিখি" },
+            { subject: "তালিমুল ইসলাম ও ইসলামি তাহজীব" },
+            { subject: "ইতিহাস ও ভূগোল" },
+            { subject: "ইংরেজি ও গ্রামার" },
+            { subject: "গণিত" },
+            { subject: "-" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "7",
+          className: "মিজান",
+          exam_fee: "৩৮০",
+          periods: [
+            { subject: "বাংলা ও ব্যাকরণ" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "এসো আরবী শিখি" },
+            { subject: "তারিখুল ইসলাম" },
+            { subject: "মিজানুস সরফ" },
+            { subject: "ইংরেজি ও গ্রামার" },
+            { subject: "গণিত" },
+            { subject: "বাকারাতুল আদাব" },
+            { subject: "বেহেশতী জেওর" }
+          ]
+        },
+        {
+          id: "8",
+          className: "নাহবেমীর",
+          exam_fee: "৩৮০",
+          periods: [
+            { subject: "বাংলা ও ব্যাকরণ" },
+            { subject: "কুরআন মাজীদ ও তাজবীদ" },
+            { subject: "রওজাতুল আদব" },
+            { subject: "নাহুমির" },
+            { subject: "আল ফিকহুল মুয়াসসার" },
+            { subject: "সিরাত" },
+            { subject: "ইলমুস সরফ" },
+            { subject: "শরহে মিয়াতে আমেল" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "9",
+          className: "কুদূরী",
+          exam_fee: "৩৮০",
+          periods: [
+            { subject: "বাংলা ও ব্যাকরণ" },
+            { subject: "কুরআন মাজীদ ও আততারিখ ইলাল ইংশা" },
+            { subject: "ফয়জুল কালাম" },
+            { subject: "হেদায়াতুন নাহু" },
+            { subject: "কালয়ুবি" },
+            { subject: "কুদুরি" },
+            { subject: "উসুলুস শাশী" },
+            { subject: "ইলমুস সিগাহ্" },
+            { subject: "আমলী" }
+          ]
+        },
+        {
+          id: "1745899566213",
+          className: "হিফজখানা",
+          exam_fee: "২৫০",
+          periods: [
+            { subject: "-" },
+            { subject: "-" },
+            { subject: "-" },
+            { subject: "কুরআন মাজিদ" },
+            { subject: "তাজবীদ" },
+            { subject: "মাসআলা" },
+            { subject: "মাসনূন দোয়া" },
+            { subject: "হাদিস" },
+            { subject: "আমলী" }
+          ]
+        }],
+        editMode: false,
+        addMode: false,
+        newClass: {
+          id: '',
+          className: '',
+          exam_fee: 500,
+          periods: [
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: 'আমলী' }
+          ]
+        },
+        editRoutineData: {
+          id: '',
+          className: '',
+          exam_fee: 500,
+          periods: [
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: '' },
+            { subject: 'আমলী' }
+          ]
+        },
+        
+        print() {
+          window.print();
+        },
+        
+        addClassRoutine() {
+          if (!this.newClass.className.trim()) {
+            alert('ক্লাসের নাম দিন!');
+            return;
+          }
+          const newRoutine = {
+            id: Date.now().toString(),
+            className: this.newClass.className,
+            exam_fee: this.newClass.exam_fee,
+            periods: this.newClass.periods.map(period => ({ ...period }))
+          };
+          this.routines.push(newRoutine);
+          this.saveToLocalStorage();
+          this.resetNewClass();
+          this.addMode = false;
+        },
+        
+        editRoutine(routine) {
+          this.editRoutineData = {
+            id: routine.id,
+            className: routine.className,
+            exam_fee: routine.exam_fee,
+            periods: routine.periods.map(period => ({ subject: period.subject }))
+          };
+          this.editMode = true;
+        },
+        
+        updateRoutine() {
+          const index = this.routines.findIndex(r => r.id === this.editRoutineData.id);
+          if (index !== -1) {
+            this.routines[index] = {
+              id: this.editRoutineData.id,
+              className: this.editRoutineData.className,
+              exam_fee: this.editRoutineData.exam_fee,
+              periods: this.editRoutineData.periods.map(period => ({ ...period }))
+            };
+            this.saveToLocalStorage();
+          }
+          this.editMode = false;
+        },
+        
+        deleteRoutine(id) {
+          if (confirm('আপনি কি নিশ্চিতভাবে এই রুটিনটি ডিলিট করতে চান?')) {
+            this.routines = this.routines.filter(r => r.id !== id);
+            this.saveToLocalStorage();
+          }
+        },
+        
+        resetNewClass() {
+          this.newClass = {
+            id: '',
+            className: '',
+            exam_fee: 500,
+            periods: [
+              { subject: '' },
+              { subject: '' },
+              { subject: '' },
+              { subject: '' },
+              { subject: '' },
+              { subject: '' },
+              { subject: '' },
+              { subject: 'আমলী' }
+            ]
+          };
+        },
+        
+        saveToLocalStorage() {
+          localStorage.setItem('routines', JSON.stringify(this.routines));
+        },
+        
+        init() {
+          const savedRoutines = localStorage.getItem('routines');
+          if (savedRoutines) {
+            // this.routines = JSON.parse(savedRoutines);
+            //document.body.innerHTML = JSON.stringify(this.routines)
+          }
+        }
+      }));
+    });
+  </script>
+</body>
+
+</html>
