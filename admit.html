@@ -62,10 +62,20 @@
             </template>
           </select>
         </div>
+
+        <div>
+          <label class="block mb-2">পরীক্ষা নির্বাচন করুন</label>
+          <select x-model="selectedExam" class="w-full p-2 border rounded min-h-[42px] max-h-[120px] overflow-auto">
+            <template x-for="exam in allExam" :key="exam">
+              <option x-text="exam" :value="exam"></option>
+            </template>
+          </select>
+        </div>
         
         <button @click="resetFilters()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
           ফিল্টার রিসেট করুন
         </button>
+        
         <button @click="printFiltered()" :disabled="isPrinting" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 flex items-center">
           <template x-if="isPrinting">
             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -79,29 +89,15 @@
           </template>
         </button>
       </div>
-      <div class="my-3 flex items-center gap-3">
-        নির্বাচিত ক্লাসসমূহ: 
-        <!-- নির্বাচিত ক্লাস প্রিভিউ -->
-        <template x-if="selectedClasses.length > 0">
-          <div class="mt-2 flex flex-wrap gap-1">
-            <template x-for="cls in selectedClasses" :key="cls">
-              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm flex items-center">
-                <span x-text="cls"></span>
-                <button @click.stop="selectedClasses = selectedClasses.filter(c => c !== cls)" class="ml-1 text-blue-600 hover:text-blue-800">
-                  ✕
-                </button>
-              </span>
-            </template>
-          </div>
-        </template>
-      </div>
+      
+      
     </div>
     <div class="w-full admit flex flex-col items-center justify-center">
       <template x-for="student in getFilteredStudents">
         <div class="page relative">
           <img :src="student.studentId.startsWith('ASMM-') ? '/images/asmm-admit.jpg' : '/images/juai-admit.jpg' " alt="">
           <div class="w-full absolute top-36 left-0 px-10">
-            <h1 class="text-center font-bold text-2xl mt-2 mb-4" x-text="examName + ' - প্রবেশ পত্র'"></h1>
+            <h1 class="text-center font-bold text-2xl mt-2 mb-4" x-text="selectedExam + ' - প্রবেশ পত্র'"></h1>
             <table class="w-full text-2xl text-left border border-gray-400">
               <tbody>
                 <tr class="border-b border-gray-400">
@@ -151,7 +147,7 @@
                     পরীক্ষা আরম্ভের তারিখ
                   </th>
                   <td class="px-2 py-1 border-r border-gray-400">
-                    ০৬/৫/২০২৫
+                    ১৬/০৮/২০২৫
                   </td>
                   <th class="px-2 py-1 border-r border-gray-400">
                     পরীক্ষার সময়
@@ -199,6 +195,7 @@
         selectedClasses: [],
         studentId: '',
         allClasses: [],
+        allExam: ['প্রথম সাময়িক পরীক্ষা ২০২৫', 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৫'],
         students: [],
         examName: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
         searchStudent() {
