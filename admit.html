@@ -53,15 +53,6 @@
           </select>
         </div>
         
-        <!-- একাধিক ক্লাস নির্বাচন -->
-        <div>
-          <label class="block mb-2">একাধিক ক্লাস নির্বাচন</label>
-          <select x-model="selectedClasses" multiple class="w-full p-2 border rounded min-h-[42px] max-h-[120px] overflow-auto">
-            <template x-for="cls in allClasses" :key="cls">
-              <option x-text="cls" :value="cls"></option>
-            </template>
-          </select>
-        </div>
 
         <div>
           <label class="block mb-2">পরীক্ষা নির্বাচন করুন</label>
@@ -191,6 +182,7 @@
     function data() {
       return {
         isPrinting: false,
+        selectedExam: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
         selectedClass: '',
         selectedClasses: [],
         studentId: '',
