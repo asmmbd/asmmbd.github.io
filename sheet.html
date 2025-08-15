@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> প্রবেশ পত্র </title>
+  <title> পরীক্ষার সিট প্ল্যান</title>
   <link href='https://fonts.maateen.me/solaiman-lipi/font.css' rel='stylesheet' />
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -22,13 +22,18 @@
       width: 100%;
       height: 100%;
     }
+    
+    .border,
+    .border-b {
+      border-color: #42445A;
+    }
   </style>
 </head>
 
 <body>
   <div class="w-full" x-data="data()">
     <div class="w-full print:hidden p-4 bg-gray-100 mb-4">
-      <h2 class="text-xl font-bold mb-4">প্রবেশ পত্র ফিল্টার</h2>
+      <h2 class="text-xl font-bold mb-4">ফিল্টার</h2>
       
       <div class="w-full grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
         <!-- শিক্ষার্থী আইডি দিয়ে খুঁজুন -->
@@ -52,17 +57,15 @@
             </template>
           </select>
         </div>
-        
-        <!-- একাধিক ক্লাস নির্বাচন -->
         <div>
-          <label class="block mb-2">একাধিক ক্লাস নির্বাচন</label>
-          <select x-model="selectedClasses" multiple class="w-full p-2 border rounded min-h-[42px] max-h-[120px] overflow-auto">
-            <template x-for="cls in allClasses" :key="cls">
-              <option x-text="cls" :value="cls"></option>
+          <label class="block mb-2">পরীক্ষা নির্বাচন করুন</label>
+          <select x-model="selectedExam" class="w-full p-2 border rounded">
+            <option value="">সকল পরীক্ষা</option>
+            <template x-for="exam in allExam" :key="exam">
+              <option x-text="exam" :value="exam"></option>
             </template>
           </select>
         </div>
-        
         <button @click="resetFilters()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
           ফিল্টার রিসেট করুন
         </button>
@@ -74,41 +77,39 @@
             </svg>
           </template>
           নির্বাচিত প্রবেশ পত্র প্রিন্ট করুন
-          <template x-if="getFilteredStudents.length > 0">
-            <span class="ml-2 bg-blue-700 text-white px-2 py-1 rounded-full text-xs" x-text="getFilteredStudents.length"></span>
-          </template>
         </button>
       </div>
-      <div class="my-3 flex items-center gap-3">
-        নির্বাচিত ক্লাসসমূহ:
-        <!-- নির্বাচিত ক্লাস প্রিভিউ -->
-        <template x-if="selectedClasses.length > 0">
-          <div class="mt-2 flex flex-wrap gap-1">
-            <template x-for="cls in selectedClasses" :key="cls">
-              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm flex items-center">
-                <span x-text="cls"></span>
-                <button @click.stop="selectedClasses = selectedClasses.filter(c => c !== cls)" class="ml-1 text-blue-600 hover:text-blue-800">
-                  ✕
-                </button>
-              </span>
-            </template>
-          </div>
-        </template>
-      </div>
     </div>
-    <div class="w-full admit flex flex-col items-center justify-center">
+    
+    <div class="mx-auto w-[21cm] grid grid-cols-2 gap-4">
       <template x-for="student in getFilteredStudents">
-        <div class="page relative border">
-          <div class="w-full absolute top-36 left-0 px-10">
-            <h1 class=" font-bold text-7xl mt-2 mb-6" x-text="'পরীক্ষা : ' + examName"></h1>
-            <h1 class=" font-bold text-7xl mt-2 mb-6" x-text="'শিক্ষার্থীর নাম : ' + student?.stname"></h1>
-            <h1 class=" font-bold text-7xl mt-2 mb-6" x-text="'শ্রেণি : ' + student?.class"></h1>
-            <h1 class=" font-bold text-7xl mt-2 mb-6" x-text="'আইডি নং : ' + getBangla(student?.studentId.slice(5,13))"></h1>
-            <h1 class="font-bold text-7xl mt-2 mb-6" >রোল নং : _ _</h1>
+        <div class="w-full h-full border p-4">
+          
+          <div class="head border-b pb-2 mb-4 flex items-center gap-4">
+            <img class="size-16" src="/src/asmm-logo.png" alt="">
+            <div class="text-center text-xl font-bold">
+              <h1>আয়েশা সিদ্দিকা (রা.) মহিলা মাদরাসা</h1>
+              <h2 x-text="selectedExam">দ্বিতীয় সাময়িক পরীক্ষা ২০২৫ ইং</h2>
+            </div>
+          </div>
+          <div class="text-xl">
+            <h4>ছাত্রীর নাম: <span x-text="student?.stname"></span></h4>
+            <h4>শ্রেনী: <span x-text="student?.class"></span></h4>
+            <h4>আইডি নং: <span x-text="getBangla(student?.studentId.slice(5,13))"></span></h4>
+          </div>
+          <div class="flex items-center justify-between mt-5">
+            <span>পরীক্ষা শুরুর তারিখ: ১৬/০৮/২৫</span>
+            <div class="flex flex-col justify-center items-center">
+              <span class="border-b">আব্দুল্লাহ আল সাইফ</span>
+              <span>মুহতামিমের সাক্ষর</span>
+            </div>
           </div>
         </div>
+        
       </template>
     </div>
+    
+    
   </div>
   
   
@@ -125,11 +126,11 @@
       return {
         isPrinting: false,
         selectedClass: '',
-        selectedClasses: [],
+        allExam: ['প্রথম সাময়িক পরীক্ষা ২০২৫', 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৫'],
+        selectedExam: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
         studentId: '',
         allClasses: [],
         students: [],
-        examName: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
         searchStudent() {
           const promise = databases.listDocuments('652c16162f939c821f75', '652c16266c0f7c2fccd8', [Query.limit(150)]);
           promise.then((ress) => {
@@ -164,12 +165,6 @@
             filtered = filtered.filter(s => s.class === this.selectedClass);
           }
           
-          // যদি একাধিক ক্লাস নির্বাচন করা থাকে
-          if (this.selectedClasses && this.selectedClasses.length > 0) {
-            filtered = filtered.filter(s =>
-              this.selectedClasses.includes(s.class)
-            );
-          }
           
           return filtered;
         },
@@ -185,7 +180,6 @@
         resetFilters() {
           this.studentId = '';
           this.selectedClass = '';
-          this.selectedClasses = [];
         },
         async printFiltered() {
           this.isPrinting = true;
