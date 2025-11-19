@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Madrasa Account - MadrasaCloud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0fdfa',
+              100: '#ccfbef',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            },
+            accent: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    
+    .islamic-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230d9488' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 islamic-pattern min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-md w-full">
+    <!-- Logo and Header -->
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-4">
+        <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-md">
+          <i class="fas fa-mosque text-white text-2xl"></i>
+        </div>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-800">Create Madrasa Account</h1>
+      <p class="text-gray-600 mt-2">Start managing your madrasa digitally in minutes</p>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-sm font-medium text-primary-600">Step 1 of 2 – Create your account</span>
+        <span class="text-xs text-gray-500">40%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-primary-500 h-2 rounded-full" style="width: 40%"></div>
+      </div>
+    </div>
+    
+    <!-- Account Creation Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+      <form id="accountForm">
+        <!-- Madrasa Name -->
+        <div class="mb-6">
+          <label for="madrasaName" class="block text-sm font-medium text-gray-700 mb-2">Madrasa Name</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-school text-gray-400"></i>
+            </div>
+            <input type="text" id="madrasaName" class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200" placeholder="Enter your madrasa name" required>
+          </div>
+        </div>
+        
+        <!-- Subdomain Preview -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Your Madrasa URL</label>
+          <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+            <span id="subdomainPreview" class="text-gray-600 font-medium">yourmadrasa</span>
+            <span class="text-gray-500">.madrasacloud.com</span>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">This will be your unique web address for the madrasa portal</p>
+        </div>
+        
+        <!-- Email -->
+        <div class="mb-6">
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-envelope text-gray-400"></i>
+            </div>
+            <input type="email" id="email" class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200" placeholder="your@email.com" required>
+          </div>
+        </div>
+        
+        <!-- Phone Number -->
+        <div class="mb-6">
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-phone text-gray-400"></i>
+            </div>
+            <input type="tel" id="phone" class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200" placeholder="+880 1XXX-XXXXXX" required>
+          </div>
+        </div>
+        
+        <!-- Password -->
+        <div class="mb-6">
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-lock text-gray-400"></i>
+            </div>
+            <input type="password" id="password" class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200" placeholder="Create a strong password" required>
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <button type="button" id="togglePassword" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="mt-2 flex items-center">
+            <div class="w-full bg-gray-200 rounded-full h-1.5">
+              <div class="bg-red-500 h-1.5 rounded-full" style="width: 30%"></div>
+            </div>
+            <span class="ml-2 text-xs text-red-500 font-medium">Weak</span>
+          </div>
+        </div>
+        
+        <!-- Madrasa Type -->
+        <div class="mb-8">
+          <label for="madrasaType" class="block text-sm font-medium text-gray-700 mb-2">Madrasa Type</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-graduation-cap text-gray-400"></i>
+            </div>
+            <select id="madrasaType" class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 appearance-none transition duration-200 bg-white" required>
+              <option value="" disabled selected>Select your madrasa type</option>
+              <option value="boys">Boys</option>
+              <option value="girls">Girls</option>
+              <option value="co-ed">Co-educational</option>
+              <option value="hifz">Hifz</option>
+              <option value="qawmi">Qawmi</option>
+              <option value="alia">Alia</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <i class="fas fa-chevron-down text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Terms and Conditions -->
+        <div class="mb-6 flex items-start">
+          <div class="flex items-center h-5">
+            <input id="terms" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500" required>
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="terms" class="text-gray-700">
+              I agree to the <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Terms of Service</a> and <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Privacy Policy</a>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white py-3 px-4 rounded-lg font-medium transition duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+          Create Account
+        </button>
+        
+        <!-- Login Link -->
+        <div class="mt-6 text-center">
+          <p class="text-gray-600 text-sm">
+            Already have an account?
+            <a href="#" class="text-primary-600 hover:text-primary-500 font-medium">Login</a>
+          </p>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Success Message (Hidden by default) -->
+    <div id="successMessage" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-green-500 text-2xl"></i>
+      </div>
+      <h3 class="text-lg font-medium text-gray-800 mb-2">Account Created Successfully!</h3>
+      <p class="text-gray-600 mb-4">We've sent a verification email to your inbox. Please verify to activate your account.</p>
+      <button class="text-primary-600 hover:text-primary-500 font-medium text-sm">
+        Go to Dashboard <i class="fas fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+    
+    <!-- Footer Note -->
+    <div class="mt-8 text-center">
+      <p class="text-xs text-gray-500">
+        © 2023 MadrasaCloud. All rights reserved.<br>
+        Empowering Islamic education through technology
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const madrasaNameInput = document.getElementById('madrasaName');
+      const subdomainPreview = document.getElementById('subdomainPreview');
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const accountForm = document.getElementById('accountForm');
+      const successMessage = document.getElementById('successMessage');
+      
+      // Update subdomain preview as user types
+      madrasaNameInput.addEventListener('input', function() {
+        const name = this.value.trim().toLowerCase().replace(/\s+/g, '');
+        const subdomain = name || 'yourmadrasa';
+        subdomainPreview.textContent = subdomain;
+      });
+      
+      // Toggle password visibility
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+      });
+      
+      // Form submission
+      accountForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // In a real app, you would submit the form data to a server here
+        // For this demo, we'll just show the success message
+        
+        // Hide the form
+        accountForm.style.display = 'none';
+        
+        // Show success message
+        successMessage.classList.remove('hidden');
+        
+        // Update progress bar
+        document.querySelector('.bg-primary-500').style.width = '100%';
+        document.querySelector('.text-xs.text-gray-500').textContent = '100%';
+        document.querySelector('.text-sm.font-medium.text-primary-600').textContent = 'Step 2 of 2 – Account Created';
+      });
+    });
+  </script>
+</body>
+
+</html>
