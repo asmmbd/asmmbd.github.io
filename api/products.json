@@ -1,0 +1,401 @@
+[
+{
+  "id": 1,
+  "name": "বিরিয়ানি",
+  "description": "স্পেশাল মুঘলাই বিরিয়ানি, সতেজ মসলা দিয়ে তৈরি",
+  "price": 250,
+  "image": "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmlyeWFuaXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "বিরিয়ানি ও রাইস ডিশ"
+},
+{
+  "id": 2,
+  "name": "কাচ্চি",
+  "description": "গরুর মাংসের কাচ্চি, ৮ ঘন্টা ম্যারিনেট করা",
+  "price": 300,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YmlyeWFuaXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "বিরিয়ানি ও রাইস ডিশ"
+},
+{
+  "id": 3,
+  "name": "পোলাও",
+  "description": "ফ্রাগর্যান্ট বাসমতি চালের পোলাও",
+  "price": 180,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJpcnlhbml8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "বিরিয়ানি ও রাইস ডিশ"
+},
+{
+  "id": 4,
+  "name": "গ্রিল্ড চিকেন",
+  "description": "স্পাইসি গ্রিল্ড চিকেন, সাইড স্যালাড সহ",
+  "price": 220,
+  "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "গ্রিল ও ট্যান্ডুরি"
+},
+{
+  "id": 5,
+  "name": "বাটার চিকেন",
+  "description": "ক্রিমি বাটার চিকেন, নান রুটি সহ",
+  "price": 280,
+  "image": "https://images.unsplash.com/photo-1585032226651-759b368d7246?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YnV0dGVyJTIwY2hpY2tlbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "কারি ও গ্রেভি"
+},
+{
+  "id": 6,
+  "name": "ফ্রাইড রাইস",
+  "description": "চাইনিজ স্টাইল ফ্রাইড রাইস, ভেজিটেবল সহ",
+  "price": 150,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJpcnlhbml8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "চাইনিজ"
+},
+{
+  "id": 7,
+  "name": "চিকেন টিক্কা",
+  "description": "ট্যান্ডুরি চিকেন টিক্কা, মিন্ট সস সহ",
+  "price": 200,
+  "image": "https://images.unsplash.com/photo-1625938144745-faab5c5c7daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2hpY2tlbiUyMHRpa2thfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "গ্রিল ও ট্যান্ডুরি"
+},
+{
+  "id": 8,
+  "name": "মাটন রেজালা",
+  "description": "মৃদু মসলায় রান্না মাটন রেজালা",
+  "price": 320,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bXV0dG9uJTIwY3Vycml5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "কারি ও গ্রেভি"
+},
+{
+  "id": 9,
+  "name": "ডাল ফ্রাই",
+  "description": "ক্রিস্পি ডাল ফ্রাই, পিয়াজ সহ",
+  "price": 120,
+  "image": "https://images.unsplash.com/photo-1601050690117-64b6d2a3d1b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGFhbCUyMGZyeXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "সাইড ডিশ"
+},
+{
+  "id": 10,
+  "name": "বেগুনী",
+  "description": "স্পাইসি বেগুন ভাজা, পুদিনা চাটনি সহ",
+  "price": 100,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZWdncGxhbnQlMjBmcnl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "স্টার্টার ও স্ন্যাকস"
+},
+{
+  "id": 11,
+  "name": "ফিশ কারি",
+  "description": "রুই মাছের ঝাল কারি",
+  "price": 230,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmlzaCUyMGN1cnJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "কারি ও গ্রেভি"
+},
+{
+  "id": 12,
+  "name": "চিকেন কারি",
+  "description": "স্পাইসি চিকেন কারি, বেসন রুটি সহ",
+  "price": 240,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpY2tlbiUyMGN1cnJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "কারি ও গ্রেভি"
+},
+{
+  "id": 13,
+  "name": "মোরগ পোলাও",
+  "description": "চিকেন পোলাও, বাদাম ও কিসমিস সহ",
+  "price": 260,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hpY2tlbiUyMHB1bGFvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "বিরিয়ানি ও রাইস ডিশ"
+},
+{
+  "id": 14,
+  "name": "বিফ টেহারী",
+  "description": "গরুর মাংসের টেহারী, স্পেশাল মসলা সহ",
+  "price": 290,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YmVlZiUyMHRhaGFyafGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "বিরিয়ানি ও রাইস ডিশ"
+},
+{
+  "id": 15,
+  "name": "ভুনা খিচুড়ি",
+  "description": "ডাল ও চালের ভুনা খিচুড়ি, ঘি সহ",
+  "price": 170,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGtoaWNocmklMjBmb29kfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "বিরিয়ানি ও রাইস ডিশ"
+},
+{
+  "id": 16,
+  "name": "লাচ্ছা পরোটা",
+  "description": "লেয়ার্ড লাচ্ছা পরোটা, ঘি স্মিয়ার্ড",
+  "price": 30,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFjaGhhJTIwcGFyYXRoYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "রুটি ও নান"
+},
+{
+  "id": 17,
+  "name": "নান রুটি",
+  "description": "ট্যান্ডুরি নান, বাটার স্মিয়ার্ড",
+  "price": 40,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bmFuJTIwcm90aXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "রুটি ও নান"
+},
+{
+  "id": 18,
+  "name": "চিকেন স্যুপ",
+  "description": "হট অ্যান্ড সাওয়ার চিকেন স্যুপ",
+  "price": 90,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHNvdXB8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "স্যুপ"
+},
+{
+  "id": 19,
+  "name": "ভেজিটেবল স্যুপ",
+  "description": "ফ্রেশ ভেজিটেবল স্যুপ, ক্রাউটন সহ",
+  "price": 80,
+  "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnZXRhYmxlJTIwc291cHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "স্যুপ"
+},
+{
+  "id": 20,
+  "name": "ফ্রুট সালাদ",
+  "description": "মিক্সড ফ্রুট সালাদ, হানি ড্রেসিং সহ",
+  "price": 110,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZnJ1aXQlMjBzYWxhZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "সালাদ"
+},
+{
+  "id": 21,
+  "name": "চিকেন বার্গার",
+  "description": "জুসি চিকেন প্যাটি, লেটুস ও সস সহ",
+  "price": 160,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hpY2tlbiUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "বার্গার ও স্যান্ডউইচ"
+},
+{
+  "id": 22,
+  "name": "বিফ বার্গার",
+  "description": "বিফ প্যাটি বার্গার, চিজ ও ভেজিটেবল সহ",
+  "price": 190,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJlZWYlMjBidXJnZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "বার্গার ও স্যান্ডউইচ"
+},
+{
+  "id": 23,
+  "name": "ফ্রেঞ্চ ফ্রাই",
+  "description": "ক্রিস্পি ফ্রেঞ্চ ফ্রাই, কেচাপ সহ",
+  "price": 70,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "সাইড ডিশ"
+},
+{
+  "id": 24,
+  "name": "চিকেন স্যান্ডউইচ",
+  "description": "গ্রিল্ড চিকেন স্যান্ডউইচ, মেয়োনিজ সহ",
+  "price": 140,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hpY2tlbiUyMHNhbmR3aWNofGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "বার্গার ও স্যান্ডউইচ"
+},
+{
+  "id": 25,
+  "name": "ভেজ পিজা",
+  "description": "ভেজিটেবল পিজা, এক্সট্রা চিজ সহ",
+  "price": 350,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnJTIwcGl6emF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "পিজা ও পাস্তা"
+},
+{
+  "id": 26,
+  "name": "চিকেন পিজা",
+  "description": "চিকেন টপিং পিজা, স্পাইসি সস সহ",
+  "price": 400,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hpY2tlbiUyMHBpenphfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "পিজা ও পাস্তা"
+},
+{
+  "id": 27,
+  "name": "পাস্তা",
+  "description": "ক্রিমি হোয়াইট সস পাস্তা",
+  "price": 210,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGFzdGF8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "পিজা ও পাস্তা"
+},
+{
+  "id": 28,
+  "name": "স্প্যাগেটি",
+  "description": "স্প্যাগেটি বোলোনিজ, পারমেসান চিজ সহ",
+  "price": 230,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHNwYWdoZXR0aXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "পিজা ও পাস্তা"
+},
+{
+  "id": 29,
+  "name": "চিকেন রোল",
+  "description": "ক্রিস্পি চিকেন রোল, মেয়োনিজ ডিপ সহ",
+  "price": 120,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHJvbGx8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "স্টার্টার ও স্ন্যাকস"
+},
+{
+  "id": 30,
+  "name": "স্প্রিং রোল",
+  "description": "ভেজিটেবল স্প্রিং রোল, সয় সস সহ",
+  "price": 100,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3ByaW5nJTIwcm9sbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "স্টার্টার ও স্ন্যাকস"
+},
+{
+  "id": 31,
+  "name": "সামোসা  ",
+  "description": "ক্রিস্পি ভেজিটেবল সামোসা, মিন্ট সস সহ",
+  "price": 20,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2Ftb3NhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "স্টার্টার ও স্ন্যাকস"
+},
+{
+  "id": 32,
+  "name": "পাকোড়া",
+  "description": "মিক্সড ভেজিটেবল পাকোড়া, তেঁতুল চাটনি সহ",
+  "price": 60,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGFrb3JhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "স্টার্টার ও স্ন্যাকস"
+},
+{
+  "id": 33,
+  "name": "জিলাপি",
+  "description": "ক্রিস্পি জিলাপি, সিরাপ ড্রেন্ড",
+  "price": 50,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8amFsZWJpfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "মিষ্টি"
+},
+{
+  "id": 34,
+  "name": "রসগোল্লা",
+  "description": "ফ্রেশ রসগোল্লা, সিরাপে ডুবে",
+  "price": 40,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHJvc2hvZ29sbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "মিষ্টি"
+},
+{
+  "id": 35,
+  "name": "চমচম",
+  "description": "সফট চমচম, সিরাপ সোয়াক্ড",
+  "price": 45,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hhbWNoYW18ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "মিষ্টি"
+},
+{
+  "id": 36,
+  "name": "মিষ্টি দই",
+  "description": "ক্রিমি মিষ্টি দই, ড্রাই ফ্রুট টপিং সহ",
+  "price": 60,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3dlZXQlMjB5b2d1cnR8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "মিষ্টি"
+},
+{
+  "id": 37,
+  "name": "ফালুদা",
+  "description": "রঙিন ফালুদা, সিরাপ ও আইসক্রিম সহ",
+  "price": 80,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFsb29kYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "ডেজার্ট"
+},
+{
+  "id": 38,
+  "name": "আইসক্রিম",
+  "description": "ভ্যানিলা ফ্লেভার আইসক্রিম, চকলেট সস সহ",
+  "price": 70,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aWNlJTIwY3JlYW18ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "ডেজার্ট"
+},
+{
+  "id": 39,
+  "name": "চা",
+  "description": "স্পেশাল মসলা চা, দুধ ও চিনি সহ",
+  "price": 25,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dGVhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "গরম পানীয়"
+},
+{
+  "id": 40,
+  "name": "কফি",
+  "description": "হট কফি, দুধ ও চিনি সহ",
+  "price": 30,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvZmZlZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "গরম পানীয়"
+},
+{
+  "id": 41,
+  "name": "লাচ্ছি",
+  "description": "মিষ্টি লাচ্ছি, রোজ ফ্লেভার সহ",
+  "price": 50,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFzc2l8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 42,
+  "name": "মিল্কশেক",
+  "description": "চকলেট মিল্কশেক, হুইপড ক্রিম সহ",
+  "price": 90,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWlsa3NoYWtlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 43,
+  "name": "ফ্রুট জুস",
+  "description": "ফ্রেশ মিক্সড ফ্রুট জুস, নো প্রিজারভেটিভ",
+  "price": 60,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZnJ1aXQlMjBqdWljZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 44,
+  "name": "লেবুর শরবত",
+  "description": "ফ্রেশ লেবুর শরবত, পুদিনা ও বরফ সহ",
+  "price": 40,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bGVtb24lMjBqdWljZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 45,
+  "name": "মোজিটো",
+  "description": "মিন্ট মোজিটো, লেবু ও সোডা সহ",
+  "price": 80,
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bW9qaXRvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 46,
+  "name": "আম পানা",
+  "description": "টক-মিষ্টি আম পানা, বরফ সহ",
+  "price": 50,
+  "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1hbmdvJTIwZHJpbmt8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 47,
+  "name": "বোরহানি",
+  "description": "স্পাইসি বোরহানি, দই ও মসলা সহ",
+  "price": 60,
+  "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9yaGFuaXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "কোল্ড ড্রিংক"
+},
+{
+  "id": 48,
+  "name": "সprite",
+  "description": "কোল্ড সprite, লেমন ফ্লেভার",
+  "price": 35,
+  "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3ByaXRlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "category": "সফট ড্রিংক"
+},
+{
+  "id": 49,
+  "name": "কোক",
+  "description": "কোল্ড কোকাকোলা",
+  "price": 35,
+  "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29rZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "সফট ড্রিংক"
+},
+{
+  "id": 50,
+  "name": "পেপসি",
+  "description": "কোল্ড পেপসি",
+  "price": 35,
+  "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGVwc2l8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60",
+  "category": "সফট ড্রিংক"
+}]
