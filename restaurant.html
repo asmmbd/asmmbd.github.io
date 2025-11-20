@@ -1,697 +1,549 @@
 <!DOCTYPE html>
-<html lang="en" x-data="app()" x-cloak>
+<html lang="en" x-data="menuApp()" x-init="init(); initScrollSpy()" class="scroll-smooth">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রেস্টুরেন্ট অর্ডারিং অ্যাপ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Food Menu</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      font-family: 'Hind Siliguri', sans-serif;
+    }
     
-    <style>
-        * {
-            font-family: 'Hind Siliguri', sans-serif;
-        }
-        
-        [x-cloak] {
-            display: none !important;
-        }
-    </style>
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+    
+    
+    .cart-badge {
+      animation: bounce 0.3s ease-in-out;
+    }
+    
+    @keyframes bounce {
+      
+      0%,
+      100% {
+        transform: scale(1);
+      }
+      
+      50% {
+        transform: scale(1.2);
+      }
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">রেস্টুরেন্ট মেনু</h1>
-        <div class="mb-8 max-w-md mx-auto">
-            <div class="relative">
-                <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="প্রোডাক্ট খুঁজুন..." x-model="searchQuery" @input.debounce.400ms="filterProducts()">
-                <svg class="absolute right-3 top-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
-        </div>
-        <!-- প্রোডাক্ট লিস্ট -->
-        <template x-if="isLoading">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-                <template x-for="n in 8">
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-center animate-pulse">
-                        <div class="w-40 h-40 bg-gray-200 rounded"></div>
-                        <div class="flex-1 p-2">
-                            <div class="h-6 bg-gray-200 rounded w-1/2"></div>
-                            <div class="h-4 bg-gray-200 rounded w-full mt-2"></div>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-lg font-bold text-gray-800">
-                                    <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                                </span>
-                                <div class="px-4 py-2 rounded">
-                                    <div class="h-4 bg-gray-200 rounded w-full"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-        </template>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
-            <template x-for="product in filteredProducts" :key="product.id">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex items-center">
-                    <img :src="product.image" :alt="product.name" class="w-40 h-40">
-                    <div class="flex-1 p-2">
-                        <h3 class="text-xl font-semibold text-gray-800" x-text="product.name"></h3>
-                        <p class="text-gray-600 mt-2" x-text="product.description"></p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-lg font-bold text-gray-800" x-text="'৳' + product.price"></span>
-                            
-                            <button @click="addToCart(product)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" :disabled="isInCart(product.id)" :class="{'bg-gray-400 cursor-not-allowed': isInCart(product.id)}">
-                                <span x-show="!isInCart(product.id)">কার্টে যোগ করুন</span>
-                                <span x-show="isInCart(product.id)">ইতিমধ্যে যোগ হয়েছে</span>
-                            </button>
-                        </div>
-                        
-                    </div>
-                </div>
-            </template>
-        </div>
-        
-        <!-- কার্ট সাইডবার -->
-        <div x-show="cart.length > 0" class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-2 border-t border-gray-200">
-            <div class="container mx-auto flex justify-between items-center flex-col">
-                <div class="flex items-center gap-4 mb-2">
-                    <h3 class="font-semibold text-sm">আপনার কার্ট (<span x-text="cart.length"></span> আইটেম)</h3>
-                    <p class="text-gray-600" x-text="'মোট: ৳' + cartTotal"></p>
-                </div>
-                <div class="flex space-x-3">
-                    <button @click="showCart = true" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
-                        কার্ট দেখুন
-                    </button>
-                    <button @click="showOrderForm = true" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                        অর্ডার কনফার্ম করুন
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- কার্ট ডিটেইলস (মডাল) -->
-        <div x-show="showCart" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" @click.away="showCart = false">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md" @click.stop>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">আপনার কার্ট</h2>
-                    
-                    <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
-                        <template x-for="(item, index) in cart" :key="index">
-                            <div class="flex justify-between items-center border-b pb-3">
-                                <div>
-                                    <h4 class="font-medium" x-text="item.name"></h4>
-                                    <p class="text-gray-600" x-text="'৳' + item.price + ' x ' + item.quantity"></p>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button @click="decreaseQuantity(index)" class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full">
-                                        -
-                                    </button>
-                                    <span x-text="item.quantity"></span>
-                                    <button @click="increaseQuantity(index)" class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full">
-                                        +
-                                    </button>
-                                    <button @click="removeFromCart(index)" class="text-red-500 hover:text-red-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                    
-                    <div class="border-t pt-4 mb-6">
-                        <div class="flex justify-between font-semibold">
-                            <span>মোট:</span>
-                            <span x-text="'৳' + cartTotal"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-3">
-                        <button @click="showCart = false" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
-                            বাতিল
-                        </button>
-                        <button @click="showOrderForm = true; showCart = false" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                            অর্ডার কনফার্ম করুন
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- অর্ডার ফর্ম (মডাল) -->
-        <div x-show="showOrderForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" @click.away="showOrderForm = false">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md" @click.stop>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">অর্ডার ফর্ম</h2>
-                    
-                    <template x-if="tableId">
-                        <div class="grid place-items-center">
-                            <span class="text-8xl font-bold" x-text="tableId"></span>
-                            
-                        </div>
-                    </template>
-                    <template x-if="!tableId">
-                        <div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">আপনার নাম</label>
-                                <input type="text" class="w-full px-4 py-2 border rounded-lg" placeholder="আপনার নাম লিখুন" x-model="orderForm.name" required>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">ফোন নম্বর</label>
-                                <input type="tel" class="w-full px-4 py-2 border rounded-lg" placeholder="ফোন নম্বর লিখুন" x-model="orderForm.phone" required>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">ঠিকানা</label>
-                                <textarea class="w-full px-4 py-2 border rounded-lg" rows="3" placeholder="ডেলিভারি ঠিকানা লিখুন" x-model="orderForm.address" required></textarea>
-                            </div>
-                        </div>
-                    </template>
-                    
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2">অর্ডার বিবরণ</label>
-                        <div class="bg-gray-100 p-3 rounded-lg">
-                            <template x-for="item in cart" :key="item.id">
-                                <div class="flex justify-between py-1">
-                                    <span x-text="item.name + ' (x' + item.quantity + ')'"></span>
-                                    <span x-text="'৳' + (item.price * item.quantity)"></span>
-                                </div>
-                            </template>
-                            <div class="border-t mt-2 pt-2 font-semibold">
-                                <span>মোট:</span>
-                                <span x-text="'৳' + cartTotal" class="float-right"></span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-3">
-                        <button @click="showOrderForm = false" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
-                            বাতিল
-                        </button>
-                        <button @click="placeOrder()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                            অর্ডার কনফার্ম করুন
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- অর্ডার কনফার্মেশন (মডাল) -->
-        <div x-show="showOrderConfirmation" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md" @click.stop>
-                <div class="p-6 text-center">
-                    <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">অর্ডার সফল!</h2>
-                    <p class="text-gray-600 mb-6">আপনার অর্ডারটি গ্রহণ করা হয়েছে। ধন্যবাদ!</p>
-                    
-                    <div class="bg-gray-100 p-4 rounded-lg text-left mb-6">
-                        <h3 class="font-semibold mb-2">অর্ডার বিবরণ:</h3>
-                        <template x-for="item in cart" :key="item.id">
-                            <p x-text="item.name + ' - ' + item.quantity + ' x ৳' + item.price + ' = ৳' + (item.price * item.quantity)"></p>
-                        </template>
-                        <p class="font-semibold mt-2" x-text="'মোট মূল্য: ৳' + cartTotal"></p>
-                    </div>
-                    
-                    <button @click="resetOrder()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                        নতুন অর্ডার করুন
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+  <div class="max-w-md mx-auto bg-white min-h-screen relative">
     
-    <script>
-        const { Client, Databases, Storage, ID, Query } = Appwrite;
-        const client = new Client();
-        // const bucketId = '653bc7811a3ca0417dd5';
-        client
-            .setEndpoint('https://cloud.appwrite.io/v1')
-            .setProject('652c1374db243c864a6c');
-        const databases = new Databases(client);
+    <!-- Header -->
+    <div class="bg-white z-10 p-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="font-bold text-2xl text-gray-800">Food Menu</h1>
+          <p class="text-gray-500 text-sm">Delicious meals await you</p>
+        </div>
+        <!-- Cart Button -->
+        <button @click="showCart = true" class="relative bg-pink-500 text-white rounded-full p-3 shadow-lg hover:bg-pink-600 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span x-show="cartCount > 0" class="cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center" x-text="cartCount"></span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="sticky bg-white top-0 py-3 px-4 shadow-md z-10 flex items-center gap-3">
+      <button @click="showSearch = !showSearch" class="p-2 rounded-full bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0a7.5 7.5 0 10-10.607-10.607 7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+      </button>
+      <div x-show="showSearch" class="relative flex-1">
+        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none bg-white text-gray-800" placeholder="প্রোডাক্ট খুঁজুন..." x-model="searchQuery" @input.debounce.400ms="filterProducts()">
+        <i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i>
+      </div>
+      <!-- Tabs -->
+      <nav x-show="!showSearch" class="overflow-x-auto flex overflow-x-auto snap-x snap-mandatory gap-4 text-gray-500 text-sm font-medium">
+        <template x-for="categoryName in Object.keys(categories)" :key="categoryName">
+          <button @click="setActiveCategory(categoryName)" class="snap-start shrink-0 pb-2" :class="categoryName === activeCategory ? 'border-b-2 border-pink-600' : ''">
+            <span x-text="categoryName"></span>
+            (<span x-text="categories[categoryName].length"></span>)
+          </button>
+        </template>
+      </nav>
+    </div>
+    
+    <!-- Loading State -->
+    <div x-show="loading" class="flex flex-col items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-500"></div>
+      <p class="text-gray-500 mt-4">Loading menu...</p>
+    </div>
+    
+    <!-- Error State -->
+    <div x-show="error" class="mx-4 mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+      <p class="text-red-600" x-text="error"></p>
+      <button @click="init()" class="mt-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+        Try Again
+      </button>
+    </div>
+    
+    <!-- Menu Items -->
+    <section class="p-4 mb-20" x-show="!loading && !error">
+      <template x-for="categoryName in Object.keys(categories)" :key="categoryName">
+        <div class="my-4">
+          <!-- Category Header -->
+          <h2 class="font-bold text-xl flex items-center gap-3 pt-6 border-t border-gray-200 first:border-t-0 first:pt-0" :id="'category-' + categoryName.replace(/\s+/g, '-').toLowerCase()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C10.343 2 7 9.363 7 13a5 5 0 1010 0c0-3.637-3.343-11-5-11z" />
+            </svg>
+            <span x-text="categoryName"></span>
+          </h2>
+          
+          
+          <!-- Items in Category -->
+          <div class="space-y-4">
+            <template x-for="item in categories[categoryName]" :key="item.id">
+              <div class="flex justify-between items-center border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-lg transition">
+                <!-- Left: Details -->
+                <div class="flex-1 pr-3">
+                  <h3 class="font-semibold text-lg text-gray-800" x-text="item.name"></h3>
+                  
+                  <!-- Price Display -->
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="text-pink-600 text-lg" x-text="'৳' + item.price"></span>
+                    <template x-if="item.oldPrice">
+                      <span class="text-gray-400 line-through text-sm" x-text="'৳' + item.oldPrice"></span>
+                    </template>
+                  </div>
+                  
+                  <p class="text-gray-600 text-sm mt-1" x-text="item.description"></p>
+                </div>
+                
+                <!-- Right: Image + Add Button -->
+                <div class="relative w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden shadow-md">
+                  <img :src="item.image || 'https://via.placeholder.com/150?text=No+Image'" alt="" class="w-full h-full object-cover" @error="$el.src = 'https://via.placeholder.com/150?text=No+Image'" />
+                  <button @click="addToCart(item)" class="absolute bottom-2 right-2 rounded-full grid place-items-center size-9 shadow-lg hover:bg-pink-600 hover:text-white transform hover:scale-110 transition-all duration-200" :class="isInCart(item.id) ? 'bg-green-600 text-white' : 'bg-white'">
+                    <i :class="isInCart(item.id) ? 'fas fa-check' : 'fas fa-plus'"></i>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </section>
+    
+    <!-- Empty State -->
+    <div x-show="!loading && !error && Object.keys(categories).length === 0" class="text-center py-12">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <p class="text-gray-500 mt-4">No menu items available</p>
+    </div>
+    
+    <!-- Cart Summary Bar -->
+    <div x-show="cart.length > 0" class="fixed bottom-0 left-0 right-0 p-4">
+      <div class="bg-white shadow-lg p-2 border border-gray-200 rounded-lg z-10 flex  justify-between items-center">
+        <p class="text-gray-600" x-text="'Total: ৳' + cartTotal"></p>
+        <button @click="showCart = true" class="flex items-center space-x-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">
+          <i class="fas fa-eye"></i>
+          <span x-text="cartCount"></span>
+          <span>View Cart</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Cart Details Modal -->
+    <div x-show="showCart" class="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center p-4 z-20" @click.away="showCart = false">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-gray-800">Your Cart</h2>
+            <button @click="showCart = false" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          
+          <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+            <template x-for="(item, index) in cart" :key="index">
+              <div class="flex justify-between items-center border-b pb-3">
+                <div class="flex items-center space-x-3">
+                  <img :src="item.image" :alt="item.name" class="w-12 h-12 object-cover rounded-lg">
+                  <div>
+                    <h4 class="font-medium text-gray-800" x-text="item.name"></h4>
+                    <p class="text-gray-600 text-sm" x-text="'৳' + item.price"></p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button @click="decreaseQuantity(index)" class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition">
+                    <i class="fas fa-minus text-xs"></i>
+                  </button>
+                  <span class="w-8 text-center font-medium text-gray-800" x-text="item.quantity"></span>
+                  <button @click="increaseQuantity(index)" class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition">
+                    <i class="fas fa-plus text-xs"></i>
+                  </button>
+                  <button @click="removeFromCart(index)" class="text-red-500 hover:text-red-700 ml-2">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+          
+          <div class="border-t pt-4 mb-6">
+            <div class="flex justify-between font-semibold text-lg">
+              <span class="text-gray-800">Total:</span>
+              <span class="text-gray-800" x-text="'৳' + cartTotal"></span>
+            </div>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button @click="showCart = false" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
+              Close
+            </button>
+            <button @click="showOrderForm = true; showCart = false" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              Place Order
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Order Form Modal -->
+    <div x-show="showOrderForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center p-4 z-20" @click.away="showOrderForm = false">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto" @click.stop>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-gray-800">Order Form</h2>
+            <button @click="showOrderForm = false" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          
+          <template x-if="tableId">
+            <div class="text-center mb-6">
+              <div class="relative w-24 h-24 mx-auto bg-pink-100 rounded-md rotate-45 flex items-center justify-center mb-10 z-20">
+                <span class="absolute w-28 h-8 bg-pink-400 rounded-lg"></span>
+                <span class="absolute w-8 h-28 bg-pink-400 rounded-lg"></span>
+                <span class="-rotate-45 bg-pink-400 w-20 h-20 rounded-full grid place-items-center text-3xl font-bold text-white" x-text="tableId"></span>
+              </div>
+              <p class="text-gray-600">
+                আপনি টেবিল <span x-text="tableId" class="font-bold"></span> নম্বরে বসে আছেন। </p>
+            </div>
+          </template>
+          
+          <template x-if="!tableId">
+            <div>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2 font-medium">Your Name</label>
+                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-800" placeholder="Enter your name" x-model="orderForm.name" required>
+              </div>
+              
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2 font-medium">Phone Number</label>
+                <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-800" placeholder="Enter phone number" x-model="orderForm.phone" required>
+              </div>
+              
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2 font-medium">Address</label>
+                <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-800" rows="3" placeholder="Enter delivery address" x-model="orderForm.address" required></textarea>
+              </div>
+            </div>
+          </template>
+          
+          <div class="mb-6">
+            <label class="block text-gray-700 mb-2 font-medium">Order Details</label>
+            <div class="bg-gray-100 p-3 rounded-lg">
+              <template x-for="item in cart" :key="item.id">
+                <div class="flex justify-between py-1 text-gray-800">
+                  <span x-text="item.name + ' (x' + item.quantity + ')'"></span>
+                  <span x-text="'৳' + (item.price * item.quantity)"></span>
+                </div>
+              </template>
+              <div class="border-t mt-2 pt-2 font-semibold text-gray-800">
+                <span>Total:</span>
+                <span x-text="'৳' + cartTotal" class="float-right"></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button @click="showOrderForm = false" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
+              Cancel
+            </button>
+            <button @click="placeOrder()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              Confirm Order
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Order Confirmation Modal -->
+    <div x-show="showOrderConfirmation" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-20">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md" @click.stop>
+        <div class="p-6 text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check text-green-600 text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Order Successful!</h2>
+          <p class="text-gray-600 mb-6">Your order has been placed. Thank you!</p>
+          
+          <div class="bg-gray-100 p-4 rounded-lg text-left mb-6">
+            <h3 class="font-semibold mb-2 text-gray-800">Order Details:</h3>
+            <template x-for="item in cart" :key="item.id">
+              <p class="text-gray-700" x-text="item.name + ' - ' + item.quantity + ' x ৳' + item.price + ' = ৳' + (item.price * item.quantity)"></p>
+            </template>
+            <p class="font-semibold mt-2 text-gray-800" x-text="'Total Price: ৳' + cartTotal"></p>
+          </div>
+          
+          <button @click="resetOrder()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            New Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function menuApp() {
+      return {
+        tableId: new URLSearchParams(window.location.search).get('table'),
+        allItems: [],
+        categories: {},
+        cart: [],
+        searchQuery: '',
+        activeCategory: 'বিরিয়ানি ও রাইস ডিশ',
+        showSearch: false,
+        loading: true,
+        error: null,
+        showCart: false,
+        showOrderForm: false,
+        showOrderConfirmation: false,
+        orderForm: {
+          name: '',
+          phone: '',
+          address: ''
+        },
+        searchQuery: '',
+        filteredProducts: [],
         
-        function app() {
-            return {
-                tableId: new URLSearchParams(window.location.search).get('table'),
-                products: [],
-                isLoading: true,
-                cart: [],
-                showCart: false,
-                showOrderForm: false,
-                showOrderConfirmation: false,
-                orderForm: {
-                    name: '',
-                    phone: '',
-                    address: ''
-                },
-                searchQuery: '',
-                filteredProducts: [],
-                // কার্ট টোটাল ক্যালকুলেশন
-                get cartTotal() {
-                    return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-                },
-                
-                // প্রোডাক্ট কার্টে আছে কিনা চেক করা
-                isInCart(productId) {
-                    return this.cart.some(item => item.id === productId);
-                },
-                
-                // কার্টে প্রোডাক্ট যোগ করা
-                addToCart(product) {
-                    if (!this.isInCart(product.id)) {
-                        this.cart.push({
-                            ...product,
-                            quantity: 1
-                        });
-                    }
-                },
-                
-                // কার্ট থেকে প্রোডাক্ট রিমুভ করা
-                removeFromCart(index) {
-                    this.cart.splice(index, 1);
-                },
-                
-                // প্রোডাক্ট পরিমাণ বাড়ানো
-                increaseQuantity(index) {
-                    this.cart[index].quantity += 1;
-                },
-                
-                // প্রোডাক্ট পরিমাণ কমানো
-                decreaseQuantity(index) {
-                    if (this.cart[index].quantity > 1) {
-                        this.cart[index].quantity -= 1;
-                    } else {
-                        this.removeFromCart(index);
-                    }
-                },
-                
-                // অর্ডার প্লেস করা
-                placeOrder() {
-                    // এখানে আপনি অর্ডার ডাটা সার্ভারে সেন্ড করতে পারেন
-                    let response = databases.createDocument('652c16162f939c821f75', '6895ab460007cc74c1ac', ID.unique(), {
-                        orderId: new Date().toString()
-                    })
-                    response.then(() => {
-                        console.log('অর্ডার প্লেস করা হয়েছে:', {
-                            customer: this.orderForm,
-                            items: this.cart,
-                            total: this.cartTotal
-                        });
-                        this.showOrderForm = false;
-                        this.showOrderConfirmation = true;
-                    })
-                },
-                
-                // নতুন অর্ডার শুরু করা
-                resetOrder() {
-                    this.cart = [];
-                    this.showOrderConfirmation = false;
-                    this.orderForm = {
-                        name: '',
-                        phone: '',
-                        address: ''
-                    };
-                },
-                filterProducts() {
-                    if (this.searchQuery === '') {
-                        this.filteredProducts = this.products;
-                        return;
-                    }
-                    
-                    const query = this.searchQuery.toLowerCase();
-                    this.filteredProducts = this.products.filter(product =>
-                        product.name.toLowerCase().includes(query) ||
-                        product.description.toLowerCase().includes(query)
-                    );
-                },
-                
-                init() {
-                    setTimeout(() => {
-                        this.products = [
-                        {
-                            "id": 1,
-                            "name": "বিরিয়ানি",
-                            "description": "স্পেশাল মুঘলাই বিরিয়ানি, সতেজ মসলা দিয়ে তৈরি",
-                            "price": 250,
-                            "image": "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmlyeWFuaXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 2,
-                            "name": "কাচ্চি",
-                            "description": "গরুর মাংসের কাচ্চি, ৮ ঘন্টা ম্যারিনেট করা",
-                            "price": 300,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YmryeWFuaXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 3,
-                            "name": "পোলাও",
-                            "description": "ফ্রাগর্যান্ট বাসমতি চালের পোলাও",
-                            "price": 180,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJpcnlhbml8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 4,
-                            "name": "গ্রিল্ড চিকেন",
-                            "description": "স্পাইসি গ্রিল্ড চিকেন, সাইড স্যালাড সহ",
-                            "price": 220,
-                            "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 5,
-                            "name": "বাটার চিকেন",
-                            "description": "ক্রিমি বাটার চিকেন, নান রুটি সহ",
-                            "price": 280,
-                            "image": "https://images.unsplash.com/photo-1585032226651-759b368d7246?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YnV0dGVyJTIwY2hpY2tlbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 6,
-                            "name": "ফ্রাইড রাইস",
-                            "description": "চাইনিজ স্টাইল ফ্রাইড রাইস, ভেজিটেবল সহ",
-                            "price": 150,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJpcnlhbml8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 7,
-                            "name": "চিকেন টিক্কা",
-                            "description": "ট্যান্ডুরি চিকেন টিক্কা, মিন্ট সস সহ",
-                            "price": 200,
-                            "image": "https://images.unsplash.com/photo-1625938144745-faab5c5c7daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2hpY2tlbiUyMHRpa2thfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 8,
-                            "name": "মাটন রেজালা",
-                            "description": "মৃদু মসলায় রান্না মাটন রেজালা",
-                            "price": 320,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bXV0dG9uJTIwY3Vycml5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 9,
-                            "name": "ডাল ফ্রাই",
-                            "description": "ক্রিস্পি ডাল ফ্রাই, পিয়াজ সহ",
-                            "price": 120,
-                            "image": "https://images.unsplash.com/photo-1601050690117-64b6d2a3d1b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGFhbCUyMGZyeXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 10,
-                            "name": "বেগুনী",
-                            "description": "স্পাইসি বেগুন ভাজা, পুদিনা চাটনি সহ",
-                            "price": 100,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZWdncGxhbnQlMjBmcnl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 11,
-                            "name": "ফিশ কারি",
-                            "description": "রুই মাছের ঝাল কারি",
-                            "price": 230,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmlzaCUyMGN1cnJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 12,
-                            "name": "চিকেন কারি",
-                            "description": "স্পাইসি চিকেন কারি, বেসন রুটি সহ",
-                            "price": 240,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpY2tlbiUyMGN1cnJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 13,
-                            "name": "মোরগ পোলাও",
-                            "description": "চিকেন পোলাও, বাদাম ও কিসমিস সহ",
-                            "price": 260,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hpY2tlbiUyMHB1bGFvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 14,
-                            "name": "বিফ টেহারী",
-                            "description": "গরুর মাংসের টেহারী, স্পেশাল মসলা সহ",
-                            "price": 290,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YmVlZiUyMHRhaGFyafGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 15,
-                            "name": "ভুনা খিচুড়ি",
-                            "description": "ডাল ও চালের ভুনা খিচুড়ি, ঘি সহ",
-                            "price": 170,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGtoaWNocmklMjBmb29kfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 16,
-                            "name": "লাচ্ছা পরোটা",
-                            "description": "লেয়ার্ড লাচ্ছা পরোটা, ঘি স্মিয়ার্ড",
-                            "price": 30,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFjaGhhJTIwcGFyYXRoYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 17,
-                            "name": "নান রুটি",
-                            "description": "ট্যান্ডুরি নান, বাটার স্মিয়ার্ড",
-                            "price": 40,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bmFuJTIwcm90aXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 18,
-                            "name": "চিকেন স্যুপ",
-                            "description": "হট অ্যান্ড সাওয়ার চিকেন স্যুপ",
-                            "price": 90,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHNvdXB8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 19,
-                            "name": "ভেজিটেবল স্যুপ",
-                            "description": "ফ্রেশ ভেজিটেবল স্যুপ, ক্রাউটন সহ",
-                            "price": 80,
-                            "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnZXRhYmxlJTIwc291cHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 20,
-                            "name": "ফ্রুট সালাদ",
-                            "description": "মিক্সড ফ্রুট সালাদ, হানি ড্রেসিং সহ",
-                            "price": 110,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZnJ1aXQlMjBzYWxhZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 21,
-                            "name": "চিকেন বার্গার",
-                            "description": "জুসি চিকেন প্যাটি, লেটুস ও সস সহ",
-                            "price": 160,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hpY2tlbiUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 22,
-                            "name": "বিফ বার্গার",
-                            "description": "বিফ প্যাটি বার্গার, চিজ ও ভেজিটেবল সহ",
-                            "price": 190,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJlZWYlMjBidXJnZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 23,
-                            "name": "ফ্রেঞ্চ ফ্রাই",
-                            "description": "ক্রিস্পি ফ্রেঞ্চ ফ্রাই, কেচাপ সহ",
-                            "price": 70,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 24,
-                            "name": "চিকেন স্যান্ডউইচ",
-                            "description": "গ্রিল্ড চিকেন স্যান্ডউইচ, মেয়োনিজ সহ",
-                            "price": 140,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hpY2tlbiUyMHNhbmR3aWNofGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 25,
-                            "name": "ভেজ পিজা",
-                            "description": "ভেজিটেবল পিজা, এক্সট্রা চিজ সহ",
-                            "price": 350,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnJTIwcGl6emF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 26,
-                            "name": "চিকেন পিজা",
-                            "description": "চিকেন টপিং পিজা, স্পাইসি সস সহ",
-                            "price": 400,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hpY2tlbiUyMHBpenphfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 27,
-                            "name": "পাস্তা",
-                            "description": "ক্রিমি হোয়াইট সস পাস্তা",
-                            "price": 210,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGFzdGF8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 28,
-                            "name": "স্প্যাগেটি",
-                            "description": "স্প্যাগেটি বোলোনিজ, পারমেসান চিজ সহ",
-                            "price": 230,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHNwYWdoZXR0aXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 29,
-                            "name": "চিকেন রোল",
-                            "description": "ক্রিস্পি চিকেন রোল, মেয়োনিজ ডিপ সহ",
-                            "price": 120,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHJvbGx8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 30,
-                            "name": "স্প্রিং রোল",
-                            "description": "ভেজিটেবল স্প্রিং রোল, সয় সস সহ",
-                            "price": 100,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3ByaW5nJTIwcm9sbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 31,
-                            "name": "সামোসা",
-                            "description": "ক্রিস্পি ভেজিটেবল সামোসা, মিন্ট সস সহ",
-                            "price": 20,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2Ftb3NhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 32,
-                            "name": "পাকোড়া",
-                            "description": "মিক্সড ভেজিটেবল পাকোড়া, তেঁতুল চাটনি সহ",
-                            "price": 60,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGFrb3JhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 33,
-                            "name": "জিলাপি",
-                            "description": "ক্রিস্পি জিলাপি, সিরাপ ড্রেন্ড",
-                            "price": 50,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8amFsZWJpfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 34,
-                            "name": "রসগোল্লা",
-                            "description": "ফ্রেশ রসগোল্লা, সিরাপে ডুবে",
-                            "price": 40,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHJvc2hvZ29sbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 35,
-                            "name": "চমচম",
-                            "description": "সফট চমচম, সিরাপ সোয়াক্ড",
-                            "price": 45,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hhbWNoYW18ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 36,
-                            "name": "মিষ্টি দই",
-                            "description": "ক্রিমি মিষ্টি দই, ড্রাই ফ্রুট টপিং সহ",
-                            "price": 60,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3dlZXQlMjB5b2d1cnR8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 37,
-                            "name": "ফালুদা",
-                            "description": "রঙিন ফালুদা, সিরাপ ও আইসক্রিম সহ",
-                            "price": 80,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFsb29kYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 38,
-                            "name": "আইসক্রিম",
-                            "description": "ভ্যানিলা ফ্লেভার আইসক্রিম, চকলেট সস সহ",
-                            "price": 70,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aWNlJTIwY3JlYW18ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 39,
-                            "name": "চা",
-                            "description": "স্পেশাল মসলা চা, দুধ ও চিনি সহ",
-                            "price": 25,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dGVhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 40,
-                            "name": "কফি",
-                            "description": "হট কফি, দুধ ও চিনি সহ",
-                            "price": 30,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvZmZlZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 41,
-                            "name": "লাচ্ছি",
-                            "description": "মিষ্টি লাচ্ছি, রোজ ফ্লেভার সহ",
-                            "price": 50,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFzc2l8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 42,
-                            "name": "মিল্কশেক",
-                            "description": "চকলেট মিল্কশেক, হুইপড ক্রিম সহ",
-                            "price": 90,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWlsa3NoYWtlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 43,
-                            "name": "ফ্রুট জুস",
-                            "description": "ফ্রেশ মিক্সড ফ্রুট জুস, নো প্রিজারভেটিভ",
-                            "price": 60,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZnJ1aXQlMjBqdWljZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 44,
-                            "name": "লেবুর শরবত",
-                            "description": "ফ্রেশ লেবুর শরবত, পুদিনা ও বরফ সহ",
-                            "price": 40,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bGVtb24lMjBqdWljZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 45,
-                            "name": "মোজিটো",
-                            "description": "মিন্ট মোজিটো, লেবু ও সোডা সহ",
-                            "price": 80,
-                            "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bW9qaXRvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 46,
-                            "name": "আম পানা",
-                            "description": "টক-মিষ্টি আম পানা, বরফ সহ",
-                            "price": 50,
-                            "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1hbmdvJTIwZHJpbmt8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 47,
-                            "name": "বোরহানি",
-                            "description": "স্পাইসি বোরহানি, দই ও মসলা সহ",
-                            "price": 60,
-                            "image": "https://images.unsplash.com/photo-1633799238932-4c6c1ae1ebcd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9yaGFuaXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 48,
-                            "name": "সprite",
-                            "description": "কোল্ড সprite, লেমন ফ্লেভার",
-                            "price": 35,
-                            "image": "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c3ByaXRlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 49,
-                            "name": "কোক",
-                            "description": "কোল্ড কোকাকোলা",
-                            "price": 35,
-                            "image": "https://images.unsplash.com/photo-1633613286991-611fe299c4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29rZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        },
-                        {
-                            "id": 50,
-                            "name": "পেপসি",
-                            "description": "কোল্ড পেপসি",
-                            "price": 35,
-                            "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGVwc2l8ZW58MHx8MHx8fDA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                        }];
-                        this.isLoading = false;
-                        this.filteredProducts = this.products;
-                    }, 6600)
-                }
+        // Cart total calculation
+        get cartTotal() {
+          return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        },
+        
+        // Total items in cart
+        get cartCount() {
+          return this.cart.reduce((total, item) => total + item.quantity, 0);
+        },
+        
+        // Total items in cart (alias for cartCount)
+        get cartTotalItems() {
+          return this.cartCount;
+        },
+        
+        // Check if product is in cart
+        isInCart(productId) {
+          return this.cart.some(item => item.id === productId);
+        },
+        
+        // Add product to cart
+        addToCart(product) {
+          const existingItem = this.cart.find(item => item.id === product.id);
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            this.cart.push({
+              ...product,
+              quantity: 1
+            });
+          }
+        },
+        
+        // Remove product from cart
+        removeFromCart(index) {
+          this.cart.splice(index, 1);
+        },
+        
+        // Increase product quantity
+        increaseQuantity(index) {
+          this.cart[index].quantity += 1;
+        },
+        
+        // Decrease product quantity
+        decreaseQuantity(index) {
+          if (this.cart[index].quantity > 1) {
+            this.cart[index].quantity -= 1;
+          } else {
+            this.removeFromCart(index);
+          }
+        },
+        
+        // Place order
+        placeOrder() {
+          console.log('Order placed:', {
+            customer: this.tableId ? this.tableId : this.orderForm,
+            items: this.cart,
+            total: this.cartTotal
+          });
+          this.showOrderForm = false;
+          this.showOrderConfirmation = true;
+        },
+        
+        // Start new order
+        resetOrder() {
+          this.cart = [];
+          this.showOrderConfirmation = false;
+          this.orderForm = {
+            name: '',
+            phone: '',
+            address: ''
+          };
+        },
+        
+        groupByCategory(items) {
+          const grouped = {};
+          items.forEach(item => {
+            const category = item.category || 'Uncategorized';
+            if (!grouped[category]) {
+              grouped[category] = [];
             }
+            grouped[category].push(item);
+          });
+          return grouped;
+        },
+        
+        async init() {
+          this.loading = true;
+          this.error = null;
+          
+          try {
+            // Try to fetch from API first
+            const response = await fetch('/api/products.json');
+            
+            if (!response.ok) {
+              throw new Error('API not available, loading sample data');
+            }
+            
+            const items = await response.json();
+            this.allItems = items;
+            this.categories = this.groupByCategory(items);
+          } catch (err) {
+            console.log('Loading sample data...', err.message);
+            
+            // Sample data if API is not available
+            const sampleItems = [
+            {
+              id: 1,
+              name: 'Butter Chicken',
+              price: 350,
+              oldPrice: 400,
+              description: 'Tender chicken in rich tomato cream sauce',
+              category: 'Main Course',
+              image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&h=300&fit=crop'
+            },
+            {
+              id: 2,
+              name: 'Paneer Tikka',
+              price: 280,
+              description: 'Grilled cottage cheese with spices',
+              category: 'Starters',
+              image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=300&h=300&fit=crop'
+            },
+            {
+              id: 3,
+              name: 'Biryani',
+              price: 320,
+              description: 'Aromatic rice with spiced meat',
+              category: 'Main Course',
+              image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&h=300&fit=crop'
+            },
+            {
+              id: 4,
+              name: 'Samosa',
+              price: 50,
+              description: 'Crispy pastry with potato filling',
+              category: 'Starters',
+              image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=300&fit=crop'
+            },
+            {
+              id: 5,
+              name: 'Gulab Jamun',
+              price: 80,
+              description: 'Sweet milk dumplings in syrup',
+              category: 'Desserts',
+              image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&h=300&fit=crop'
+            },
+            {
+              id: 6,
+              name: 'Masala Dosa',
+              price: 120,
+              description: 'Crispy crepe with spiced potato',
+              category: 'Breakfast',
+              image: 'https://images.unsplash.com/photo-1630383249896-424e482df921?w=300&h=300&fit=crop'
+            }];
+            
+            this.categories = this.groupByCategory(sampleItems);
+          }
+          
+          this.loading = false;
+        },
+        
+        initScrollSpy() {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const categoryName = entry.target.id.replace('category-', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                this.activeCategory = categoryName;
+              }
+            });
+          }, {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '-50px 0px -70% 0px'
+          });
+          setTimeout(() => {
+            document.querySelectorAll('[id^="category-"]').forEach(el => {
+              observer.observe(el);
+            });
+          }, 100);
+        },
+        
+        setActiveCategory(categoryName) {
+          this.activeCategory = categoryName;
+          // স্ক্রল করে সেকশন সামনে আনুন
+          const elementId = 'category-' + categoryName.replace(/\s+/g, '-').toLowerCase();
+          const element = document.getElementById(elementId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 'start' মানে উপরে আনবে
+          }
+        },
+        filterProducts() {
+          if (!this.searchQuery.trim()) {
+            // If search is empty, show all categories
+            this.categories = this.groupByCategory(this.allItems);
+            return;
+          }
+          
+          const query = this.searchQuery.toLowerCase();
+          const filtered = this.allItems.filter(item =>
+            item.name.toLowerCase().includes(query) ||
+            item.description.toLowerCase().includes(query)
+          );
+          
+          this.categories = this.groupByCategory(filtered);
         }
-    </script>
+      }
+    }
+  </script>
 </body>
 
 </html>
