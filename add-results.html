@@ -149,12 +149,12 @@
                 <template x-for="(result, subjIndex) in student.results" :key="result.name">
                   <td class="p-3 border-b">
                     <div class="flex items-center justify-center gap-2">
-                      <input type="number" x-model.number="student.results[subjIndex].test"
+                      <input type="number" x-model.number="student.results[subjIndex].mark"
                         @change="updateStudent(student)"
                         class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         min="0" max="20" placeholder="২০">
                       <span class="text-gray-400">+</span>
-                      <input type="number" x-model.number="student.results[subjIndex].mark"
+                      <input type="number" x-model.number="student.results[subjIndex].test"
                         @change="updateStudent(student)"
                         class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         min="0" max="80" placeholder="৮০">
