@@ -9,57 +9,57 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.maateen.me/noto-serif-bengali/font.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <style>
     * {
       font-family: 'Noto Serif Bengali', serif;
     }
-    
+
     .page {
       width: 21cm;
       height: 29.9cm;
     }
-    
+
     .page .page-img {
       width: 100%;
       height: 100%;
     }
-    
+
     .flex {
       width: 100%;
       display: flex;
     }
-    
+
     /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
-    
+
     ::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
-    
+
     ::-webkit-scrollbar-thumb {
       background: #888;
       border-radius: 4px;
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
       background: #555;
     }
-    
+
     /* Print styles */
     @media print {
       body {
         background: white;
         color: black;
       }
-      
+
       .no-print {
         display: none !important;
       }
-      
+
       .print-full-width {
         width: 100% !important;
         margin: 0 !important;
@@ -69,131 +69,127 @@
   </style>
 </head>
 
-<body class="bg-gray-50 font-sans">
-  <div class="p-6 print:p-0">
-    <h1 class="no-print text-4xl font-bold text-center mb-8 text-gray-800">মাদ্রাসার রেজাল্ট ম্যানেজমেন্ট সিস্টেম</h1>
-    
-    <div x-data="app()" class="space-y-6">
-      <!-- Header with school info and controls -->
-      <div class="no-print bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="p-6 flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="bg-indigo-100 p-3 rounded-full">
-              <i class="fas fa-school text-indigo-600 text-2xl"></i>
-            </div>
-            <div>
-              <h2 class="text-xl font-bold text-gray-800">আয়েশা সিদ্দিকা (রা.) মহিলা মাদ্রাসা</h2>
-              <p class="text-gray-600">রেজাল্ট ম্যানেজমেন্ট প্যানেল</p>
-            </div>
-          </div>
-          <button @click="generateReport()" class="w-40 flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md">
-            <i class="fas fa-file-alt"></i>
-            <span>সংরক্ষণ করুন</span>
-          </button>
-        </div>
+<body class="bg-gray-50 font-sans p-4">
+  <div x-data="app()" class="container mx-auto p-4 print-full-width bg-white rounded-md shadow-md">
+    <!-- Header with school info and controls -->
+    <header class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">রেজাল্ট ম্যানেজমেন্ট প্যানেল</h2>
       </div>
-      
-      <!-- Class and Exam Selection Card -->
-      <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white p-6 rounded-xl shadow-md">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-            <i class="fas fa-users-class text-indigo-500"></i>
-            <span>শ্রেণি নির্বাচন</span>
-          </h3>
-          <select x-model="selectedClass" @change="loadStudents()" class="w-full border-2 border-gray-200 rounded-lg p-3 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+      <button @click="generateReport()"
+        class="w-40 flex items-center space-x-2 bg-green-800 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md">
+        <i class="fas fa-file-alt"></i>
+        <span>সংরক্ষণ করুন</span>
+      </button>
+    </header>
+
+
+    <!-- Class and Exam Selection Card -->
+    <div class="bg-white p-4 rounded-lg shadow my-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white">
+          <input type="text" placeholder="নাম বা রোল নাম্বার দিয়ে খুঁজুন..."
+            class="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+        </div>
+        <div class="bg-white">
+          <select x-model="selectedClass" @change="loadStudents()"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
             <template x-for="cls in Object.keys(classSubjects)">
               <option :value="cls" x-text="cls"></option>
             </template>
           </select>
         </div>
-        
-        <div class="bg-white p-6 rounded-xl shadow-md">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-            <i class="fas fa-clipboard-list text-indigo-500"></i>
-            <span>পরীক্ষা নির্বাচন</span>
-          </h3>
-          <select x-model="selectedExam" class="w-full border-2 border-gray-200 rounded-lg p-3 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+
+        <div class="bg-white">
+          <select x-model="selectedExam"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
             <option value="প্রথম সাময়িক পরীক্ষা ২০২৫">প্রথম সাময়িক পরীক্ষা ২০২৫</option>
             <option value="দ্বিতীয় সাময়িক পরীক্ষা ২০২৫">দ্বিতীয় সাময়িক পরীক্ষা ২০২৫</option>
             <option value="বার্ষিক পরীক্ষা ২০২৫">বার্ষিক পরীক্ষা ২০২৫</option>
           </select>
         </div>
       </div>
-      
-      <!-- Results Table -->
-      <div class="no-print bg-white p-6 rounded-xl shadow-md overflow-x-auto">
-        <div class="mb-4 flex justify-between items-center">
-          <h3 class="text-xl font-semibold text-gray-800">
-            <i class="fas fa-graduation-cap text-indigo-500 mr-2"></i>
-            ছাত্রদের রেজাল্ট শিট
-          </h3>
-          <div class="text-sm text-gray-500">
-            <span x-text="selectedClass + ' শ্রেণি'"></span> |
-            <span x-text="selectedExam"></span>
-          </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="no-print overflow-x-auto">
+      <div class="mb-4 flex justify-between items-center">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-graduation-cap text-indigo-500 mr-2"></i>
+          ছাত্রদের রেজাল্ট শিট
+        </h3>
+        <div class="text-sm text-gray-500">
+          <span x-text="selectedClass + ' শ্রেণি'"></span> |
+          <span x-text="selectedExam"></span>
         </div>
-        
-        <div class="overflow-x-auto">
-          <table class="w-full text-center border-collapse">
-            <thead>
-              <tr class="bg-indigo-600 text-white">
-                <th scope="col" class="p-3 border-b">ক্রমিক</th>
-                <th scope="col" class="p-3 border-b w-60 text-left">নাম</th>
-                <th scope="col" class="p-3 border-b">স্টুডেন্ট আইডি</th>
-                <template x-for="(subject,id) in classSubjects[selectedClass]" :key="id">
-                  <th scope="col" class="p-3 border-b" x-text="subject"></th>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-center border-collapse table-auto">
+          <thead>
+            <tr class="bg-green-800 text-white">
+              <th scope="col" class="p-3 border-b">ক্রমিক</th>
+              <th scope="col" class="p-3 border-b w-60 text-left">নাম</th>
+              <th scope="col" class="p-3 border-b">স্টুডেন্ট আইডি</th>
+              <template x-for="(subject,id) in classSubjects[selectedClass]" :key="id">
+                <th scope="col" class="p-3 border-b" x-text="subject"></th>
+              </template>
+              <th scope="col" class="p-3 border-b">মোট</th>
+              <th scope="col" class="p-3 border-b">গড়</th>
+              <th scope="col" class="p-3 border-b">স্ট্যাটাস</th>
+              <th scope="col" class="p-3 border-b">পজিশন</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(student, index) in sortedResults" :key="student.studentId">
+              <tr class="hover:bg-gray-50 transition" :class="{'bg-gray-50': index % 2 === 0}">
+                <td class="p-3 border-b text-center" x-text="index + 1"></td>
+                <td class="p-3 border-b text-left" x-text="student.name"></td>
+                <td class="p-3 border-b text-center" x-text="student.studentId"></td>
+                <template x-for="(result, subjIndex) in student.results" :key="result.name">
+                  <td class="p-3 border-b">
+                    <div class="flex items-center justify-center gap-2">
+                      <input type="number" x-model.number="student.results[subjIndex].test"
+                        @change="updateStudent(student)"
+                        class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        min="0" max="20" placeholder="২০">
+                      <span class="text-gray-400">+</span>
+                      <input type="number" x-model.number="student.results[subjIndex].mark"
+                        @change="updateStudent(student)"
+                        class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        min="0" max="80" placeholder="৮০">
+                    </div>
+                  </td>
                 </template>
-                <th scope="col" class="p-3 border-b">মোট</th>
-                <th scope="col" class="p-3 border-b">গড়</th>
-                <th scope="col" class="p-3 border-b">স্ট্যাটাস</th>
-                <th scope="col" class="p-3 border-b">পজিশন</th>
-              </tr>
-            </thead>
-            <tbody>
-              <template x-for="(student, index) in sortedResults" :key="student.studentId">
-                <tr class="hover:bg-gray-50 transition" :class="{'bg-gray-50': index % 2 === 0}">
-                  <td class="p-3 border-b text-center" x-text="index + 1"></td>
-                  <td class="p-3 border-b text-left" x-text="student.name"></td>
-                  <td class="p-3 border-b text-center" x-text="student.studentId"></td>
-                  <template x-for="(result, subjIndex) in student.results" :key="result.name">
-                    <td class="p-3 border-b">
-                      <div class="flex items-center justify-center gap-2">
-                        <input type="number" x-model.number="student.results[subjIndex].test" @change="updateStudent(student)" class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" min="0" max="20" placeholder="২০">
-                        <span class="text-gray-400">+</span>
-                        <input type="number" x-model.number="student.results[subjIndex].mark" @change="updateStudent(student)" class="w-16 border rounded p-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500" min="0" max="80" placeholder="৮০">
-                      </div>
-                    </td>
-                  </template>
-                  <td class="p-3 border-b text-center font-semibold" x-text="calculateTotal(student.results)"></td>
-                  <td class="p-3 border-b text-center font-semibold" x-text="calculateAverage(student.results)"></td>
-                  <td class="p-3 border-b text-center">
-                    <span x-text="calculateStatus(calculateAverage(student.results))" :class="{
+                <td class="p-3 border-b text-center font-semibold" x-text="calculateTotal(student.results)"></td>
+                <td class="p-3 border-b text-center font-semibold" x-text="calculateAverage(student.results)"></td>
+                <td class="p-3 border-b text-center">
+                  <span x-text="calculateStatus(calculateAverage(student.results))" :class="{
                             'text-green-600': calculateStatus(calculateAverage(student.results)) === 'মুমতায',
                             'text-blue-600': calculateStatus(calculateAverage(student.results)) === 'জায়্যিদ জিদ্দান',
                             'text-indigo-600': calculateStatus(calculateAverage(student.results)) === 'জায়্যিদ',
                             'text-yellow-600': calculateStatus(calculateAverage(student.results)) === 'মাকবুল',
                             'text-red-600': calculateStatus(calculateAverage(student.results)) === 'রাসিব'
                           }"></span>
-                  </td>
-                  <td class="p-3 border-b text-center font-semibold" x-text="calculatePosition(student)"></td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </div>
-        
-        <!-- Empty state -->
-        <div x-show="sortedResults.length === 0" class="py-12 text-center">
-          <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-4"></i>
-          <h4 class="text-xl text-gray-500 font-medium">কোনো ছাত্র পাওয়া যায়নি</h4>
-          <p class="text-gray-400">দয়া করে শ্রেণি নির্বাচন করুন এবং রেজাল্ট এন্ট্রি করুন</p>
-        </div>
+                </td>
+                <td class="p-3 border-b text-center font-semibold" x-text="calculatePosition(student)"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
       </div>
-      
+
+      <!-- Empty state -->
+      <div x-show="sortedResults.length === 0" class="py-12 text-center">
+        <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-4"></i>
+        <h4 class="text-xl text-gray-500 font-medium">কোনো ছাত্র পাওয়া যায়নি</h4>
+        <p class="text-gray-400">দয়া করে শ্রেণি নির্বাচন করুন এবং রেজাল্ট এন্ট্রি করুন</p>
+      </div>
     </div>
+
   </div>
   <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
-  
+
   <script>
     const { Client, Databases, Query, ID } = Appwrite;
     const client = new Client();
@@ -201,28 +197,28 @@
       .setEndpoint('https://cloud.appwrite.io/v1')
       .setProject('652c1374db243c864a6c');
     const databases = new Databases(client);
-    
+
     function app() {
       return {
         selectedClass: 'পঞ্চম',
         selectedExam: 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৫',
         students: [],
         classSubjects: {
-          'প্লে': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'দ্বীন শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
-          'নার্সারি': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবি বর্ণ শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
-          'প্রথম': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
-          'দ্বিতীয়': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
-          'তৃতীয়': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
-          'চতুর্থ': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদিস, মাসআলা ও দোয়া', 'কুরআন শিক্ষা ও আমলী', 'গণিত', 'ইংরেজি', 'সমাজ ও বিজ্ঞান', 'আমলী'],
+          'প্লে': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'দ্বীন শিক্ষা', 'হাদীস শরীফ, দোয়া ও মাসআলা', 'আদইয়ায়ে সলাহ্ ও মাসআলাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'নার্সারি': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবি বর্ণ শিক্ষা', 'হাদীস শরীফ, দোয়া ও মাসআলা', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'প্রথম': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ, দোয়া ও মাসআলা', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'দ্বিতীয়': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ, দোয়া ও মাসআলা', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'তৃতীয়': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ, দোয়া ও মাসআলা', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'চতুর্থ': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ, দোয়া ও মাসআলা', 'কুরআন শিক্ষা', 'গণিত', 'ইংরেজি', 'সমাজ ও বিজ্ঞান', 'আমলী'],
           'পঞ্চম': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ ও তাজবীদ', 'এসো আরবী শিখি', 'তালিমুল ইসলাম ও ইসলামি তাহজীব', 'ইতিহাস ও ভূগোল', 'ইংরেজি ও গ্রামার', 'গণিত', 'আমলী', 'হাদিস, মাসআলা ও দোয়া'],
           'মিজান': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ ও তাজবীদ', 'এসো আরবী শিখি', 'তারিখুল ইসলাম', 'মিজানুস সরফ', 'ইংরেজি ও গ্রামার', 'গণিত', 'বাকারাতুল আদাব', 'বেহেশতী জেওর', 'আমলী'],
           'নাহবেমির': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ ও তাজবীদ', 'রওজাতুল আদব', 'নাহুমীর', 'আল ফিকহুল মুয়াসসার', 'সিরাত', 'ইলমুস সরফ', 'শরহে মিয়াতে আমেল', 'আমলী'],
-          'কুদুরী': ['বাংলা ও ব্যাকরণ', ' কুরআন তরজমা', 'আততারিখ ইলাল ইংশা', 'ফয়জুল কালাম', 'হেদায়াতুন নাহু', 'কালয়ুবী', 'কুদুরী', 'উসুলুস শাশী', 'ইলমুস সিগাহ্', 'আমলী'],
+          'কুদুরী': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ', 'আততারিখ ইলাল ইংশা', 'ফয়জুল কালাম', 'হেদায়াতুন নাহু', 'কালয়ুবী', 'কুদুরী', 'উসুলুস শাশী', 'ইলমুস সিগাহ্', 'আমলী'],
           'হিফজখানা': ['কুরআন মাজিদ', 'তাজবীদ', 'মাসআলা', 'মাসনূন দোয়া', 'হাদিস', 'আমলী']
         },
         results: [],
         resultRecords: {},
-        
+
         // Initialize: Load saved results from localStorage
         init() {
           let promise = databases.listDocuments(
@@ -232,7 +228,7 @@
           );
           promise.then(ress => {
             this.students = ress.documents.filter(s => s.active)
-            
+
             const savedRecords = localStorage.getItem('resultRecords');
             if (savedRecords) {
               this.resultRecords = JSON.parse(savedRecords);
@@ -240,11 +236,11 @@
             this.loadStudents();
           })
         },
-        
+
         // Load students for the selected class
         loadStudents() {
           this.results = this.students
-            .filter(student => student.class === this.selectedClass && student.studentId.startsWith('JUAI-'))
+            .filter(student => student.class === this.selectedClass && student.studentId.startsWith('ASMM-'))
             .map(student => ({
               examName: this.selectedExam,
               name: student.stname,
@@ -266,7 +262,7 @@
               comment: 'সুন্দর ফলাফলের জন্য অভিনন্দন। আগামীতে আরো ভালো ফলাফলের জন্য দোয়া ও প্রত্যাশা করছি।'
             }));
         },
-        
+
         // Update student data and save
         updateStudent(student) {
           student.results = student.results.map(result => ({
@@ -276,14 +272,14 @@
           student.total = this.calculateTotal(student.results);
           student.avg = this.calculateAverage(student.results);
           student.status = this.calculateStatus(student.avg);
-          
+
           // Update all positions after any change
           this.updateAllPositions();
-          
+
           student.comment = this.generateComment(student)
           this.results = [...this.results];
         },
-        
+
         // Update all student positions based on sorted order
         updateAllPositions() {
           const sorted = this.sortedResults;
@@ -291,35 +287,35 @@
             student.position = index + 1;
           });
         },
-        
+
         // Sorted results by total marks for position
         get sortedResults() {
           return this.results.slice().sort((a, b) => {
             const totalA = this.calculateTotal(a.results);
             const totalB = this.calculateTotal(b.results);
-            
+
             // Sort by total marks descending
             if (totalB !== totalA) {
               return totalB - totalA;
             }
-            
+
             // If totals are equal, sort by name alphabetically
             return a.name.localeCompare(b.name);
           });
         },
-        
+
         // Calculate total marks
         calculateTotal(results) {
           return results.reduce((sum, result) => sum + (result.test || 0) + (result.mark || 0), 0);
         },
-        
+
         // Calculate average
         calculateAverage(results) {
           const total = this.calculateTotal(results);
           const subjectCount = results.length;
           return subjectCount > 0 ? Math.round(total / subjectCount) : 0;
         },
-        
+
         // Calculate status based on average
         calculateStatus(avg) {
           if (avg >= 80) return 'মুমতায';
@@ -328,33 +324,33 @@
           if (avg >= 40) return 'মাকবুল';
           return 'রাসিব';
         },
-        
+
         // Calculate position based on total marks
         calculatePosition(student) {
           return student.position || 0;
         },
-        
+
         // Generate report
         generateReport() {
           if (this.results.length === 0) {
             alert('কোনো ছাত্রের তথ্য নেই। দয়া করে প্রথমে রেজাল্ট এন্ট্রি করুন।');
             return;
           }
-          
+
           // Update all positions before generating report
           this.updateAllPositions();
-          
+
           //console.log(this.results)
           this.addReasult(this.results)
         },
-        
+
         async addReasult(results) {
           try {
             const allResults = results.map(result => ({
               ...result,
               results: JSON.stringify(result.results)
             }));
-            
+
             await Promise.all(allResults.map(async (result) => {
               try {
                 await databases.createDocument(
@@ -368,21 +364,21 @@
                 throw error; // Re-throw to be caught by outer catch
               }
             }));
-            
+
             console.log(allResults)
-            alert('Result created successfully!', );
+            alert('Result created successfully!',);
           } catch (error) {
             console.error('Error in addReasult:', error);
             alert('Error creating results: ' + error.message);
           }
         },
-        
+
         generateComment(student) {
           const avg = this.calculateAverage(student.results);
           const total = this.calculateTotal(student.results);
           const status = this.calculateStatus(avg);
           const position = student.position;
-          
+
           // কমেন্ট টেমপ্লেট
           const comments = {
             'মুমতায': [
@@ -411,7 +407,7 @@
               'ফলাফল উন্নতির জন্য বিশেষ মনোযোগ প্রয়োজন।'
             ]
           };
-          
+
           // পজিশন ভিত্তিক অতিরিক্ত কমেন্ট
           let positionComment = '';
           if (position === 1) {
@@ -421,25 +417,25 @@
           } else if (position <= 10) {
             positionComment = 'আপনি শ্রেণিতে প্রথম দশে আছেন। আরো ভালো করার চেষ্টা করুন।';
           }
-          
+
           // র্যান্ডম কমেন্ট সিলেক্ট করা
           const statusComments = comments[status] || comments['মাকবুল'];
           const randomComment = statusComments[Math.floor(Math.random() * statusComments.length)];
-          
+
           // ফাইনাল কমেন্ট তৈরি
           let finalComment = randomComment;
           if (positionComment) {
             finalComment += ' ' + positionComment;
           }
-          
+
           // বিশেষ ক্ষেত্রে অতিরিক্ত পরামর্শ
           if (avg < 50) {
             finalComment += ' দয়া করে আপনার দুর্বল বিষয়গুলো চিহ্নিত করে সেগুলোতে বেশি সময় দিন।';
           }
-          
+
           return finalComment;
         },
-        
+
         getGrade(score) {
           let grade
           if (score >= 80) {
@@ -455,7 +451,7 @@
           }
           return grade
         },
-        
+
         getBangla(x) {
           let numbers = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
           var retStr = String(x);
@@ -464,7 +460,7 @@
           }
           return retStr;
         },
-        
+
         // Print report
         printReport() {
           window.print();
