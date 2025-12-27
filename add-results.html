@@ -240,7 +240,7 @@
         // Load students for the selected class
         loadStudents() {
           this.results = this.students
-            .filter(student => student.class === this.selectedClass && student.studentId.startsWith('ASMM-'))
+            .filter(student => student.class === this.selectedClass && student.studentId.startsWith('JUAI-'))
             .map(student => ({
               examName: this.selectedExam,
               name: student.stname,
