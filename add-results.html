@@ -114,6 +114,7 @@
           </h3>
           <select x-model="selectedExam" class="w-full border-2 border-gray-200 rounded-lg p-3 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
             <option value="প্রথম সাময়িক পরীক্ষা ২০২৫">প্রথম সাময়িক পরীক্ষা ২০২৫</option>
+            <option value="দ্বিতীয় সাময়িক পরীক্ষা ২০২৫">দ্বিতীয় সাময়িক পরীক্ষা ২০২৫</option>
             <option value="বার্ষিক পরীক্ষা ২০২৫">বার্ষিক পরীক্ষা ২০২৫</option>
           </select>
         </div>
@@ -204,19 +205,20 @@
     function app() {
       return {
         selectedClass: 'পঞ্চম',
-        selectedExam: 'প্রথম সাময়িক পরীক্ষা ২০২৫',
+        selectedExam: 'দ্বিতীয় সাময়িক পরীক্ষা ২০২৫',
         students: [],
         classSubjects: {
-          'প্লে': ['বাংলা', 'কায়দা ও মাখরাজ', 'হাদিস,মাসআলা ও দোয়া', 'দ্বীন শিক্ষা', 'গণিত', 'ইংরেজি', 'আমলী'],
-          'নার্সারি': ['বাংলা', 'কায়দা ও মাখরাজ', 'হাদিস,মাসআলা ও দোয়া', 'আরবী বর্ণ শিক্ষা', 'গণিত', 'ইংরেজি', 'আমলী'],
-          'প্রথম': ['বাংলা', 'কায়দা ও তাজবীদ', 'সাধারণ জ্ঞান', 'হাদিস,মাসআলা ও দোয়া', 'আরবি শিক্ষা', 'গণিত', 'ইংরেজি ও ওয়ার্ড বুক', 'আমলী'],
-          'দ্বিতীয়': ['বাংলা', 'কায়দা ও তাজবীদ', 'ইংরেজি ও ওয়ার্ড বুক', 'হাদিস,মাসআলা ও দোয়া', 'আরবি শিক্ষা', 'গণিত', 'সাধারণ জ্ঞান', 'আমলী'],
-          'তৃতীয়': ['বাংলা', 'আমপারা ও তাজবীদ', 'ইংরেজি ও ওয়ার্ড বুক', 'হাদিস,মাসআলা ও দোয়া', 'আরবী শিক্ষা', 'গণিত', 'সাধারণ জ্ঞান', 'আমলী'],
-          'চতুর্থ': ['বাংলা', 'আমপারা ও তাজবীদ', 'ইংরেজি', 'হাদিস,মাসআলা ও দোয়া', 'সমাজ ও বিজ্ঞান', 'আরবী শিক্ষা', 'গণিত', 'কুরআন শিক্ষা', 'আমলী'],
-          'পঞ্চম': ['বাংলা ও ব্যাকরণ', 'কুরআন ও তাজবীদ', 'ইংরেজি ১ম ও ইংরেজি ২য়', 'ইতিহাস ও ভূগোল', 'তালিমুল ইসলাম ও ইসলামী তাহজিব', 'গণিত', 'এসো আরবি শিখি', 'আমলী'],
-          'হিফজখানা': ['মাসআলা', 'কুরআন', 'তাজবীদ', 'মাসনুন দোয়া ও হাদিস', 'আমলী'],
-          'ষষ্ঠ': ['বাংলা', 'ইংরেজি', 'গণিত', 'মিজানুস সরফ', 'এসো আরবী শিখি', 'তারিখুল ইসলাম', 'বাকারাতুল আদব', 'বেহেশতি জেওর', 'আমলী', 'কোরআন'],
-          'সপ্তম': ['বাংলা', 'নহুমির', ' আল ফিকহুল মুয়াসসার', 'সিরাত', 'ইলমুস সরফ', 'রওজাতুল আদব', 'শরহে মিয়াতে আমল', 'কোরআন', 'আমলী'],
+          'প্লে': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'দ্বীন শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'নার্সারি': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবি বর্ণ শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'প্রথম': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'দ্বিতীয়': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'তৃতীয়': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদীস শরীফ ও আদইয়ায়ে মাসনূনাহ', 'আদইয়ায়ে সলাহ্ ও মাসআلাহ্', 'গণিত', 'ইংরেজি', 'সাধারণ জ্ঞান', 'আমলী'],
+          'চতুর্থ': ['বাংলা', 'কুরআন মাজীদ ও তাজবীদ', 'আরবী শিক্ষা', 'হাদিস, মাসআলা ও দোয়া', 'কুরআন শিক্ষা ও আমলী', 'গণিত', 'ইংরেজি', 'সমাজ ও বিজ্ঞান', 'আমলী'],
+          'পঞ্চম': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ ও তাজবীদ', 'এসো আরবী শিখি', 'তালিমুল ইসলাম ও ইসলামি তাহজীব', 'ইতিহাস ও ভূগোল', 'ইংরেজি ও গ্রামার', 'গণিত', 'আমলী', 'হাদিস, মাসআলা ও দোয়া'],
+          'মিজান': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ ও তাজবীদ', 'এসো আরবী শিখি', 'তারিখুল ইসলাম', 'মিজানুস সরফ', 'ইংরেজি ও গ্রামার', 'গণিত', 'বাকারাতুল আদাব', 'বেহেশতী জেওর', 'আমলী'],
+          'নাহবেমির': ['বাংলা ও ব্যাকরণ', 'কুরআন মাজীদ ও তাজবীদ', 'রওজাতুল আদব', 'নাহুমীর', 'আল ফিকহুল মুয়াসসার', 'সিরাত', 'ইলমুস সরফ', 'শরহে মিয়াতে আমেল', 'আমলী'],
+          'কুদুরী': ['বাংলা ও ব্যাকরণ', ' কুরআন তরজমা', 'আততারিখ ইলাল ইংশা', 'ফয়জুল কালাম', 'হেদায়াতুন নাহু', 'কালয়ুবী', 'কুদুরী', 'উসুলুস শাশী', 'ইলমুস সিগাহ্', 'আমলী'],
+          'হিফজখানা': ['কুরআন মাজিদ', 'তাজবীদ', 'মাসআলা', 'মাসনূন দোয়া', 'হাদিস', 'আমলী']
         },
         results: [],
         resultRecords: {},
@@ -274,25 +276,48 @@
           student.total = this.calculateTotal(student.results);
           student.avg = this.calculateAverage(student.results);
           student.status = this.calculateStatus(student.avg);
-          student.position = this.calculatePosition(student);
+          
+          // Update all positions after any change
+          this.updateAllPositions();
+          
           student.comment = this.generateComment(student)
-          this.results = [...this.sortedResults];
+          this.results = [...this.results];
+        },
+        
+        // Update all student positions based on sorted order
+        updateAllPositions() {
+          const sorted = this.sortedResults;
+          sorted.forEach((student, index) => {
+            student.position = index + 1;
+          });
         },
         
         // Sorted results by total marks for position
         get sortedResults() {
-          return this.results.slice().sort((a, b) => this.calculateTotal(b.results) - this.calculateTotal(a.results));
+          return this.results.slice().sort((a, b) => {
+            const totalA = this.calculateTotal(a.results);
+            const totalB = this.calculateTotal(b.results);
+            
+            // Sort by total marks descending
+            if (totalB !== totalA) {
+              return totalB - totalA;
+            }
+            
+            // If totals are equal, sort by name alphabetically
+            return a.name.localeCompare(b.name);
+          });
         },
         
         // Calculate total marks
         calculateTotal(results) {
-          return results.reduce((sum, result) => sum + result.total, 0);
+          return results.reduce((sum, result) => sum + (result.test || 0) + (result.mark || 0), 0);
         },
         
         // Calculate average
         calculateAverage(results) {
           const total = this.calculateTotal(results);
-          return Math.round(total / results.length);
+          const subjectCount = results.length;
+          return subjectCount > 0 ? Math.round(total / subjectCount) : 0;
         },
         
         // Calculate status based on average
@@ -306,8 +331,7 @@
         
         // Calculate position based on total marks
         calculatePosition(student) {
-          const sorted = this.sortedResults;
-          return sorted.findIndex(s => s.studentId === student.studentId) + 1;
+          return student.position || 0;
         },
         
         // Generate report
@@ -316,9 +340,14 @@
             alert('কোনো ছাত্রের তথ্য নেই। দয়া করে প্রথমে রেজাল্ট এন্ট্রি করুন।');
             return;
           }
+          
+          // Update all positions before generating report
+          this.updateAllPositions();
+          
           //console.log(this.results)
           this.addReasult(this.results)
         },
+        
         async addReasult(results) {
           try {
             const allResults = results.map(result => ({
@@ -326,7 +355,6 @@
               results: JSON.stringify(result.results)
             }));
             
-            // Use Promise.all for multiple async operations
             await Promise.all(allResults.map(async (result) => {
               try {
                 await databases.createDocument(
@@ -341,17 +369,19 @@
               }
             }));
             
-            alert('Result created successfully!');
+            console.log(allResults)
+            alert('Result created successfully!', );
           } catch (error) {
             console.error('Error in addReasult:', error);
             alert('Error creating results: ' + error.message);
           }
         },
+        
         generateComment(student) {
           const avg = this.calculateAverage(student.results);
           const total = this.calculateTotal(student.results);
           const status = this.calculateStatus(avg);
-          const position = this.calculatePosition(student);
+          const position = student.position;
           
           // কমেন্ট টেমপ্লেট
           const comments = {
@@ -409,6 +439,7 @@
           
           return finalComment;
         },
+        
         getGrade(score) {
           let grade
           if (score >= 80) {
@@ -420,7 +451,7 @@
           } else if (score >= 40) {
             grade = "মাকবুল";
           } else {
-            grade = "রাসিব";
+            grade = "রাসיב";
           }
           return grade
         },
